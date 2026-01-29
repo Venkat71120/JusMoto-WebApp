@@ -1,0 +1,386 @@
+/* Popup/Modal Styles */
+:root {
+  --inter-font: 'Inter', sans-serif;
+
+  --success-bg: #08b14d1a;
+  --warning: #ff9900;
+  --warning-bg: #ff99001a;
+  --danger: #b92325;
+  --danger-bg: #b923251a;
+  --info: #007fff;
+  --info-bg: #007fff1a;
+  --forget-text: #575e65;
+  --select-green: #4cb050;
+  --form-aria: #f3f3f3;
+  --form-method: #767474;
+  --success-icon: #eeddff;
+}
+.cmn-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0.875rem 1.625rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  background-color: #fff;
+  transition: all 0.3s ease-in-out;
+}
+.black-btn {
+  color: var(--scolor2);
+  background-color: var(--scolor3);
+  border-color: var(--scolor3);
+  border: none;
+  outline: none;
+}
+
+.slider-btn {
+  height: 54px;
+  width: 54px;
+  border: 1px solid var(--border-color-two);
+  border-radius: 50%;
+  background-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  flex-shrink: 0;
+  z-index: 3;
+  &:hover {
+    background-color: var(--primary-color);
+    color: var(--scolor2);
+  }
+  &.style3 {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #ffffff;
+  }
+}
+
+/* Popup Overlay */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.popup-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.popup {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(5%, 33%) scale(0.9);
+  transition: transform 0.4s ease, opacity 0.3s ease;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 101;
+  background: #fff;
+  width: 90%;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  z-index: 2000;
+}
+
+.popup.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%);
+}
+
+/* Select Car Modal */
+.containers {
+  max-width: 873px;
+  width: 90%;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 3rem 0;
+}
+
+.model-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 0;
+}
+
+.head {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-top: 2rem;
+}
+
+.btnPosition {
+  position: absolute;
+  left: 103px;
+}
+
+.btnPositionRigt {
+  position: absolute;
+  right: 103px;
+}
+
+.models-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 696px;
+  width: 100%;
+  gap: 1rem;
+}
+
+.model-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 101px;
+  min-height: 84px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  border-radius: 10px;
+  flex: 1 1 200px;
+}
+
+.model-card.selected {
+  border: 2px solid var(--danger);
+  background: var(--scolor1);
+}
+.selected {
+  color: var(--primary-color);
+}
+.red-text {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+}
+
+.continue-btn {
+  grid-column: 1/-1;
+  justify-self: center;
+}
+
+/* Car Preview Modal */
+.model-car {
+  max-width: 713px;
+  margin: auto;
+  padding: 0 21px;
+  margin-top: 3rem;
+}
+
+.car-change {
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+}
+
+.car-change .cngBtn {
+  border: none;
+  outline: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.car-box {
+  background-color: var(--scolor1);
+  border-radius: 12px;
+}
+
+.show-car-text h4 {
+  font-size: 1.5rem;
+  margin: 1rem 0;
+}
+
+.show-car {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 0 0.67rem 0;
+}
+
+.show-car span {
+  margin-top: 1rem;
+}
+
+.showImg {
+  max-width: 394px;
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+}
+
+.showImg img {
+  width: 80%;
+  max-width: 500px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Oil Selection Box */
+.oil-box {
+  max-width: 147px;
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.67rem;
+}
+
+/* Modal Card */
+.modal_card {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+/* Select2 Z-index Fix */
+.select2-container.select2-container--default {
+  z-index: 1055;
+}
+
+.service-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 1.5rem;
+}
+.service-option input[type='radio']:checked + label span {
+  color: var(--danger);
+}
+.service-option label {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background-color: white;
+}
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  margin-right: 12px;
+  position: relative;
+  transition: all 0.3s;
+}
+.service-option input[type='radio']:checked + label .radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: var(--danger);
+  border-radius: 50%;
+}
+.service-option input[type='radio']:checked + label .radio-custom {
+  border-color: var(--danger);
+}
+.service-option input[type='radio'] {
+  position: absolute;
+  opacity: 0;
+}
+.service-option input[type='radio']:checked + label {
+  border-color: var(--danger);
+  background-color: rgba(185, 35, 37, 0.1);
+}
+.subtitle-2 {
+  color: var(--main-color-one);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .popup {
+    width: 95%;
+  }
+
+  .models-grid {
+    gap: 0.5rem;
+  }
+
+  .model-card {
+    min-height: 70px;
+  }
+
+  .btnPosition,
+  .btnPositionRigt {
+    position: static;
+    margin: 1rem 0;
+  }
+
+  .showImg {
+    max-width: 100%;
+  }
+
+  .showImg img {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .containers {
+    padding: 1.5rem 0;
+  }
+
+  .model-box {
+    padding: 1.5rem 0;
+  }
+
+  .model-card {
+    flex: 1 1 150px;
+  }
+
+  .car-change {
+    padding: 0.5rem 0.5rem 0;
+  }
+
+  .show-car {
+    padding: 1.5rem 0 0.5rem 0;
+  }
+}
+
+/* Animation Classes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translate(-50%, -40%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
+.popup-overlay.animate {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.popup.animate {
+  animation: slideIn 0.4s ease forwards;
+}

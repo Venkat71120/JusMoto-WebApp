@@ -1,0 +1,47 @@
+{
+   "name":"Refund",
+   "addon_identifier":"refund",
+   "version":"100",
+   "required_cms_version":"120",
+   "addon_banner":"images/addons/refund.png",
+   "directories":
+   [
+      "public/addons",
+      "public/images/addons",
+      "app/Http/Controllers/Site/Addons",
+      "app/Http/Controllers/Admin/Addons",
+      "app/Http/Controllers/Seller/Addons",
+      "app/Repositories/Interfaces/Admin/Refund",
+      "app/Repositories/Admin/Refund"
+
+   ],
+   "sql_files":[
+
+   ],
+   "files":[
+      {
+         "from_directory":"images/refund.png",
+         "to_directory":"public/images/addons/refund.php"
+      },
+      {
+         "from_directory":"files/RefundController.php",
+         "to_directory":"app/Http/Controllers/Admin/Addons/RefundController.php"
+      },
+      {
+         "from_directory":"files/seller/RefundController.php",
+         "to_directory":"app/Http/Controllers/Seller/Addons/RefundController.php"
+      },
+      {
+         "from_directory":"files/site/RefundController.php",
+         "to_directory":"app/Http/Controllers/Site/Addons/RefundController.php"
+      },
+      {
+         "from_directory":"files/RefundInterface.php",
+         "to_directory":"app/Repositories/Interfaces/Admin/Refund/RefundInterface.php"
+      },
+      {
+         "from_directory":"files/RefundRepository.php",
+         "to_directory":"app/Repositories/Admin/Refund/RefundRepository.php"
+      }
+   ]
+}

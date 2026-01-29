@@ -1,0 +1,123 @@
+<?php $__env->startSection('site-title'); ?>
+    <?php echo e(__('All Reviews')); ?>
+
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('style'); ?>
+    <style>
+        .custom_status_style{
+            font-size: 14px!important;
+        }
+        a.cmnBtn.btn_5.btn_bg_warning.btnIcon.radius-5.swal_status_change {
+            min-width: 30px!important;
+        }
+    </style>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+    <div class="row g-4 mt-0">
+        <div class="col-xl-12 col-lg-12">
+            <div class="dashboard__card bg__white padding-20 radius-10">
+                <div class="dashboard__inner__header">
+                    <div class="dashboard__inner__header__flex">
+                        <div class="dashboard__inner__header__left">
+                            <h4 class="dashboard__inner__header__title"><?php echo e(__('All Reviews')); ?></h4>
+                       </div>
+                        <div class="dashboard__inner__header__right">
+                            <div class="d-flex text-right w-100 mt-3">
+                                <input class="form__control notice_string_search" name="string_search" id="string_search" placeholder="<?php echo e(__('Search Using rating')); ?>">
+                            </div>
+                       </div>
+                   </div>
+                 </div>
+                <?php if (isset($component)) { $__componentOriginal4bb59b834d778ff0cb72af5a473e2885 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4bb59b834d778ff0cb72af5a473e2885 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.validation.error','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('validation.error'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4bb59b834d778ff0cb72af5a473e2885)): ?>
+<?php $attributes = $__attributesOriginal4bb59b834d778ff0cb72af5a473e2885; ?>
+<?php unset($__attributesOriginal4bb59b834d778ff0cb72af5a473e2885); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4bb59b834d778ff0cb72af5a473e2885)): ?>
+<?php $component = $__componentOriginal4bb59b834d778ff0cb72af5a473e2885; ?>
+<?php unset($__componentOriginal4bb59b834d778ff0cb72af5a473e2885); ?>
+<?php endif; ?>
+                <div class="tableStyle_three mt-4">
+                    <div class="table_wrapper custom_Table">
+                        <div class="search_notice_result">
+                            <?php echo $__env->make('backend.pages.admin.review.search-review', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('scripts'); ?>
+    <script type="text/javascript">
+        (function(){
+            "use strict";
+            $(document).ready(function(){
+            
+
+                // live search
+                $(document).on('keyup','.notice_string_search',function(){
+                    let string_search = $(this).val();
+                    $.ajax({
+                        url:"<?php echo e(route('admin.review.search')); ?>",
+                        method:'GET',
+                        data:{string_search:string_search},
+                        success:function(res){
+                            if(res.status=='nothing'){
+                                $('.search_notice_result').html('<h3 class="text-center text-danger">'+"<?php echo e(__('Nothing Found')); ?>"+'</h3>');
+                            }else{
+                                $('.search_notice_result').html(res);
+                            }
+                        }
+                    });
+                });
+
+                // pagination
+                $(document).on('click', '.pagination li a', function(e){
+                    e.preventDefault();
+                    let page = $(this).attr('href').split('page=')[1];
+                    notices(page);
+                });
+                function notices(page){
+                    $.ajax({
+                        url:"<?php echo e(route('admin.review.paginate').'?page='); ?>" + page,
+                        success:function(res){
+                            $('.search_notice_result').html(res);
+                        }
+                    });
+                }
+
+            });
+
+            // change status
+            $(document).on('click','.swal_status_change',function(e){
+                    e.preventDefault();
+                    Swal.fire({
+                        title: '<?php echo e(__("Are you sure to change status complete? Once you done you can not revert this !!")); ?>',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: "<?php echo e(__('Yes, change it!')); ?>"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $(this).next().find('.swal_form_submit_btn').trigger('click');
+                        }
+                    });
+                });
+        })(jQuery);
+    </script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('backend.admin-master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /Users/venkatesharavamudhan/Claude/JusMoto/main-files/Admin Panel/extracted/gocar-v1.1.0/core/resources/views/backend/pages/admin/review/allReviews.blade.php ENDPATH**/ ?>

@@ -3,11 +3,11 @@
   array (
     'aliases' => 
     array (
-      'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
+      'Debugbar' => 'Fruitcake\\LaravelDebugbar\\Facades\\Debugbar',
     ),
     'providers' => 
     array (
-      0 => 'Barryvdh\\Debugbar\\ServiceProvider',
+      0 => 'Fruitcake\\LaravelDebugbar\\ServiceProvider',
     ),
   ),
   'barryvdh/laravel-dompdf' => 
@@ -144,13 +144,6 @@
       0 => 'Propaganistas\\LaravelPhone\\PhoneServiceProvider',
     ),
   ),
-  'sharifur/payfast' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Billow\\PayfastServiceProvider',
-    ),
-  ),
   'spatie/laravel-ignition' => 
   array (
     'aliases' => 
@@ -198,18 +191,18 @@
       0 => 'Stevebauman\\Location\\LocationServiceProvider',
     ),
   ),
+  'xgenious-fundorex/paymentgateway' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Xgenious\\Paymentgateway\\Providers\\PaymentgatewayServiceProvider',
+    ),
+  ),
   'xgenious/installer' => 
   array (
     'providers' => 
     array (
       0 => 'Xgenious\\Installer\\InstallerServiceProvider',
-    ),
-  ),
-  'xgenious/paymentgateway' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Xgenious\\Paymentgateway\\Providers\\PaymentgatewayServiceProvider',
     ),
   ),
   'xgenious/xgapiclient' => 

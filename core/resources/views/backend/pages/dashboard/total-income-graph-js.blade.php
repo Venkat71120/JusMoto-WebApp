@@ -76,20 +76,6 @@
                         }
                     },
                 },
-                grid: {
-    show: true,
-    borderColor: '#d3dcdb',
-},
-xaxis: {
-    labels: {
-        style: { colors: '#252726' }
-    }
-},
-yaxis: {
-    labels: {
-        style: { colors: '#252726' }
-    }
-},
 
                 responsive: [{
                     breakpoint: 575,

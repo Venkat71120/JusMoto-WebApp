@@ -74,8 +74,8 @@
   --new-section-bg: #F5F7FF;
   --new-section-bg-2: #F9FAFB;
   --new-border-color: #EAECF0;
-  --new-heading-font: "Plus Jakarta Sans", sans-serif;
-  --new-body-font: "Manrope", sans-serif;
+  --new-heading-font: 'Roboto', sans-serif;
+  --new-body-font: 'Roboto', sans-serif;
 }
 :root {
     /* ===== Palette ===== */

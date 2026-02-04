@@ -9,9 +9,8 @@
  8. Media Queries
 **/
 /* 1. Root */
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 :root {
-  --inter-font: 'Inter', sans-serif;
+  --inter-font: 'Roboto', sans-serif;
   --primary-color: #b92325;
   --main-color-one: #1a1c1e;
   --paragraph-color: #5c5c5c;

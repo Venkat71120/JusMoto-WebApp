@@ -12062,9 +12062,9 @@ Background-color Makes CSS Class
   --radius-40: 40px;
   --radius-50: 50px;
   --radius-50-percent: 50%;
-  --heading-font: "Jost", sans-serif;
-  --body-font: "Manrope", sans-serif;
-  --jost-font: "Jost", sans-serif;
+  --heading-font: 'Roboto', sans-serif;
+  --body-font: 'Roboto', sans-serif;
+  --jost-font: 'Roboto', sans-serif;
 }
 
 .height_100 {

@@ -28,13 +28,19 @@
                 legend: {
                     show: false,
                 },
-                fill: {
-                    colors: [
-                        "var(--blue)", "var(--purple)", "var(--orange)",
-                        "var(--brown)", "var(--green)", "var(--sky)",
-                        "var(--pink)", "var(--primary)"
-                    ],
-                },
+               fill: {
+    colors: [
+        "#00b799",
+        "#2dca73",
+        "#fbc423",
+        "#ff4240",
+        "#00b799",
+        "#2dca73",
+        "#fbc423",
+        "#ff4240"
+    ],
+},
+
                 grid: {
                     show: true,
                     borderColor: 'var(--border-color)',
@@ -70,6 +76,21 @@
                         }
                     },
                 },
+                grid: {
+    show: true,
+    borderColor: '#d3dcdb',
+},
+xaxis: {
+    labels: {
+        style: { colors: '#252726' }
+    }
+},
+yaxis: {
+    labels: {
+        style: { colors: '#252726' }
+    }
+},
+
                 responsive: [{
                     breakpoint: 575,
                     options: {

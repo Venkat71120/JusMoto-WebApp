@@ -22,23 +22,21 @@
        type: 'line',
        data: {
         labels: data.labels,
-        datasets: [{
-         label: 'Total Users',
-         data: data.data,
-         borderWidth: 2,
-         fill: true,
-         pointBorderWidth: 2,
-         pointBackgroundColor: cssvar('--white'),
-         pointRadius: 2,
-         pointHoverRadius: 5,
-         borderColor: cssvar('--primary'),
-backgroundColor: cssvar('--chart-fill'),
-pointBorderWidth: 2,
-pointBackgroundColor: '#ffffff',
-pointHoverBackgroundColor: cssvar('--danger'),
+      datasets: [{
+    label: 'Total Users',
+    data: data.data,
+    borderColor: cssvar('--primary'),
+    borderWidth: 2,
+    fill: true,
+    backgroundColor: cssvar('--chart-fill'),
+    pointBorderWidth: 2,
+    pointBackgroundColor: '#ffffff',
+    pointRadius: 2,
+    pointHoverRadius: 5,
+    pointHoverBackgroundColor: cssvar('--danger'),
+    tension: .5,
+}]
 
-         lineTension: .5,
-        }]
        },
        options: {
         responsive: true,
@@ -46,7 +44,7 @@ pointHoverBackgroundColor: cssvar('--danger'),
          legend: {
           display: true,
           labels: {
-         color: cssvar('--dark'),
+          color: cssvar('--dark'),
 borderColor: cssvar('--border'),
 
           },
@@ -56,7 +54,9 @@ borderColor: cssvar('--border'),
          x: {
           ticks: {
            beginAtZero: true,
-           color: cssvar('--body-color'),
+          color: cssvar('--dark'),
+borderColor: cssvar('--border'),
+
           },
           grid: {
            borderColor: cssvar('--border-color'),
@@ -66,7 +66,9 @@ borderColor: cssvar('--border'),
          y: {
           ticks: {
            beginAtZero: true,
-           color: cssvar('--body-color'),
+           color: cssvar('--dark'),
+borderColor: cssvar('--border'),
+
           },
           grid: {
            borderColor: cssvar('--border-color'),
@@ -89,17 +91,15 @@ borderColor: cssvar('--border'),
         datasets: [{
          label: 'Total Services',
          data: data.data,
+         borderColor: cssvar('--blue'),
          borderWidth: 2,
          fill: true,
+         backgroundColor: 'rgba(0, 128, 255, .05)',
          pointBorderWidth: 2,
+         pointBackgroundColor: cssvar('--white'),
          pointRadius: 2,
          pointHoverRadius: 5,
-         borderColor: cssvar('--primary'),
-backgroundColor: cssvar('--chart-fill'),
-pointBorderWidth: 2,
-pointBackgroundColor: '#ffffff',
-pointHoverBackgroundColor: cssvar('--danger'),
-
+         pointHoverBackgroundColor: cssvar('--blue'),
          lineTension: .5,
         }]
        },
@@ -109,7 +109,9 @@ pointHoverBackgroundColor: cssvar('--danger'),
          legend: {
           display: true,
           labels: {
-           color: cssvar('--body-color'),
+          color: cssvar('--dark'),
+borderColor: cssvar('--border'),
+
           },
          }
         },
@@ -117,7 +119,9 @@ pointHoverBackgroundColor: cssvar('--danger'),
          x: {
           ticks: {
            beginAtZero: true,
-           color: cssvar('--body-color'),
+           color: cssvar('--dark'),
+borderColor: cssvar('--border'),
+
           },
           grid: {
            borderColor: cssvar('--border-color'),
@@ -127,7 +131,9 @@ pointHoverBackgroundColor: cssvar('--danger'),
          y: {
           ticks: {
            beginAtZero: true,
-           color: cssvar('--body-color'),
+           color: cssvar('--dark'),
+borderColor: cssvar('--border'),
+
           },
           grid: {
            borderColor: cssvar('--border-color'),
@@ -155,17 +161,13 @@ pointHoverBackgroundColor: cssvar('--danger'),
          borderColor: cssvar('--blue'),
          borderWidth: 2,
          fill: true,
+         backgroundColor: 'rgba(0, 128, 255, .05)',
          pointBorderWidth: 2,
          pointBackgroundColor: cssvar('--white'),
          pointRadius: 2,
          pointHoverRadius: 5,
+         pointHoverBackgroundColor: cssvar('--blue'),
          lineTension: .5,
-         borderColor: cssvar('--primary'),
-backgroundColor: cssvar('--chart-fill'),
-pointBorderWidth: 2,
-pointBackgroundColor: '#ffffff',
-pointHoverBackgroundColor: cssvar('--danger'),
-
         }]
        },
        options: {
@@ -174,7 +176,9 @@ pointHoverBackgroundColor: cssvar('--danger'),
          legend: {
           display: true,
           labels: {
-           color: cssvar('--body-color'),
+           color: cssvar('--dark'),
+borderColor: cssvar('--border'),
+
           },
          }
         },
@@ -182,7 +186,9 @@ pointHoverBackgroundColor: cssvar('--danger'),
          x: {
           ticks: {
            beginAtZero: true,
-           color: cssvar('--body-color'),
+           color: cssvar('--dark'),
+borderColor: cssvar('--border'),
+
           },
           grid: {
            borderColor: cssvar('--border-color'),
@@ -192,7 +198,9 @@ pointHoverBackgroundColor: cssvar('--danger'),
          y: {
           ticks: {
            beginAtZero: true,
-           color: cssvar('--body-color'),
+           color: cssvar('--dark'),
+borderColor: cssvar('--border'),
+
           },
           grid: {
            borderColor: cssvar('--border-color'),

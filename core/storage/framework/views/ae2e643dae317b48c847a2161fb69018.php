@@ -25,15 +25,18 @@
         datasets: [{
          label: 'Total Users',
          data: data.data,
-         borderColor: cssvar('--blue'),
          borderWidth: 2,
          fill: true,
-         backgroundColor: 'rgba(0, 128, 255, .05)',
          pointBorderWidth: 2,
          pointBackgroundColor: cssvar('--white'),
          pointRadius: 2,
          pointHoverRadius: 5,
-         pointHoverBackgroundColor: cssvar('--blue'),
+         borderColor: cssvar('--primary'),
+backgroundColor: cssvar('--chart-fill'),
+pointBorderWidth: 2,
+pointBackgroundColor: '#ffffff',
+pointHoverBackgroundColor: cssvar('--danger'),
+
          lineTension: .5,
         }]
        },
@@ -43,7 +46,9 @@
          legend: {
           display: true,
           labels: {
-           color: cssvar('--body-color'),
+         color: cssvar('--dark'),
+borderColor: cssvar('--border'),
+
           },
          }
         },
@@ -84,15 +89,17 @@
         datasets: [{
          label: 'Total Services',
          data: data.data,
-         borderColor: cssvar('--blue'),
          borderWidth: 2,
          fill: true,
-         backgroundColor: 'rgba(0, 128, 255, .05)',
          pointBorderWidth: 2,
-         pointBackgroundColor: cssvar('--white'),
          pointRadius: 2,
          pointHoverRadius: 5,
-         pointHoverBackgroundColor: cssvar('--blue'),
+         borderColor: cssvar('--primary'),
+backgroundColor: cssvar('--chart-fill'),
+pointBorderWidth: 2,
+pointBackgroundColor: '#ffffff',
+pointHoverBackgroundColor: cssvar('--danger'),
+
          lineTension: .5,
         }]
        },
@@ -148,13 +155,17 @@
          borderColor: cssvar('--blue'),
          borderWidth: 2,
          fill: true,
-         backgroundColor: 'rgba(0, 128, 255, .05)',
          pointBorderWidth: 2,
          pointBackgroundColor: cssvar('--white'),
          pointRadius: 2,
          pointHoverRadius: 5,
-         pointHoverBackgroundColor: cssvar('--blue'),
          lineTension: .5,
+         borderColor: cssvar('--primary'),
+backgroundColor: cssvar('--chart-fill'),
+pointBorderWidth: 2,
+pointBackgroundColor: '#ffffff',
+pointHoverBackgroundColor: cssvar('--danger'),
+
         }]
        },
        options: {

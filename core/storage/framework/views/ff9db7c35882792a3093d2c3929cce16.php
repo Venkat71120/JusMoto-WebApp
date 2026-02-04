@@ -1,0 +1,179 @@
+<?php $__env->startSection('site-title'); ?>
+    <?php echo e(__('Registration')); ?> - <?php echo e(get_static_option('site_title')); ?>
+
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
+    <main>
+        <section class="account-management-page">
+            <!-- Wrapper (main content) -->
+            <div class="account-management-wrapper">
+
+                <!-- Left Side -->
+                <div class="left-card-wrapper">
+                    <div class="login-left-card">
+                        <?php if(!empty(get_static_option('register_page_social_login_show_hide'))): ?>
+                            <!--  Back Button -->
+                            <div class="back-btn">
+                                <a href="<?php echo e(route('auth.social.login')); ?>">
+                                    <span><i class="fa-solid fa-arrow-left"></i></span>
+                                    <?php echo e(__('Back')); ?>
+
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                        <h2 class="subtitle-1 mb-2"><?php echo e(get_static_option('register_page_title')); ?></h2>
+                        <form action="<?php echo e(route('auth.signup.submit')); ?>" method="POSt" class="register-form mt-2">
+                            <?php echo csrf_field(); ?>
+                            <!-- Email -->
+                            <label class="mt-2" for="email"><?php echo e(__('Email')); ?></label>
+                            <div class="input-group">
+                                <input type="email" id="email" name="email" class="custom-input" value="<?php echo e(old('email')); ?>" placeholder="Enter email" />
+                            </div>
+                            <div>
+                                <span id="email_availability" class="d-none mb-2"></span>
+                            </div>
+
+
+                            <!-- Password -->
+                            <label for="password"><?php echo e(__('Password')); ?></label>
+                            <div class="input-group custom-input relative_wrapper">
+                                <input type="password" id="password" name="password" class="w-100 pss-input" value="<?php echo e(old('password')); ?>" placeholder="Enter password" />
+                                <div class="pass_eye_btn">
+                                    <i class="base-icon ti tabler-eye d-none"></i>
+                                    <i class="base-icon ti tabler-eye-off "></i>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="length-check d-none mb-2"></span>
+                            </div>
+
+                            <!-- confirm Password -->
+                            <label for="confirm_password"><?php echo e(__('Confirm Password')); ?></label>
+                            <div class="input-group custom-input relative_wrapper">
+                                <input type="password" id="confirm_password" name="confirm_password" class="w-100 pss-input" value="<?php echo e(old('confirm_password')); ?>" placeholder="Enter password" />
+                                <div class="pass_eye_btn">
+                                    <i class="base-icon ti tabler-eye d-none"></i>
+                                    <i class="base-icon ti tabler-eye-off "></i>
+                                </div>
+                            </div>
+                            <span id="check_password_match" class="d-none"></span>
+
+                            <div class="d-flex flex-wrap gap-4 mb-2 mt-3">
+                                <?php if((!empty(get_static_option('site_google_captcha_enable')))): ?>
+                                    <div class="col-md-12 mb-3">
+                                        <div class="g-recaptcha" id="recaptcha_element_register" data-sitekey="<?php echo e(get_static_option('recaptcha_2_site_key') ?? ''); ?>"></div>
+                                        <?php if($errors->has('g-recaptcha-response')): ?>
+                                            <span class="text-danger"><?php echo e($errors->first('g-recaptcha-response')); ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
+
+                            </div>
+
+                            <div>
+                                <?php
+                                    $slug=get_static_option('select_terms_condition_page') ?? '';
+                                ?>
+
+                                <input type="checkbox" name="agree" id="agree" class="custom-checkbox"  <?php echo e(old('agree') ? 'checked' : ''); ?>>
+                                <label for="agree" class="custom-label"><?php echo e(__('I agree to the')); ?> <a target="_blank" href="<?php echo e(url('/') . '/' . $slug); ?>" class="text-decoration-underline fw-bold"><?php echo e(__('Terms & Conditions')); ?></a></label>
+                            </div>
+
+                            <button type="submit" class="signin-btn"><?php echo e(get_static_option('register_page_button')); ?></button>
+                            <div class="alredy-account text-center black-text fw_medium mt-3">
+                                <p><?php echo e(__("Already have an account? ")); ?><a href="<?php echo e(route('auth.login')); ?>" class="primary-text"><?php echo e(__('Sign in')); ?></a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right Side -->
+                <div class="login-right-part d-sm-none d-md-block d-lg-block d-none">
+                    <?php echo render_image_markup_by_attachment_id(get_static_option('register_page_image'), '', 'full'); ?>
+
+                </div>
+            </div>
+        </section>
+    </main>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('scripts'); ?>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script>
+        $(document).ready(function () {
+            $(document).on('keyup', '#email', function () {
+                let email = $(this).val();
+                let emailRegex = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i;
+
+                if (emailRegex.test(email)) {
+                    $.ajax({
+                        url: "<?php echo e(route('user.email.availability')); ?>",
+                        type: 'post',
+                        data: { email: email },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (res) {
+                            let $msg = $("#email_availability").removeClass("d-none");
+                            if (res.status === 'available') {
+                                $msg.text(res.msg).css("color", "green");
+                            } else {
+                                $msg.text(res.msg).css("color", "red");
+                            }
+                        }
+                    });
+                } else if (email.length > 0) {
+                    $("#email_availability")
+                        .removeClass("d-none")
+                        .text("<?php echo e(__('Enter valid email')); ?>")
+                        .css("color", "red");
+                } else {
+                    $("#email_availability").addClass("d-none").text("");
+                }
+            });
+
+
+            $(document).on('keyup', '#password, #confirm_password', function() {
+
+                let password = $("#password").val();
+                let confirm_password = $("#confirm_password").val();
+
+                let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+                if (password.length === 0) {
+                    // remove message if input is empty
+                    $('.length-check').next('span').remove();
+                }else if (passwordPattern.test(password)) {
+                    $('.length-check')
+                        .next('span').remove()
+                        .end()
+                        .after('<span style="color:green; margin-left:8px;">Password meets all requirements</span>');
+                } else {
+                    $('.length-check')
+                        .next('span').remove()
+                        .end()
+                        .after('<span style="color:red; margin-left:8px;">Password must be at least 8 chars, include uppercase, lowercase, number & special char</span>');
+                }
+
+                if (confirm_password.length > 0) {
+                    // remove old span first
+                    $("#check_password_match").next("span").remove();
+
+                    if (password === confirm_password) {
+                        $("#check_password_match").after(
+                            '<span style="color:green; margin-left:8px;">Password match!</span>'
+                        );
+                    } else {
+                        $("#check_password_match").after(
+                            '<span style="color:red; margin-left:8px;">Password does not match!</span>'
+                        );
+                    }
+                }else {
+                    $("#check_password_match").next("span").remove();
+                }
+            });
+        });
+    </script>
+
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('frontend.layout.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/auth/client/signup.blade.php ENDPATH**/ ?>

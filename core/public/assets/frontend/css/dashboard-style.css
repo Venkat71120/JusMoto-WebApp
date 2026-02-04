@@ -45,6 +45,19 @@
     --success1-p: #08b14d;
     --success2-p: rgba(8, 177, 76, 0.1);
 }
+:root {
+    /* ===== Palette ===== */
+    --primary: #00b799;   /* main growth / totals */
+    --danger: #ff4240;    /* alerts / hover */
+    --dark: #252726;      /* text */
+    --bg: #e9edee;        /* background */
+    --border: #d3dcdb;    /* borders / grid */
+    --highlight: #fbc423; /* emphasis */
+    --success-soft: #2dca73;
+
+    /* ===== Chart specific ===== */
+    --chart-fill: rgba(0, 183, 153, 0.15);
+}
 
 /* common css */
 *{

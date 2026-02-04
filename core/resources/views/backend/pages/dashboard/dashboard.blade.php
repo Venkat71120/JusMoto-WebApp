@@ -19,6 +19,102 @@
              width: 100%!important;
              height: 350px!important;
          }
+         /* ===== Dashboard Base ===== */
+body {
+    background-color: #e9edee;
+    color: #252726;
+}
+
+/* ===== Cards ===== */
+.dashboard__card {
+    background-color: #ffffff;
+    border: 1px solid #d3dcdb;
+    height: 97% !important;
+}
+
+.dashboard__card__header__title {
+    color: #252726;
+    font-weight: 600;
+}
+
+.dashboard__card__header__title p {
+    color: #c66763;
+    font-size: 13px;
+}
+
+/* ===== Promo Cards ===== */
+.dashboard_promo__single {
+    border-left: 4px solid #00b799;
+    transition: all 0.3s ease;
+}
+
+.dashboard_promo__single:hover {
+    border-left-color: #ff4240;
+    transform: translateY(-3px);
+}
+
+.dashboard_promo__single__price {
+    color: #252726;
+}
+
+/* ===== Links & Icons ===== */
+a {
+    color: #00b799;
+}
+
+a:hover {
+    color: #ff4240;
+}
+
+/* ===== Tables ===== */
+.custom_table thead th {
+    background-color: #e9edee;
+    color: #252726;
+}
+
+.table_row:hover {
+    background-color: #f7f9f9;
+}
+
+.table_date {
+    color: #c66763;
+}
+
+/* ===== Buttons ===== */
+.btn_bg_info {
+    background-color: #00b799;
+    border-color: #00b799;
+    color: #fff;
+}
+
+.btn_bg_info:hover {
+    background-color: #ff4240;
+    border-color: #ff4240;
+}
+
+/* ===== User / Product Images ===== */
+.table_customer__thumb img,
+.order_id img {
+    border-radius: 6px;
+    border: 1px solid #d3dcdb;
+}
+
+/* ===== Charts Container ===== */
+.chart__item__inner {
+    background: #ffffff;
+}
+
+/* ===== Revenue Chart ===== */
+#sales_pipeline {
+    width: 100% !important;
+    height: 350px !important;
+}
+
+/* ===== Greeting ===== */
+.dashboard__inner__header__title strong {
+    color: #00b799;
+}
+
     </style>
 @endsection
 @section('content')
@@ -167,7 +263,10 @@
                                                                     </div>
                                                                 </div>
                                                             </td>
-                                                            <td><span class="table_date">{{ $user->created_at->format('d M Y') }}</span></td>
+                                                            <td><span class="table_date">
+    {{ optional($user->created_at)->format('d M Y') ?? '-' }}
+</span>
+</td>
                                                         </tr>
                                                     @endforeach
                                                     </tbody>
@@ -217,7 +316,10 @@
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <span class="table_date">{{ $service->created_at->format('d M Y') }}</span>
+                                                           <span class="table_date">
+    {{ optional($service->created_at)->format('d M Y') ?? '-' }}
+</span>
+
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -268,7 +370,10 @@
                                                             </a>
                                                         </td>
                                                         <td>
-                                                            <span class="table_date">{{ $product->created_at->format('d M Y') }}</span>
+                                                          <span class="table_date">
+    {{ optional($product->created_at)->format('d M Y') ?? '-' }}
+</span>
+
                                                         </td>
                                                     </tr>
                                                 @endforeach

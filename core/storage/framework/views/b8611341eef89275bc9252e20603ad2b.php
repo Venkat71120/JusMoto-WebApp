@@ -1,9 +1,6 @@
 <?php $__env->startSection('content'); ?>
     <style>
-        body{
-            background-color: #ff3232 !important;
-        }
-        .password-toggle {
+            .password-toggle {
             position: absolute;
             right: 15px;
             top: 50%;

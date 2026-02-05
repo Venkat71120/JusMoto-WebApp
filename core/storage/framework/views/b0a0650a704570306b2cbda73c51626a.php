@@ -49,29 +49,7 @@
 
                         </a>
                     </li>
-                    <li>
-                        <a href="<?php echo e(route('client.wallet.transactions')); ?>" class="sidebar_list_item <?php echo e(request()->routeIs('client.wallet.transactions') ? 'active' : ''); ?>">
-                            <svg width="19" height="18" viewBox="0 0 19 18" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_10511_2814)">
-                                    <path d="M7.55469 4.5H15.8047" stroke="currentColor" stroke-width="2"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M7.55469 9H15.8047" stroke="currentColor" stroke-width="2"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M7.55469 13.5H15.8047" stroke="currentColor" stroke-width="2"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M4.55469 4.5V4.5075" stroke="currentColor" stroke-width="2"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M4.55469 9V9.0075" stroke="currentColor" stroke-width="2"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                    <path d="M4.55469 13.5V13.5075" stroke="currentColor" stroke-width="2"
-                                          stroke-linecap="round" stroke-linejoin="round" />
-                                </g>
-                            </svg>
-                           <?php echo e(__('Wallet Transactions')); ?>
-
-                        </a>
-                    </li>
+                    
                     <li>
                         <a href="<?php echo e(route('client.favourite.services.all')); ?>" class="sidebar_list_item">
                             <svg xmlns="http://www.w3.org/2000/svg"

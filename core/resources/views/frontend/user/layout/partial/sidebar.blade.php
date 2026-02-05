@@ -47,7 +47,7 @@
                         {{__('Order List')}}
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="{{ route('client.wallet.transactions') }}" class="sidebar_list_item {{ request()->routeIs('client.wallet.transactions') ? 'active' : '' }}">
                             <svg width="19" height="18" viewBox="0 0 19 18" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -68,7 +68,7 @@
                             </svg>
                            {{__('Wallet Transactions')}}
                         </a>
-                    </li>
+                    </li> --}}
                     <li>
                         <a href="{{ route('client.favourite.services.all') }}" class="sidebar_list_item">
                             <svg xmlns="http://www.w3.org/2000/svg"

@@ -3,6 +3,32 @@
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
+<style>/* Password input wrapper */
+
+.custom-input {
+    width: 100%;
+}
+.relative_wrapper {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+.relative_wrapper input {
+    margin: 0;
+    display: block;   /* VERY IMPORTANT */
+}
+
+.custom-input input {
+    width: 100%;
+    height: 48px;
+    padding: 10px 15px;
+    border: 1px solid #d3dcdb;
+    border-radius: 6px;
+    outline: none;
+    box-sizing: border-box;
+}
+</style>
     <main>
         <section class="account-management-page">
             <!-- Wrapper (main content) -->
@@ -89,7 +115,7 @@
 
                 <!-- Right Side -->
                 <div class="login-right-part d-sm-none d-md-block d-lg-block d-none">
-                    <?php echo render_image_markup_by_attachment_id(get_static_option('register_page_image'), '', 'full'); ?>
+                    <img src="<?php echo e(asset('assets/frontend/images/Signupimg.png')); ?>" alt="Register Image">
 
                 </div>
             </div>

@@ -34,7 +34,8 @@
                         </div>
                         
                         <!-- Only show login/signup actions if not already on auth pages -->
-                        @if(!request()->is('login*', 'register*', 'forgot-password*', 'reset-password*'))
+                     @if(!request()->is('login*'))
+
                         <div class="navbar-right-item">
                             @if(auth()->check())
                                 <!-- User is logged in - show minimal user icon -->
@@ -111,14 +112,14 @@
                             </div>
                             @endif
                             
-                            @if(!auth()->check() && !request()->is('login*', 'register*'))
+                            {{-- @if(!auth()->check() && !request()->is('login*', 'register*'))
                             <div class="navbar-right-item d-none d-sm-none d-md-none d-lg-block">
                                 <a href="{{route('auth.login')}}" class="login-link">
                                     <i class="fas fa-sign-in-alt me-1"></i>
                                     {{__('Log In')}}
                                 </a>
                             </div>
-                            @endif
+                            @endif --}}
                             
                             @if(auth()->check())
                             <div class="navbar-right-item">
@@ -161,14 +162,18 @@
 
 /* Custom styles for login page header */
 .login-page-header {
-    background: #ffffff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    border-bottom: 2px solid var(--primary);
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border-bottom: 1px solid var(--border);
 }
 
-.login-page-header .navbar-brand img {
-    max-height: 40px;
+
+.login-page-header .navbar-brand {
+    display: flex;
+    align-items: center;
+    padding: 0;
 }
+
 
 .login-page-header .back-button {
     color: var(--dark);
@@ -230,6 +235,9 @@
     display: flex;
     align-items: center;
     gap: 12px;
+}
+.social-icon i {
+    color: #fff !important;
 }
 
 .social-icon {

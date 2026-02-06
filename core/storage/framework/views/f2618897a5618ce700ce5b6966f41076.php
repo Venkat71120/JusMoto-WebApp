@@ -179,7 +179,54 @@ a:hover {
                                     </div>
                                 </div>
                             </div>
-                            
+                            <div class="col-xl-4 col-lg-4">
+                                <div class="dashboard__card bg__white padding-20 radius-10">
+                                    <div class="dashboard__card__header">
+                                        <div class="dashboard__card__header__flex">
+                                            <div class="dashboard__card__header__left">
+                                                <h5 class="dashboard__card__header__title"><?php echo e(__('Services')); ?>
+
+                                                    <p><?php echo e(__('Total Services:')); ?> <?php echo e($total_services); ?></p>
+                                                </h5>
+                                            </div>
+                                            <div class="dashboard__card__header__right">
+                                                <select id="serviceTimeIntervalSelect" class="select2_activation">
+                                                    <?php $__currentLoopData = ['This Week','Last Week','This Month','Last Month','This Year','Last Year']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $option): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($key); ?>"><?php echo e($option); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="chart__item__inner mt-4">
+                                        <canvas id="lineChartListings"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4">
+                                <div class="dashboard__card bg__white padding-20 radius-10">
+                                    <div class="dashboard__card__header">
+                                        <div class="dashboard__card__header__flex">
+                                            <div class="dashboard__card__header__left">
+                                                <h5 class="dashboard__card__header__title"><?php echo e(__('Products')); ?>
+
+                                                    <p><?php echo e(__('Total Products:')); ?> <?php echo e($total_products); ?></p>
+                                                </h5>
+                                            </div>
+                                            <div class="dashboard__card__header__right">
+                                                <select id="productTimeIntervalSelect" class="select2_activation">
+                                                    <?php $__currentLoopData = ['This Week','Last Week','This Month','Last Month','This Year','Last Year']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $option): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($key); ?>"><?php echo e($option); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="chart__item__inner mt-4">
+                                        <canvas id="lineChartProductListings"></canvas>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row g-4 mt-1">
                             <div class="col-lg-4">

@@ -127,13 +127,13 @@
 
 
 <!-- Integration Module -->
-@can('integration-list')
+{{-- @can('integration-list')
 <li class="dashboard__bottom__list__item @if(request()->is('admin/integrations-manage*')) active @endif">
     <a href="{{route('admin.integration')}}"><i class="las la-puzzle-piece"></i>
         <span class="icon_title">{{ __('Integration') }}</span>
     </a>
 </li>
-@endcan
+@endcan --}}
 
 
 <!-- Support Ticket Module -->
@@ -158,7 +158,7 @@
 @endcanany
 
 <!-- Pages Module -->
-<li class="dashboard__bottom__list__item has-children @if(request()->is('admin/plugin-manage/*')) active open @endif">
+{{-- <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/plugin-manage/*')) active open @endif">
     <a href="javascript:void(0)"><i class="las la-plug"></i>
         <span class="icon_title">{{ __('Plugins Manage') }}</span>
     </a>
@@ -174,7 +174,7 @@
             </li>
         @endcan
     </ul>
-</li>
+</li> --}}
 
 @can('payment-currency-settings')
 <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/payment-settings/*') || request()->is('admin/payment-gateway/currency-settings')) active open @endif">

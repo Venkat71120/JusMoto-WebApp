@@ -15429,3 +15429,5 @@ Did you mean one of these?
 #68 C:/xampp/htdocs/JusMoto-WebApp/core/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(23): require_once('C://xampp//htdocs...')
 #69 {main}
 "} 
+[2026-02-06 13:26:37] local.INFO: error: Attempt to read property "name" on null  
+[2026-02-06 13:28:00] local.INFO: error: Attempt to read property "name" on null  

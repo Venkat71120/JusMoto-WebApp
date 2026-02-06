@@ -345,26 +345,7 @@
               <?php endif; ?>
 
                     <!-- Pages Manage -->
-                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['dynamic-page-list', 'dynamic-page-add'])): ?>
-                        <li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/dynamic-page*')): ?> active open <?php endif; ?>">
-                            <a href="javascript:void(0)">
-                                <i class="las la-paste"></i>
-                                <span class="icon_title"><?php echo e(__('Pages')); ?></span>
-                            </a>
-                            <ul class="submenu <?php if(request()->is('admin/dynamic-page/*')): ?> d-block <?php endif; ?>">
-                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('dynamic-page-list')): ?>
-                                    <li class="dashboard__bottom__list__item <?php if(request()->is('admin/dynamic-page/all')): ?> selected <?php endif; ?>">
-                                        <a href="<?php echo e(route('admin.page')); ?>"><?php echo e(__('All Pages')); ?></a>
-                                    </li>
-                                <?php endif; ?>
-                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('dynamic-page-add')): ?>
-                                    <li class="dashboard__bottom__list__item <?php if(request()->is('admin/dynamic-page/new')): ?> selected <?php endif; ?>">
-                                        <a href="<?php echo e(route('admin.page.new')); ?>"><?php echo e(__('Add New Page')); ?></a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </li>
-                    <?php endif; ?>
+                    
 
                     <!-- Wallet Management -->
                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['admin-wallet-list', 'admin-wallet-settings', 'admin-transaction-list'])): ?>

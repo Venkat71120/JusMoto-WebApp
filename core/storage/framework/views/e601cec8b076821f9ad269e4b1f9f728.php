@@ -1,2 +1,0 @@
-<link rel="stylesheet" href="<?php echo e(asset('assets/backend/css/jquery.dataTables.min.css')); ?>">
-<?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/components/datatable/css.blade.php ENDPATH**/ ?>

@@ -150,7 +150,7 @@
                                             <!-- brand Info end-->
                                             <div  class="col-lg-12 mt-5">
                                                 <div class="btn_wrapper gap-3">
-                                                    <button class="cmnBtn btn_5 btn_bg_blue radius-5" id="submitBtn" type="submit">{{__('Edit Brand')}}</button>
+                                                    <button class="cmnBtn btn_5 btn_bg_blue radius-5" id="submitBtn" type="submit">{{__('Update Brand')}}</button>
                                                 </div>
                                             </div>
                                         </div>

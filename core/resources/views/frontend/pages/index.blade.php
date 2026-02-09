@@ -3,9 +3,10 @@
     <nav class="navbar navbar-area navbar-expand-lg">
         <div class="custom-container container nav-container">
             <div class="logo-wrapper">
-                <a href="index.html" class="navbar-brand">
-                    <img src="{{ asset('assets/frontend/images/gocar-logo.png') }}" alt="GoCarLogo">
-                </a>
+              <a href="index.html" class="navbar-brand">
+    <img src="{{ asset('assets/uploads/media-uploader/grid/grid-white1770204222.webp') }}" alt="GoCarLogo">
+</a>
+
             </div>
             <div class="responsive-mobile-menu d-lg-none">
                 <a href="#/" class="click-nav-right-icon">
@@ -74,7 +75,7 @@
                             </a>
                         </div>
                         <div class="navbar-right-item">
-                            <a href="http://influencer.test/user-register" class="cmn-btn md-btn primary-btn">
+                            <a href="/login" class="cmn-btn md-btn primary-btn">
                                 Log In
                             </a>
                         </div>

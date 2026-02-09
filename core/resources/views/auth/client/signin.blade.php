@@ -16,6 +16,16 @@
     margin: 0;
     display: block;   /* VERY IMPORTANT */
 }
+.btn-login{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    border:1px solid #ddd;
+    padding:12px;
+    border-radius:6px;
+    text-decoration:none;
+}
 
 .custom-input input {
     width: 100%;
@@ -47,6 +57,7 @@
 
                         <h2 class="subtitle-1">{{get_static_option('login_form_title')}}</h2>
 
+
                         <form action="{{route('auth.login.submit')}}" method="POSt" class="login-form">
                             @csrf
                             <!-- Email -->
@@ -76,9 +87,21 @@
                                 </div>
                             </div>
                             <button type="submit" class="signin-btn">{{get_static_option('login_form_button')}}</button>
+                            
                             <div class="alredy-account text-center black-text fw_medium mt-5">
                                 <p>{{__("Don't have an account? ")}}<a href="{{route('auth.signup')}}" class="primary-text">{{__('Sign up')}}</a></p>
                             </div>
+                            <div>
+      <div class="divider text-center mb-3">
+        <span>{{ __('OR') }}</span>
+    </div>
+    <div class="from-control-login mb-3">
+        <a href="{{ route('login.google.redirect') }}" class="btn-login w-100">
+            <img src="{{ asset('assets/frontend/images/google.png') }}" alt="Google" />
+            {{ __('Continue with Google') }}
+        </a>
+    </div>
+</div>
                             @if(preg_match('/(bytesed)/',url('/')))
                                 <div class="adminlogin-info mt-3">
                                     <table class="table">
@@ -98,6 +121,7 @@
                                 </div>
                             @endif
                         </form>
+                        
                     </div>
                 </div>
 

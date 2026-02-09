@@ -336,9 +336,10 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], f
 
     //dynamic single page
     Route::controller(App\Http\Controllers\Frontend\FrontendController::class)->group(function(){
-      Route::get('/', function () {
-    return redirect()->route('auth.login');
+    Route::get('/', function () {
+    return view('frontend.pages.index');
 })->name('homepage');
+
         Route::get('/{slug}', 'dynamic_single_page')->name('frontend.dynamic.page');
     });
 

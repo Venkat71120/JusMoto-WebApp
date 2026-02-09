@@ -16,6 +16,16 @@
     margin: 0;
     display: block;   /* VERY IMPORTANT */
 }
+.btn-login{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    border:1px solid #ddd;
+    padding:12px;
+    border-radius:6px;
+    text-decoration:none;
+}
 
 .custom-input input {
     width: 100%;
@@ -48,6 +58,7 @@
 
                         <h2 class="subtitle-1"><?php echo e(get_static_option('login_form_title')); ?></h2>
 
+
                         <form action="<?php echo e(route('auth.login.submit')); ?>" method="POSt" class="login-form">
                             <?php echo csrf_field(); ?>
                             <!-- Email -->
@@ -77,9 +88,22 @@
                                 </div>
                             </div>
                             <button type="submit" class="signin-btn"><?php echo e(get_static_option('login_form_button')); ?></button>
+                            
                             <div class="alredy-account text-center black-text fw_medium mt-5">
                                 <p><?php echo e(__("Don't have an account? ")); ?><a href="<?php echo e(route('auth.signup')); ?>" class="primary-text"><?php echo e(__('Sign up')); ?></a></p>
                             </div>
+                            <div>
+      <div class="divider text-center mb-3">
+        <span><?php echo e(__('OR')); ?></span>
+    </div>
+    <div class="from-control-login mb-3">
+        <a href="<?php echo e(route('login.google.redirect')); ?>" class="btn-login w-100">
+            <img src="<?php echo e(asset('assets/frontend/images/google.png')); ?>" alt="Google" />
+            <?php echo e(__('Continue with Google')); ?>
+
+        </a>
+    </div>
+</div>
                             <?php if(preg_match('/(bytesed)/',url('/'))): ?>
                                 <div class="adminlogin-info mt-3">
                                     <table class="table">
@@ -99,6 +123,7 @@
                                 </div>
                             <?php endif; ?>
                         </form>
+                        
                     </div>
                 </div>
 

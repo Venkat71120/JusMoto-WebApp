@@ -1,8 +1,8 @@
-@extends('frontend.layout.master')
-@section('site-title')
-    {{ __('Registration') }} - {{ get_static_option('site_title') }}
-@endsection
-@section('content')
+<?php $__env->startSection('site-title'); ?>
+    <?php echo e(__('Registration')); ?> - <?php echo e(get_static_option('site_title')); ?>
+
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('content'); ?>
     <style>
         /* Password input wrapper */
 
@@ -40,37 +40,39 @@
                 <!-- Left Side -->
                 <div class="left-card-wrapper">
                     <div class="login-left-card">
-                        @if(!empty(get_static_option('register_page_social_login_show_hide')))
+                        <?php if(!empty(get_static_option('register_page_social_login_show_hide'))): ?>
                             <!--  Back Button -->
                             <div class="back-btn">
-                                <a href="{{ route('auth.social.login') }}">
+                                <a href="<?php echo e(route('auth.social.login')); ?>">
                                     <span><i class="fa-solid fa-arrow-left"></i></span>
-                                    {{__('Back')}}
+                                    <?php echo e(__('Back')); ?>
+
                                 </a>
                             </div>
-                        @endif
-                        <h2 class="subtitle-1 mb-2">{{get_static_option('register_page_title')}}</h2>
+                        <?php endif; ?>
+                        <h2 class="subtitle-1 mb-2"><?php echo e(get_static_option('register_page_title')); ?></h2>
                        <div>
 
                             <div class="from-control-login mb-3">
-                                <a href="{{ route('login.google.redirect') }}" class="btn-login w-100">
-                                    <img src="{{ asset('assets/frontend/images/google.png') }}" alt="Google" />
-                                    {{ __('Continue with Google') }}
+                                <a href="<?php echo e(route('login.google.redirect')); ?>" class="btn-login w-100">
+                                    <img src="<?php echo e(asset('assets/frontend/images/google.png')); ?>" alt="Google" />
+                                    <?php echo e(__('Continue with Google')); ?>
+
                                 </a>
                             </div>
 
                             <div class="divider text-center mb-3">
-                                <span>{{ __('OR') }}</span>
+                                <span><?php echo e(__('OR')); ?></span>
                             </div>
                        </div>
 
 
-                        <form action="{{route('auth.signup.submit')}}" method="POSt" class="register-form mt-2">
-                            @csrf
+                        <form action="<?php echo e(route('auth.signup.submit')); ?>" method="POSt" class="register-form mt-2">
+                            <?php echo csrf_field(); ?>
                             <!-- Email -->
-                            <label class="mt-2" for="email">{{__('Email')}}</label>
+                            <label class="mt-2" for="email"><?php echo e(__('Email')); ?></label>
                             <div class="input-group">
-                                <input type="email" id="email" name="email" class="custom-input" value="{{old('email')}}"
+                                <input type="email" id="email" name="email" class="custom-input" value="<?php echo e(old('email')); ?>"
                                     placeholder="Enter email" />
                             </div>
                             <div>
@@ -79,10 +81,10 @@
 
 
                             <!-- Password -->
-                            <label for="password">{{__('Password')}}</label>
+                            <label for="password"><?php echo e(__('Password')); ?></label>
                             <div class="input-group custom-input relative_wrapper">
                                 <input type="password" id="password" name="password" class="w-100 pss-input"
-                                    value="{{old('password')}}" placeholder="Enter password" />
+                                    value="<?php echo e(old('password')); ?>" placeholder="Enter password" />
                                 <div class="pass_eye_btn">
                                     <i class="base-icon ti tabler-eye d-none"></i>
                                     <i class="base-icon ti tabler-eye-off "></i>
@@ -93,10 +95,10 @@
                             </div>
 
                             <!-- confirm Password -->
-                            <label for="confirm_password">{{__('Confirm Password')}}</label>
+                            <label for="confirm_password"><?php echo e(__('Confirm Password')); ?></label>
                             <div class="input-group custom-input relative_wrapper">
                                 <input type="password" id="confirm_password" name="confirm_password" class="w-100 pss-input"
-                                    value="{{old('confirm_password')}}" placeholder="Enter password" />
+                                    value="<?php echo e(old('confirm_password')); ?>" placeholder="Enter password" />
                                 <div class="pass_eye_btn">
                                     <i class="base-icon ti tabler-eye d-none"></i>
                                     <i class="base-icon ti tabler-eye-off "></i>
@@ -105,33 +107,33 @@
                             <span id="check_password_match" class="d-none"></span>
 
                             <div class="d-flex flex-wrap gap-4 mb-2 mt-3">
-                                @if((!empty(get_static_option('site_google_captcha_enable'))))
+                                <?php if((!empty(get_static_option('site_google_captcha_enable')))): ?>
                                     <div class="col-md-12 mb-3">
                                         <div class="g-recaptcha" id="recaptcha_element_register"
-                                            data-sitekey="{{ get_static_option('recaptcha_2_site_key') ?? '' }}"></div>
-                                        @if ($errors->has('g-recaptcha-response'))
-                                            <span class="text-danger">{{ $errors->first('g-recaptcha-response') }}</span>
-                                        @endif
+                                            data-sitekey="<?php echo e(get_static_option('recaptcha_2_site_key') ?? ''); ?>"></div>
+                                        <?php if($errors->has('g-recaptcha-response')): ?>
+                                            <span class="text-danger"><?php echo e($errors->first('g-recaptcha-response')); ?></span>
+                                        <?php endif; ?>
                                     </div>
-                                @endif
+                                <?php endif; ?>
 
                             </div>
 
                             <div>
-                                @php
+                                <?php
                                     $slug = get_static_option('select_terms_condition_page') ?? '';
-                                @endphp
+                                ?>
 
-                                <input type="checkbox" name="agree" id="agree" class="custom-checkbox" {{ old('agree') ? 'checked' : '' }}>
-                                <label for="agree" class="custom-label">{{__('I agree to the')}} <a target="_blank"
-                                        href="{{ url('/') . '/' . $slug }}"
-                                        class="text-decoration-underline fw-bold">{{__('Terms & Conditions')}}</a></label>
+                                <input type="checkbox" name="agree" id="agree" class="custom-checkbox" <?php echo e(old('agree') ? 'checked' : ''); ?>>
+                                <label for="agree" class="custom-label"><?php echo e(__('I agree to the')); ?> <a target="_blank"
+                                        href="<?php echo e(url('/') . '/' . $slug); ?>"
+                                        class="text-decoration-underline fw-bold"><?php echo e(__('Terms & Conditions')); ?></a></label>
                             </div>
 
-                            <button type="submit" class="signin-btn">{{get_static_option('register_page_button')}}</button>
+                            <button type="submit" class="signin-btn"><?php echo e(get_static_option('register_page_button')); ?></button>
                             <div class="alredy-account text-center black-text fw_medium mt-3">
-                                <p>{{__("Already have an account? ")}}<a href="{{route('auth.login')}}"
-                                        class="primary-text">{{__('Sign in')}}</a></p>
+                                <p><?php echo e(__("Already have an account? ")); ?><a href="<?php echo e(route('auth.login')); ?>"
+                                        class="primary-text"><?php echo e(__('Sign in')); ?></a></p>
                             </div>
                         </form>
                     </div>
@@ -139,14 +141,14 @@
 
                 <!-- Right Side -->
                 <div class="login-right-part d-sm-none d-md-block d-lg-block d-none">
-                    <img src="{{ asset('assets/frontend/images/Signupimg.png') }}" alt="Register Image">
+                    <img src="<?php echo e(asset('assets/frontend/images/Signupimg.png')); ?>" alt="Register Image">
 
                 </div>
             </div>
         </section>
     </main>
-@endsection
-@section('scripts')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('scripts'); ?>
     <script src='https://www.google.com/recaptcha/api.js'></script>
     <script>
         $(document).ready(function () {
@@ -156,7 +158,7 @@
 
                 if (emailRegex.test(email)) {
                     $.ajax({
-                        url: "{{ route('user.email.availability') }}",
+                        url: "<?php echo e(route('user.email.availability')); ?>",
                         type: 'post',
                         data: { email: email },
                         headers: {
@@ -174,7 +176,7 @@
                 } else if (email.length > 0) {
                     $("#email_availability")
                         .removeClass("d-none")
-                        .text("{{ __('Enter valid email') }}")
+                        .text("<?php echo e(__('Enter valid email')); ?>")
                         .css("color", "red");
                 } else {
                     $("#email_availability").addClass("d-none").text("");
@@ -224,4 +226,5 @@
         });
     </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('frontend.layout.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/auth/client/signup.blade.php ENDPATH**/ ?>

@@ -22,7 +22,8 @@ class Admin extends Authenticatable
         'username',
         'email_verified',
         'about',
-        'status'
+        'status',
+        'outlet_location_id'
     ];
 
     protected $hidden = [
@@ -40,4 +41,10 @@ class Admin extends Authenticatable
     {
         return $this->hasMany(Review::class, 'admin_id', 'id');
     }
+    // Admin.php
+public function outletLocation()
+{
+    return $this->belongsTo(Admin_outlet_location::class, 'outlet_location_id');
+}
+
 }

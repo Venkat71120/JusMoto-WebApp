@@ -68,6 +68,24 @@ class AdminServiceOrderManageController extends Controller
         }
         return redirect()->back()->with(FlashMsg::settings_update());
     }
+    public function allocateSubAdmin(Request $request)
+{
+    // Validate input
+    $request->validate([
+        'order_id' => 'required|exists:orders,id',
+        'franchise_admin_id' => 'required|exists:admins,id',
+    ]);
+
+    // Find order
+    $order = Order::find($request->order_id);
+
+    // Save allocated admin
+    $order->franchise_admin_id = $request->franchise_admin_id;
+    $order->save();
+
+    return redirect()->back()->with('success', 'Order allocated successfully.');
+}
+
 public function allocateOrderToFranchise(Request $request)
 {
     $request->validate([
@@ -87,7 +105,14 @@ public function allAdminOrders(Request $request){
     $status = $request->input('status', 'all');
 
     // Orders query
-    $query = Order::with('user','OrderLocations', 'staff','orderItems');
+   $query = Order::with([
+    'user',
+    'OrderLocations',
+    'staff',
+    'orderItems',
+    'franchiseAdmin.outletLocation'
+]);
+
 
     if ($status !== 'all') {
         $query->where('status', (int)$status);

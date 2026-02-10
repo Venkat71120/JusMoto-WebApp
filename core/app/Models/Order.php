@@ -88,5 +88,9 @@ class Order extends Model
     {
       return $this->hasMany(Review::class);
     }
+public function franchiseAdmin()
+{
+    return $this->belongsTo(Admin::class, 'franchise_admin_id');
+}
 
 }

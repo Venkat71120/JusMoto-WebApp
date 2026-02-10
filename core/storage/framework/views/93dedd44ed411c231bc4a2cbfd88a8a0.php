@@ -127,7 +127,13 @@
 
 
 <!-- Integration Module -->
-
+<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('integration-list')): ?>
+<li class="dashboard__bottom__list__item <?php if(request()->is('admin/integrations-manage*')): ?> active <?php endif; ?>">
+    <a href="<?php echo e(route('admin.integration')); ?>"><i class="las la-puzzle-piece"></i>
+        <span class="icon_title"><?php echo e(__('Integration')); ?></span>
+    </a>
+</li>
+<?php endif; ?>
 
 
 <!-- Support Ticket Module -->
@@ -152,7 +158,23 @@
 <?php endif; ?>
 
 <!-- Pages Module -->
-
+<li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/plugin-manage/*')): ?> active open <?php endif; ?>">
+    <a href="javascript:void(0)"><i class="las la-plug"></i>
+        <span class="icon_title"><?php echo e(__('Plugins Manage')); ?></span>
+    </a>
+    <ul class="submenu <?php if(request()->is('admin/plugin-manage/*')): ?> d-block <?php endif; ?>">
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('plugins-list')): ?>
+            <li class="dashboard__bottom__list__item <?php if(request()->is('admin/plugin-manage/all')): ?> selected <?php endif; ?>">
+                <a href="<?php echo e(route('admin.plugin.manage.all')); ?>"><?php echo e(__('All Plugins')); ?></a>
+            </li>
+        <?php endif; ?>
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('plugins-add')): ?>
+            <li class="dashboard__bottom__list__item <?php if(request()->is('admin/plugin-manage/new')): ?> selected <?php endif; ?>">
+                <a href="<?php echo e(route('admin.plugin.manage.new')); ?>"><?php echo e(__('Add New Plugin')); ?></a>
+            </li>
+        <?php endif; ?>
+    </ul>
+</li>
 
 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('payment-currency-settings')): ?>
 <li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/payment-settings/*') || request()->is('admin/payment-gateway/currency-settings')): ?> active open <?php endif; ?>">

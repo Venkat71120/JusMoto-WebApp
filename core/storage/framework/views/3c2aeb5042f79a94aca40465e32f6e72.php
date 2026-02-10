@@ -150,51 +150,7 @@
                 </td>
                 <td> <strong class="subCap"><?php echo e($data->created_at->diffForHumans()); ?></strong></td>
                 <td>
-                    <div class="d-flex" id="order_action">
-                        <?php if (isset($component)) { $__componentOriginal768f8f40d03d4d53d956d4ea52baca68 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal768f8f40d03d4d53d956d4ea52baca68 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.icon.view-icon','data' => ['url' => route('admin.main.order.details',$data->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('icon.view-icon'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.main.order.details',$data->id))]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal768f8f40d03d4d53d956d4ea52baca68)): ?>
-<?php $attributes = $__attributesOriginal768f8f40d03d4d53d956d4ea52baca68; ?>
-<?php unset($__attributesOriginal768f8f40d03d4d53d956d4ea52baca68); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal768f8f40d03d4d53d956d4ea52baca68)): ?>
-<?php $component = $__componentOriginal768f8f40d03d4d53d956d4ea52baca68; ?>
-<?php unset($__componentOriginal768f8f40d03d4d53d956d4ea52baca68); ?>
-<?php endif; ?>
-
-                        <?php if (isset($component)) { $__componentOriginalcfe74fef1e01e8d4a7dcb56a2fb67fde = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalcfe74fef1e01e8d4a7dcb56a2fb67fde = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.icon.file-icon','data' => ['url' => route('admin.order.invoice.generate',$data->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('icon.file-icon'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.order.invoice.generate',$data->id))]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalcfe74fef1e01e8d4a7dcb56a2fb67fde)): ?>
-<?php $attributes = $__attributesOriginalcfe74fef1e01e8d4a7dcb56a2fb67fde; ?>
-<?php unset($__attributesOriginalcfe74fef1e01e8d4a7dcb56a2fb67fde); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalcfe74fef1e01e8d4a7dcb56a2fb67fde)): ?>
-<?php $component = $__componentOriginalcfe74fef1e01e8d4a7dcb56a2fb67fde; ?>
-<?php unset($__componentOriginalcfe74fef1e01e8d4a7dcb56a2fb67fde); ?>
-<?php endif; ?>
-                    </div>        
-                </td>
-                <td>
+                
     <div class="d-flex" id="order_action">
         <?php if (isset($component)) { $__componentOriginal768f8f40d03d4d53d956d4ea52baca68 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal768f8f40d03d4d53d956d4ea52baca68 = $attributes; } ?>
@@ -238,13 +194,14 @@
 <?php endif; ?>
         
         <!-- Allocate Admin Button -->
-        <button type="button"
-                class="btn btn-sm btn-warning ms-2 openAllocateModal"
-                data-admin-id="<?php echo e($data->id); ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#AllocateSubAdminModal">
-            <i class="las la-user-cog"></i> Allocate
-        </button>
+       <button type="button"
+    class="btn btn-sm btn-warning openAllocateModal"
+   data-order-id="<?php echo e($data->id); ?>"
+data-current-admin-name="<?php echo e(optional($data->franchiseAdmin)->name ?? ''); ?>">
+
+    <i class="las la-user-cog"></i> Allocate
+</button>
+
     </div>        
 </td>
 

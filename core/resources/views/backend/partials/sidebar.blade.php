@@ -343,7 +343,7 @@
               @endcanany
 
                     <!-- Pages Manage -->
-                    {{-- @canany(['dynamic-page-list', 'dynamic-page-add'])
+                    @canany(['dynamic-page-list', 'dynamic-page-add'])
                         <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/dynamic-page*')) active open @endif">
                             <a href="javascript:void(0)">
                                 <i class="las la-paste"></i>
@@ -362,7 +362,7 @@
                                 @endcan
                             </ul>
                         </li>
-                    @endcanany --}}
+                    @endcanany
 
                     <!-- Wallet Management -->
                     @canany(['admin-wallet-list', 'admin-wallet-settings', 'admin-transaction-list'])

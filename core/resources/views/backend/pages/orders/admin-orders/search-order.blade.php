@@ -92,25 +92,20 @@
                 </td>
                 <td> <strong class="subCap">{{ $data->created_at->diffForHumans() }}</strong></td>
                 <td>
-                    <div class="d-flex" id="order_action">
-                        <x-icon.view-icon :url="route('admin.main.order.details',$data->id)"/>
-
-                        <x-icon.file-icon :url="route('admin.order.invoice.generate',$data->id)"/>
-                    </div>        
-                </td>
-                <td>
+                
     <div class="d-flex" id="order_action">
         <x-icon.view-icon :url="route('admin.main.order.details',$data->id)"/>
         <x-icon.file-icon :url="route('admin.order.invoice.generate',$data->id)"/>
         
         <!-- Allocate Admin Button -->
-        <button type="button"
-                class="btn btn-sm btn-warning ms-2 openAllocateModal"
-                data-admin-id="{{ $data->id }}"
-                data-bs-toggle="modal"
-                data-bs-target="#AllocateSubAdminModal">
-            <i class="las la-user-cog"></i> Allocate
-        </button>
+       <button type="button"
+    class="btn btn-sm btn-warning openAllocateModal"
+   data-order-id="{{ $data->id }}"
+data-current-admin-name="{{ optional($data->franchiseAdmin)->name ?? '' }}">
+
+    <i class="las la-user-cog"></i> Allocate
+</button>
+
     </div>        
 </td>
 

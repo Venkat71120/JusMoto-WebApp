@@ -80,12 +80,11 @@
         </form>
     </div>
     <!-- Allocate SubAdmin Modal -->
-    <div class="modal fade" id="AllocateSubAdminModal">
+    <div class="modal fade" id="AllocateSubAdminModal" tabindex="-1">
         <div class="modal-dialog">
             <form action="{{ route('admin.allocate.subadmin') }}" method="POST">
                 @csrf
-
-                <input type="hidden" name="admin_id" id="allocate_admin_id">
+                <input type="hidden" name="order_id" id="allocate_order_id">
 
                 <div class="modal-content">
                     <div class="modal-header">
@@ -94,43 +93,23 @@
                     </div>
 
                     <div class="modal-body">
-    @php
-        // Get currently allocated admin for the order if exists
-        $currentAdmin = null;
-        if(isset($order)) {
-            $currentAdmin = $order->franchise_admin_id
-                ? $franchiseAdmins->firstWhere('id', $order->franchise_admin_id)
-                : null;
-        }
-    @endphp
 
-    @if($currentAdmin)
-        <div class="mb-3">
-            <label class="form-label">Currently Allocated Admin:</label>
-            <div class="badge bg-info text-white p-2">
-                {{ $currentAdmin->name }}
-                @if($currentAdmin->outletLocation)
-                    ({{ $currentAdmin->outletLocation->name }})
-                @endif
-            </div>
-        </div>
-    @endif
+                        <label>Currently Allocated Admin:</label>
+                        <div id="currentAdminLabel" class="badge bg-info text-white p-2"></div>
 
-    <label class="form-label">Select Admin to Allocate</label>
-    <select name="franchise_admin_id" class="form-control">
-        <option value="">-- Select Admin --</option>
-        @foreach($franchiseAdmins as $admin)
-            <option value="{{ $admin->id }}">
-                {{ $admin->name }} 
-                @if($admin->outletLocation)
-                    ({{ $admin->outletLocation->name }})
-                @endif
-            </option>
-        @endforeach
-    </select>
-</div>
-
-
+                        <label>Select Admin to Allocate</label>
+                        <select name="franchise_admin_id" class="form-control" required>
+                            <option value="">-- Select Admin --</option>
+                            @foreach($franchiseAdmins as $admin)
+                                <option value="{{ $admin->id }}">
+                                    {{ $admin->name }}
+                                    @if($admin->outletLocation)
+                                        ({{ $admin->outletLocation->name }})
+                                    @endif
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <div class="modal-footer">
                         <button class="btn btn-primary">Save Allocation</button>
@@ -140,21 +119,25 @@
         </div>
     </div>
 
+
     @include('backend.pages.orders.manual-payment-file-modal')
 @endsection
 @section('scripts')
     <script type="text/javascript">
         $(document).on('click', '.openAllocateModal', function () {
+            let orderId = $(this).data('order-id');
+            let currentAdminName = $(this).data('current-admin-name');
 
-            let adminId = $(this).data('admin-id');
-            let outletId = $(this).data('outlet-id');
+            $('#allocate_order_id').val(orderId);
 
-            $('#allocate_admin_id').val(adminId);
-
-            if (outletId) {
-                $('#AllocateSubAdminModal select[name="outlet_location_id"]').val(outletId);
+            if (currentAdminName) {
+                $('#currentAdminLabel').text(currentAdminName);
+            } else {
+                $('#currentAdminLabel').text('Not allocated yet');
             }
 
+            var modal = new bootstrap.Modal(document.getElementById('AllocateSubAdminModal'));
+            modal.show();
         });
 
         (function () {

@@ -11,7 +11,7 @@
 @endcanany
 
 
-@canany(['delivery-charge-settings', 'delivery-charge-list', 'delivery-charge-new', 'delivery-charge-edit-add'])
+{{-- @canany(['delivery-charge-settings', 'delivery-charge-list', 'delivery-charge-new', 'delivery-charge-edit-add'])
 <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/delivery-charge/*')) active open @endif">
     <a href="javascript:void(0)"><i class="las la-file-invoice-dollar"></i>
         <span class="icon_title">{{ __('Delivery Charge Settings') }}</span>
@@ -34,7 +34,7 @@
 
     </ul>
 </li>
-@endcanany
+@endcanany --}}
 
 
 @canany(['tax-settings', 'tax-list', 'tax-new', 'tax-edit-add'])

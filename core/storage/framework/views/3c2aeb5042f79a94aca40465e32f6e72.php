@@ -157,7 +157,7 @@
                     <td> <strong class="subCap"><?php echo e($data->created_at->diffForHumans()); ?></strong></td>
                     <td>
 
-               <div class="d-flex gap-1" id="order_action">
+               <div class="d-flex gap-2" id="order_action">
     <?php if (isset($component)) { $__componentOriginal768f8f40d03d4d53d956d4ea52baca68 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal768f8f40d03d4d53d956d4ea52baca68 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.icon.view-icon','data' => ['url' => route('admin.main.order.details', $data->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>

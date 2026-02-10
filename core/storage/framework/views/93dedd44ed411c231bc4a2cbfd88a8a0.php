@@ -11,30 +11,7 @@
 <?php endif; ?>
 
 
-<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['delivery-charge-settings', 'delivery-charge-list', 'delivery-charge-new', 'delivery-charge-edit-add'])): ?>
-<li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/delivery-charge/*')): ?> active open <?php endif; ?>">
-    <a href="javascript:void(0)"><i class="las la-file-invoice-dollar"></i>
-        <span class="icon_title"><?php echo e(__('Delivery Charge Settings')); ?></span>
-    </a>
-    <ul class="submenu <?php if(request()->is('admin/delivery-charge/*')): ?> d-block <?php endif; ?>">
-        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/delivery-charge/settings')): ?> selected <?php endif; ?>">
-            <a href="<?php echo e(route('admin.delivery-charge.settings')); ?>"><?php echo e(__('Delivery Charge Manage')); ?></a>
-        </li>
-        
-        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/delivery-charge/state')): ?> selected <?php endif; ?>">
-            <a href="<?php echo e(route('admin.delivery-charge.state.all')); ?>"><?php echo e(__('State Delivery Charge')); ?></a>
-        </li> 
-        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/delivery-charge/city')): ?> selected <?php endif; ?>">
-            <a href="<?php echo e(route('admin.delivery-charge.city.all')); ?>"><?php echo e(__('City Delivery Charge')); ?></a>
-        </li>
-   
-       
-        
-      
 
-    </ul>
-</li>
-<?php endif; ?>
 
 
 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['tax-settings', 'tax-list', 'tax-new', 'tax-edit-add'])): ?>

@@ -63,20 +63,7 @@
                 <?php endif; ?>
 
                 <!--Review List -->
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['review-list'])): ?>
-                <li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/review/*')): ?> active open <?php endif; ?>">
-                    <a href="javascript:void(0)"><i class="las la-th-list"></i>
-                        <span class="icon_title"><?php echo e(__('Reviews List')); ?></span>
-                    </a>
-                    <ul class="submenu <?php if(request()->is('admin/review/*')): ?> d-block <?php endif; ?>">
-                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('review-list')): ?>
-                        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/review/all')): ?> selected <?php endif; ?>">
-                            <a href="<?php echo e(route('admin.review.all')); ?>"><?php echo e(__('All Reviews')); ?></a>
-                        </li>
-                        <?php endif; ?>
-                    </ul>
-                </li>
-               <?php endif; ?>
+                
 
                 <!--Admin outlet address  manage -->
                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['admin-outletAddress-all','admin-outletAddress-add'])): ?>
@@ -213,26 +200,7 @@
                <?php endif; ?>
 
 
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['offer-list', 'offer-add'])): ?>
-                    <li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/offer*')): ?> active open <?php endif; ?>">
-                        <a href="javascript:void(0)">
-                            <i class="las la-paste"></i>
-                            <span class="icon_title"><?php echo e(__('Offers')); ?></span>
-                        </a>
-                        <ul class="submenu <?php if(request()->is('admin/offer/*')): ?> d-block <?php endif; ?>">
-                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('offer-list')): ?>
-                                <li class="dashboard__bottom__list__item <?php if(request()->routeIs(['admin.offer.all'])): ?> selected <?php endif; ?>">
-                                    <a href="<?php echo e(route('admin.offer.all')); ?>"><?php echo e(__('All Offers')); ?></a>
-                                </li>
-                            <?php endif; ?>
-                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('offer-add')): ?>
-                                <li class="dashboard__bottom__list__item <?php if(request()->routeIs(['admin.offer.add'])): ?> selected <?php endif; ?>">
-                                    <a href="<?php echo e(route('admin.offer.add')); ?>"><?php echo e(__('Add New Offer')); ?></a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    </li>
-                <?php endif; ?>
+                
 
                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['blog-list', 'blog-add'])): ?>
                         <li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/blog*')): ?> active open <?php endif; ?>">
@@ -367,31 +335,7 @@
                     <?php endif; ?>
 
                     <!-- Wallet Management -->
-                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['admin-wallet-list', 'admin-wallet-settings', 'admin-transaction-list'])): ?>
-                        <li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/wallet/*')): ?> active open <?php endif; ?>">
-                            <a href="javascript:void(0)">
-                                <i class="las la-wallet"></i>
-                                <span class="icon_title"><?php echo e(__('Wallet Management')); ?></span>
-                            </a>
-                            <ul class="submenu" style="<?php if(request()->is('admin/wallet/*')): ?> display:block; <?php endif; ?>">
-                                
-                                
-                                
-                                
-                                
-                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin-wallet-list')): ?>
-                                    <li class="dashboard__bottom__list__item <?php if(request()->routeIs(['admin.wallet.wallets', 'admin.wallet.wallets.show'])): ?> selected <?php endif; ?>">
-                                        <a href="<?php echo e(route('admin.wallet.wallets')); ?>"><?php echo e(__('All Wallets')); ?></a>
-                                    </li>
-                                <?php endif; ?>
-                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin-transaction-list')): ?>
-                                    <li class="dashboard__bottom__list__item <?php if(request()->routeIs(['admin.wallet.transactions', 'admin.wallet.transactions.show'])): ?> selected <?php endif; ?>">
-                                        <a href="<?php echo e(route('admin.wallet.transactions')); ?>"><?php echo e(__('All Transactions')); ?></a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </li>
-                    <?php endif; ?>
+                    
 
 
                 <?php echo $__env->make('backend.partials.module-list', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>

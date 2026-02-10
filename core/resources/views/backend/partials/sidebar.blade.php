@@ -61,7 +61,7 @@
                 @endcanany
 
                 <!--Review List -->
-                @canany(['review-list'])
+                {{-- @canany(['review-list'])
                 <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/review/*')) active open @endif">
                     <a href="javascript:void(0)"><i class="las la-th-list"></i>
                         <span class="icon_title">{{ __('Reviews List') }}</span>
@@ -74,7 +74,7 @@
                         @endcan
                     </ul>
                 </li>
-               @endcanany
+               @endcanany --}}
 
                 <!--Admin outlet address  manage -->
                 @canany(['admin-outletAddress-all','admin-outletAddress-add'])
@@ -210,8 +210,8 @@
                 </li>
                @endcanany
 
-
-                @canany(['offer-list', 'offer-add'])
+{{-- Offers --}}
+                {{-- @canany(['offer-list', 'offer-add'])
                     <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/offer*')) active open @endif">
                         <a href="javascript:void(0)">
                             <i class="las la-paste"></i>
@@ -230,7 +230,7 @@
                             @endcan
                         </ul>
                     </li>
-                @endcanany
+                @endcanany --}}
 
                     @canany(['blog-list', 'blog-add'])
                         <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/blog*')) active open @endif">
@@ -365,18 +365,18 @@
                     @endcanany
 
                     <!-- Wallet Management -->
-                    @canany(['admin-wallet-list', 'admin-wallet-settings', 'admin-transaction-list'])
+                    {{-- @canany(['admin-wallet-list', 'admin-wallet-settings', 'admin-transaction-list'])
                         <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/wallet/*')) active open @endif">
                             <a href="javascript:void(0)">
                                 <i class="las la-wallet"></i>
                                 <span class="icon_title">{{ __('Wallet Management') }}</span>
                             </a>
                             <ul class="submenu" style="@if(request()->is('admin/wallet/*')) display:block; @endif">
-                                {{--                    @can('admin-wallet-settings')--}}
-                                {{--                    <li class="dashboard__bottom__list__item @if(request()->routeIs(['admin.wallet.settings'])) selected @endif">--}}
-                                {{--                        <a href="{{ route('admin.wallet.settings') }}">{{ __('Wallet Settings') }}</a>--}}
-                                {{--                    </li>--}}
-                                {{--                    @endcan--}}
+                                                   @can('admin-wallet-settings')
+                                                   <li class="dashboard__bottom__list__item @if(request()->routeIs(['admin.wallet.settings'])) selected @endif">
+                                                       <a href="{{ route('admin.wallet.settings') }}">{{ __('Wallet Settings') }}</a>
+                                                   </li>
+                                                   @endcan
                                 @can('admin-wallet-list')
                                     <li class="dashboard__bottom__list__item @if(request()->routeIs(['admin.wallet.wallets', 'admin.wallet.wallets.show'])) selected @endif">
                                         <a href="{{ route('admin.wallet.wallets') }}">{{ __('All Wallets') }}</a>
@@ -389,7 +389,7 @@
                                 @endcan
                             </ul>
                         </li>
-                    @endcanany
+                    @endcanany --}}
 
 
                 @include('backend.partials.module-list')

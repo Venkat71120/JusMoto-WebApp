@@ -345,15 +345,11 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], f
     Route::post('get-child-category',[GetCategoryController::class, 'get_child_category'])->name('get.subcategory.with.child.category');
 
     //dynamic single page
-    Route::controller(App\Http\Controllers\Frontend\FrontendController::class)->group(function(){
+  Route::controller(App\Http\Controllers\Frontend\FrontendController::class)->group(function(){
     Route::get('/', function () {
-    return view('frontend.pages.index');
-})->name('homepage');
+        return view('frontend.pages.index');
+    })->name('homepage');
 
         Route::get('/{slug}', 'dynamic_single_page')->name('frontend.dynamic.page');
     });
-
-
 });
-
-

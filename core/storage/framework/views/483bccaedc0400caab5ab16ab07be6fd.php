@@ -75,8 +75,8 @@
                        data-email="<?php echo e($staff->email); ?>"
                        data-phone="<?php echo e($staff->phone); ?>"
                        data-about="<?php echo e($staff->about); ?>"
-                     > <?php echo e(__('Staff Details')); ?>
-
+                     >
+                      
                     </a>
                     <?php if (isset($component)) { $__componentOriginal95a57cf8b726360d66c2d339617390c3 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal95a57cf8b726360d66c2d339617390c3 = $attributes; } ?>

@@ -29,7 +29,7 @@
                                                 <td>{{ $menu->id }}</td>
                                                 <td>{{ $menu->title }}</td>
                                                 <td><x-status.table.menu :status="$menu->status" :menuID="$menu->id" /></td>
-                                                <td>{{ $menu->created_at->diffForHumans() }}</td>
+                                               <td>{{ optional($menu->created_at)->diffForHumans() }}</td>
                                                 <td>
                                                     <x-status.table.select-action :title="__('Select Action')" />
                                                     <ul class="dropdown-menu status_dropdown__list">

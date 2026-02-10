@@ -202,26 +202,7 @@
 
                 
 
-                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['blog-list', 'blog-add'])): ?>
-                        <li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/blog*')): ?> active open <?php endif; ?>">
-                            <a href="javascript:void(0)">
-                                <i class="las la-paste"></i>
-                                <span class="icon_title"><?php echo e(__('Blog')); ?></span>
-                            </a>
-                            <ul class="submenu" style="<?php if(request()->is('admin/blog/*')): ?> display:block; <?php endif; ?>">
-                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('blog-list')): ?>
-                                    <li class="dashboard__bottom__list__item <?php if(request()->routeIs(['admin.blog.index'])): ?> selected <?php endif; ?>">
-                                        <a href="<?php echo e(route('admin.blog.index')); ?>"><?php echo e(__('All Blogs')); ?></a>
-                                    </li>
-                                <?php endif; ?>
-                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('blog-add')): ?>
-                                    <li class="dashboard__bottom__list__item <?php if(request()->routeIs(['admin.blog.create'])): ?> selected <?php endif; ?>">
-                                        <a href="<?php echo e(route('admin.blog.create')); ?>"><?php echo e(__('Add New Blog')); ?></a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </li>
-                    <?php endif; ?>
+                    
 
                       <!-- Brand Manage -->
                       <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['admin-brand-list', 'admin-brand-add'])): ?>
@@ -313,26 +294,7 @@
               <?php endif; ?>
 
                     <!-- Pages Manage -->
-                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['dynamic-page-list', 'dynamic-page-add'])): ?>
-                        <li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/dynamic-page*')): ?> active open <?php endif; ?>">
-                            <a href="javascript:void(0)">
-                                <i class="las la-paste"></i>
-                                <span class="icon_title"><?php echo e(__('Pages')); ?></span>
-                            </a>
-                            <ul class="submenu <?php if(request()->is('admin/dynamic-page/*')): ?> d-block <?php endif; ?>">
-                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('dynamic-page-list')): ?>
-                                    <li class="dashboard__bottom__list__item <?php if(request()->is('admin/dynamic-page/all')): ?> selected <?php endif; ?>">
-                                        <a href="<?php echo e(route('admin.page')); ?>"><?php echo e(__('All Pages')); ?></a>
-                                    </li>
-                                <?php endif; ?>
-                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('dynamic-page-add')): ?>
-                                    <li class="dashboard__bottom__list__item <?php if(request()->is('admin/dynamic-page/new')): ?> selected <?php endif; ?>">
-                                        <a href="<?php echo e(route('admin.page.new')); ?>"><?php echo e(__('Add New Page')); ?></a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </li>
-                    <?php endif; ?>
+                    
 
                     <!-- Wallet Management -->
                     
@@ -340,11 +302,7 @@
 
                 <?php echo $__env->make('backend.partials.module-list', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any('report-reason-list', 'report-reason-edit', 'report-reason-delete', 'report-reason-bulk-delete')): ?>
-                    <li class="dashboard__bottom__list__item <?php if(request()->routeIs('admin.report.reason.all')): ?> active <?php endif; ?>">
-                        <a href="<?php echo e(route('admin.report.reason.all')); ?>"> <i class="las la-question-circle"></i> <?php echo e(__('Reasons')); ?> </a>
-                    </li>
-                <?php endif; ?>
+                
 
                <!-- Refund Manage -->
                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any('refund-payment-gateway-list', 'refund-settings-view', 'refund-payment-gateway-add', 'refund-payment-gateway-edit', 'refund-payment-status-change', 'refund-payment-gateway-delete', 'refund-list', 'refund-status-change', 'refund-fee-settings-view')): ?>

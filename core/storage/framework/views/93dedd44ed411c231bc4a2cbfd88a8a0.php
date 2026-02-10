@@ -1,47 +1,13 @@
 <!-- Support Ticket Module -->
 
 
-<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['coupon-settings', 'coupons-new', 'coupon-list', 'coupon-edit-add', 'coupon-delete-add'])): ?>
-    <li class="dashboard__bottom__list__item <?php if(request()->is(['admin/coupons', 'admin/coupons/*'])): ?> active <?php endif; ?>">
-        <a href="<?php echo e(route('admin.coupon.all')); ?>">
-            <i class="las la-percentage"></i>
-            <span><?php echo e(__('Coupon Manage')); ?></span>
-        </a>
-    </li>
-<?php endif; ?>
 
 
 
 
 
-<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['tax-settings', 'tax-list', 'tax-new', 'tax-edit-add'])): ?>
-<li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/tax/*')): ?> active open <?php endif; ?>">
-    <a href="javascript:void(0)"><i class="las la-file-invoice-dollar"></i>
-        <span class="icon_title"><?php echo e(__('Tax Settings')); ?></span>
-    </a>
-    <ul class="submenu <?php if(request()->is('admin/tax/*')): ?> d-block <?php endif; ?>">
-        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/tax/settings')): ?> selected <?php endif; ?>">
-            <a href="<?php echo e(route('admin.tax.settings')); ?>"><?php echo e(__('Tax Manage Settings')); ?></a>
-        </li>
 
-            <?php if(get_static_option('tax_system') == 'advance_tax_system'): ?>
-                <li class="dashboard__bottom__list__item <?php if(request()->is('admin/tax/settings')): ?> selected <?php endif; ?>">
-                    <a href="<?php echo e(route('admin.tax.tax-class')); ?>"><?php echo e(__('Tax Class')); ?></a>
-                </li>
-            <?php endif; ?>
 
-         <?php if(get_static_option('tax_system') == 'zone_wise_tax_system'): ?>
-                <li class="dashboard__bottom__list__item <?php if(request()->is('admin/tax/state')): ?> selected <?php endif; ?>">
-                    <a href="<?php echo e(route('admin.tax.state.all')); ?>"><?php echo e(__('State Tax')); ?></a>
-                </li>
-                <li class="dashboard__bottom__list__item <?php if(request()->is('admin/tax/city')): ?> selected <?php endif; ?>">
-                    <a href="<?php echo e(route('admin.tax.city.all')); ?>"><?php echo e(__('City Tax')); ?></a>
-                </li>
-            <?php endif; ?>
-
-    </ul>
-</li>
-<?php endif; ?>
 
 <!-- Admin Manage Role Module -->
 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin-role-manage')): ?>
@@ -104,13 +70,7 @@
 
 
 <!-- Integration Module -->
-<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('integration-list')): ?>
-<li class="dashboard__bottom__list__item <?php if(request()->is('admin/integrations-manage*')): ?> active <?php endif; ?>">
-    <a href="<?php echo e(route('admin.integration')); ?>"><i class="las la-puzzle-piece"></i>
-        <span class="icon_title"><?php echo e(__('Integration')); ?></span>
-    </a>
-</li>
-<?php endif; ?>
+
 
 
 <!-- Support Ticket Module -->
@@ -135,23 +95,7 @@
 <?php endif; ?>
 
 <!-- Pages Module -->
-<li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/plugin-manage/*')): ?> active open <?php endif; ?>">
-    <a href="javascript:void(0)"><i class="las la-plug"></i>
-        <span class="icon_title"><?php echo e(__('Plugins Manage')); ?></span>
-    </a>
-    <ul class="submenu <?php if(request()->is('admin/plugin-manage/*')): ?> d-block <?php endif; ?>">
-        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('plugins-list')): ?>
-            <li class="dashboard__bottom__list__item <?php if(request()->is('admin/plugin-manage/all')): ?> selected <?php endif; ?>">
-                <a href="<?php echo e(route('admin.plugin.manage.all')); ?>"><?php echo e(__('All Plugins')); ?></a>
-            </li>
-        <?php endif; ?>
-        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('plugins-add')): ?>
-            <li class="dashboard__bottom__list__item <?php if(request()->is('admin/plugin-manage/new')): ?> selected <?php endif; ?>">
-                <a href="<?php echo e(route('admin.plugin.manage.new')); ?>"><?php echo e(__('Add New Plugin')); ?></a>
-            </li>
-        <?php endif; ?>
-    </ul>
-</li>
+
 
 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('payment-currency-settings')): ?>
 <li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/payment-settings/*') || request()->is('admin/payment-gateway/currency-settings')): ?> active open <?php endif; ?>">
@@ -182,14 +126,6 @@
 <?php endif; ?>
 
 
-<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('sms-gateway-settings')): ?>
-    <li class="dashboard__bottom__list__item <?php if(request()->routeIs('admin.sms.gateway.settings') || request()->is('admin/sms-gateway-settings/view')): ?> active <?php endif; ?>">
-        <a href="<?php echo e(route('admin.sms.gateway.settings')); ?>"><i class="las la-sms"></i>
-            <span class="icon_title"><?php echo e(__('SMS Gateway')); ?></span>
-            <span class="badge bg-danger"><?php echo e(__('Plugin')); ?></span>
-        </a>
-    </li>
-<?php endif; ?>
 
 <!-- Render all module route start -->
 <?php

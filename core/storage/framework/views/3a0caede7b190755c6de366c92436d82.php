@@ -1,0 +1,2 @@
+<button type="submit" class="<?php echo e($class ?? ''); ?>"><?php echo e($title ?? ''); ?></button>
+<?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/components/btn/submit-btn.blade.php ENDPATH**/ ?>

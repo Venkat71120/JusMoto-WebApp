@@ -165,7 +165,7 @@
                 </li>
                @endcanany
 
-               @canany(['user-list', 'user-deactivated-list', 'user-verify-status', 'user-add','staff-setting'])
+               {{-- @canany(['user-list', 'user-deactivated-list', 'user-verify-status', 'user-add','staff-setting'])
                 <li  class="dashboard__bottom__list__item has-children @if (request()->is('admin/staff*')) active open show @endif">
                     <a href="javascript:void(0)"> <i class="las la-user-circle"></i> {{ __('Admin Staffs Manage') }} </a>
                     <ul class="submenu">
@@ -188,7 +188,7 @@
                         @endcan
                     </ul>
                 </li>
-               @endcanany
+               @endcanany --}}
 
                @canany(['category-list', 'category-add'])
                 <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/category/*')) active open @endif">
@@ -232,7 +232,7 @@
                     </li>
                 @endcanany --}}
 
-                    @canany(['blog-list', 'blog-add'])
+                    {{-- @canany(['blog-list', 'blog-add'])
                         <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/blog*')) active open @endif">
                             <a href="javascript:void(0)">
                                 <i class="las la-paste"></i>
@@ -251,7 +251,7 @@
                                 @endcan
                             </ul>
                         </li>
-                    @endcanany
+                    @endcanany --}}
 
                       <!-- Brand Manage -->
                       @canany(['admin-brand-list', 'admin-brand-add'])
@@ -343,7 +343,7 @@
               @endcanany
 
                     <!-- Pages Manage -->
-                    @canany(['dynamic-page-list', 'dynamic-page-add'])
+                    {{-- @canany(['dynamic-page-list', 'dynamic-page-add'])
                         <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/dynamic-page*')) active open @endif">
                             <a href="javascript:void(0)">
                                 <i class="las la-paste"></i>
@@ -362,7 +362,7 @@
                                 @endcan
                             </ul>
                         </li>
-                    @endcanany
+                    @endcanany --}}
 
                     <!-- Wallet Management -->
                     {{-- @canany(['admin-wallet-list', 'admin-wallet-settings', 'admin-transaction-list'])
@@ -394,11 +394,11 @@
 
                 @include('backend.partials.module-list')
 
-                @canany('report-reason-list', 'report-reason-edit', 'report-reason-delete', 'report-reason-bulk-delete')
+                {{-- @canany('report-reason-list', 'report-reason-edit', 'report-reason-delete', 'report-reason-bulk-delete')
                     <li class="dashboard__bottom__list__item @if(request()->routeIs('admin.report.reason.all')) active @endif">
                         <a href="{{ route('admin.report.reason.all') }}"> <i class="las la-question-circle"></i> {{ __('Reasons') }} </a>
                     </li>
-                @endcanany
+                @endcanany --}}
 
                <!-- Refund Manage -->
                @canany('refund-payment-gateway-list', 'refund-settings-view', 'refund-payment-gateway-add', 'refund-payment-gateway-edit', 'refund-payment-status-change', 'refund-payment-gateway-delete', 'refund-list', 'refund-status-change', 'refund-fee-settings-view')

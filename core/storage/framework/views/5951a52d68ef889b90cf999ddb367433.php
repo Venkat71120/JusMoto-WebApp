@@ -1,0 +1,2 @@
+<a class="cmnBtn btn_5 btn_bg_warning btnIcon radius-5" href="<?php echo e($url ?? ''); ?>"><i class="las la-pen"></i><?php echo e($title ?? ''); ?></a>
+<?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/components/btn/edit.blade.php ENDPATH**/ ?>

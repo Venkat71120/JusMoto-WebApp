@@ -402,31 +402,7 @@ a:hover {
                         </div>
                         <div class="row g-4 mt-1">
                             
-                            <div class="col-xl-4 col-lg-4">
-                                <div class="dashboard__card bg__white radius-10 p-3">
-                                    <div class="dashboard__card__header">
-                                        <div class="dashboard__card__header__flex">
-                                            <div class="dashboard__card__header__left">
-                                                <h5 class="dashboard__card__header__title"><?php echo e(__('Revenue')); ?></h5>
-                                            </div>
-                                            <div class="dashboard__card__header__right">
-                                                <select id="totalIncomeIntervalSelectAll" class="select2_activation">
-                                                    <?php $__currentLoopData = ['Today', 'Yesterday', 'This Week','Last Week','This Month','Last Month','This Year','Last Year']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $option): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                        <option value="<?php echo e($key); ?>"><?php echo e($option); ?></option>
-                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="chart__item__inner mt-4">
-                                            <div class="chart__item__inner mt-4">
-                                                <div class="sales_pipeline_chart">
-                                                    <div id="sales_pipeline"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                 </div>
             </div>

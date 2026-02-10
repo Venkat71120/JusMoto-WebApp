@@ -131,6 +131,26 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('traffic-challan.index') }}" class="sidebar_list_item {{ request()->routeIs('traffic-challan.*') ? 'active' : '' }}">
+                            <svg width="19" height="18" viewBox="0 0 19 18" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_traffic_challan)">
+                                    <path
+                                        d="M4.55469 3.75H14.3047C14.7025 3.75 15.084 3.90804 15.3653 4.18934C15.6467 4.47064 15.8047 4.85218 15.8047 5.25V14.25C15.8047 14.6478 15.6467 15.0294 15.3653 15.3107C15.084 15.592 14.7025 15.75 14.3047 15.75H4.55469C4.15686 15.75 3.77533 15.592 3.49403 15.3107C3.21272 15.0294 3.05469 14.6478 3.05469 14.25V5.25C3.05469 4.85218 3.21272 4.47064 3.49403 4.18934C3.77533 3.90804 4.15686 3.75 4.55469 3.75Z"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path d="M6.05469 7.5H12.8047" stroke="currentColor" stroke-width="1.5"
+                                          stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M6.05469 10.5H12.8047" stroke="currentColor" stroke-width="1.5"
+                                          stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M3.05469 2.25L9.42969 2.25L15.8047 2.25" stroke="currentColor" stroke-width="1.5"
+                                          stroke-linecap="round" stroke-linejoin="round" />
+                                </g>
+                            </svg>
+                            {{__('Traffic Challans')}}
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('client.notification.all') }}" class="sidebar_list_item {{ request()->routeIs('client.notification.all') ? 'active' : '' }}">
                             <svg width="19" height="18" viewBox="0 0 19 18" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">

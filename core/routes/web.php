@@ -26,6 +26,7 @@ use App\Http\Controllers\Frontend\Auth\SignupController;
 use App\Http\Controllers\Frontend\MediaUploadController;
 use App\Http\Controllers\Frontend\NotificationController;
 use App\Http\Controllers\Frontend\OrderPaymentController;
+use App\Http\Controllers\Frontend\TrafficChallanController;
 
 
 
@@ -252,6 +253,16 @@ Route::middleware(['login.check', 'globalVariable','setlangforuser'])->group(fun
     Route::post('/client/media-upload/delete',[MediaUploadController::class, 'deleteUploadMediaFile'])->name('client.upload.media.file.delete');
     // media upload routes for restrict user in demo mode
     Route::post('/client/media-upload/loadmore',  [MediaUploadController::class,'getImageForLoadmore'])->name('client.upload.media.file.loadmore');
+
+// Traffic Challan Routes
+    Route::group(['prefix' => 'client/traffic-challan', 'as' => 'traffic-challan.'], function () {
+        Route::get('/', [TrafficChallanController::class, 'index'])->name('index');
+        Route::post('/fetch', [TrafficChallanController::class, 'fetchChallans'])->name('fetch');
+        Route::get('/history', [TrafficChallanController::class, 'history'])->name('history');
+        Route::get('/details/{id}', [TrafficChallanController::class, 'details'])->name('details');
+        Route::get('/payment/{id}', [TrafficChallanController::class, 'paymentPage'])->name('payment');
+        Route::post('/process-payment/{id}', [TrafficChallanController::class, 'processPayment'])->name('process-payment');
+    });
 });
 
 //...

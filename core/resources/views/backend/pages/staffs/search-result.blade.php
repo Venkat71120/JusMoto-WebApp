@@ -37,7 +37,8 @@
                        data-email="{{ $staff->email }}"
                        data-phone="{{ $staff->phone }}"
                        data-about="{{ $staff->about }}"
-                     > {{ __('Staff Details') }}
+                     >
+                      {{-- {{ __('Staff Details') }} --}}
                     </a>
                     <x-icon.edit-icon :url="route('admin.staff.info.edit', $staff->id)"/>
                    <x-popup.delete-popup :url="route('admin.staff.delete',$staff->id)"/>

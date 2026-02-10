@@ -98,67 +98,67 @@
             </div>
         </form>
     </div>
-   <!-- Allocate SubAdmin Modal -->
-<div class="modal fade" id="AllocateSubAdminModal" tabindex="-1">
-    <div class="modal-dialog">
-        <form action="<?php echo e(route('admin.allocate.subadmin')); ?>" method="POST">
-            <?php echo csrf_field(); ?>
-            <input type="hidden" name="order_id" id="allocate_order_id">
+    <!-- Allocate SubAdmin Modal -->
+    <div class="modal fade" id="AllocateSubAdminModal" tabindex="-1">
+        <div class="modal-dialog">
+            <form action="<?php echo e(route('admin.allocate.subadmin')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
+                <input type="hidden" name="order_id" id="allocate_order_id">
 
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Allocate Subadmin</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Allocate Subadmin</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <label>Currently Allocated Admin:</label>
+                        <div id="currentAdminLabel" class="badge bg-info text-white p-2"></div>
+
+                        <label>Select Admin to Allocate</label>
+                        <select name="franchise_admin_id" class="form-control" required>
+                            <option value="">-- Select Admin --</option>
+                            <?php $__currentLoopData = $franchiseAdmins; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $admin): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($admin->id); ?>">
+                                    <?php echo e($admin->name); ?>
+
+                                    <?php if($admin->outletLocation): ?>
+                                        (<?php echo e($admin->outletLocation->name); ?>)
+                                    <?php endif; ?>
+                                </option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-primary">Save Allocation</button>
+                    </div>
                 </div>
-
-                <div class="modal-body">
-
-                    <label>Currently Allocated Admin:</label>
-                    <div id="currentAdminLabel" class="badge bg-info text-white p-2"></div>
-
-                    <label>Select Admin to Allocate</label>
-                    <select name="franchise_admin_id" class="form-control" required>
-                        <option value="">-- Select Admin --</option>
-                        <?php $__currentLoopData = $franchiseAdmins; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $admin): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <option value="<?php echo e($admin->id); ?>">
-                                <?php echo e($admin->name); ?>
-
-                                <?php if($admin->outletLocation): ?>
-                                    (<?php echo e($admin->outletLocation->name); ?>)
-                                <?php endif; ?>
-                            </option>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </select>
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-primary">Save Allocation</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
 
     <?php echo $__env->make('backend.pages.orders.manual-payment-file-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('scripts'); ?>
     <script type="text/javascript">
-       $(document).on('click', '.openAllocateModal', function () {
-    let orderId = $(this).data('order-id');
-    let currentAdminName = $(this).data('current-admin-name');
+        $(document).on('click', '.openAllocateModal', function () {
+            let orderId = $(this).data('order-id');
+            let currentAdminName = $(this).data('current-admin-name');
 
-    $('#allocate_order_id').val(orderId);
+            $('#allocate_order_id').val(orderId);
 
-    if(currentAdminName){
-        $('#currentAdminLabel').text(currentAdminName);
-    } else {
-        $('#currentAdminLabel').text('Not allocated yet');
-    }
+            if (currentAdminName) {
+                $('#currentAdminLabel').text(currentAdminName);
+            } else {
+                $('#currentAdminLabel').text('Not allocated yet');
+            }
 
-    var modal = new bootstrap.Modal(document.getElementById('AllocateSubAdminModal'));
-    modal.show();
-});
+            var modal = new bootstrap.Modal(document.getElementById('AllocateSubAdminModal'));
+            modal.show();
+        });
 
         (function () {
             "use strict";

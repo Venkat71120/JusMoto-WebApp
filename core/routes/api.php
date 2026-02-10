@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\UserEmailVerifyController;
 use App\Http\Controllers\api\AdminServiceScheduleController;
 use App\Http\Controllers\Api\Outlet\OutletLocationController;
 use App\Http\Controllers\Api\Orders\OrderCancelPolicyController;
+use App\Http\Controllers\Api\TrafficChallan\TrafficChallanController;
 
 
 
@@ -114,6 +115,15 @@ Route::group(['prefix'=>'v1', 'middleware' => 'setlang'],function(){
                 Route::post('/account-active','accountActive');
                 Route::post('account-delete','accountDelete');
             });
+        });
+
+        // Traffic Challan Routes
+        Route::group(['prefix' => 'traffic-challan/'],function (){
+            Route::post('fetch', [TrafficChallanController::class, 'fetchChallans']);
+            Route::get('history', [TrafficChallanController::class, 'userChallans']);
+            Route::get('details/{id}', [TrafficChallanController::class, 'challanDetails']);
+            Route::post('pay', [TrafficChallanController::class, 'payChallan']);
+            Route::get('stats', [TrafficChallanController::class, 'challanStats']);
         });
    });
 

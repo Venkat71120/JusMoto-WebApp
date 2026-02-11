@@ -61,7 +61,7 @@
                 @endcanany
 
                 <!--Review List -->
-                @canany(['review-list'])
+                {{-- @canany(['review-list'])
                 <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/review/*')) active open @endif">
                     <a href="javascript:void(0)"><i class="las la-th-list"></i>
                         <span class="icon_title">{{ __('Reviews List') }}</span>
@@ -74,7 +74,7 @@
                         @endcan
                     </ul>
                 </li>
-               @endcanany
+               @endcanany --}}
 
                 <!--Admin outlet address  manage -->
                 @canany(['admin-outletAddress-all','admin-outletAddress-add'])
@@ -165,7 +165,7 @@
                 </li>
                @endcanany
 
-               @canany(['user-list', 'user-deactivated-list', 'user-verify-status', 'user-add','staff-setting'])
+               {{-- @canany(['user-list', 'user-deactivated-list', 'user-verify-status', 'user-add','staff-setting'])
                 <li  class="dashboard__bottom__list__item has-children @if (request()->is('admin/staff*')) active open show @endif">
                     <a href="javascript:void(0)"> <i class="las la-user-circle"></i> {{ __('Admin Staffs Manage') }} </a>
                     <ul class="submenu">
@@ -188,7 +188,7 @@
                         @endcan
                     </ul>
                 </li>
-               @endcanany
+               @endcanany --}}
 
                @canany(['category-list', 'category-add'])
                 <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/category/*')) active open @endif">
@@ -210,8 +210,8 @@
                 </li>
                @endcanany
 
-
-                @canany(['offer-list', 'offer-add'])
+{{-- Offers --}}
+                {{-- @canany(['offer-list', 'offer-add'])
                     <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/offer*')) active open @endif">
                         <a href="javascript:void(0)">
                             <i class="las la-paste"></i>
@@ -230,9 +230,9 @@
                             @endcan
                         </ul>
                     </li>
-                @endcanany
+                @endcanany --}}
 
-                    @canany(['blog-list', 'blog-add'])
+                    {{-- @canany(['blog-list', 'blog-add'])
                         <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/blog*')) active open @endif">
                             <a href="javascript:void(0)">
                                 <i class="las la-paste"></i>
@@ -251,7 +251,7 @@
                                 @endcan
                             </ul>
                         </li>
-                    @endcanany
+                    @endcanany --}}
 
                       <!-- Brand Manage -->
                       @canany(['admin-brand-list', 'admin-brand-add'])
@@ -365,18 +365,18 @@
                     @endcanany --}}
 
                     <!-- Wallet Management -->
-                    @canany(['admin-wallet-list', 'admin-wallet-settings', 'admin-transaction-list'])
+                    {{-- @canany(['admin-wallet-list', 'admin-wallet-settings', 'admin-transaction-list'])
                         <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/wallet/*')) active open @endif">
                             <a href="javascript:void(0)">
                                 <i class="las la-wallet"></i>
                                 <span class="icon_title">{{ __('Wallet Management') }}</span>
                             </a>
                             <ul class="submenu" style="@if(request()->is('admin/wallet/*')) display:block; @endif">
-                                {{--                    @can('admin-wallet-settings')--}}
-                                {{--                    <li class="dashboard__bottom__list__item @if(request()->routeIs(['admin.wallet.settings'])) selected @endif">--}}
-                                {{--                        <a href="{{ route('admin.wallet.settings') }}">{{ __('Wallet Settings') }}</a>--}}
-                                {{--                    </li>--}}
-                                {{--                    @endcan--}}
+                                                   @can('admin-wallet-settings')
+                                                   <li class="dashboard__bottom__list__item @if(request()->routeIs(['admin.wallet.settings'])) selected @endif">
+                                                       <a href="{{ route('admin.wallet.settings') }}">{{ __('Wallet Settings') }}</a>
+                                                   </li>
+                                                   @endcan
                                 @can('admin-wallet-list')
                                     <li class="dashboard__bottom__list__item @if(request()->routeIs(['admin.wallet.wallets', 'admin.wallet.wallets.show'])) selected @endif">
                                         <a href="{{ route('admin.wallet.wallets') }}">{{ __('All Wallets') }}</a>
@@ -389,16 +389,16 @@
                                 @endcan
                             </ul>
                         </li>
-                    @endcanany
+                    @endcanany --}}
 
 
                 @include('backend.partials.module-list')
 
-                @canany('report-reason-list', 'report-reason-edit', 'report-reason-delete', 'report-reason-bulk-delete')
+                {{-- @canany('report-reason-list', 'report-reason-edit', 'report-reason-delete', 'report-reason-bulk-delete')
                     <li class="dashboard__bottom__list__item @if(request()->routeIs('admin.report.reason.all')) active @endif">
                         <a href="{{ route('admin.report.reason.all') }}"> <i class="las la-question-circle"></i> {{ __('Reasons') }} </a>
                     </li>
-                @endcanany
+                @endcanany --}}
 
                <!-- Refund Manage -->
                @canany('refund-payment-gateway-list', 'refund-settings-view', 'refund-payment-gateway-add', 'refund-payment-gateway-edit', 'refund-payment-status-change', 'refund-payment-gateway-delete', 'refund-list', 'refund-status-change', 'refund-fee-settings-view')

@@ -1,17 +1,17 @@
 <!-- Support Ticket Module -->
 
 
-@canany(['coupon-settings', 'coupons-new', 'coupon-list', 'coupon-edit-add', 'coupon-delete-add'])
+{{-- @canany(['coupon-settings', 'coupons-new', 'coupon-list', 'coupon-edit-add', 'coupon-delete-add'])
     <li class="dashboard__bottom__list__item @if (request()->is(['admin/coupons', 'admin/coupons/*'])) active @endif">
         <a href="{{ route('admin.coupon.all') }}">
             <i class="las la-percentage"></i>
             <span>{{ __('Coupon Manage') }}</span>
         </a>
     </li>
-@endcanany
+@endcanany --}}
 
 
-@canany(['delivery-charge-settings', 'delivery-charge-list', 'delivery-charge-new', 'delivery-charge-edit-add'])
+{{-- @canany(['delivery-charge-settings', 'delivery-charge-list', 'delivery-charge-new', 'delivery-charge-edit-add'])
 <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/delivery-charge/*')) active open @endif">
     <a href="javascript:void(0)"><i class="las la-file-invoice-dollar"></i>
         <span class="icon_title">{{ __('Delivery Charge Settings') }}</span>
@@ -34,10 +34,10 @@
 
     </ul>
 </li>
-@endcanany
+@endcanany --}}
 
 
-@canany(['tax-settings', 'tax-list', 'tax-new', 'tax-edit-add'])
+{{-- @canany(['tax-settings', 'tax-list', 'tax-new', 'tax-edit-add'])
 <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/tax/*')) active open @endif">
     <a href="javascript:void(0)"><i class="las la-file-invoice-dollar"></i>
         <span class="icon_title">{{ __('Tax Settings') }}</span>
@@ -64,7 +64,7 @@
 
     </ul>
 </li>
-@endcanany
+@endcanany --}}
 
 <!-- Admin Manage Role Module -->
 @can('admin-role-manage')
@@ -204,7 +204,7 @@
 </li>
 @endcan
 
-
+{{-- 
 @can('sms-gateway-settings')
     <li class="dashboard__bottom__list__item @if(request()->routeIs('admin.sms.gateway.settings') || request()->is('admin/sms-gateway-settings/view')) active @endif">
         <a href="{{route('admin.sms.gateway.settings')}}"><i class="las la-sms"></i>
@@ -212,7 +212,7 @@
             <span class="badge bg-danger">{{ __('Plugin') }}</span>
         </a>
     </li>
-@endcan
+@endcan --}}
 
 <!-- Render all module route start -->
 @php

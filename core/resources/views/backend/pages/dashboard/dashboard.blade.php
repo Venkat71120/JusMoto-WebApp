@@ -392,7 +392,7 @@ a:hover {
                         </div>
                         <div class="row g-4 mt-1">
                             
-                            <div class="col-xl-4 col-lg-4">
+                            {{-- <div class="col-xl-4 col-lg-4">
                                 <div class="dashboard__card bg__white radius-10 p-3">
                                     <div class="dashboard__card__header">
                                         <div class="dashboard__card__header__flex">
@@ -416,7 +416,7 @@ a:hover {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                 </div>
             </div>

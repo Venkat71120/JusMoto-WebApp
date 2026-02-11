@@ -22,7 +22,7 @@ use App\Http\Controllers\Frontend\DashboardController;
 use App\Http\Controllers\Frontend\Auth\SigninController;
 use App\Http\Controllers\Frontend\Auth\SignupController;
 
-
+use App\Http\Controllers\Backend\AdminServiceOrderManageController;
 use App\Http\Controllers\Frontend\MediaUploadController;
 use App\Http\Controllers\Frontend\NotificationController;
 use App\Http\Controllers\Frontend\OrderPaymentController;
@@ -332,6 +332,16 @@ Route::group(['middleware' => ['globalVariable','setlang']], function () {
     });
 
 });
+// Add this near your other login routes
+Route::controller(LoginController::class)->group(function(){
+    // ... existing routes
+    
+    // Add franchise login route
+    Route::get('/franchise/login', 'showFranchiseLoginForm')->name('franchise.login');
+    Route::post('/franchise/login', 'franchiseLogin')->name('franchise.login.submit');
+});
+Route::post('/allocate-subadmin', [AdminServiceOrderManageController::class, 'allocateSubAdmin'])
+    ->name('admin.allocate.subadmin');
 
 Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], function () {
     // public routes for user and admin
@@ -346,15 +356,11 @@ Route::group(['middleware' => ['globalVariable', 'maintains_mode','setlang']], f
     Route::post('get-child-category',[GetCategoryController::class, 'get_child_category'])->name('get.subcategory.with.child.category');
 
     //dynamic single page
-    Route::controller(App\Http\Controllers\Frontend\FrontendController::class)->group(function(){
+  Route::controller(App\Http\Controllers\Frontend\FrontendController::class)->group(function(){
     Route::get('/', function () {
-    return view('frontend.pages.index');
-})->name('homepage');
+        return view('frontend.pages.index');
+    })->name('homepage');
 
         Route::get('/{slug}', 'dynamic_single_page')->name('frontend.dynamic.page');
     });
-
-
 });
-
-

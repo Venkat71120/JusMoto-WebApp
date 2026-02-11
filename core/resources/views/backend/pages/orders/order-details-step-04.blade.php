@@ -1,4 +1,4 @@
-<div class="col-xl-6 col-lg-6 col-md-6 col-12 mt-4">
+{{-- <div class="col-xl-6 col-lg-6 col-md-6 col-12 mt-4">
     <div class="customer__details__author__item p-2 radius-10">
         <div class="customer__details__author__item__header">
             <div class="customer__details__author__item__header__flex">
@@ -51,4 +51,4 @@
             </div>
         @endif    
     </div>
-</div>
+</div> --}}

@@ -4,25 +4,22 @@
 @endsection
 @section('style')
     <style>
-
-
         @media (max-width: 993px) {
-        .table-responsive {
-            -webkit-overflow-scrolling: touch;
-            overflow-y: auto;
+            .table-responsive {
+                -webkit-overflow-scrolling: touch;
+                overflow-y: auto;
+            }
         }
-    }
 
         .custom_table tr td:not(:first-child) {
             min-width: 42px;
         }
 
-        #order_status
-        {
+        #order_status {
             align-items: center;
         }
-        #order_action
-        {
+
+        #order_action {
             align-items: center;
         }
     </style>
@@ -35,10 +32,10 @@
                     <div class="dashboard__inner__header__flex">
                         <div class="dashboard__inner__header__left">
                             <h4 class="dashboard__inner__header__title">{{ __('All Orders') }}</h4>
-                       </div>
-                   </div>
-                 </div>
-                <x-validation.error/>
+                        </div>
+                    </div>
+                </div>
+                <x-validation.error />
                 <div class="mt-4">
                     @include('backend.pages.orders.order-filter')
                     <div class="table_wrapper custom_Table">
@@ -52,9 +49,8 @@
     </div>
 
     <!--Status Modal -->
-    <div class="modal fade" id="OrderStatusChangeModal" tabindex="-1" role="dialog"
-         aria-labelledby="editModal"
-         aria-hidden="true">
+    <div class="modal fade" id="OrderStatusChangeModal" tabindex="-1" role="dialog" aria-labelledby="editModal"
+        aria-hidden="true">
         <form action="{{ route('admin.order.status.change') }}" method="post">
             @csrf
             <input type="hidden" name="id" class="order_id">
@@ -83,15 +79,72 @@
             </div>
         </form>
     </div>
+    <!-- Allocate SubAdmin Modal -->
+    <div class="modal fade" id="AllocateSubAdminModal" tabindex="-1">
+        <div class="modal-dialog">
+            <form action="{{ route('admin.allocate.subadmin') }}" method="POST">
+                @csrf
+                <input type="hidden" name="order_id" id="allocate_order_id">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Allocate Subadmin</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <label>Currently Allocated Admin:</label>
+                        <div id="currentAdminLabel" class="badge bg-info text-white p-2"></div>
+
+                        <label>Select Admin to Allocate</label>
+                        <select name="franchise_admin_id" class="form-control" required>
+                            <option value="">-- Select Admin --</option>
+                            @foreach($franchiseAdmins as $admin)
+                                <option value="{{ $admin->id }}">
+                                    {{ $admin->name }}
+                                    @if($admin->outletLocation)
+                                        ({{ $admin->outletLocation->name }})
+                                    @endif
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-primary">Save Allocation</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
     @include('backend.pages.orders.manual-payment-file-modal')
 @endsection
 @section('scripts')
     <script type="text/javascript">
-        (function(){
-            "use strict";
-            $(document).ready(function(){
+        $(document).on('click', '.openAllocateModal', function () {
+            let orderId = $(this).data('order-id');
+            let currentAdminName = $(this).data('current-admin-name');
 
-                $(document).on('click', '.open-modal', function(event) {
+            $('#allocate_order_id').val(orderId);
+
+            if (currentAdminName) {
+                $('#currentAdminLabel').text(currentAdminName);
+            } else {
+                $('#currentAdminLabel').text('Not allocated yet');
+            }
+
+            var modal = new bootstrap.Modal(document.getElementById('AllocateSubAdminModal'));
+            modal.show();
+        });
+
+        (function () {
+            "use strict";
+            $(document).ready(function () {
+
+                $(document).on('click', '.open-modal', function (event) {
                     // Get file URL and name from data attributes
                     var fileUrl = $(this).data('file-url');
                     var fileName = $(this).data('file-name');
@@ -130,7 +183,7 @@
                 });
 
                 // change status
-                $(document).on('click','.swal_status_change',function(e){
+                $(document).on('click', '.swal_status_change', function (e) {
                     e.preventDefault();
                     Swal.fire({
                         title: '{{__("Are you sure to change status complete? Once you done you can not revert this !!")}}',
@@ -147,16 +200,16 @@
                 });
 
                 // live search
-                $(document).on('keyup','.string_search',function(){
+                $(document).on('keyup', '.string_search', function () {
                     let string_search = $(this).val();
                     $.ajax({
-                        url:"{{ route('admin.order.search') }}",
-                        method:'GET',
-                        data:{string_search:string_search},
-                        success:function(res){
-                            if(res.status=='nothing'){
-                                $('.search_result').html('<h3 class="text-center text-danger">'+"{{ __('Nothing Found') }}"+'</h3>');
-                            }else{
+                        url: "{{ route('admin.order.search') }}",
+                        method: 'GET',
+                        data: { string_search: string_search },
+                        success: function (res) {
+                            if (res.status == 'nothing') {
+                                $('.search_result').html('<h3 class="text-center text-danger">' + "{{ __('Nothing Found') }}" + '</h3>');
+                            } else {
                                 $('.search_result').html(res);
                             }
                         }
@@ -164,7 +217,7 @@
                 });
 
                 // pagination
-                $(document).on('click', '.pagination li a', function(e){
+                $(document).on('click', '.pagination li a', function (e) {
                     e.preventDefault();
                     let page = $(this).attr('href').split('page=')[1];
 
@@ -174,10 +227,10 @@
 
                     admin_orders(page, status);
                 });
-                function admin_orders(page, status){
+                function admin_orders(page, status) {
                     $.ajax({
-                        url:"{{ route('admin.order.paginate').'?page='}}" + page + "&status=" + status,
-                        success:function(res){
+                        url: "{{ route('admin.order.paginate') . '?page='}}" + page + "&status=" + status,
+                        success: function (res) {
                             $('.search_result').html(res);
                         }
                     });

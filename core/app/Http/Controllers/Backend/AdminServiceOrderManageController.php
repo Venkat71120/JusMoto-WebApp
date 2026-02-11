@@ -25,7 +25,7 @@ use Modules\SMSGateway\app\Models\SmsGateway;
 use App\Http\Services\ProviderEarningsService;
 use App\Http\Services\OrderServiceNotification;
 use Modules\SMSGateway\app\Http\Traits\OtpGlobalTrait;
-
+use App\Models\Backend\Admin;
 
 class AdminServiceOrderManageController extends Controller
 {
@@ -68,36 +68,142 @@ class AdminServiceOrderManageController extends Controller
         }
         return redirect()->back()->with(FlashMsg::settings_update());
     }
+    public function allocateSubAdmin(Request $request)
+{
+    // Validate input
+    $request->validate([
+        'order_id' => 'required|exists:orders,id',
+        'franchise_admin_id' => 'required|exists:admins,id',
+    ]);
 
-    public function allAdminOrders(Request $request){
+    // Find order
+    $order = Order::find($request->order_id);
 
-        $status = $request->input('status', 'all');
+    // Save allocated admin
+    $order->franchise_admin_id = $request->franchise_admin_id;
+    $order->save();
 
+    return redirect()->back()->with('success', 'Order allocated successfully.');
+}
 
-        $query = Order::with('user','OrderLocations', 'staff','orderItems');
+public function allocateOrderToFranchise(Request $request)
+{
+    $request->validate([
+        'order_id' => 'required|exists:orders,id',
+        'franchise_admin_id' => 'required|exists:admins,id',
+    ]);
 
-        if ($status !== 'all') {
-            $query->where('status', (int)$status);
-        }
+    $order = Order::find($request->order_id);
+    $order->franchise_admin_id = $request->franchise_admin_id;
+    $order->save();
 
-        $all_orders = $query->latest()->paginate(10);
-        $total_orders = $query->count();
+    return redirect()->back()->with('success', 'Order allocated successfully');
+}
 
-        // Aggregate counts by status in a single query
-        $orderCounts = Order::selectRaw('
-            COUNT(CASE WHEN status = "0" THEN 1 END) as total_pending_order,
-            COUNT(CASE WHEN status = "2" THEN 1 END) as total_completed_order
-        ')->first();
+public function allAdminOrders(Request $request)
+{
+    $outletLocations = Admin_outlet_location::all();
+    $status = $request->input('status', 'all');
 
+    $admin = Auth::guard('admin')->user();
 
-        return view('backend.pages.orders.admin-orders.all_orders', [
-            'all_orders' => $all_orders,
-            'total_orders' => $total_orders,
-            'total_pending_order' => $orderCounts->total_pending_order,
-            'total_completed_order' => $orderCounts->total_completed_order,
-            'current_status' => $status,
-        ]);
+    /*
+    |--------------------------------------------------------------------------
+    | Base Query
+    |--------------------------------------------------------------------------
+    */
+
+    $query = Order::with([
+        'user',
+        'OrderLocations',
+        'staff',
+        'orderItems',
+        'franchiseAdmin.outletLocation'
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Role Based Filtering
+    |--------------------------------------------------------------------------
+    */
+
+    // Franchise admin sees ONLY allocated orders
+    if ($admin->is_franchise == 1) {
+        $query->where('franchise_admin_id', $admin->id);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Status Filter
+    |--------------------------------------------------------------------------
+    */
+
+    if ($status !== 'all') {
+        $query->where('status', (int)$status);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Orders List
+    |--------------------------------------------------------------------------
+    */
+
+    $all_orders = $query->latest()->paginate(10);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Total Orders Count
+    |--------------------------------------------------------------------------
+    */
+
+    $total_orders = (clone $query)->count();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Order Status Counts (VERY IMPORTANT FIX)
+    |--------------------------------------------------------------------------
+    */
+
+    $countQuery = Order::query();
+
+    // Apply same role filter for counts
+    if ($admin->is_franchise == 1) {
+        $countQuery->where('franchise_admin_id', $admin->id);
+    }
+
+    $orderCounts = $countQuery->selectRaw('
+        COUNT(CASE WHEN status = 0 THEN 1 END) as total_pending_order,
+        COUNT(CASE WHEN status = 2 THEN 1 END) as total_completed_order
+    ')->first();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Franchise Admin Dropdown
+    |--------------------------------------------------------------------------
+    */
+
+    $franchiseAdmins = Admin::where('is_franchise', 1)
+        ->with('outletLocation')
+        ->get();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Return View
+    |--------------------------------------------------------------------------
+    */
+
+    return view('backend.pages.orders.admin-orders.all_orders', [
+        'all_orders' => $all_orders,
+        'total_orders' => $total_orders,
+        'total_pending_order' => $orderCounts->total_pending_order ?? 0,
+        'total_completed_order' => $orderCounts->total_completed_order ?? 0,
+        'current_status' => $status,
+        'outletLocations' => $outletLocations,
+        'franchiseAdmins' => $franchiseAdmins,
+    ]);
+}
+
+
 
     public function orderAdminDetails($id,$notificationId=null){
         $outlet_location="";

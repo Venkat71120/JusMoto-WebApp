@@ -85,6 +85,47 @@ class LoginController extends Controller
             'status' => 'not_ok',
         ]);
     }
+    // Add these methods to your LoginController
+public function showFranchiseLoginForm()
+{
+    return view('backend.auth.franchise-login');
+}
+
+public function franchiseLogin(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+        'franchise_code' => 'required|string',
+    ]);
+
+    // Check if admin exists with franchise code
+    $admin = Admin::where('email', $request->email)
+                 ->where('franchise_code', $request->franchise_code)
+                 ->where('is_franchise', 1)
+                 ->first();
+
+    if (!$admin) {
+        return back()->withErrors([
+            'email' => 'Invalid franchise credentials.',
+        ]);
+    }
+
+    // Attempt login
+    if (Auth::guard('admin')->attempt([
+        'email' => $request->email,
+        'password' => $request->password,
+        'is_franchise' => 1,
+        'franchise_code' => $request->franchise_code
+    ], $request->filled('remember'))) {
+        
+        return redirect()->route('franchise.dashboard');
+    }
+
+    return back()->withErrors([
+        'email' => 'The provided credentials do not match our records.',
+    ]);
+}
 
     public function showAdminForgetPasswordForm()
     {

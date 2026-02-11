@@ -1,6 +1,6 @@
 @extends('backend.admin-master')
 @section('site-title')
-    {{__('All Tickets')}}
+    {{__('All Requests')}}
 @endsection
 @section('style')
     <style>
@@ -50,7 +50,7 @@
                 <div class="dashboard__inner__header mb-3">
                     <div class="dashboard__inner__header__flex">
                         <div class="dashboard__inner__header__left">
-                            <h4 class="dashboard__inner__header__title">{{ __('All Tickets') }}</h4>
+                            <h4 class="dashboard__inner__header__title">{{ __('All Requests') }}</h4>
                             <div class="mt-3">
                                 <strong>#{{ $ticket_details->id }}</strong>
                                 @if($ticket_details->status == 'open')

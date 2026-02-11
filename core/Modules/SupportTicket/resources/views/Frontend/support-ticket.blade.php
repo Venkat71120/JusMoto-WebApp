@@ -1,5 +1,5 @@
 @extends('frontend.user.layout.master')
-@section('title', 'Support Ticket')
+@section('title', 'Service Requests')
 @section('content')
     <div class="overlay"></div>
     <div class="main_container">
@@ -47,21 +47,21 @@
                         <a class="nav-link {{ request('status') == '' ? 'active' : '' }}"
                            href="{{ route('tickets.index') }}"
                            role="tab">
-                            {{__('All Tickets')}} ({{ $totalTickets }})
+                            {{__('All Requests')}} ({{ $totalTickets }})
                         </a>
                     </li>
                     <li class="nav-item support_item" role="presentation">
                         <a class="nav-link {{ request('status') == 'open' ? 'active' : '' }}"
                            href="{{ route('tickets.index', ['status' => 'open']) }}"
                            role="tab">
-                            {{__('Open Tickets')}} ({{ $openTickets }})
+                            {{__('Open Service Requests')}} ({{ $openTickets }})
                         </a>
                     </li>
                     <li class="nav-item support_item" role="presentation">
                         <a class="nav-link {{ request('status') == 'close' ? 'active' : '' }}"
                            href="{{ route('tickets.index', ['status' => 'close']) }}"
                            role="tab">
-                            {{__('Closed Tickets')}} ({{ $closedTickets }})
+                            {{__('Closed Service Requests')}} ({{ $closedTickets }})
                         </a>
                     </li>
                 </ul>
@@ -128,14 +128,14 @@
                                 <div class="alert alert-info text-center p-4">
                                     <i class="fa-solid fa-info-circle fa-3x mb-3"></i>
                                     @if(request('status') == 'open')
-                                        <h5>{{__('No Open Tickets Found')}}</h5>
-                                        <p class="mb-0">{{__('You have no open tickets.')}}</p>
+                                        <h5>{{__('No Open Service Requests Found')}}</h5>
+                                        <p class="mb-0">{{__('You have no Service Requests.')}}</p>
                                     @elseif(request('status') == 'close')
-                                        <h5>{{__('No Closed Tickets Found')}}</h5>
-                                        <p class="mb-0">{{__('You have no closed tickets.')}}</p>
+                                        <h5>{{__('No Closed Service Requests Found')}}</h5>
+                                        <p class="mb-0">{{__('You have no closed service requests.')}}</p>
                                     @else
-                                        <h5>{{__('No Tickets Found')}}</h5>
-                                        <p class="mb-0">{{__("You haven't created any tickets yet.")}}</p>
+                                        <h5>{{__('No Service Requests Found')}}</h5>
+                                        <p class="mb-0">{{__("You haven't created any service requests yet.")}}</p>
                                     @endif
                                 </div>
                             @endif

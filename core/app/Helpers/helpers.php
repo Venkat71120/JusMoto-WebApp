@@ -20,7 +20,7 @@ use Modules\DeliveryCharge\app\Models\CityDeliveryCharge;
 use Modules\DeliveryCharge\app\Models\StateDeliveryCharge;
 use Modules\Tax\app\Models\CityTax;
 use Modules\Tax\app\Models\StateTax;
-use Xgenious\Paymentgateway\Facades\XgPaymentGateway;
+// XgPaymentGateway removed - using static currency list instead
 use App\Models\Backend\Admin_outlet_location;
 
 function render_twitter_meta_image_by_attachment_id($id, $size = 'full')
@@ -436,7 +436,35 @@ function get_language_by_slug($slug)
 }
 function site_currency_symbol($text = false)
 {
-    $all_currency = XgPaymentGateway::script_currency_list();
+    // Static currency list (XgPaymentGateway package removed)
+    $all_currency = [
+        'USD' => '$',
+        'EUR' => '€',
+        'GBP' => '£',
+        'INR' => '₹',
+        'AUD' => 'A$',
+        'CAD' => 'C$',
+        'SGD' => 'S$',
+        'MYR' => 'RM',
+        'JPY' => '¥',
+        'CNY' => '¥',
+        'BRL' => 'R$',
+        'ZAR' => 'R',
+        'AED' => 'د.إ',
+        'SAR' => '﷼',
+        'IDR' => 'Rp',
+        'PHP' => '₱',
+        'THB' => '฿',
+        'VND' => '₫',
+        'KRW' => '₩',
+        'RUB' => '₽',
+        'TRY' => '₺',
+        'NGN' => '₦',
+        'PKR' => '₨',
+        'BDT' => '৳',
+        'LKR' => 'Rs',
+        'NPR' => 'रू',
+    ];
 
     $symbol = '$';
     $global_currency = get_static_option('site_global_currency');

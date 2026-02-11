@@ -154,30 +154,7 @@
                 </li>
                <?php endif; ?>
 
-               <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['user-list', 'user-deactivated-list', 'user-verify-status', 'user-add','staff-setting'])): ?>
-                <li  class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/staff*')): ?> active open show <?php endif; ?>">
-                    <a href="javascript:void(0)"> <i class="las la-user-circle"></i> <?php echo e(__('Admin Staffs Manage')); ?> </a>
-                    <ul class="submenu">
-                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-list')): ?>
-                            <li class="dashboard__bottom__list__item <?php if(request()->routeIs(['admin.staff.all'])): ?> selected <?php endif; ?>">
-                                <a href="<?php echo e(route('admin.staff.all')); ?>"> <?php echo e(__('Admin All Staffs')); ?> </a>
-                            </li>
-                        <?php endif; ?>
-                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-add')): ?>
-                        <li class="dashboard__bottom__list__item <?php if(request()->routeIs(['admin.staff.add'])): ?> selected <?php endif; ?>">
-                            <a href="<?php echo e(route('admin.staff.add')); ?>">
-                                <?php echo e(__('Add New Staff')); ?> </a>
-                        </li>
-                        <?php endif; ?>
-                        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('staff-setting')): ?>
-                        <li class="dashboard__bottom__list__item <?php if(request()->routeIs(['admin.staff.select'])): ?> selected <?php endif; ?>">
-                            <a href="<?php echo e(route('admin.staff.select')); ?>">
-                                <?php echo e(__('Staff Selection Setting')); ?> </a>
-                        </li>
-                        <?php endif; ?>
-                    </ul>
-                </li>
-               <?php endif; ?>
+               
 
                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['category-list', 'category-add'])): ?>
                 <li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/category/*')): ?> active open <?php endif; ?>">

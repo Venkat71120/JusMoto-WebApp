@@ -1,184 +1,548 @@
 @extends('layouts.login-screens')
 @section('content')
-    <style>
-            .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #777;
-        }
-    </style>
-    <section class="loginForm">
-        <div class="loginForm__flex">
-            <div class="loginForm__left">
-                <div class="loginForm__left__inner desktop-center">
-                    <div class="loginForm__right__logo">
-                        <div class="loginForm__logo">
-                            <a href="{{ route('homepage') }}" class="logo">
-                                {!! render_image_markup_by_attachment_id(get_static_option('site_logo')) !!}
-                            </a>
-                        </div>
-                    </div>
-                    <div class="loginForm__header">
-                        <h2 class="loginForm__header__title text-start">
-                            {{ get_static_option('admin_login_page_title') ?? __('Welcome Back') }}
-                        </h2>
-                        <p class="loginForm__header__para text-start">
-                            {{  get_static_option('admin_login_page_subtitle') ?? __('Login with your data that you entered during registration.') }}
-                        </p>
-                    </div>
-                    <div class="error-message text-start">
-                        <x-msg.response-message />
-                    </div>
-                    <div class="loginForm__wrapper">
-                        <form action="{{ route('admin.login') }}" class="custom_form" method="POST">
-                            @csrf
-                            <div class="single_input">
-                                <label class="label_title">{{ __('Username or Email') }}</label>
-                                <div class="include_icon">
-                                    <input class="form--control radius-5" type="text" id="username" name="username"
-                                        placeholder="{{ __('Username or Email') }}" autocomplete="username" required>
-                                    <div class="icon"><span><i class="las la-user-alt"></i></span></div>
-                                </div>
-                            </div>
+<style>
+/* ===== Modern Red Color Palette ===== */
+:root {
+    --primary-red: #dc2626;
+    --primary-dark: #b91c1c;
+    --primary-light: #fef2f2;
+    --accent-red: #ef4444;
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+    --white: #ffffff;
+    --light-bg: #f8fafc;
+    --shadow: 0 8px 30px rgba(220, 38, 38, 0.1);
+}
 
-                            <div class="single_input mt-3">
-                                <label class="label_title">{{ __('Password') }}</label>
-                                <div class="include_icon position-relative">
-                                    <input class="form--control radius-5" type="password" id="password" name="password"
-                                        placeholder="{{ __('Password') }}" autocomplete="current-password" required>
+/* ===== Base Reset ===== */
+body {
+    background: var(--primary-light);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-                                    <div class="icon"><span><i class="las la-lock"></i></span></div>
+/* ===== Simple Login Card ===== */
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 40px 35px;
+    box-shadow: var(--shadow);
+}
 
-                                  <span class="password-toggle" id="togglePassword">
+/* ===== Logo ===== */
+.login-logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-                                        <i class="las la-eye"></i>
-                                    </span>
-                                </div>
+.login-logo img {
+    max-width: 160px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
 
-                            </div>
+/* ===== Header ===== */
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-                            <div class="loginForm__wrapper__remember single_input mt-3">
-                                <div class="dashboard_checkBox">
-                                    <input class="dashboard_checkBox__input" id="remember" name="remember" type="checkbox"
-                                        value="1">
-                                    <label class="dashboard_checkBox__label" for="remember">{{ __('Remember Me') }}</label>
-                                </div>
-                                <!-- forgetPassword -->
-                                <div class="forgotPassword">
-                                    <a href="{{ route('admin.forget.password') }}"
-                                        class="forgotPass">{{ __('Forgot passwords?') }}</a>
-                                </div>
-                            </div>
-                            <div class="btn_wrapper single_input mt-3">
-                                <button type="submit" id="form_submit" class="cmnBtn btn_5 btn_bg_blue radius-5 w-100">
-                                    {{ __('Login') }}
-                                </button>
+.login-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
 
-                            </div>
-                            @if(preg_match('/(bytesed)/', url('/')))
-                                <div class="adminlogin-info mt-3">
-                                    <table class="table">
-                                        <th>{{__('Username')}}</th>
-                                        <th>{{__('Password')}}</th>
-                                        <th>{{__('Action')}}</th>
-                                        <tbody>
-                                            <tr class="border-0">
-                                                <td class="border-0" id="td_username">super_admin</td>
-                                                <td class="border-0" id="td_password">12345678</td>
-                                                <td class="border-0">
-                                                    <button type="button"
-                                                        class="cmnBtn btn_5 btn_bg_success btnIcon radius-5 autoLogin"
-                                                        id="autoLogin">{{__('Login')}}</button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @endif
-                        </form>
-                    </div>
-                </div>
+.login-subtitle {
+    font-size: 14px;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+/* ===== Messages ===== */
+.message-container {
+    margin-bottom: 24px;
+}
+
+.alert {
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.alert-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.alert-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* ===== Form - Fixed Alignment ===== */
+.login-form {
+    width: 100%;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.input-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px 16px 14px 46px;
+    font-size: 15px;
+    background: var(--light-bg);
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    color: var(--text-dark);
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+    background: var(--white);
+}
+
+.input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 18px;
+    line-height: 1;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 0;
+    font-size: 18px;
+    line-height: 1;
+    transition: color 0.2s ease;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle:hover {
+    color: var(--primary-red);
+}
+
+/* ===== Remember & Forgot - Fixed Alignment ===== */
+.remember-forgot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.remember-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox {
+    width: 18px;
+    height: 18px;
+    background: var(--light-bg);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.checkbox:hover {
+    background: #e5e7eb;
+}
+
+.remember-box input:checked + .checkbox {
+    background: var(--primary-red);
+    color: white;
+}
+
+.remember-box input:checked + .checkbox::after {
+    content: '✓';
+    font-size: 12px;
+    line-height: 1;
+}
+
+.remember-text {
+    font-size: 14px;
+    color: var(--text-dark);
+    white-space: nowrap;
+}
+
+.forgot-link {
+    font-size: 14px;
+    color: var(--primary-red);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.forgot-link:hover {
+    color: var(--primary-dark);
+}
+
+/* ===== Login Button ===== */
+.login-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary-red);
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 24px;
+    box-sizing: border-box;
+}
+
+.login-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.login-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ===== Auto Login - Fixed Alignment ===== */
+.auto-login {
+    background: var(--light-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 24px;
+}
+
+.auto-login-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.auto-login-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+    font-size: 13px;
+}
+
+.auto-login-item {
+    padding: 8px 12px;
+    background: var(--white);
+    border-radius: 8px;
+    color: var(--text-dark);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.auto-login-btn {
+    padding: 8px 16px;
+    background: var(--accent-red);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+}
+
+.auto-login-btn:hover {
+    background: var(--primary-red);
+}
+
+/* ===== Hide default checkbox ===== */
+.remember-box input {
+    display: none;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 30px 25px;
+        border-radius: 16px;
+    }
+    
+    .login-title {
+        font-size: 24px;
+    }
+    
+    .remember-forgot {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .auto-login-content {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .auto-login-item {
+        text-align: left;
+        padding: 10px 12px;
+    }
+    
+    .auto-login-btn {
+        width: 100%;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 350px) {
+    .login-card {
+        padding: 25px 20px;
+    }
+}
+</style>
+
+<div class="login-card">
+    <!-- Logo -->
+    <div class="login-logo">
+        <a href="{{ route('homepage') }}">
+            {!! render_image_markup_by_attachment_id(get_static_option('site_logo')) !!}
+        </a>
+    </div>
+
+    <!-- Header -->
+    <div class="login-header">
+        <h1 class="login-title">
+            {{ get_static_option('admin_login_page_title') ?? __('Welcome Back') }}
+        </h1>
+        <p class="login-subtitle">
+            {{ get_static_option('admin_login_page_subtitle') ?? __('Login to your account') }}
+        </p>
+    </div>
+
+    <!-- Messages -->
+    <div class="message-container">
+        <x-msg.response-message />
+    </div>
+
+    <!-- Login Form -->
+    <form action="{{ route('admin.login') }}" method="POST" class="login-form" id="loginForm">
+        @csrf
+        
+        <!-- Username -->
+        <div class="input-group">
+            <label class="input-label">{{ __('Username or Email') }}</label>
+            <div class="input-wrapper">
+                <input type="text" 
+                       id="username" 
+                       name="username" 
+                       class="form-input" 
+                       placeholder="{{ __('Enter username or email') }}"
+                       required>
+                <span class="input-icon">
+                    <i class="las la-user-alt"></i>
+                </span>
             </div>
         </div>
-    </section>
+
+        <!-- Password -->
+        <div class="input-group">
+            <label class="input-label">{{ __('Password') }}</label>
+            <div class="input-wrapper">
+                <input type="password" 
+                       id="password" 
+                       name="password" 
+                       class="form-input" 
+                       placeholder="{{ __('Enter password') }}"
+                       required>
+                <span class="input-icon">
+                    <i class="las la-lock"></i>
+                </span>
+                <button type="button" class="password-toggle" id="togglePassword">
+                    <i class="las la-eye"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Remember & Forgot -->
+        <div class="remember-forgot">
+            <label class="remember-box">
+                <input type="checkbox" id="remember" name="remember" value="1">
+                <span class="checkbox"></span>
+                <span class="remember-text">{{ __('Remember Me') }}</span>
+            </label>
+            <a href="{{ route('admin.forget.password') }}" class="forgot-link">
+                {{ __('Forgot Password?') }}
+            </a>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" class="login-btn" id="form_submit">
+            {{ __('Login') }}
+        </button>
+    </form>
+
+    <!-- Auto Login -->
+    @if(preg_match('/(bytesed)/', url('/')))
+    <div class="auto-login">
+        <div class="auto-login-title">{{ __('Quick Login') }}</div>
+        <div class="auto-login-content">
+            <div class="auto-login-item" id="td_username">super_admin</div>
+            <div class="auto-login-item" id="td_password">12345678</div>
+            <button type="button" class="auto-login-btn" id="autoLogin">
+                {{ __('Login') }}
+            </button>
+        </div>
+    </div>
+    @endif
+</div>
 @endsection
+
 @section('scripts')
-   <script>
+<script>
 (function($){
 "use strict";
 
-function togglePassword(){
-    const input = document.getElementById('password');
-    input.type = input.type === 'password' ? 'text' : 'password';
-}
-$(document).on('click', '#togglePassword', function () {
-    const input = $('#password');
+// Toggle password visibility
+$('#togglePassword').on('click', function () {
+    const passwordInput = $('#password');
     const icon = $(this).find('i');
-
-    if (input.attr('type') === 'password') {
-        input.attr('type', 'text');
+    
+    if (passwordInput.attr('type') === 'password') {
+        passwordInput.attr('type', 'text');
         icon.removeClass('la-eye').addClass('la-eye-slash');
     } else {
-        input.attr('type', 'password');
+        passwordInput.attr('type', 'password');
         icon.removeClass('la-eye-slash').addClass('la-eye');
     }
 });
 
-$(document).ready(function (){
-
-    $(document).on('click','#form_submit',function (e){
-        e.preventDefault();
-
-        let el = $(this);
-        let erContainer = $(".error-message");
-
-        erContainer.html('');
-        el.prop('disabled', true).text('{{__('Please Wait...')}}');
-
-        $.ajax({
-            url: "{{route('admin.login')}}",
-            type: "POST",
-            data: {
-                _token : "{{csrf_token()}}",
-                username : $('#username').val(),
-                password : $('#password').val(),
-                remember : $('#remember').is(':checked') ? 1 : 0,
-            },
-            error:function(xhr){
-                let errors = xhr.responseJSON;
-
-                erContainer.html('<div class="alert alert-danger"></div>');
-
-                if(errors?.errors){
-                    $.each(errors.errors, function(_, value){
-                        erContainer.find('.alert').append('<p>'+value+'</p>');
-                    });
-                }else if(errors?.msg){
-                    erContainer.find('.alert').append('<p>'+errors.msg+'</p>');
-                }else{
-                    erContainer.find('.alert').append('<p>{{__('Something went wrong.')}}</p>');
-                }
-
-                el.prop('disabled', false).text('{{__('Login')}}');
-            },
-            success:function (data){
-                if (data.status === 'ok'){
-                    el.text('{{__('Redirecting...')}}');
-                    erContainer.html('<div class="alert alert-success">'+data.msg+'</div>');
-                    setTimeout(()=>location.reload(),800);
-                }else{
-                    erContainer.html('<div class="alert alert-'+data.type+'">'+data.msg+'</div>');
-                    el.prop('disabled', false).text('{{__('Login')}}');
-                }
+// Form submission
+$('#loginForm').on('submit', function(e) {
+    e.preventDefault();
+    
+    const submitBtn = $('#form_submit');
+    const originalText = submitBtn.text();
+    const messageContainer = $('.message-container');
+    
+    // Show loading
+    submitBtn.prop('disabled', true).text('{{__('Please wait...')}}');
+    messageContainer.html('');
+    
+    // Prepare data
+    const formData = {
+        _token: "{{csrf_token()}}",
+        username: $('#username').val(),
+        password: $('#password').val(),
+        remember: $('#remember').is(':checked') ? 1 : 0
+    };
+    
+    // AJAX request
+    $.ajax({
+        url: "{{route('admin.login')}}",
+        type: "POST",
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'ok') {
+                submitBtn.text('{{__('Redirecting...')}}');
+                messageContainer.html(
+                    '<div class="alert alert-success">'+response.msg+'</div>'
+                );
+                setTimeout(() => window.location.reload(), 800);
+            } else {
+                messageContainer.html(
+                    '<div class="alert alert-danger">'+response.msg+'</div>'
+                );
+                submitBtn.prop('disabled', false).text(originalText);
             }
-        });
+        },
+        error: function(xhr) {
+            let errorHtml = '<div class="alert alert-danger">';
+            
+            if (xhr.responseJSON?.errors) {
+                $.each(xhr.responseJSON.errors, function(_, messages) {
+                    $.each(messages, function(_, message) {
+                        errorHtml += '<p>'+message+'</p>';
+                    });
+                });
+            } else if (xhr.responseJSON?.msg) {
+                errorHtml += '<p>'+xhr.responseJSON.msg+'</p>';
+            } else {
+                errorHtml += '<p>{{__('Something went wrong')}}</p>';
+            }
+            
+            errorHtml += '</div>';
+            messageContainer.html(errorHtml);
+            submitBtn.prop('disabled', false).text(originalText);
+        }
     });
+});
 
+// Auto login
+$('#autoLogin').on('click', function() {
+    $('#username').val('super_admin');
+    $('#password').val('12345678');
+    $('#remember').prop('checked', true);
+    $('#loginForm').submit();
+});
+
+// Enter key support
+$('#username, #password').on('keypress', function(e) {
+    if (e.which === 13) {
+        $('#loginForm').submit();
+    }
 });
 })(jQuery);
 </script>
-
 @endsection

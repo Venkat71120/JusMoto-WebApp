@@ -2,64 +2,78 @@
     <?php echo e(__('Dashboard')); ?>
 
 <?php $__env->stopSection(); ?>
-<?php $__env->startSection('style'); ?>
-    <style>
-        .order_id img{
-            width: 50px !important;
-        }
-        .table_customer__thumb img {
-            width: 60px;
-            height: 60px;
-        }
-        .dashboard__card {
-            height: 97%!important;
-        }
 
-       #sales_pipeline {
-             width: 100%!important;
-             height: 350px!important;
-         }
-         /* ===== Dashboard Base ===== */
+<?php $__env->startSection('style'); ?>
+<style>
+/* ===== Body ===== */
 body {
-    background-color: #e9edee;
-    color: #252726;
+    background-color: #f5f7fa;
+    color: #333;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
 }
 
-/* ===== Cards ===== */
+/* ===== Dashboard Cards ===== */
 .dashboard__card {
-    background-color: #ffffff;
-    border: 1px solid #d3dcdb;
-    height: 97% !important;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    padding: 20px;
+    height: 100% !important;
+}
+
+.dashboard__card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
 }
 
 .dashboard__card__header__title {
-    color: #252726;
+    color: #1f2a38;
     font-weight: 600;
+    font-size: 16px;
 }
 
 .dashboard__card__header__title p {
-    color: #c66763;
+    color: #8f9bb3;
     font-size: 13px;
+    margin-top: 4px;
 }
 
 /* ===== Promo Cards ===== */
 .dashboard_promo__single {
-    border-left: 4px solid #00b799;
+    border-left: 5px solid #00b799;
+    border-radius: 10px;
+    padding: 20px;
     transition: all 0.3s ease;
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 }
 
 .dashboard_promo__single:hover {
     border-left-color: #ff4240;
-    transform: translateY(-3px);
+    transform: translateY(-5px);
+}
+
+.dashboard_promo__single__subtitle {
+    font-size: 13px;
+    color: #6c757d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .dashboard_promo__single__price {
-    color: #252726;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1f2a38;
+    margin-top: 10px;
 }
 
 /* ===== Links & Icons ===== */
 a {
     color: #00b799;
+    transition: color 0.3s ease;
 }
 
 a:hover {
@@ -67,17 +81,27 @@ a:hover {
 }
 
 /* ===== Tables ===== */
+.custom_table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
 .custom_table thead th {
-    background-color: #e9edee;
-    color: #252726;
+    background-color: #edf1f5;
+    color: #495057;
+    text-align: left;
+    font-weight: 600;
+    padding: 12px;
 }
 
 .table_row:hover {
-    background-color: #f7f9f9;
+    background-color: #f1f4f8;
+    transition: all 0.3s ease;
 }
 
 .table_date {
-    color: #c66763;
+    color: #ff4240;
+    font-weight: 500;
 }
 
 /* ===== Buttons ===== */
@@ -85,6 +109,10 @@ a:hover {
     background-color: #00b799;
     border-color: #00b799;
     color: #fff;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+    transition: all 0.3s ease;
 }
 
 .btn_bg_info:hover {
@@ -95,28 +123,65 @@ a:hover {
 /* ===== User / Product Images ===== */
 .table_customer__thumb img,
 .order_id img {
-    border-radius: 6px;
-    border: 1px solid #d3dcdb;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    transition: all 0.3s ease;
 }
 
-/* ===== Charts Container ===== */
+.table_customer__thumb img:hover,
+.order_id img:hover {
+    transform: scale(1.05);
+}
+
+/* ===== Charts ===== */
 .chart__item__inner {
-    background: #ffffff;
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
 }
 
-/* ===== Revenue Chart ===== */
 #sales_pipeline {
     width: 100% !important;
-    height: 350px !important;
+    height: 360px !important;
 }
 
 /* ===== Greeting ===== */
 .dashboard__inner__header__title strong {
     color: #00b799;
+    font-weight: 700;
+    font-size: 20px;
 }
 
-    </style>
+/* ===== Dropdowns ===== */
+.select2-container--default .select2-selection--single {
+    border-radius: 8px;
+    height: 36px;
+    border: 1px solid #d3dcdb;
+    padding: 2px 10px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1200px) {
+    .dashboard_promo__single {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard__inner__header__title {
+        font-size: 16px;
+    }
+    .dashboard__card {
+        padding: 15px;
+    }
+}
+</style>
 <?php $__env->stopSection(); ?>
+
 <?php $__env->startSection('content'); ?>
     <div class="dashboard__body posPadding">
         <div class="dashboard__inner">

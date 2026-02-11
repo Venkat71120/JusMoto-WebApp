@@ -1,5 +1,5 @@
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('All Tickets')); ?>
+    <?php echo e(__('All Requests')); ?>
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('style'); ?>
@@ -39,7 +39,7 @@
                 <div class="dashboard__inner__header mb-3">
                     <div class="dashboard__inner__header__flex">
                         <div class="dashboard__inner__header__left">
-                            <h4 class="dashboard__inner__header__title"><?php echo e(__('All Tickets')); ?></h4>
+                            <h4 class="dashboard__inner__header__title"><?php echo e(__('All Requests')); ?></h4>
                             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('support-ticket-bulk-delete')): ?>
                                 <?php if (isset($component)) { $__componentOriginal41fc2efab414de3fc9c6739ba1ffcc6e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal41fc2efab414de3fc9c6739ba1ffcc6e = $attributes; } ?>

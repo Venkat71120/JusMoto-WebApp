@@ -84,15 +84,26 @@ private function createTicketForAllocation($order, $franchiseAdmin)
         ]);
     }
 
-    // Build ticket title with service/item names only
+// Build ticket title ONLY for SERVICE type (type = 0)
 $serviceNames = [];
-if ($order->orderItems && $order->orderItems->count() > 0) {
+$hasService = false;
+
+if ($order->orderItems && $order->orderItems->count()) {
+
     foreach ($order->orderItems as $item) {
-        if ($item->service) {
+
+        if ($item->service && $item->service->type == 0) { // 0 = service
+            $hasService = true;
             $serviceNames[] = $item->service->title;
         }
     }
 }
+
+// 🚀 STOP ticket creation if NO service exists
+if(!$hasService){
+    return;
+}
+
 
 $ticketTitle = !empty($serviceNames) 
     ? implode(', ', $serviceNames)
@@ -287,22 +298,35 @@ public function allAdminOrders(Request $request)
     }
 
 
-    public function searchOrder(Request $request)
-    {
-        $searchString = strip_tags($request->string_search);
+public function searchOrder(Request $request)
+{
+    $searchString = strip_tags($request->string_search);
 
-        $all_orders = Order::with([
-                'user','OrderLocations', 'staff', 'service','orderItems'])->where(function ($query) use ($searchString) {
-                // Search conditions
-                $query->where('total', 'LIKE', "%{$searchString}%")
-                    ->orWhere('invoice_number', 'LIKE', "%{$searchString}%");
-            })
-            ->latest()
-            ->paginate(10);
+    // Get logged admin
+    $admin = Auth::guard('admin')->user();
 
-        return $all_orders->total() >= 1 ? view('backend.pages.orders.admin-orders.search-order',
-            compact('all_orders'))->render() : response()->json(['status'=>__("nothing")]);
+    $query = Order::with([
+        'user','OrderLocations','staff','service','orderItems'
+    ]);
+
+    // ✅ ROLE BASED FILTER (IMPORTANT)
+    if ($admin->is_franchise == 1) {
+        $query->where('franchise_admin_id', $admin->id);
     }
+
+    // Search conditions
+    $query->where(function ($q) use ($searchString) {
+        $q->where('total', 'LIKE', "%{$searchString}%")
+          ->orWhere('invoice_number', 'LIKE', "%{$searchString}%");
+    });
+
+    $all_orders = $query->latest()->paginate(10);
+
+    return $all_orders->total() >= 1
+        ? view('backend.pages.orders.admin-orders.search-order', compact('all_orders'))->render()
+        : response()->json(['status'=>__("nothing")]);
+}
+
 
     // pagination
    public function paginate(Request $request)

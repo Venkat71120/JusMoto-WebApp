@@ -105,7 +105,7 @@
                                         stroke-linejoin="round" />
                                 </g>
                             </svg>
-                            {{__('Support Ticket')}}
+                            {{__('Service Requests')}}
                         </a>
                     </li>
                     <li>

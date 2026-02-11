@@ -83,52 +83,72 @@ public function ticket(Request $request)
     public function paginate(Request $request)
     {
         if($request->ajax()){
-            if(empty($request->string_search)){
-                $tickets = Ticket::whereHas('user')->latest()->paginate(10);
-            }else{
-                $tickets = Ticket::where(function($q) use ($request){
-                    $q->orWhere('id', $request->string_search)
-                        ->orWhere('priority',$request->string_search)
-                        ->orWhere('status',$request->string_search);
-                })->latest()->paginate(10);
-            }
+           $admin = Auth::guard('admin')->user();
+
+$query = Ticket::whereHas('user');
+
+if ($admin->is_franchise == 1) {
+    $query->where('admin_id', $admin->id);
+}
+
+if(empty($request->string_search)){
+    $tickets = $query->latest()->paginate(10);
+}else{
+    $tickets = $query->where(function($q) use ($request){
+        $q->orWhere('id', $request->string_search)
+          ->orWhere('priority',$request->string_search)
+          ->orWhere('status',$request->string_search);
+    })->latest()->paginate(10);
+}
+
             return $tickets->total() >= 1
                 ? view('supportticket::backend.ticket.search-result', compact('tickets'))->render()
                 : response()->json(['status'=>__('nothing')]);
         }
     }
 
-    //search
-    public function search_ticket(Request $request)
-    {
-        $searchTerm = strip_tags($request->string_search);
-        $priority = $request->priority;
-        $status = $request->status;
+    //search//search
+public function search_ticket(Request $request)
+{
+    $searchTerm = strip_tags($request->string_search);
+    $priority = $request->priority;
+    $status = $request->status;
 
-        // Query tickets with filters and search term
-        $tickets = Ticket::where(function ($query) use ($searchTerm, $priority, $status) {
-            if ($searchTerm) {
-                $query->where('id', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('priority', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('status', 'LIKE', "%{$searchTerm}%");
-            }
+    $admin = Auth::guard('admin')->user();
 
-            if ($priority) {
-                $query->where('priority', $priority);
-            }
+    // Base query
+    $query = Ticket::whereHas('user');
 
-            if ($status) {
-                $query->where('status', $status);
-            }
-        })
-            ->whereHas('user')
-            ->latest()
-            ->paginate(10);
-
-        return $tickets->total() >= 1
-            ? view('supportticket::backend.ticket.search-result', compact('tickets'))->render()
-            : response()->json(['status'=>__('nothing')]);
+    // 🔥 Franchise admin filter
+    if ($admin->is_franchise == 1) {
+        $query->where('admin_id', $admin->id);
     }
+
+    // Apply filters
+    $tickets = $query->where(function ($query) use ($searchTerm, $priority, $status) {
+
+        if ($searchTerm) {
+            $query->where('id', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('priority', 'LIKE', "%{$searchTerm}%")
+                  ->orWhere('status', 'LIKE', "%{$searchTerm}%");
+        }
+
+        if ($priority) {
+            $query->where('priority', $priority);
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+    })
+    ->latest()
+    ->paginate(10);
+
+    return $tickets->total() >= 1
+        ? view('supportticket::backend.ticket.search-result', compact('tickets'))->render()
+        : response()->json(['status'=>__('nothing')]);
+}
 
     //status change
     public function change_status($id)

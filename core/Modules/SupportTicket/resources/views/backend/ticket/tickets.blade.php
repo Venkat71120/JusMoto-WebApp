@@ -1,6 +1,6 @@
 @extends('backend.admin-master')
 @section('site-title')
-    {{__('All Tickets')}}
+    {{__('All Requests')}}
 @endsection
 @section('style')
     <x-summernote.css/>
@@ -20,7 +20,7 @@
                 <div class="dashboard__inner__header mb-3">
                     <div class="dashboard__inner__header__flex">
                         <div class="dashboard__inner__header__left">
-                            <h4 class="dashboard__inner__header__title">{{ __('All Tickets') }}</h4>
+                            <h4 class="dashboard__inner__header__title">{{ __('All Requests') }}</h4>
                             @can('support-ticket-bulk-delete')
                                 <x-bulk-action.bulk-action/>
                             @endcan
@@ -50,8 +50,8 @@
                     <div class="table_wrapper custom_Table">
                         <div class="mt-4">
                             <x-notice.general-notice
-                                :description="__('Notice: The admin has the ability to create tickets for the client if desired.')"
-                                :description1="__('Notice: Admin can search by ticket id, ticket status, ticket priority.')"
+                                :description="__('Notice: The admin has the ability to create requests for the client if desired.')"
+                                :description1="__('Notice: Admin can search by ticket id, request status, ticket priority.')"
                             />
                         </div>
                         <div class="search_result">

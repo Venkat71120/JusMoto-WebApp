@@ -41,4 +41,14 @@ return [
     'redirect' => env('GOOGLE_REDIRECT_URI')
 ],
 
+    'instantpay' => [
+        'base_url' => env('INSTANTPAY_BASE_URL', 'https://api.instantpay.in'),
+        'client_id' => env('INSTANTPAY_CLIENT_ID'),
+        'client_secret' => env('INSTANTPAY_CLIENT_SECRET'),
+        'encryption_key' => env('INSTANTPAY_ENCRYPTION_KEY'),
+        'auth_code' => env('INSTANTPAY_AUTH_CODE', '1'),
+        'endpoint_ip' => env('INSTANTPAY_ENDPOINT_IP'),
+        'use_mock' => env('INSTANTPAY_USE_MOCK', false),
+    ],
+
 ];

@@ -29,6 +29,7 @@ use App\Http\Controllers\api\AdminServiceScheduleController;
 use App\Http\Controllers\Api\Outlet\OutletLocationController;
 use App\Http\Controllers\Api\Orders\OrderCancelPolicyController;
 use App\Http\Controllers\Api\TrafficChallan\TrafficChallanController;
+use App\Http\Controllers\Api\AdminLoginController;
 
 
 
@@ -45,6 +46,9 @@ Route::group(['prefix'=>'v1', 'middleware' => 'setlang'],function(){
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/send-otp-in-mail',[UserController::class,'sendOTP']);
     Route::post('/reset-password',[UserController::class,'resetPassword']);
+
+    // admin/franchise login
+    Route::post('/admin/login', [AdminLoginController::class, 'login']);
 
     // provider profile
     //Route::get('provider/profile/details/{id?}',[UserProfileController::class,'publicProviderProfile'])->name('api.provider.profile.details');

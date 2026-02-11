@@ -64,26 +64,7 @@
                             <?php endif; ?>
                         </div>
                         <div class="dashboard__inner__header__right">
-                            <?php if (isset($component)) { $__componentOriginal6ed017f2ec07de0f219e80c147d739bc = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal6ed017f2ec07de0f219e80c147d739bc = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.btn.add-modal','data' => ['title' => __('Add Ticket')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('btn.add-modal'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Add Ticket'))]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal6ed017f2ec07de0f219e80c147d739bc)): ?>
-<?php $attributes = $__attributesOriginal6ed017f2ec07de0f219e80c147d739bc; ?>
-<?php unset($__attributesOriginal6ed017f2ec07de0f219e80c147d739bc); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal6ed017f2ec07de0f219e80c147d739bc)): ?>
-<?php $component = $__componentOriginal6ed017f2ec07de0f219e80c147d739bc; ?>
-<?php unset($__componentOriginal6ed017f2ec07de0f219e80c147d739bc); ?>
-<?php endif; ?>
+                            
                             <div class="d-flex text-right w-100 mt-3 ">
                                 <select name="priority" id="priority" class="select2_activation radius-5 new_st">
                                     <option value=""><?php echo e(__('Select priority')); ?></option>
@@ -127,14 +108,14 @@
                         <div class="mt-4">
                             <?php if (isset($component)) { $__componentOriginalfc4e3c8108f5f9458dc90e11adc2a670 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalfc4e3c8108f5f9458dc90e11adc2a670 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.notice.general-notice','data' => ['description' => __('Notice: The admin has the ability to create tickets for the client if desired.'),'description1' => __('Notice: Admin can search by ticket id, ticket status, ticket priority.')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.notice.general-notice','data' => ['description' => __('Notice: The admin has the ability to create requests for the client if desired.'),'description1' => __('Notice: Admin can search by ticket id, request status, ticket priority.')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('notice.general-notice'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['description' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Notice: The admin has the ability to create tickets for the client if desired.')),'description1' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Notice: Admin can search by ticket id, ticket status, ticket priority.'))]); ?>
+<?php $component->withAttributes(['description' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Notice: The admin has the ability to create requests for the client if desired.')),'description1' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Notice: Admin can search by ticket id, request status, ticket priority.'))]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalfc4e3c8108f5f9458dc90e11adc2a670)): ?>

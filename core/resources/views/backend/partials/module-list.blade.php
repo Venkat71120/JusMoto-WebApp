@@ -134,27 +134,19 @@
     </a>
 </li>
 @endcan --}}
-{{-- Support Ticket Module --}}
-@can('support-ticket-list')
-<li class="dashboard__bottom__list__item @if(request()->is('admin/support-ticket/tickets')) active @endif">
-    <a href="{{ route('admin.ticket') }}">
-        <i class="las la-headset"></i>
-        <span class="icon_title">{{ __('Service Requests') }}</span>
-    </a>
-</li>
-@endcan
+
 
 
 <!-- Support Ticket Module -->
-{{-- @canany(['department-list', 'support-ticket-list'])
+@canany(['department-list', 'support-ticket-list'])
 <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/support-ticket/*')) active open @endif">
     <a href="javascript:void(0)"><i class="las la-headset"></i>
-        <span class="icon_title">{{ __('Support') }}</span>
+        <span class="icon_title">{{ __('Service Requests') }}</span>
     </a>
     <ul class="submenu @if(request()->is('admin/support-ticket/*')) d-block @endif">
         @can('department-list')
         <li class="dashboard__bottom__list__item @if(request()->is('admin/support-ticket/department')) selected @endif">
-            <a href="{{ route('admin.department') }}">{{ __('Department') }}</a>
+            <a href="{{ route('admin.department') }}">{{ __('Service Type') }}</a>
         </li>
         @endcan
         @can('support-ticket-list')
@@ -164,7 +156,7 @@
         @endcan
     </ul>
 </li>
-@endcanany --}}
+@endcanany
 
 <!-- Pages Module -->
 {{-- <li class="dashboard__bottom__list__item has-children @if(request()->is('admin/plugin-manage/*')) active open @endif">

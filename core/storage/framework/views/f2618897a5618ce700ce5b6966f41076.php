@@ -2,78 +2,64 @@
     <?php echo e(__('Dashboard')); ?>
 
 <?php $__env->stopSection(); ?>
-
 <?php $__env->startSection('style'); ?>
-<style>
-/* ===== Body ===== */
+    <style>
+        .order_id img{
+            width: 50px !important;
+        }
+        .table_customer__thumb img {
+            width: 60px;
+            height: 60px;
+        }
+        .dashboard__card {
+            height: 97%!important;
+        }
+
+       #sales_pipeline {
+             width: 100%!important;
+             height: 350px!important;
+         }
+         /* ===== Dashboard Base ===== */
 body {
-    background-color: #f5f7fa;
-    color: #333;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
+    background-color: #e9edee;
+    color: #252726;
 }
 
-/* ===== Dashboard Cards ===== */
+/* ===== Cards ===== */
 .dashboard__card {
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-    padding: 20px;
-    height: 100% !important;
-}
-
-.dashboard__card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+    background-color: #ffffff;
+    border: 1px solid #d3dcdb;
+    height: 97% !important;
 }
 
 .dashboard__card__header__title {
-    color: #1f2a38;
+    color: #252726;
     font-weight: 600;
-    font-size: 16px;
 }
 
 .dashboard__card__header__title p {
-    color: #8f9bb3;
+    color: #c66763;
     font-size: 13px;
-    margin-top: 4px;
 }
 
 /* ===== Promo Cards ===== */
 .dashboard_promo__single {
-    border-left: 5px solid #00b799;
-    border-radius: 10px;
-    padding: 20px;
+    border-left: 4px solid #00b799;
     transition: all 0.3s ease;
-    background: #fff;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 }
 
 .dashboard_promo__single:hover {
     border-left-color: #ff4240;
-    transform: translateY(-5px);
-}
-
-.dashboard_promo__single__subtitle {
-    font-size: 13px;
-    color: #6c757d;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    transform: translateY(-3px);
 }
 
 .dashboard_promo__single__price {
-    font-size: 22px;
-    font-weight: 700;
-    color: #1f2a38;
-    margin-top: 10px;
+    color: #252726;
 }
 
 /* ===== Links & Icons ===== */
 a {
     color: #00b799;
-    transition: color 0.3s ease;
 }
 
 a:hover {
@@ -81,27 +67,17 @@ a:hover {
 }
 
 /* ===== Tables ===== */
-.custom_table table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
 .custom_table thead th {
-    background-color: #edf1f5;
-    color: #495057;
-    text-align: left;
-    font-weight: 600;
-    padding: 12px;
+    background-color: #e9edee;
+    color: #252726;
 }
 
 .table_row:hover {
-    background-color: #f1f4f8;
-    transition: all 0.3s ease;
+    background-color: #f7f9f9;
 }
 
 .table_date {
-    color: #ff4240;
-    font-weight: 500;
+    color: #c66763;
 }
 
 /* ===== Buttons ===== */
@@ -109,10 +85,6 @@ a:hover {
     background-color: #00b799;
     border-color: #00b799;
     color: #fff;
-    border-radius: 8px;
-    padding: 6px 14px;
-    font-size: 13px;
-    transition: all 0.3s ease;
 }
 
 .btn_bg_info:hover {
@@ -123,65 +95,28 @@ a:hover {
 /* ===== User / Product Images ===== */
 .table_customer__thumb img,
 .order_id img {
-    border-radius: 12px;
-    border: 1px solid #e0e0e0;
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    transition: all 0.3s ease;
+    border-radius: 6px;
+    border: 1px solid #d3dcdb;
 }
 
-.table_customer__thumb img:hover,
-.order_id img:hover {
-    transform: scale(1.05);
-}
-
-/* ===== Charts ===== */
+/* ===== Charts Container ===== */
 .chart__item__inner {
-    background: #fff;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
+    background: #ffffff;
 }
 
+/* ===== Revenue Chart ===== */
 #sales_pipeline {
     width: 100% !important;
-    height: 360px !important;
+    height: 350px !important;
 }
 
 /* ===== Greeting ===== */
 .dashboard__inner__header__title strong {
     color: #00b799;
-    font-weight: 700;
-    font-size: 20px;
 }
 
-/* ===== Dropdowns ===== */
-.select2-container--default .select2-selection--single {
-    border-radius: 8px;
-    height: 36px;
-    border: 1px solid #d3dcdb;
-    padding: 2px 10px;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 1200px) {
-    .dashboard_promo__single {
-        margin-bottom: 20px;
-    }
-}
-
-@media (max-width: 768px) {
-    .dashboard__inner__header__title {
-        font-size: 16px;
-    }
-    .dashboard__card {
-        padding: 15px;
-    }
-}
-</style>
+    </style>
 <?php $__env->stopSection(); ?>
-
 <?php $__env->startSection('content'); ?>
     <div class="dashboard__body posPadding">
         <div class="dashboard__inner">

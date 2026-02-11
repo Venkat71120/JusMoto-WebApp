@@ -26,48 +26,58 @@ class SupportTicketController extends Controller
         $this->orderServiceNotification = $orderServiceNotification;
     }
     //show and add ticket
-    public function ticket(Request $request)
-    {
-        if($request->isMethod('post')){
-            $user = User::where('id',$request->user)->first();
-            $request->validate([
-                'title'=> 'required|max:191',
-                'department'=> 'required|max:191',
-                'priority'=> 'required|max:191',
-                'user'=> 'required',
-                'description'=> 'required',
-            ]);
+public function ticket(Request $request)
+{
+    if($request->isMethod('post')){
+        $user = User::where('id',$request->user)->first();
+        $request->validate([
+            'title'=> 'required|max:191',
+            'department'=> 'required|max:191',
+            'priority'=> 'required|max:191',
+            'user'=> 'required',
+            'description'=> 'required',
+        ]);
 
-            // create ticket for specific user
-            $ticket = Ticket::create([
-                'department_id'=>$request->department,
-                'admin_id'=> Auth::guard('admin')->check() ? Auth::guard('admin')->user()->id : NULL,
-                'user_id'=> $request->user,
-                'title'=>$request->title,
-                'priority'=>$request->priority,
-                'description'=>$request->description,
-            ]);
+        // create ticket for specific user
+        $ticket = Ticket::create([
+            'department_id'=>$request->department,
+            'admin_id'=> Auth::guard('admin')->check() ? Auth::guard('admin')->user()->id : NULL,
+            'user_id'=> $request->user,
+            'title'=>$request->title,
+            'priority'=>$request->priority,
+            'description'=>$request->description,
+        ]);
 
-            // send notification to user
-             user_notification($ticket->id,$user->id,'ticket',__('New Support Ticket'), 'unread');
+        // send notification to user
+         user_notification($ticket->id,$user->id,'ticket',__('New Support Ticket'), 'unread');
 
-            //Email to user
-            try {
-                $message = get_static_option('support_ticket_message') ?? __('Support Ticket Message');
-                $message = str_replace(["@name","@ticket_id"],[$user->fullname,$ticket->id], $message);
-                Mail::to($user->email)->send(new BasicMail([
-                    'subject' => get_static_option('support_ticket_subject') ?? __('Support Ticket'),
-                    'message' => $message
-                ]));
-            } catch (\Exception $e) {}
+        //Email to user
+        try {
+            $message = get_static_option('support_ticket_message') ?? __('Support Ticket Message');
+            $message = str_replace(["@name","@ticket_id"],[$user->fullname,$ticket->id], $message);
+            Mail::to($user->email)->send(new BasicMail([
+                'subject' => get_static_option('support_ticket_subject') ?? __('Support Ticket'),
+                'message' => $message
+            ]));
+        } catch (\Exception $e) {}
 
-            return back()->with((FlashMsg::item_new('New Ticket Successfully Added')));
-        }
-        $tickets = Ticket::whereHas('user')->latest()->paginate(10);
-        $departments = Department::all();
-        $users = User::select(['id','first_name','last_name','username'])->get();
-        return view('supportticket::backend.ticket.tickets',compact(['tickets','departments','users']));
+        return back()->with((FlashMsg::item_new('New Ticket Successfully Added')));
     }
+    
+    // Filter tickets based on admin role
+    $admin = Auth::guard('admin')->user();
+    $ticketsQuery = Ticket::whereHas('user');
+    
+    // If franchise admin, show only their allocated tickets
+    if ($admin->is_franchise == 1) {
+        $ticketsQuery->where('admin_id', $admin->id);
+    }
+    
+    $tickets = $ticketsQuery->latest()->paginate(10);
+    $departments = Department::all();
+    $users = User::select(['id','first_name','last_name','username'])->get();
+    return view('supportticket::backend.ticket.tickets',compact(['tickets','departments','users']));
+}
 
     //paginate
     public function paginate(Request $request)

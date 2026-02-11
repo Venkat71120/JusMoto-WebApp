@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Backend;
-
+use Modules\SupportTicket\app\Models\Ticket;
+use Modules\SupportTicket\app\Models\Department;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Staff;
@@ -68,7 +69,53 @@ class AdminServiceOrderManageController extends Controller
         }
         return redirect()->back()->with(FlashMsg::settings_update());
     }
-    public function allocateSubAdmin(Request $request)
+    /**
+ * Create ticket when order is allocated to franchise admin
+ */
+private function createTicketForAllocation($order, $franchiseAdmin)
+{
+    // Get default department
+    $department = Department::first();
+    
+    if (!$department) {
+        $department = Department::create([
+            'name' => 'Service Orders',
+            'status' => 1,
+        ]);
+    }
+
+    // Build ticket title with service/item names only
+$serviceNames = [];
+if ($order->orderItems && $order->orderItems->count() > 0) {
+    foreach ($order->orderItems as $item) {
+        if ($item->service) {
+            $serviceNames[] = $item->service->title;
+        }
+    }
+}
+
+$ticketTitle = !empty($serviceNames) 
+    ? implode(', ', $serviceNames)
+    : "Order #{$order->id}";
+
+    // Build ticket description
+    $ticketDescription = "ORDER DETAILS\n";
+    $ticketDescription .= "Order ID: #{$order->id}\n";
+    $ticketDescription .= "Customer: " . optional($order->user)->fullname . "\n";
+    $ticketDescription .= "Total: " . $order->total . "\n";
+
+    // Create the ticket
+    Ticket::create([
+        'department_id' => $department->id,
+        'admin_id' => $franchiseAdmin->id,
+        'user_id' => $order->user_id,
+        'title' => $ticketTitle,
+        'priority' => 'normal',
+        'description' => $ticketDescription,
+        'status' => 'open',
+    ]);
+}
+public function allocateSubAdmin(Request $request)
 {
     // Validate input
     $request->validate([
@@ -76,16 +123,19 @@ class AdminServiceOrderManageController extends Controller
         'franchise_admin_id' => 'required|exists:admins,id',
     ]);
 
-    // Find order
-    $order = Order::find($request->order_id);
+    // Find order with related data
+    $order = Order::with(['user', 'orderItems'])->find($request->order_id);
+    $franchiseAdmin = Admin::find($request->franchise_admin_id);
 
     // Save allocated admin
     $order->franchise_admin_id = $request->franchise_admin_id;
     $order->save();
 
-    return redirect()->back()->with('success', 'Order allocated successfully.');
-}
+    // Auto-create ticket for this allocation
+    $this->createTicketForAllocation($order, $franchiseAdmin);
 
+    return redirect()->back()->with('success', 'Order allocated successfully and ticket created.');
+}
 public function allocateOrderToFranchise(Request $request)
 {
     $request->validate([
@@ -93,11 +143,17 @@ public function allocateOrderToFranchise(Request $request)
         'franchise_admin_id' => 'required|exists:admins,id',
     ]);
 
-    $order = Order::find($request->order_id);
+    // Find order with related data
+    $order = Order::with(['user', 'orderItems'])->find($request->order_id);
+    $franchiseAdmin = Admin::find($request->franchise_admin_id);
+    
     $order->franchise_admin_id = $request->franchise_admin_id;
     $order->save();
 
-    return redirect()->back()->with('success', 'Order allocated successfully');
+    // Auto-create ticket for this allocation
+    $this->createTicketForAllocation($order, $franchiseAdmin);
+
+    return redirect()->back()->with('success', 'Order allocated successfully and ticket created.');
 }
 
 public function allAdminOrders(Request $request)

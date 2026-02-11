@@ -26,7 +26,7 @@
                             @endcan
                         </div>
                         <div class="dashboard__inner__header__right">
-                            <x-btn.add-modal :title="__('Add Ticket')" />
+                            {{-- <x-btn.add-modal :title="__('Add Ticket')" /> --}}
                             <div class="d-flex text-right w-100 mt-3 ">
                                 <select name="priority" id="priority" class="select2_activation radius-5 new_st">
                                     <option value="">{{ __('Select priority') }}</option>

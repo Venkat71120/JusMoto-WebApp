@@ -3,6 +3,7 @@
 namespace Modules\SupportTicket\app\Models;
 
 use App\Models\Backend\Admin;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +16,7 @@ class Ticket extends Model
         'department_id',
         'admin_id',
         'user_id',
+        'order_id',
         'title',
         'subject',
         'priority',
@@ -47,5 +49,10 @@ class Ticket extends Model
     public function admin()
     {
         return $this->belongsTo(Admin::class, 'admin_id','id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 }

@@ -120,6 +120,7 @@ $ticketTitle = !empty($serviceNames)
         'department_id' => $department->id,
         'admin_id' => $franchiseAdmin->id,
         'user_id' => $order->user_id,
+        'order_id' => $order->id,
         'title' => $ticketTitle,
         'priority' => 'normal',
         'description' => $ticketDescription,

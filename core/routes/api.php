@@ -30,6 +30,7 @@ use App\Http\Controllers\Api\Outlet\OutletLocationController;
 use App\Http\Controllers\Api\Orders\OrderCancelPolicyController;
 use App\Http\Controllers\Api\TrafficChallan\TrafficChallanController;
 use App\Http\Controllers\Api\AdminLoginController;
+use App\Http\Controllers\Api\Franchise\FranchiseSupportTicketController;
 
 
 
@@ -130,6 +131,18 @@ Route::group(['prefix'=>'v1', 'middleware' => 'setlang'],function(){
             Route::get('stats', [TrafficChallanController::class, 'challanStats']);
         });
    });
+
+    // Franchise Admin API Routes
+    Route::group(['prefix' => 'franchise/', 'middleware' => 'auth:sanctum'], function () {
+        // Support Tickets
+        Route::group(['prefix' => 'support-ticket/'], function () {
+            Route::get('all', [FranchiseSupportTicketController::class, 'allTickets']);
+            Route::get('statistics', [FranchiseSupportTicketController::class, 'statistics']);
+            Route::get('{id}', [FranchiseSupportTicketController::class, 'ticketDetails']);
+            Route::post('{id}/reply', [FranchiseSupportTicketController::class, 'sendReply']);
+            Route::post('{id}/status', [FranchiseSupportTicketController::class, 'changeStatus']);
+        });
+    });
 
     //service for app
     Route::group(['prefix' => 'service/'],function (){

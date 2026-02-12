@@ -30,7 +30,11 @@ use App\Http\Controllers\Api\Outlet\OutletLocationController;
 use App\Http\Controllers\Api\Orders\OrderCancelPolicyController;
 use App\Http\Controllers\Api\TrafficChallan\TrafficChallanController;
 use App\Http\Controllers\Api\AdminLoginController;
+use App\Http\Controllers\Api\CouponController;
 use App\Http\Controllers\Api\Franchise\FranchiseSupportTicketController;
+use App\Http\Controllers\Api\Franchise\FranchiseDashboardController;
+use App\Http\Controllers\Api\Franchise\FranchiseOrderController;
+use App\Http\Controllers\Api\Franchise\FranchiseNotificationController;
 
 
 
@@ -77,6 +81,7 @@ Route::group(['prefix'=>'v1', 'middleware' => 'setlang'],function(){
      //order cancellation policy
     Route::group(['prefix' => 'order'],function (){
         Route::get('cancel-policy-details',[OrderCancelPolicyController::class,'cancelPolicyDetails']);
+        Route::post('preview-cancellation',[OrderCancelPolicyController::class,'previewCancellation'])->middleware('auth:sanctum');
     });
 
     // user Api Routes
@@ -130,10 +135,47 @@ Route::group(['prefix'=>'v1', 'middleware' => 'setlang'],function(){
             Route::post('pay', [TrafficChallanController::class, 'payChallan']);
             Route::get('stats', [TrafficChallanController::class, 'challanStats']);
         });
+
+        // Coupon Routes
+        Route::group(['prefix' => 'coupon/'],function (){
+            Route::get('available', [CouponController::class, 'availableCoupons']);
+            Route::post('validate', [CouponController::class, 'validateCoupon']);
+            Route::post('apply', [CouponController::class, 'applyCoupon']);
+            Route::post('remove', [CouponController::class, 'removeCoupon']);
+            Route::post('details', [CouponController::class, 'couponDetails']);
+        });
    });
 
     // Franchise Admin API Routes
     Route::group(['prefix' => 'franchise/', 'middleware' => 'auth:sanctum'], function () {
+        // Dashboard
+        Route::group(['prefix' => 'dashboard/'], function () {
+            Route::get('statistics', [FranchiseDashboardController::class, 'statistics']);
+            Route::get('order-counts', [FranchiseDashboardController::class, 'orderCounts']);
+            Route::get('earnings', [FranchiseDashboardController::class, 'earnings']);
+            Route::get('recent-activity', [FranchiseDashboardController::class, 'recentActivity']);
+            Route::get('earnings-chart', [FranchiseDashboardController::class, 'earningsChart']);
+        });
+
+        // Orders
+        Route::group(['prefix' => 'orders/'], function () {
+            Route::get('all', [FranchiseOrderController::class, 'allOrders']);
+            Route::get('staff', [FranchiseOrderController::class, 'availableStaff']);
+            Route::get('{id}', [FranchiseOrderController::class, 'orderDetails']);
+            Route::post('{id}/status', [FranchiseOrderController::class, 'changeStatus']);
+            Route::post('{id}/payment-status', [FranchiseOrderController::class, 'changePaymentStatus']);
+            Route::post('{id}/assign-staff', [FranchiseOrderController::class, 'assignStaff']);
+        });
+
+        // Notifications
+        Route::group(['prefix' => 'notifications/'], function () {
+            Route::get('all', [FranchiseNotificationController::class, 'allNotifications']);
+            Route::get('unread-count', [FranchiseNotificationController::class, 'unreadCount']);
+            Route::get('recent-activity', [FranchiseNotificationController::class, 'recentActivityNotifications']);
+            Route::post('{id}/read', [FranchiseNotificationController::class, 'markAsRead']);
+            Route::post('read-all', [FranchiseNotificationController::class, 'markAllAsRead']);
+        });
+
         // Support Tickets
         Route::group(['prefix' => 'support-ticket/'], function () {
             Route::get('all', [FranchiseSupportTicketController::class, 'allTickets']);

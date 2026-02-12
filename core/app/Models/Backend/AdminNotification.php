@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class AdminNotification extends Model
 {
     use HasFactory;
-    protected $fillable = ['identity','user_id','type','message','is_read'];
+    protected $fillable = ['identity','user_id','admin_id','type','message','is_read'];
 
     public static function unread_notification()
     {

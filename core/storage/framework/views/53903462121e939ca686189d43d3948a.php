@@ -78,6 +78,14 @@
                     <h4><?php echo e(__('Car Fuel Type')); ?></h4>
                     <div class="d-flex align-items-center gap-4" id="fuelTypeList"></div>
                 </div>
+                <div class="show-car-text">
+                    <h4 class="fs-md fw_semibold"><?php echo e(__('Registration Number')); ?></h4>
+                    <div class="form-group">
+                        <input type="text" name="registration_number" id="registrationNumber" class="form-control"
+                            placeholder="<?php echo e(__('Enter your car registration number')); ?>" maxlength="20">
+                        <small class="text-muted"><?php echo e(__('e.g., TN01AB1234')); ?></small>
+                    </div>
+                </div>
             </div>
 
             <div class="text-center mt-3">
@@ -91,22 +99,67 @@
 
     <script>
         window.selectedCarFromBackend = <?php echo json_encode($selectedCar ?? null); ?>;
-        $('#carSelectForm').on('submit', function (e) {
-            e.preventDefault();
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'POST',
-                data: $(this).serialize(),
-                success: function () {
-                    toastr.success('Your car has been selected successfully.');
-                    location.reload();
-                },
-                error: function (xhr) {
-                    toastr.error(xhr.responseJSON.message);
-                }
-            });
-        });
+      $('#carSelectForm').on('submit', function (e) {
+
+    e.preventDefault();
+
+let regNumber = $('#registrationNumber').val().trim();
+
+// Check empty
+if (!regNumber) {
+    toastr.error('Please enter registration number.');
+    return;
+}
+
+// Indian vehicle format validation
+let vehicleRegex = /^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$/;
+
+if (!vehicleRegex.test(regNumber)) {
+    toastr.error('Enter valid registration number (Example: TN01AB1234)');
+    return;
+}
+
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function () {
+            toastr.success('Your car has been selected successfully.');
+            location.reload();
+        },
+        error: function (xhr) {
+            toastr.error(xhr.responseJSON.message);
+        }
+    });
+
+});
+// Auto uppercase registration number while typing
+$('#registrationNumber').on('input', function () {
+
+    let value = $(this).val();
+
+    // Remove spaces + convert to uppercase
+    value = value.replace(/\s+/g, '').toUpperCase();
+
+    $(this).val(value);
+
+});
+
+$(document).ready(function () {
+
+    if (window.selectedCarFromBackend) {
+
+        // Auto fill registration number
+        if (window.selectedCarFromBackend.registration_number) {
+            $('#registrationNumber').val(
+                window.selectedCarFromBackend.registration_number
+            );
+        }
+
+    }
+
+});
 
     </script>
-</div>
-<?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/frontend/user/client/myCar/setting.blade.php ENDPATH**/ ?>
+</div><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/frontend/user/client/myCar/setting.blade.php ENDPATH**/ ?>

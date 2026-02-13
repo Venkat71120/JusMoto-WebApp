@@ -12,8 +12,13 @@ class UserSelectedCar extends Model
         'brand_id',
         'car_id',
         'engine_type_id',
-        'fual_type_id'
+        'fual_type_id',
+        'registration_number'
     ];
+public function user_selected_cars()
+{
+    return $this->hasMany(UserSelectedCar::class,'user_id');
+}
 
     public function user()
     {

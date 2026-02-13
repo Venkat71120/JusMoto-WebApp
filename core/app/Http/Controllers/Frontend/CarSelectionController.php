@@ -65,15 +65,17 @@ class CarSelectionController extends Controller
             Cookie::queue('guest_token', $guestToken, 60 * 24 * 365);
         }
 
-        UserSelectedCar::updateOrCreate(
-            $userId ? ['user_id' => $userId] : ['guest_token' => $guestToken],
-            [
-                'brand_id' => $request->brand_id,
-                'car_id' => $request->car_id,
-                'engine_type_id' => $request->selected_engine_type,
-                'fual_type_id' => $request->selected_fuel_type
-            ]
-        );
+    UserSelectedCar::create([
+    'user_id' => $userId,
+    'guest_token' => $guestToken,
+    'brand_id' => $request->brand_id,
+    'car_id' => $request->car_id,
+    'engine_type_id' => $request->selected_engine_type,
+    'fual_type_id' => $request->selected_fuel_type,
+    'registration_number' => $request->registration_number
+]);
+
+
 
         if ($userId) {
             UserCartItem::where('user_id', $userId)->delete();

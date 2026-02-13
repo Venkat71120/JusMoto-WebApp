@@ -4,15 +4,22 @@
     <div class="overlay"></div>
     <div class="main_container">
         <div class="p_15">
-            <div class="row g-4">
-                <div class="col-12 col-lg-6">
+            <!-- First Row: Greeting and Welcome Message -->
+            <div class="row g-4 mb-4">
+                <div class="col-12">
                     <div class="page_header">
                         <h3 class="page-heading" id="greeting"></h3>
                         <p><?php echo e(__('Manage your dashboard here')); ?></p>
                     </div>
-                    <div class="cards_wrapper bg_active p_6 br_8">
+                </div>
+            </div>
+
+            <!-- Second Row: Dashboard Cards (All in one row) -->
+            <div class="row g-4 mb-4">
+                <div class="col-12">
+                    <div class="cards_wrapper bg_active p_6 br_8 d-flex flex-wrap gap-3">
                         <!-- Total Orders Card -->
-                        <div class="dashborad_card bg_light br_8 py_13 px_10">
+                        <div class="dashborad_card bg_light br_8 py_13 px_10 flex-fill" style="min-width: 200px;">
                             <div class="card_content">
                                 <span><?php echo e(__('Total Orders')); ?></span>
                                 <h6><?php echo e($totalOrders); ?></h6>
@@ -44,7 +51,7 @@
                         </div>
 
                         <!-- Order Cancelled Card -->
-                        <div class="dashborad_card bg_light br_8 py_13 px_10">
+                        <div class="dashborad_card bg_light br_8 py_13 px_10 flex-fill" style="min-width: 200px;">
                             <div class="card_content">
                                 <span><?php echo e(__('Order Cancelled')); ?></span>
                                 <h6><?php echo e($cancelledOrders); ?></h6>
@@ -67,7 +74,7 @@
                         </div>
 
                         <!-- Order Pending Card -->
-                        <div class="dashborad_card bg_light br_8 py_13 px_10">
+                        <div class="dashborad_card bg_light br_8 py_13 px_10 flex-fill" style="min-width: 200px;">
                             <div class="card_content">
                                 <span><?php echo e(__('Order Pending')); ?></span>
                                 <h6><?php echo e($pendingOrders); ?></h6>
@@ -90,7 +97,7 @@
                         </div>
 
                         <!-- Order Completed Card -->
-                        <div class="dashborad_card bg_light br_8 py_13 px_10">
+                        <div class="dashborad_card bg_light br_8 py_13 px_10 flex-fill" style="min-width: 200px;">
                             <div class="card_content">
                                 <span><?php echo e(__('Order completed')); ?></span>
                                 <h6><?php echo e($completedOrders); ?></h6>
@@ -113,113 +120,153 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-6">
-                    <div class="page_header2 mt_12 mb_12">
-                        <h3 class="page_title"><?php echo e(__('My Car')); ?></h3>
-                    </div>
-                    <div class="my_car_wrapper br_8">
-                        <a href="#" class="edit_my_car">
-                            <i class="icon-28px ti tabler-edit openPop"></i>
-                        </a>
-                        <div class="my_car">
-                            <div class="my_car_img">
-                                <?php echo render_image_markup_by_attachment_id($user->user_selected_car?->car?->image,'','thumb'); ?>
+            </div>
 
-                            </div>
-                            <div class="page_header">
-                                <p class="page_title m-0"><?php echo e($user->user_selected_car?->car?->name); ?></p>
-                            </div>
-                        </div>
+            <!-- Third Row: My Cars Section (Left Column) and Empty Right Column (if needed) -->
+            <div class="row g-4 mb-4">
+                <div class="col-12 col-lg-6">
+                    <div class="page_header2 mt_12 mb_12 d-flex justify-content-between align-items-center">
+                        <h3 class="page_title"><?php echo e(__('My Cars')); ?></h3>
+                        <button class="cmn-btn black-btn openPop">
+                            + Add Car
+                        </button>
+                    </div>
+
+                    <div class="table_wrapper">
+                        <table class="table w-100">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Car Name</th>
+                                    <th>Registration</th>
+                                    <th>Fuel Type</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $__empty_1 = true; $__currentLoopData = $cars; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $car): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                    <tr>
+                                        <td>
+                                            <?php echo render_image_markup_by_attachment_id(
+                                                $car->car?->image,'','thumb'
+                                            ); ?>
+
+                                        </td>
+                                        <td><?php echo e($car->car?->name); ?></td>
+                                        <td><?php echo e($car->registration_number); ?></td>
+                                        <td><?php echo e($car->fuelType?->name ?? '-'); ?></td>
+                                        <td>
+                                            <button class="openPop">
+                                                <i class="ti tabler-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            No cars added
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+                
+                <!-- Right Column - Can be used for additional content if needed -->
+                <div class="col-12 col-lg-6">
+                    <!-- Additional content can go here -->
+                    <!-- For now, it's empty but ready for future widgets -->
+                </div>
             </div>
-        </div>
 
-        <!-- Order List Section -->
-        <h4 class="section-header px_15"><?php echo e(__('Order List')); ?></h4>
-        <div class="table_wrapper px_15">
-            <?php if($orders->count() > 0): ?>
-                <table class="data-table table w-100 br_4 overflow-hidden">
-                    <colgroup>
-                        <col data-dt-column="1" style="width: 235px;">
-                        <col data-dt-column="2" style="width: 371px;">
-                        <col data-dt-column="3" style="width: 179px;">
-                        <col data-dt-column="4" style="width: 259px;">
-                        <col data-dt-column="5" style="width: 177px;">
-                        <col data-dt-column="6" style="width: 115px;">
-                    </colgroup>
-                    <thead class="table_head">
-                    <tr>
-                        <th><?php echo e(__('Order Id')); ?></th>
-                        <th><?php echo e(__('Address')); ?></th>
-                        <th><?php echo e(__('Payment')); ?></th>
-                        <th><?php echo e(__('Date')); ?></th>
-                        <th><?php echo e(__('Status')); ?></th>
-                        <th><?php echo e(__('Action')); ?></th>
-                    </tr>
-                    </thead>
-                    <tbody class="table_body">
-                    <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <tr>
-                            <td>ID: <?php echo e($order->id); ?></td>
-                            <td>
-                                <?php if($order->orderLocations): ?>
-                                    <?php echo e(Str::limit($order->orderLocations->address ?? 'N/A', 50)); ?>
+            <!-- Fourth Row: Order List Section (Full Width) -->
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="section-header px_15"><?php echo e(__('Order List')); ?></h4>
+                    <div class="table_wrapper px_15">
+                        <?php if($orders->count() > 0): ?>
+                            <table class="data-table table w-100 br_4 overflow-hidden">
+                                <colgroup>
+                                    <col data-dt-column="1" style="width: 235px;">
+                                    <col data-dt-column="2" style="width: 371px;">
+                                    <col data-dt-column="3" style="width: 179px;">
+                                    <col data-dt-column="4" style="width: 259px;">
+                                    <col data-dt-column="5" style="width: 177px;">
+                                    <col data-dt-column="6" style="width: 115px;">
+                                </colgroup>
+                                <thead class="table_head">
+                                    <tr>
+                                        <th><?php echo e(__('Order Id')); ?></th>
+                                        <th><?php echo e(__('Address')); ?></th>
+                                        <th><?php echo e(__('Payment')); ?></th>
+                                        <th><?php echo e(__('Date')); ?></th>
+                                        <th><?php echo e(__('Status')); ?></th>
+                                        <th><?php echo e(__('Action')); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table_body">
+                                    <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <tr>
+                                            <td>ID: <?php echo e($order->id); ?></td>
+                                            <td>
+                                                <?php if($order->orderLocations): ?>
+                                                    <?php echo e(Str::limit($order->orderLocations->address ?? 'N/A', 50)); ?>
 
-                                    <?php if($order->orderLocations->post_code): ?>
-                                        , <?php echo e($order->orderLocations->post_code); ?>
+                                                    <?php if($order->orderLocations->post_code): ?>
+                                                        , <?php echo e($order->orderLocations->post_code); ?>
 
-                                    <?php endif; ?>
-                                <?php elseif($order->outletLocation): ?>
-                                    <?php echo e(Str::limit($order->outletLocation->address ?? 'N/A', 50)); ?>
+                                                    <?php endif; ?>
+                                                <?php elseif($order->outletLocation): ?>
+                                                    <?php echo e(Str::limit($order->outletLocation->address ?? 'N/A', 50)); ?>
 
-                                    <?php if($order->outletLocation->post_code): ?>
-                                        , <?php echo e($order->outletLocation->post_code); ?>
+                                                    <?php if($order->outletLocation->post_code): ?>
+                                                        , <?php echo e($order->outletLocation->post_code); ?>
 
-                                    <?php endif; ?>
-                                <?php else: ?>
-                                    N/A
-                                <?php endif; ?>
-                            </td>
-                            <td class="table_payment <?php echo e($order->payment_status == 1 ? 'complete' : 'pending'); ?>">
-                                <?php echo e($order->payment_status == 1 ? 'Complete' : 'Pending'); ?>
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    N/A
+                                                <?php endif; ?>
+                                            </td>
+                                            <td class="table_payment <?php echo e($order->payment_status == 1 ? 'complete' : 'pending'); ?>">
+                                                <?php echo e($order->payment_status == 1 ? 'Complete' : 'Pending'); ?>
 
-                            </td>
-                            <td>
-                                <i class="fa-regular fa-pen-to-square"></i>
-                                <span><?php echo e(\Carbon\Carbon::parse($order->date ?? $order->created_at)->format('d-m-Y')); ?></span>
-                                <span><?php echo e(\Carbon\Carbon::parse($order->created_at)->format('h:iA')); ?></span>
-                            </td>
-                            <td>
-                            <span class="table_status
-                                <?php if($order->status == 0): ?> pending
-                                <?php elseif($order->status == 1): ?> in-progress
-                                <?php elseif($order->status == 2): ?> complete
-                                <?php elseif($order->status == 3): ?> complete
-                                <?php elseif($order->status == 4): ?> cancelled
-                                <?php endif; ?>">
-                                <?php if($order->status == 0): ?> Pending
-                                <?php elseif($order->status == 1): ?> Active
-                                <?php elseif($order->status == 2): ?> Completed
-                                <?php elseif($order->status == 3): ?> Delivered
-                                <?php elseif($order->status == 4): ?> Cancelled
-                                <?php else: ?> Unknown
-                                <?php endif; ?>
-                            </span>
-                            </td>
-                            <td class="action_icon">
-                                <a href="<?php echo e(route('order.details', $order->id)); ?>" title="View Order">
-                                    <i class="icon-base ti tabler-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </tbody>
-                </table>
+                                            </td>
+                                            <td>
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                                <span><?php echo e(\Carbon\Carbon::parse($order->date ?? $order->created_at)->format('d-m-Y')); ?></span>
+                                                <span><?php echo e(\Carbon\Carbon::parse($order->created_at)->format('h:iA')); ?></span>
+                                            </td>
+                                            <td>
+                                                <span class="table_status
+                                                    <?php if($order->status == 0): ?> pending
+                                                    <?php elseif($order->status == 1): ?> in-progress
+                                                    <?php elseif($order->status == 2): ?> complete
+                                                    <?php elseif($order->status == 3): ?> complete
+                                                    <?php elseif($order->status == 4): ?> cancelled
+                                                    <?php endif; ?>">
+                                                    <?php if($order->status == 0): ?> Pending
+                                                    <?php elseif($order->status == 1): ?> Active
+                                                    <?php elseif($order->status == 2): ?> Completed
+                                                    <?php elseif($order->status == 3): ?> Delivered
+                                                    <?php elseif($order->status == 4): ?> Cancelled
+                                                    <?php else: ?> Unknown
+                                                    <?php endif; ?>
+                                                </span>
+                                            </td>
+                                            <td class="action_icon">
+                                                <a href="<?php echo e(route('order.details', $order->id)); ?>" title="View Order">
+                                                    <i class="icon-base ti tabler-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </tbody>
+                            </table>
 
-                <!-- Pagination -->
-                <div class="pagination mt-3" id="tablePagination">
-                    <?php if (isset($component)) { $__componentOriginal5e64ee16cb42f0815c0860d815d8c40e = $component; } ?>
+                            <!-- Pagination -->
+                            <div class="pagination mt-3" id="tablePagination">
+                                <?php if (isset($component)) { $__componentOriginal5e64ee16cb42f0815c0860d815d8c40e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal5e64ee16cb42f0815c0860d815d8c40e = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.frontend.dashboard-pagination.pagination','data' => ['paginator' => $orders]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('frontend.dashboard-pagination.pagination'); ?>
@@ -239,15 +286,19 @@
 <?php $component = $__componentOriginal5e64ee16cb42f0815c0860d815d8c40e; ?>
 <?php unset($__componentOriginal5e64ee16cb42f0815c0860d815d8c40e); ?>
 <?php endif; ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="alert alert-info text-center p-4">
+                                <i class="fa-solid fa-info-circle fa-2x mb-3"></i>
+                                <p class="mb-0"><?php echo e(__('No orders found. Start ordering to see your order history!')); ?></p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
-            <?php else: ?>
-                <div class="alert alert-info text-center p-4">
-                    <i class="fa-solid fa-info-circle fa-2x mb-3"></i>
-                    <p class="mb-0"><?php echo e(__('No orders found. Start ordering to see your order history!')); ?></p>
-                </div>
-            <?php endif; ?>
+            </div>
         </div>
     </div>
+
     <div id="popupContainer" data-popup-url="<?php echo e(route('client.car.select.popup')); ?>">
     </div>
 
@@ -280,9 +331,6 @@
         let greeting = hour < 12 ? "Good Morning" :
             hour < 18 ? "Good Afternoon" : "Good Evening";
         document.getElementById("greeting").innerText = greeting;
-
-
     </script>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('frontend.user.layout.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/frontend/user/client/dashboard.blade.php ENDPATH**/ ?>

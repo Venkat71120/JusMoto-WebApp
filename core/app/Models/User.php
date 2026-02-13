@@ -91,6 +91,10 @@ class User extends Authenticatable
         return $this->first_name . ' ' . $this->last_name;
     }
 
+public function user_selected_cars()
+{
+    return $this->hasMany(UserSelectedCar::class,'user_id');
+}
 
 
     public function user_state()
@@ -180,9 +184,7 @@ class User extends Authenticatable
         return $this->hasOne(Wallet::class, 'user_id');
     }
 
-    public function user_selected_car(){
-        return $this->hasOne(UserSelectedCar::class,'user_id');
-    }
+  
 
     public function languageDirection()
     {

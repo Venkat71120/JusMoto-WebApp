@@ -107,7 +107,9 @@
 
 
 
-<?php if($user->user_selected_car): ?>
+<?php if($user->user_selected_cars->count()): ?>
+
+<?php $__currentLoopData = $user->user_selected_cars; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $car): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
 <div class="car-card">
 
@@ -115,11 +117,11 @@
 
 <div class="car-card-title">
 
-
+Car <?php echo e($index+1); ?> :
 
 <span class="badge bg-primary">
 
-<?php echo e($user->user_selected_car->registration_number ?? 'N/A'); ?>
+<?php echo e($car->registration_number ?? 'N/A'); ?>
 
 
 </span>
@@ -128,63 +130,44 @@
 
 </div>
 
-
 <div class="row align-items-center">
 
+<div class="col-md-3 text-center">
 
-
-<div class="col-md-3 text-center car-image">
-
-<?php
-$carImage = $user->user_selected_car->car->image ?? null;
-?>
-
-<?php if($carImage): ?>
-
-<?php echo render_image_markup_by_attachment_id($carImage,'','medium'); ?>
-
-
-<?php else: ?>
-
-<img src="<?php echo e(asset('assets/common/img/no-image.png')); ?>">
+<?php if($car->car && $car->car->image): ?>
+<?php echo render_image_markup_by_attachment_id($car->car->image,'','medium'); ?>
 
 <?php endif; ?>
 
 </div>
-
-
-
 
 <div class="col-md-9">
 
 <table class="table table-bordered">
 
 <tr>
-<th width="200"><?php echo e(__('Brand')); ?></th>
-<td><?php echo e($user->user_selected_car->brand->name ?? __('N/A')); ?></td>
+<th>Brand</th>
+<td><?php echo e($car->brand->name ?? 'N/A'); ?></td>
 </tr>
 
 <tr>
-<th><?php echo e(__('Car Model')); ?></th>
-<td><?php echo e($user->user_selected_car->car->name ?? __('N/A')); ?></td>
+<th>Model</th>
+<td><?php echo e($car->car->name ?? 'N/A'); ?></td>
 </tr>
 
 <tr>
-<th><?php echo e(__('Engine Type')); ?></th>
-<td><?php echo e($user->user_selected_car->engine->name ?? __('N/A')); ?></td>
+<th>Engine</th>
+<td><?php echo e($car->engine->name ?? 'N/A'); ?></td>
 </tr>
 
 <tr>
-<th><?php echo e(__('Fuel Type')); ?></th>
-<td><?php echo e($user->user_selected_car->fual->name ?? __('N/A')); ?></td>
+<th>Fuel</th>
+<td><?php echo e($car->fual->name ?? 'N/A'); ?></td>
 </tr>
 
 <tr>
-<th><?php echo e(__('Added On')); ?></th>
-<td>
-<?php echo e(optional($user->user_selected_car->created_at)->format('d M Y, h:i A')); ?>
-
-</td>
+<th>Added On</th>
+<td><?php echo e(optional($car->created_at)->format('d M Y, h:i A')); ?></td>
 </tr>
 
 </table>
@@ -195,22 +178,10 @@ $carImage = $user->user_selected_car->car->image ?? null;
 
 </div>
 
-<?php else: ?>
-
-<div class="no-cars-message">
-
-<i class="las la-car" style="font-size:64px;color:#ccc;"></i>
-
-<h4 class="mt-3"><?php echo e(__('No Car Selected')); ?></h4>
-
-<p class="text-muted">
-<?php echo e(__('This user has not selected any car yet.')); ?>
-
-</p>
-
-</div>
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
 <?php endif; ?>
+
 
 </div>
 </div>

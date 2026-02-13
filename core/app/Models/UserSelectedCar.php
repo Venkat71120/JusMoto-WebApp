@@ -15,10 +15,6 @@ class UserSelectedCar extends Model
         'fual_type_id',
         'registration_number'
     ];
-public function user_selected_cars()
-{
-    return $this->hasMany(UserSelectedCar::class,'user_id');
-}
 
     public function user()
     {

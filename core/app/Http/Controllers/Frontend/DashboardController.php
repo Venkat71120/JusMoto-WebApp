@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Frontend;
-
+use App\Models\UserSelectedCar;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -40,6 +40,11 @@ class DashboardController extends Controller
         } else {
             $greeting = 'Good Evening';
         }
+$user = Auth::user();
+
+$cars = UserSelectedCar::with(['car','brand','engine','fual'])
+            ->where('user_id', $user->id)
+            ->get();
 
         // Get recent orders for the table with eager loading
         $orders = Order::where('user_id', $user->id)
@@ -54,7 +59,8 @@ class DashboardController extends Controller
             'completedOrders',
             'greeting',
             'orders',
-            'user'
+            'user',
+            'cars'
         ));
     }
 

@@ -26,13 +26,13 @@ class CarSelectionController extends Controller
             if($userId) $query->where('user_id',$userId);
             else $query->where('guest_token',$guestToken);
 
-            $selectedCar = $query->first();
+            $selectedCars = $query->get();
             if($selectedCar && $selectedCar->car){
                 $selectedCar->car->image_html = render_image_markup_by_attachment_id($selectedCar->car->image,'','thumb');
             }
         }
 
-        return view('frontend.user.client.myCar.setting', compact('selectedCar'));
+        return view('frontend.user.client.myCar.setting', compact('selectedCars'));
     }
     public function selectCar(Request $request)
     {

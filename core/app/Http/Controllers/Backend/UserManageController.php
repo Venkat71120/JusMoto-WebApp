@@ -40,8 +40,13 @@ class UserManageController extends Controller
 // User car details page
 public function userCarDetails($user_id)
 {
-    $user = User::with(['user_selected_car.brand', 'user_selected_car.car', 'user_selected_car.engine', 'user_selected_car.fual'])
-        ->find($user_id);
+  $user = User::with([
+    'user_selected_cars.brand',
+    'user_selected_cars.car',
+    'user_selected_cars.engine',
+    'user_selected_cars.fual'
+])->find($user_id);
+
     
     if (!$user) {
         return redirect()->back()->with(FlashMsg::error(__('User not found')));

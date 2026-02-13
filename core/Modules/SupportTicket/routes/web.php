@@ -16,7 +16,7 @@ Route::put('/client/tickets/{id}', [TicketController::class, 'update'])->name('t
 Route::match(['get','post'],'/client/ticket/{id}/{notificationId?}', [TicketController::class, 'ticket_details'])->name('ticket.details');
 
 
-
+Route::post('/ticket/complete-payment/{id}', [SupportTicketController::class, 'completePayment'])->name('admin.ticket.complete.payment');
 
 
 

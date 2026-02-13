@@ -37,6 +37,18 @@ use Modules\Wallet\app\Models\Wallet;
 
 class UserManageController extends Controller
 {
+// User car details page
+public function userCarDetails($user_id)
+{
+    $user = User::with(['user_selected_car.brand', 'user_selected_car.car', 'user_selected_car.engine', 'user_selected_car.fual'])
+        ->find($user_id);
+    
+    if (!$user) {
+        return redirect()->back()->with(FlashMsg::error(__('User not found')));
+    }
+    
+    return view('backend.pages.user.users.user-car-details', compact('user'));
+}
     public function add_user(Request $request)
     {
         if($request->isMethod('post')){

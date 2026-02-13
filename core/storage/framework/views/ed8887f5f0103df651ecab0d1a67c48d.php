@@ -1,5 +1,5 @@
 <?php $__env->startSection('site-title'); ?>
-    <?php echo e(__('All Tickets')); ?>
+    <?php echo e(__('All Requests')); ?>
 
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('style'); ?>
@@ -50,7 +50,7 @@
                 <div class="dashboard__inner__header mb-3">
                     <div class="dashboard__inner__header__flex">
                         <div class="dashboard__inner__header__left">
-                            <h4 class="dashboard__inner__header__title"><?php echo e(__('All Tickets')); ?></h4>
+                            <h4 class="dashboard__inner__header__title"><?php echo e(__('All Requests')); ?></h4>
                             <div class="mt-3">
                                 <strong>#<?php echo e($ticket_details->id); ?></strong>
                                 <?php if($ticket_details->status == 'open'): ?>
@@ -204,18 +204,18 @@
                             </form>
                         </div>
 
-                        <div class="text-end margin-reverse-30">
-                            <?php if($ticket_details->status === 'open'): ?>
-                                <?php if (isset($component)) { $__componentOriginaled49183813b6264fe02b2283042511dd = $component; } ?>
+                       <div class="text-end margin-reverse-30 d-flex gap-2 justify-content-end">
+    <?php if($ticket_details->status === 'open'): ?>
+        <?php if (isset($component)) { $__componentOriginaled49183813b6264fe02b2283042511dd = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginaled49183813b6264fe02b2283042511dd = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.status.table.status-change','data' => ['title' => __('Close Ticket'),'url' => route('admin.ticket.status',$ticket_details->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.status.table.status-change','data' => ['title' => __('Close Service'),'url' => route('admin.ticket.status',$ticket_details->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('status.table.status-change'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Close Ticket')),'url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.ticket.status',$ticket_details->id))]); ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Close Service')),'url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.ticket.status',$ticket_details->id))]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginaled49183813b6264fe02b2283042511dd)): ?>
@@ -226,8 +226,18 @@
 <?php $component = $__componentOriginaled49183813b6264fe02b2283042511dd; ?>
 <?php unset($__componentOriginaled49183813b6264fe02b2283042511dd); ?>
 <?php endif; ?>
-                            <?php endif; ?>
-                        </div>
+    <?php endif; ?>
+    
+    <?php if($ticket_details->status === 'close'): ?>
+        <form action="<?php echo e(route('admin.ticket.complete.payment', $ticket_details->id)); ?>" method="POST" class="d-inline">
+            <?php echo csrf_field(); ?>
+            <button type="submit" class="cmnBtn btn_5 btn_bg_success radius-5" onclick="return confirm('Are you sure you want to mark this order as completed and payment as paid?')">
+                <?php echo e(__('Complete Payment')); ?>
+
+            </button>
+        </form>
+    <?php endif; ?>
+</div>
                     </div>
 
                 </div>

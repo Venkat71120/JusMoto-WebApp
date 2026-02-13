@@ -75,7 +75,7 @@ Route::middleware(['setlang','clear.service.session','clear.editService.session'
     // admin commission
     Route::get('admin-commission/all',[AdminCommissionController::class, 'admin_commission_all'])->name('admin.commission.all');
     Route::post('admin-commission/update/{id?}', [AdminCommissionController::class, 'admin_commission_update'])->name('admin.commission.update');
-
+Route::get('/admin/user/car-details/{user_id}', [UserManageController::class, 'userCarDetails'])->name('admin.user.car.details');
     // Dashboard
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'adminDashboard'])->name('admin.dashboard');

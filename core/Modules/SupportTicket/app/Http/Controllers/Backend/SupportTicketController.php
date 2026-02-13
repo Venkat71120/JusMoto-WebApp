@@ -1,7 +1,7 @@
 <?php
 
 namespace Modules\SupportTicket\app\Http\Controllers\Backend;
-
+use App\Models\Order;
 use App\Helpers\FlashMsg;
 use App\Http\Controllers\Controller;
 use App\Mail\BasicMail;
@@ -25,6 +25,55 @@ class SupportTicketController extends Controller
     {
         $this->orderServiceNotification = $orderServiceNotification;
     }
+
+    public function completePayment($id)
+{
+    $ticket = Ticket::with('user')->find($id);
+    
+    if (!$ticket) {
+        return redirect()->back()->with(FlashMsg::error(__('Ticket not found')));
+    }
+    
+    // Find the order associated with this ticket
+    // Extract order ID from ticket title or description
+    preg_match('/Order ID: #(\d+)/', $ticket->description, $matches);
+    
+    if (isset($matches[1])) {
+        $order_id = $matches[1];
+        $order = \App\Models\Order::find($order_id);
+        
+        if ($order) {
+            // Update order status to completed (2)
+            $order->update([
+                'status' => 2,
+                'payment_status' => 1
+            ]);
+            
+            // Send notification to user
+            try {
+                user_notification($order->id, $order->user_id, 'order', __('Your order has been completed and payment confirmed'), 'unread');
+            } catch (\Exception $e) {}
+            
+            // Send email to user
+            try {
+                $subject = __('Order Completed - Order #:order_id');
+                $subject = str_replace(':order_id', $order->id, $subject);
+                
+                $message = __('Your order #:order_id has been completed successfully and payment has been confirmed. Thank you for your business!');
+                $message = str_replace(':order_id', $order->id, $message);
+                
+                Mail::to($ticket->user->email)->send(new \App\Mail\BasicMail([
+                    'subject' => $subject,
+                    'message' => $message
+                ]));
+            } catch (\Exception $e) {}
+            
+            return redirect()->back()->with(FlashMsg::item_new(__('Payment completed and order marked as completed successfully')));
+        }
+    }
+    
+    return redirect()->back()->with(FlashMsg::error(__('Order not found for this ticket')));
+}
     //show and add ticket
 public function ticket(Request $request)
 {

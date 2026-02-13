@@ -158,11 +158,20 @@
                             </form>
                         </div>
 
-                        <div class="text-end margin-reverse-30">
-                            @if($ticket_details->status === 'open')
-                                <x-status.table.status-change :title="__('Close Ticket')" :url="route('admin.ticket.status',$ticket_details->id)"/>
-                            @endif
-                        </div>
+                       <div class="text-end margin-reverse-30 d-flex gap-2 justify-content-end">
+    @if($ticket_details->status === 'open')
+        <x-status.table.status-change :title="__('Close Service')" :url="route('admin.ticket.status',$ticket_details->id)"/>
+    @endif
+    
+    @if($ticket_details->status === 'close')
+        <form action="{{ route('admin.ticket.complete.payment', $ticket_details->id) }}" method="POST" class="d-inline">
+            @csrf
+            <button type="submit" class="cmnBtn btn_5 btn_bg_success radius-5" onclick="return confirm('Are you sure you want to mark this order as completed and payment as paid?')">
+                {{ __('Complete Payment') }}
+            </button>
+        </form>
+    @endif
+</div>
                     </div>
 
                 </div>

@@ -72,18 +72,28 @@
 <!-- Integration Module -->
 
 
-<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('support-ticket-list')): ?>
-<li class="dashboard__bottom__list__item <?php if(request()->is('admin/support-ticket/tickets')): ?> active <?php endif; ?>">
-    <a href="<?php echo e(route('admin.ticket')); ?>">
-        <i class="las la-headset"></i>
-        <span class="icon_title"><?php echo e(__('Service Requests')); ?></span>
-    </a>
-</li>
-<?php endif; ?>
 
 
 <!-- Support Ticket Module -->
-
+<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->any(['department-list', 'support-ticket-list'])): ?>
+<li class="dashboard__bottom__list__item has-children <?php if(request()->is('admin/support-ticket/*')): ?> active open <?php endif; ?>">
+    <a href="javascript:void(0)"><i class="las la-headset"></i>
+        <span class="icon_title"><?php echo e(__('Service Requests')); ?></span>
+    </a>
+    <ul class="submenu <?php if(request()->is('admin/support-ticket/*')): ?> d-block <?php endif; ?>">
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('department-list')): ?>
+        <li class="dashboard__bottom__list__item <?php if(request()->is('admin/support-ticket/department')): ?> selected <?php endif; ?>">
+            <a href="<?php echo e(route('admin.department')); ?>"><?php echo e(__('Service Type')); ?></a>
+        </li>
+        <?php endif; ?>
+        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('support-ticket-list')): ?>
+            <li class="dashboard__bottom__list__item <?php if(request()->is('admin/support-ticket/tickets')): ?> selected <?php endif; ?>">
+                <a href="<?php echo e(route('admin.ticket')); ?>"><?php echo e(__('Service Requests')); ?></a>
+            </li>
+        <?php endif; ?>
+    </ul>
+</li>
+<?php endif; ?>
 
 <!-- Pages Module -->
 

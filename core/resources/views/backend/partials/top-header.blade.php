@@ -3,9 +3,9 @@
         <!-- Left Side - Sidebar Toggle & Breadcrumb -->
         <div class="header-left">
             <div class="sidebar-toggle-wrapper">
-                <span class="sidebar-toggle-icon bars">
+                {{-- <span class="sidebar-toggle-icon bars">
                     <i class="las la-bars"></i>
-                </span>
+                </span> --}}
             </div>
         </div>
 
@@ -15,13 +15,13 @@
             @include('backend.partials.global-search')
 
             <!-- Dark/Light Mode Toggle -->
-            <div class="header-action-item">
+            {{-- <div class="header-action-item">
                 <span class="mode-toggle @if(get_static_option('site_admin_dark_mode') == 'on') light-mode @else dark-mode @endif" id="mode_change">
                     <i class="las la-moon"></i>
                     <i class="las la-sun"></i>
                 </span>
                 <input type="hidden" value="{{get_static_option('site_admin_dark_mode') ?? 'lightMode' }}" id="darkModeValue">
-            </div>
+            </div> --}}
 
             <!-- Notifications -->
             @include('backend.partials.notifications')

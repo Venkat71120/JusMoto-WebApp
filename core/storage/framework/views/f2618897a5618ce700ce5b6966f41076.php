@@ -633,7 +633,7 @@
                     <table class="table-modern">
                         <thead>
                             <tr>
-                                <th><?php echo e(__('ID')); ?></th>
+                                <th><?php echo e(__('No.')); ?></th>
                                 <th><?php echo e(__('User')); ?></th>
                                 <th><?php echo e(__('Joined')); ?></th>
                             </tr>
@@ -642,7 +642,7 @@
                             <?php $__currentLoopData = $recent_users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr class="table-row">
                                     <td style="width: 15%;">
-                                        <span style="font-weight: 600; color: var(--red-primary);">#<?php echo e($user->id); ?></span>
+                                        <span style="font-weight: 600; color: var(--red-primary);"><?php echo e($loop->iteration); ?></span>
                                     </td>
                                     <td style="width: 60%;">
                                         <div class="user-cell">
@@ -694,7 +694,7 @@
                     <table class="table-modern">
                         <thead>
                             <tr>
-                                <th><?php echo e(__('ID')); ?></th>
+                              <th><?php echo e(__('No.')); ?></th>
                                 <th><?php echo e(__('Service')); ?></th>
                                 <th><?php echo e(''); ?></th>
                             </tr>
@@ -703,7 +703,7 @@
                             <?php $__currentLoopData = $recent_services; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $service): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr class="table-row">
                                     <td style="width: 15%;">
-                                        <span style="font-weight: 600; color: var(--red-primary);">#<?php echo e($service->id); ?></span>
+                                        <span style="font-weight: 600; color: var(--red-primary);"><?php echo e($loop->iteration); ?></span>
                                     </td>
                                     <td style="width: 60%;">
                                         <div class="item-cell">
@@ -760,7 +760,7 @@
                     <table class="table-modern">
                         <thead>
                             <tr>
-                                <th><?php echo e(__('ID')); ?></th>
+                               <th><?php echo e(__('No.')); ?></th>
                                 <th><?php echo e(__('Product')); ?></th>
                                 <th><?php echo e(''); ?></th>
                             </tr>
@@ -769,7 +769,7 @@
                             <?php $__currentLoopData = $recent_products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr class="table-row">
                                     <td style="width: 15%;">
-                                        <span style="font-weight: 600; color: var(--red-primary);">#<?php echo e($product->id); ?></span>
+                                        <span style="font-weight: 600; color: var(--red-primary);"><?php echo e($loop->iteration); ?></span>
                                     </td>
                                     <td style="width: 60%;">
                                         <div class="item-cell">

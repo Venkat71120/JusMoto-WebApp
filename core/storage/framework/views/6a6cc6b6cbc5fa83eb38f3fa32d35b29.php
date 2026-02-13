@@ -3,9 +3,7 @@
         <!-- Left Side - Sidebar Toggle & Breadcrumb -->
         <div class="header-left">
             <div class="sidebar-toggle-wrapper">
-                <span class="sidebar-toggle-icon bars">
-                    <i class="las la-bars"></i>
-                </span>
+                
             </div>
         </div>
 
@@ -15,13 +13,7 @@
             <?php echo $__env->make('backend.partials.global-search', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
             <!-- Dark/Light Mode Toggle -->
-            <div class="header-action-item">
-                <span class="mode-toggle <?php if(get_static_option('site_admin_dark_mode') == 'on'): ?> light-mode <?php else: ?> dark-mode <?php endif; ?>" id="mode_change">
-                    <i class="las la-moon"></i>
-                    <i class="las la-sun"></i>
-                </span>
-                <input type="hidden" value="<?php echo e(get_static_option('site_admin_dark_mode') ?? 'lightMode'); ?>" id="darkModeValue">
-            </div>
+            
 
             <!-- Notifications -->
             <?php echo $__env->make('backend.partials.notifications', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>

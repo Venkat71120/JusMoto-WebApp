@@ -699,7 +699,7 @@
 }
 
 .dashboard__top__logo img {
-    max-height: 45px;
+    max-height: 85px;
     width: auto;
     object-fit: contain;
 }

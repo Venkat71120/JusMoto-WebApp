@@ -628,7 +628,7 @@
                     <table class="table-modern">
                         <thead>
                             <tr>
-                                <th>{{ __('ID') }}</th>
+                                <th>{{ __('No.') }}</th>
                                 <th>{{ __('User') }}</th>
                                 <th>{{ __('Joined') }}</th>
                             </tr>
@@ -637,7 +637,7 @@
                             @foreach($recent_users as $user)
                                 <tr class="table-row">
                                     <td style="width: 15%;">
-                                        <span style="font-weight: 600; color: var(--red-primary);">#{{ $user->id }}</span>
+                                        <span style="font-weight: 600; color: var(--red-primary);">{{ $loop->iteration }}</span>
                                     </td>
                                     <td style="width: 60%;">
                                         <div class="user-cell">
@@ -686,7 +686,7 @@
                     <table class="table-modern">
                         <thead>
                             <tr>
-                                <th>{{ __('ID') }}</th>
+                              <th>{{ __('No.') }}</th>
                                 <th>{{ __('Service') }}</th>
                                 <th>{{ '' }}</th>
                             </tr>
@@ -695,7 +695,7 @@
                             @foreach($recent_services as $service)
                                 <tr class="table-row">
                                     <td style="width: 15%;">
-                                        <span style="font-weight: 600; color: var(--red-primary);">#{{ $service->id }}</span>
+                                        <span style="font-weight: 600; color: var(--red-primary);">{{ $loop->iteration }}</span>
                                     </td>
                                     <td style="width: 60%;">
                                         <div class="item-cell">
@@ -747,7 +747,7 @@
                     <table class="table-modern">
                         <thead>
                             <tr>
-                                <th>{{ __('ID') }}</th>
+                               <th>{{ __('No.') }}</th>
                                 <th>{{ __('Product') }}</th>
                                 <th>{{ '' }}</th>
                             </tr>
@@ -756,7 +756,7 @@
                             @foreach($recent_products as $product)
                                 <tr class="table-row">
                                     <td style="width: 15%;">
-                                        <span style="font-weight: 600; color: var(--red-primary);">#{{ $product->id }}</span>
+                                        <span style="font-weight: 600; color: var(--red-primary);">{{ $loop->iteration }}</span>
                                     </td>
                                     <td style="width: 60%;">
                                         <div class="item-cell">

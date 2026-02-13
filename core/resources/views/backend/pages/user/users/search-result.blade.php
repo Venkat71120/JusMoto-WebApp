@@ -51,12 +51,9 @@
                     </a>
 
                     @can('user-verify-status')
-                       <a class="cmnBtn btn_5 btn_bg_primary radius-5 user_identity_details"
-                           data-bs-toggle="modal"
-                           data-bs-target="#userIdentityModal"
-                           data-user_id="{{ $user->id }}">
-                            {{ __('View') }}
-                        </a>
+                      <a href="{{ route('admin.user.car.details', $user->id) }}" class="cmnBtn btn_5 btn_bg_primary radius-5">
+    {{ __('View Cars') }}
+</a>
                         @endcan
 
                     @can('user-password')

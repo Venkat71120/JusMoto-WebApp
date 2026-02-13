@@ -91,13 +91,10 @@
                     </a>
 
                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-verify-status')): ?>
-                       <a class="cmnBtn btn_5 btn_bg_primary radius-5 user_identity_details"
-                           data-bs-toggle="modal"
-                           data-bs-target="#userIdentityModal"
-                           data-user_id="<?php echo e($user->id); ?>">
-                            <?php echo e(__('View')); ?>
+                      <a href="<?php echo e(route('admin.user.car.details', $user->id)); ?>" class="cmnBtn btn_5 btn_bg_primary radius-5">
+    <?php echo e(__('View Cars')); ?>
 
-                        </a>
+</a>
                         <?php endif; ?>
 
                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('user-password')): ?>

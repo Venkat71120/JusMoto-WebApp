@@ -1,4 +1,4 @@
-<?php $__env->startSection('title','Dashboard'); ?>
+<?php $__env->startSection('title', 'Dashboard'); ?>
 
 <?php $__env->startSection('content'); ?>
     <div class="overlay"></div>
@@ -27,23 +27,23 @@
                             <div class="card_icon">
                                 <div class="card_icon_wrapper">
                                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none"
-                                         xmlns="http://www.w3.org/2000/svg">
+                                        xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M0 8C0 3.58172 3.58172 0 8 0H44C48.4183 0 52 3.58172 52 8V44C52 48.4183 48.4183 52 44 52H8C3.58172 52 0 48.4183 0 44V8Z"
                                             fill="#FF6B2C" fill-opacity="0.1" />
                                         <g clip-path="url(#clip0_10511_2914)">
                                             <path d="M22.25 18.5H36" stroke="#FF6B2C" stroke-width="3"
-                                                  stroke-linecap="round" stroke-linejoin="round" />
-                                            <path d="M22.25 26H36" stroke="#FF6B2C" stroke-width="3"
-                                                  stroke-linecap="round" stroke-linejoin="round" />
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                            <path d="M22.25 26H36" stroke="#FF6B2C" stroke-width="3" stroke-linecap="round"
+                                                stroke-linejoin="round" />
                                             <path d="M22.25 33.5H36" stroke="#FF6B2C" stroke-width="3"
-                                                  stroke-linecap="round" stroke-linejoin="round" />
+                                                stroke-linecap="round" stroke-linejoin="round" />
                                             <path d="M17.25 18.5V18.5125" stroke="#FF6B2C" stroke-width="3"
-                                                  stroke-linecap="round" stroke-linejoin="round" />
+                                                stroke-linecap="round" stroke-linejoin="round" />
                                             <path d="M17.25 26V26.0125" stroke="#FF6B2C" stroke-width="3"
-                                                  stroke-linecap="round" stroke-linejoin="round" />
+                                                stroke-linecap="round" stroke-linejoin="round" />
                                             <path d="M17.25 33.5V33.5125" stroke="#FF6B2C" stroke-width="3"
-                                                  stroke-linecap="round" stroke-linejoin="round" />
+                                                stroke-linecap="round" stroke-linejoin="round" />
                                         </g>
                                     </svg>
                                 </div>
@@ -59,7 +59,7 @@
                             <div class="card_icon">
                                 <div class="card_icon_wrapper">
                                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none"
-                                         xmlns="http://www.w3.org/2000/svg">
+                                        xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M0 8C0 3.58172 3.58172 0 8 0H44C48.4183 0 52 3.58172 52 8V44C52 48.4183 48.4183 52 44 52H8C3.58172 52 0 48.4183 0 44V8Z"
                                             fill="#E9EFFF" />
@@ -82,7 +82,7 @@
                             <div class="card_icon">
                                 <div class="card_icon_wrapper">
                                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none"
-                                         xmlns="http://www.w3.org/2000/svg">
+                                        xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M0 8C0 3.58172 3.58172 0 8 0H44C48.4183 0 52 3.58172 52 8V44C52 48.4183 48.4183 52 44 52H8C3.58172 52 0 48.4183 0 44V8Z"
                                             fill="#FFB100" fill-opacity="0.1" />
@@ -105,7 +105,7 @@
                             <div class="card_icon">
                                 <div class="card_icon_wrapper">
                                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none"
-                                         xmlns="http://www.w3.org/2000/svg">
+                                        xmlns="http://www.w3.org/2000/svg">
                                         <path
                                             d="M0 8C0 3.58172 3.58172 0 8 0H44C48.4183 0 52 3.58172 52 8V44C52 48.4183 48.4183 52 44 52H8C3.58172 52 0 48.4183 0 44V8Z"
                                             fill="#00B289" fill-opacity="0.1" />
@@ -145,22 +145,32 @@
                             </thead>
                             <tbody>
                                 <?php $__empty_1 = true; $__currentLoopData = $cars; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $car): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                                    <tr>
-                                        <td>
-                                            <?php echo render_image_markup_by_attachment_id(
-                                                $car->car?->image,'','thumb'
-                                            ); ?>
+                                                            <tr>
+                                                                <td>
+                                                                    <?php echo render_image_markup_by_attachment_id(
+                                        $car->car?->image,
+                                        '',
+                                        'thumb'
+                                    ); ?>
 
-                                        </td>
-                                        <td><?php echo e($car->car?->name); ?></td>
-                                        <td><?php echo e($car->registration_number); ?></td>
-                                        <td><?php echo e($car->fuelType?->name ?? '-'); ?></td>
-                                        <td>
-                                            <button class="openPop">
-                                                <i class="ti tabler-edit"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                                                </td>
+                                                                <td><?php echo e($car->car?->name); ?></td>
+                                                                <td><?php echo e($car->registration_number); ?></td>
+                                                                <td><?php echo e($car->fuelType?->name ?? '-'); ?></td>
+                                                                <td>
+                                                                  <button class="btn-edit-car" 
+        data-car-id="<?php echo e($car->id); ?>"
+        data-car-name="<?php echo e($car->car?->name); ?>"
+        data-brand-name="<?php echo e($car->brand?->name); ?>"
+        data-registration="<?php echo e($car->registration_number); ?>"
+        data-car-image="<?php echo e($car->car?->image); ?>"
+        data-engine-id="<?php echo e($car->engine_type_id); ?>"
+        data-fuel-id="<?php echo e($car->fual_type_id); ?>"
+        data-car-model-id="<?php echo e($car->car_id); ?>">
+    <i class="ti tabler-edit"></i>
+</button>
+                                                                </td>
+                                                            </tr>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr>
                                         <td colspan="5" class="text-center">
@@ -172,7 +182,7 @@
                         </table>
                     </div>
                 </div>
-                
+
                 <!-- Right Column - Can be used for additional content if needed -->
                 <div class="col-12 col-lg-6">
                     <!-- Additional content can go here -->
@@ -239,12 +249,12 @@
                                             </td>
                                             <td>
                                                 <span class="table_status
-                                                    <?php if($order->status == 0): ?> pending
-                                                    <?php elseif($order->status == 1): ?> in-progress
-                                                    <?php elseif($order->status == 2): ?> complete
-                                                    <?php elseif($order->status == 3): ?> complete
-                                                    <?php elseif($order->status == 4): ?> cancelled
-                                                    <?php endif; ?>">
+                                                                <?php if($order->status == 0): ?> pending
+                                                                <?php elseif($order->status == 1): ?> in-progress
+                                                                <?php elseif($order->status == 2): ?> complete
+                                                                <?php elseif($order->status == 3): ?> complete
+                                                                <?php elseif($order->status == 4): ?> cancelled
+                                                                <?php endif; ?>">
                                                     <?php if($order->status == 0): ?> Pending
                                                     <?php elseif($order->status == 1): ?> Active
                                                     <?php elseif($order->status == 2): ?> Completed
@@ -304,13 +314,13 @@
 
     <?php echo $__env->make('frontend.user.client.delete-account-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     <?php echo $__env->make('frontend.user.client.myCar.merge_confirm_modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-
+    <?php echo $__env->make('frontend.user.client.myCar.car-edit-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('scripts'); ?>
     <?php if(session('car_merge_conflict')): ?>
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 var carConflictModal = new bootstrap.Modal(document.getElementById('car_conflict_modal'));
                 carConflictModal.show();
             });
@@ -322,7 +332,6 @@
                 var deleteModal = new bootstrap.Modal(document.getElementById('delete_modal'));
                 deleteModal.show();
             });
-
         </script>
     <?php endif; ?>
 
@@ -332,5 +341,8 @@
             hour < 18 ? "Good Afternoon" : "Good Evening";
         document.getElementById("greeting").innerText = greeting;
     </script>
+    
+   <?php echo $__env->make('frontend.user.client.myCar.car-edit-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('frontend.user.layout.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/frontend/user/client/dashboard.blade.php ENDPATH**/ ?>

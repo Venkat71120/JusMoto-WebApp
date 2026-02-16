@@ -155,11 +155,11 @@
                                         <td>{{ $car->car?->name }}</td>
                                         <td>{{ $car->registration_number }}</td>
                                         <td>{{ $car->fuelType?->name ?? '-' }}</td>
-                                        <td>
+                                        {{-- <td>
                                             <button class="openPop">
                                                 <i class="ti tabler-edit"></i>
                                             </button>
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                 @empty
                                     <tr>

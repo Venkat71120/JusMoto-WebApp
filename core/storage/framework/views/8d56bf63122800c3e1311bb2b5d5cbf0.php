@@ -1,8 +1,8 @@
-@extends('backend.admin-master')
-@section('site-title')
-    {{__('All Brands')}}
-@endsection
-@section('style')
+<?php $__env->startSection('site-title'); ?>
+    <?php echo e(__('All Brands')); ?>
+
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('style'); ?>
     <style>
         /* ===== MODERN RED THEME - ALL BRANDS ===== */
         :root {
@@ -658,9 +658,9 @@
             color: #E5E7EB;
         }
     </style>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="brands-page">
         <div class="row g-4 mt-0">
             <div class="col-xl-12 col-lg-12">
@@ -668,22 +668,23 @@
                     <div class="dashboard__inner__header">
                         <div class="dashboard__inner__header__flex">
                             <div class="dashboard__inner__header__left">
-                                <h4 class="dashboard__inner__header__title">{{ __('All Brands') }}</h4>
-                                @can('admin-brand-bulk-delete')
+                                <h4 class="dashboard__inner__header__title"><?php echo e(__('All Brands')); ?></h4>
+                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin-brand-bulk-delete')): ?>
                                     <div class="bulk-action-wrapper">
                                         <select class="bulk-action-select" id="bulk_action">
-                                            <option value="">{{ __('Bulk Actions') }}</option>
-                                            <option value="delete">{{ __('Delete Selected') }}</option>
+                                            <option value=""><?php echo e(__('Bulk Actions')); ?></option>
+                                            <option value="delete"><?php echo e(__('Delete Selected')); ?></option>
                                         </select>
-                                        <button class="apply-btn" id="bulk_action_apply">{{ __('Apply') }}</button>
+                                        <button class="apply-btn" id="bulk_action_apply"><?php echo e(__('Apply')); ?></button>
                                     </div>
-                                @endcan
+                                <?php endif; ?>
                             </div>
                             <div class="dashboard__inner__header__right">
                                 <div class="btn-wrapper">
-                                    <a href="{{ route('admin.brand.add') }}" class="btn_bg_blue">
+                                    <a href="<?php echo e(route('admin.brand.add')); ?>" class="btn_bg_blue">
                                         <i class="las la-plus"></i>
-                                        {{ __('Add Brand') }}
+                                        <?php echo e(__('Add Brand')); ?>
+
                                     </a>
                                 </div>
                                 <div class="search-wrapper">
@@ -691,18 +692,37 @@
                                     <input class="search-input notice_string_search" 
                                            type="text" 
                                            id="string_search" 
-                                           placeholder="{{ __('Search brands...') }}">
+                                           placeholder="<?php echo e(__('Search brands...')); ?>">
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <x-validation.error/>
+                    <?php if (isset($component)) { $__componentOriginal4bb59b834d778ff0cb72af5a473e2885 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4bb59b834d778ff0cb72af5a473e2885 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.validation.error','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('validation.error'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4bb59b834d778ff0cb72af5a473e2885)): ?>
+<?php $attributes = $__attributesOriginal4bb59b834d778ff0cb72af5a473e2885; ?>
+<?php unset($__attributesOriginal4bb59b834d778ff0cb72af5a473e2885); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4bb59b834d778ff0cb72af5a473e2885)): ?>
+<?php $component = $__componentOriginal4bb59b834d778ff0cb72af5a473e2885; ?>
+<?php unset($__componentOriginal4bb59b834d778ff0cb72af5a473e2885); ?>
+<?php endif; ?>
 
                     <div class="tableStyle_three">
                         <div class="table-responsive">
                             <div class="search_notice_result">
-                                @include('backend.pages.admin.brand.search-brand')
+                                <?php echo $__env->make('backend.pages.admin.brand.search-brand', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                             </div>
                         </div>
                     </div>
@@ -710,12 +730,31 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('scripts')
-    @can('admin-brand-bulk-delete')
-        <x-bulk-action.bulk-action-js :url="route('admin.brand.bulk.action')"/>
-    @endcan
+<?php $__env->startSection('scripts'); ?>
+    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin-brand-bulk-delete')): ?>
+        <?php if (isset($component)) { $__componentOriginal996fed7ae655ce20bc4d8081dd84ac5f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal996fed7ae655ce20bc4d8081dd84ac5f = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.bulk-action.bulk-action-js','data' => ['url' => route('admin.brand.bulk.action')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('bulk-action.bulk-action-js'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.brand.bulk.action'))]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal996fed7ae655ce20bc4d8081dd84ac5f)): ?>
+<?php $attributes = $__attributesOriginal996fed7ae655ce20bc4d8081dd84ac5f; ?>
+<?php unset($__attributesOriginal996fed7ae655ce20bc4d8081dd84ac5f); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal996fed7ae655ce20bc4d8081dd84ac5f)): ?>
+<?php $component = $__componentOriginal996fed7ae655ce20bc4d8081dd84ac5f; ?>
+<?php unset($__componentOriginal996fed7ae655ce20bc4d8081dd84ac5f); ?>
+<?php endif; ?>
+    <?php endif; ?>
 
     <script type="text/javascript">
         (function(){
@@ -732,14 +771,14 @@
                     
                     searchTimeout = setTimeout(function() {
                         $.ajax({
-                            url: "{{ route('admin.brand.search') }}",
+                            url: "<?php echo e(route('admin.brand.search')); ?>",
                             method: 'GET',
                             data: { string_search: string_search },
                             beforeSend: function() {
                                 $('.search_notice_result').html(`
                                     <div class="loading-state">
                                         <div class="spinner"></div>
-                                        <p style="color: var(--gray-500);">{{ __('Searching...') }}</p>
+                                        <p style="color: var(--gray-500);"><?php echo e(__('Searching...')); ?></p>
                                     </div>
                                 `);
                             },
@@ -748,7 +787,7 @@
                                     $('.search_notice_result').html(`
                                         <div class="empty-state">
                                             <i class="las la-trademark"></i>
-                                            <p>{{ __('No brands found') }}</p>
+                                            <p><?php echo e(__('No brands found')); ?></p>
                                         </div>
                                     `);
                                 } else {
@@ -768,12 +807,12 @@
 
                 function notices(page){
                     $.ajax({
-                        url: "{{ route('admin.car.paginate.data') }}?page=" + page,
+                        url: "<?php echo e(route('admin.car.paginate.data')); ?>?page=" + page,
                         beforeSend: function() {
                             $('.search_notice_result').html(`
                                 <div class="loading-state">
                                     <div class="spinner"></div>
-                                    <p style="color: var(--gray-500);">{{ __('Loading...') }}</p>
+                                    <p style="color: var(--gray-500);"><?php echo e(__('Loading...')); ?></p>
                                 </div>
                             `);
                         },
@@ -790,8 +829,8 @@
                     
                     if (!action || selected === 0) {
                         Swal.fire({
-                            title: '{{__("No Action")}}',
-                            text: '{{__("Please select items and an action.")}}',
+                            title: '<?php echo e(__("No Action")); ?>',
+                            text: '<?php echo e(__("Please select items and an action.")); ?>',
                             icon: 'info',
                             confirmButtonColor: '#e31b23',
                             background: $('#darkModeValue').val() === 'on' ? '#1f2937' : '#ffffff'
@@ -801,14 +840,14 @@
                     
                     if (action === 'delete') {
                         Swal.fire({
-                            title: '{{__("Delete Selected?")}}',
-                            text: '{{__("This action cannot be undone.")}}',
+                            title: '<?php echo e(__("Delete Selected?")); ?>',
+                            text: '<?php echo e(__("This action cannot be undone.")); ?>',
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#e31b23',
                             cancelButtonColor: '#6b7280',
-                            confirmButtonText: '{{__("Delete")}}',
-                            cancelButtonText: '{{__("Cancel")}}'
+                            confirmButtonText: '<?php echo e(__("Delete")); ?>',
+                            cancelButtonText: '<?php echo e(__("Cancel")); ?>'
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 $('#bulk_action_form').submit();
@@ -854,14 +893,14 @@
                     e.preventDefault();
                     
                     Swal.fire({
-                        title: '{{__("Change Status?")}}',
-                        text: '{{__("Are you sure you want to change the status?")}}',
+                        title: '<?php echo e(__("Change Status?")); ?>',
+                        text: '<?php echo e(__("Are you sure you want to change the status?")); ?>',
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#e31b23',
                         cancelButtonColor: '#6b7280',
-                        confirmButtonText: "{{ __('Yes, change it!') }}",
-                        cancelButtonText: "{{ __('Cancel') }}",
+                        confirmButtonText: "<?php echo e(__('Yes, change it!')); ?>",
+                        cancelButtonText: "<?php echo e(__('Cancel')); ?>",
                         background: $('#darkModeValue').val() === 'on' ? '#1f2937' : '#ffffff'
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -872,4 +911,5 @@
             });
         })(jQuery);
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('backend.admin-master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/backend/pages/admin/brand/allBrands.blade.php ENDPATH**/ ?>

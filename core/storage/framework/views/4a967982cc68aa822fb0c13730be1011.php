@@ -1,12 +1,30 @@
-@extends('backend.admin-master')
+<?php $__env->startSection('site-title'); ?>
+<?php echo e(__('Add New Service')); ?>
 
-@section('site-title')
-{{__('Add New Service')}}
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('style')
+<?php $__env->startSection('style'); ?>
 
-<x-media.css/>
+<?php if (isset($component)) { $__componentOriginalbc1bcd20222d67be5eb46ea1d22a74fa = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalbc1bcd20222d67be5eb46ea1d22a74fa = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.media.css','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('media.css'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalbc1bcd20222d67be5eb46ea1d22a74fa)): ?>
+<?php $attributes = $__attributesOriginalbc1bcd20222d67be5eb46ea1d22a74fa; ?>
+<?php unset($__attributesOriginalbc1bcd20222d67be5eb46ea1d22a74fa); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalbc1bcd20222d67be5eb46ea1d22a74fa)): ?>
+<?php $component = $__componentOriginalbc1bcd20222d67be5eb46ea1d22a74fa; ?>
+<?php unset($__componentOriginalbc1bcd20222d67be5eb46ea1d22a74fa); ?>
+<?php endif; ?>
 
 <style>
 
@@ -612,10 +630,10 @@ body.dark-mode .btn_bg_info {
 
 </style>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <div class="services-page">
 
@@ -627,20 +645,40 @@ body.dark-mode .btn_bg_info {
 <div class="header-wrap d-flex justify-content-between align-items-center">
 
 <div class="left-content">
-<h4 class="header-title">{{__('Add New Service')}}</h4>
+<h4 class="header-title"><?php echo e(__('Add New Service')); ?></h4>
 </div>
 
 <div class="right-content">
 <a class="cmnBtn btn_5 btn_bg_info radius-5"
-href="{{route('admin.all.services')}}">
+href="<?php echo e(route('admin.all.services')); ?>">
 <i class="las la-arrow-left"></i>
-{{__('All Services')}}
+<?php echo e(__('All Services')); ?>
+
 </a>
 </div>
 
 </div>
 
-<x-validation.error/>
+<?php if (isset($component)) { $__componentOriginal4bb59b834d778ff0cb72af5a473e2885 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4bb59b834d778ff0cb72af5a473e2885 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.validation.error','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('validation.error'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4bb59b834d778ff0cb72af5a473e2885)): ?>
+<?php $attributes = $__attributesOriginal4bb59b834d778ff0cb72af5a473e2885; ?>
+<?php unset($__attributesOriginal4bb59b834d778ff0cb72af5a473e2885); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4bb59b834d778ff0cb72af5a473e2885)): ?>
+<?php $component = $__componentOriginal4bb59b834d778ff0cb72af5a473e2885; ?>
+<?php unset($__componentOriginal4bb59b834d778ff0cb72af5a473e2885); ?>
+<?php endif; ?>
 
 <div class="add-listing-wrapper">
 
@@ -653,7 +691,8 @@ href="{{route('admin.all.services')}}">
    href="#listing-info"
    role="tab">
 <span class="new_stepForm_list__item__numb">1</span>
-{{__('Service Details')}}
+<?php echo e(__('Service Details')); ?>
+
 </a>
 
 <a class="nav-link"
@@ -662,7 +701,8 @@ href="{{route('admin.all.services')}}">
    href="#location"
    role="tab">
 <span class="new_stepForm_list__item__numb">2</span>
-{{__('Service Attributes')}}
+<?php echo e(__('Service Attributes')); ?>
+
 </a>
 
 <a class="nav-link"
@@ -671,33 +711,35 @@ href="{{route('admin.all.services')}}">
    href="#car"
    role="tab">
 <span class="new_stepForm_list__item__numb">3</span>
-{{__('Select Car')}}
+<?php echo e(__('Select Car')); ?>
+
 </a>
 
 </div>
 
-<form action="{{route('admin.add.new.service')}}" method="post" enctype="multipart/form-data">
-@csrf
+<form action="<?php echo e(route('admin.add.new.service')); ?>" method="post" enctype="multipart/form-data">
+<?php echo csrf_field(); ?>
 
 <div class="add-listing-content-wrapper">
 
 <div class="tab-content" id="add-listing-tabContent">
 
-{{-- Service General Info --}}
-@include('backend.pages.services.admin.service-general-info')
 
-{{-- Service Include --}}
-@include('backend.pages.services.admin.service-include')
+<?php echo $__env->make('backend.pages.services.admin.service-general-info', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-{{-- Select Car --}}
-@include('backend.pages.services.admin.select-service-car')
+
+<?php echo $__env->make('backend.pages.services.admin.service-include', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
+
+<?php echo $__env->make('backend.pages.services.admin.select-service-car', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 </div>
 
 <div class="text-end mt-4">
 <button type="submit" class="cmnBtn btn_5 btn_bg_blue radius-5">
 <i class="las la-save"></i>
-{{__('Save Service')}}
+<?php echo e(__('Save Service')); ?>
+
 </button>
 </div>
 
@@ -712,18 +754,75 @@ href="{{route('admin.all.services')}}">
 
 </div>
 
-<x-media.markup/>
+<?php if (isset($component)) { $__componentOriginal0a0c44ec0e77c6e781a03c2fda86fc75 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal0a0c44ec0e77c6e781a03c2fda86fc75 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.media.markup','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('media.markup'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal0a0c44ec0e77c6e781a03c2fda86fc75)): ?>
+<?php $attributes = $__attributesOriginal0a0c44ec0e77c6e781a03c2fda86fc75; ?>
+<?php unset($__attributesOriginal0a0c44ec0e77c6e781a03c2fda86fc75); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal0a0c44ec0e77c6e781a03c2fda86fc75)): ?>
+<?php $component = $__componentOriginal0a0c44ec0e77c6e781a03c2fda86fc75; ?>
+<?php unset($__componentOriginal0a0c44ec0e77c6e781a03c2fda86fc75); ?>
+<?php endif; ?>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('scripts')
+<?php $__env->startSection('scripts'); ?>
 
-<x-media.js/>
-<x-frontend.js.new-tag-add-js/>
+<?php if (isset($component)) { $__componentOriginal9c9e2f22010721f1a8a11abf87b15b5e = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9c9e2f22010721f1a8a11abf87b15b5e = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.media.js','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('media.js'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9c9e2f22010721f1a8a11abf87b15b5e)): ?>
+<?php $attributes = $__attributesOriginal9c9e2f22010721f1a8a11abf87b15b5e; ?>
+<?php unset($__attributesOriginal9c9e2f22010721f1a8a11abf87b15b5e); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9c9e2f22010721f1a8a11abf87b15b5e)): ?>
+<?php $component = $__componentOriginal9c9e2f22010721f1a8a11abf87b15b5e; ?>
+<?php unset($__componentOriginal9c9e2f22010721f1a8a11abf87b15b5e); ?>
+<?php endif; ?>
+<?php if (isset($component)) { $__componentOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.frontend.js.new-tag-add-js','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('frontend.js.new-tag-add-js'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a)): ?>
+<?php $attributes = $__attributesOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a; ?>
+<?php unset($__attributesOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a)): ?>
+<?php $component = $__componentOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a; ?>
+<?php unset($__componentOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a); ?>
+<?php endif; ?>
 
-<script src="{{asset('assets/frontend/js/multi-step.js')}}"></script>
-@include('backend.pages.services.admin.service-add-more-option-js')
-<script src="{{asset('assets/backend/js/select2.min.js')}}"></script>
+<script src="<?php echo e(asset('assets/frontend/js/multi-step.js')); ?>"></script>
+<?php echo $__env->make('backend.pages.services.admin.service-add-more-option-js', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<script src="<?php echo e(asset('assets/backend/js/select2.min.js')); ?>"></script>
 
 <script>
     $.ajaxSetup({
@@ -739,33 +838,33 @@ href="{{route('admin.all.services')}}">
             // Initialize Select2
             $('.select2').select2({
                 width: '100%',
-                placeholder: '{{__("Select option")}}',
+                placeholder: '<?php echo e(__("Select option")); ?>',
                 allowClear: true
             });
 
             $('#category').select2({
                 width: '100%',
-                placeholder: '{{__("Select Category")}}',
+                placeholder: '<?php echo e(__("Select Category")); ?>',
                 allowClear: true
             });
 
             $('.subcategory').select2({
                 width: '100%',
-                placeholder: '{{__("Select Sub Category")}}',
+                placeholder: '<?php echo e(__("Select Sub Category")); ?>',
                 allowClear: true
             });
 
             $('#car_brand_id').select2({
                 dropdownParent: $('#addModal'),
                 width: '100%',
-                placeholder: '{{__("Select Brand")}}',
+                placeholder: '<?php echo e(__("Select Brand")); ?>',
                 allowClear: true
             });
 
             $('.car_model_id').select2({
                 dropdownParent: $('#addModal'),
                 width: '100%',
-                placeholder: '{{__("Select Car Model")}}',
+                placeholder: '<?php echo e(__("Select Car Model")); ?>',
                 allowClear: true
             });
 
@@ -798,11 +897,11 @@ href="{{route('admin.all.services')}}">
                 
                 $.ajax({
                     method: 'post',
-                    url: "{{route('get.subcategory')}}",
+                    url: "<?php echo e(route('get.subcategory')); ?>",
                     data: { category_id: category_id },
                     success: function(res) {
                         if (res.status == 'success') {
-                            let options = "<option value=''>{{__('Select Sub Category')}}</option>";
+                            let options = "<option value=''><?php echo e(__('Select Sub Category')); ?></option>";
                             $.each(res.sub_categories, function(index, value) {
                                 options += "<option value='" + value.id + "'>" + value.name + "</option>";
                             });
@@ -820,11 +919,11 @@ href="{{route('admin.all.services')}}">
                 
                 $.ajax({
                     method: 'post',
-                    url: "{{route('get.car_model')}}",
+                    url: "<?php echo e(route('get.car_model')); ?>",
                     data: { brand_id: brand_id },
                     success: function(res) {
                         if (res.status == 'success') {
-                            let options = "<option value=''>{{__('Select Car Model')}}</option>";
+                            let options = "<option value=''><?php echo e(__('Select Car Model')); ?></option>";
                             $.each(res.data, function(index, value) {
                                 let car_name = value.name + (value.Year ? ' - ' + value.Year : '');
                                 options += "<option value='" + value.id + "'>" + car_name + "</option>";
@@ -843,11 +942,11 @@ href="{{route('admin.all.services')}}">
                 
                 $.ajax({
                     method: 'post',
-                    url: "{{route('get.car_variant')}}",
+                    url: "<?php echo e(route('get.car_variant')); ?>",
                     data: { car_id: car_id },
                     success: function(res) {
                         if (res.status == 'success') {
-                            let options = "<option value='all'>{{__('Select All Variant')}}</option>";
+                            let options = "<option value='all'><?php echo e(__('Select All Variant')); ?></option>";
                             $.each(res.data, function(index, value) {
                                 let engine_name = value.engine_type ? value.engine_type.name : '';
                                 let fuel_name = value.fual_type ? value.fual_type.name : '';
@@ -868,11 +967,11 @@ href="{{route('admin.all.services')}}">
                 
                 $.ajax({
                     method: 'post',
-                    url: "{{ route('au.state.all') }}",
+                    url: "<?php echo e(route('au.state.all')); ?>",
                     data: { country: country },
                     success: function(res) {
                         if (res.status == 'success') {
-                            let options = "<option value=''>{{__('Select State')}}</option>";
+                            let options = "<option value=''><?php echo e(__('Select State')); ?></option>";
                             $.each(res.states, function(index, value) {
                                 options += "<option value='" + value.id + "'>" + value.state + "</option>";
                             });
@@ -890,11 +989,11 @@ href="{{route('admin.all.services')}}">
                 
                 $.ajax({
                     method: 'post',
-                    url: "{{ route('au.city.all') }}",
+                    url: "<?php echo e(route('au.city.all')); ?>",
                     data: { state: state },
                     success: function(res) {
                         if (res.status == 'success') {
-                            let options = "<option value=''>{{__('Select City')}}</option>";
+                            let options = "<option value=''><?php echo e(__('Select City')); ?></option>";
                             $.each(res.cities, function(index, value) {
                                 options += "<option value='" + value.id + "'>" + value.city + "</option>";
                             });
@@ -920,11 +1019,11 @@ href="{{route('admin.all.services')}}">
             $('#addAllVariant').on('click', function () {
                 $.ajax({
                     method: 'post',
-                    url: "{{ route('admin.carService.add') }}",
+                    url: "<?php echo e(route('admin.carService.add')); ?>",
                     data: { variant_id: 'all' },
                     success: function(res) {
                         if (res.status == 'success') {
-                            toastr.success("{{__('Success')}}");
+                            toastr.success("<?php echo e(__('Success')); ?>");
                             $("#session_data").html(res.view);
                         }
                     }
@@ -935,10 +1034,10 @@ href="{{route('admin.all.services')}}">
             $('#removeAllVariant').on('click', function () {
                 $.ajax({
                     method: 'post',
-                    url: "{{ route('admin.allCarService.delete') }}",
+                    url: "<?php echo e(route('admin.allCarService.delete')); ?>",
                     success: function(res) {
                         if (res.status == 'success') {
-                            toastr.success("{{__('Success')}}");
+                            toastr.success("<?php echo e(__('Success')); ?>");
                             $("#session_data").html(res.view);
                         }
                     }
@@ -959,7 +1058,7 @@ href="{{route('admin.all.services')}}">
 
                 $.ajax({
                     method: 'post',
-                    url: "{{ route('admin.carService.add') }}",
+                    url: "<?php echo e(route('admin.carService.add')); ?>",
                     data: {
                         brand_id: brand,
                         car_id: car,
@@ -973,7 +1072,7 @@ href="{{route('admin.all.services')}}">
                     },
                     success: function(res) {
                         if (res.status == 'success') {
-                            toastr.success("{{__('Success')}}");
+                            toastr.success("<?php echo e(__('Success')); ?>");
                             $("#car_brand_id").val("").trigger("change");
                             $("#car_model_value").val("").trigger("change");
                             $('#car_variant').val('').trigger('change');
@@ -982,7 +1081,7 @@ href="{{route('admin.all.services')}}">
                             $("#unit1").val('');
                             $("#duration1").val('');
                             $("#duration_checkbox").prop("checked", false);
-                            $("#service_product_img .thumbnail img").attr("src", "{{ asset('assets/frontend/img/gallery/single-image-upload.png') }}");
+                            $("#service_product_img .thumbnail img").attr("src", "<?php echo e(asset('assets/frontend/img/gallery/single-image-upload.png')); ?>");
                             $('#service_car_image1').val('');
                             $('#addModal').modal('hide');
                             $("#session_data").html(res.view);
@@ -1016,7 +1115,7 @@ href="{{route('admin.all.services')}}">
                 let car_id = $('#car_name').val();
             
                 $.ajax({
-                    url: "{{ route('admin.carService.filter') }}",
+                    url: "<?php echo e(route('admin.carService.filter')); ?>",
                     method: 'GET',
                     data: { brand_id: brand_id, car_id: car_id },
                     success: function (res) {
@@ -1065,7 +1164,8 @@ href="{{route('admin.all.services')}}">
                                                     </div>
                                                 </div>
                                                 <button type="button" class="remove-btn mt-3" data-id="${key}">
-                                                    <i class="las la-trash"></i> {{ __('Remove') }}
+                                                    <i class="las la-trash"></i> <?php echo e(__('Remove')); ?>
+
                                                 </button>
                                             </div>
                                         </div>`;
@@ -1077,7 +1177,8 @@ href="{{route('admin.all.services')}}">
                                 if (length > 5) {
                                     let loadMore = `<div class="text-center mt-3">
                                         <button type="button" class="btn-outline" id="loadMoreCarsForServiceFilter">
-                                            <i class="las la-plus"></i> {{ __('Load More') }}
+                                            <i class="las la-plus"></i> <?php echo e(__('Load More')); ?>
+
                                         </button>
                                     </div>`;
                                     $('#search_service_car_result').append(loadMore);
@@ -1093,7 +1194,7 @@ href="{{route('admin.all.services')}}">
             
             $(document).on('keyup', '#title', function (e) {
                 let slug = converToSlug($(this).val());
-                let url = "{{url('/service/')}}/" + slug;
+                let url = "<?php echo e(url('/service/')); ?>/" + slug;
                 $('.permalink_label').show();
                 $('#slug_show').text(url);
                 $('.listing_slug').val(slug);
@@ -1120,7 +1221,7 @@ href="{{route('admin.all.services')}}">
                 $('.slug_edit_button').show();
                 var update_input = $('.listing_slug').val();
                 var slug = converToSlug(update_input);
-                var url = `{{url('/service/')}}/` + slug;
+                var url = `<?php echo e(url('/service/')); ?>/` + slug;
                 $('#slug_show').text(url);
                 $('.listing_slug').hide();
             });
@@ -1131,11 +1232,12 @@ href="{{route('admin.all.services')}}">
             });
 
             // Success message
-            @if(session('success'))
-                toastr.success('{{ session("success") }}', 'Success');
-            @endif
+            <?php if(session('success')): ?>
+                toastr.success('<?php echo e(session("success")); ?>', 'Success');
+            <?php endif; ?>
         });
     })(jQuery);
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('backend.admin-master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/backend/pages/services/admin/create-service.blade.php ENDPATH**/ ?>

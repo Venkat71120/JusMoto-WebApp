@@ -5,15 +5,18 @@
         <div class="action-left">
             <button type="button" class="btn btn-outline-danger" id="removeAllVariant">
                 <i class="las la-trash"></i>
-                {{ __('Remove All') }}
+                <?php echo e(__('Remove All')); ?>
+
             </button>
             <button type="button" class="btn btn-outline-warning" id="addAllVariant">
                 <i class="las la-plus-circle"></i>
-                {{ __('Add All Variant') }}
+                <?php echo e(__('Add All Variant')); ?>
+
             </button>
             <button type="button" class="btn btn-primary" id="addBtn" data-toggle="modal" data-target="#addModal">
                 <i class="las la-plus"></i>
-                {{ __('Add Custom') }}
+                <?php echo e(__('Add Custom')); ?>
+
             </button>
         </div>
 
@@ -21,22 +24,23 @@
         <form id="filter_select_car" class="filter-form">
             <div class="filter-group">
                 <select class="form-select filter-select" name="brand_name" id="brand_name">
-                    <option value="0" selected>{{ __('All Brands') }}</option>
-                    @foreach($brands as $brand)
-                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                    @endforeach
+                    <option value="0" selected><?php echo e(__('All Brands')); ?></option>
+                    <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($brand->id); ?>"><?php echo e($brand->name); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
 
                 <select class="form-select filter-select" name="car_name" id="car_name">
-                    <option value="0" selected>{{ __('All Cars') }}</option>
-                    @foreach($cars as $car)
-                        <option value="{{ $car->id }}">{{ $car->name }}</option>
-                    @endforeach
+                    <option value="0" selected><?php echo e(__('All Cars')); ?></option>
+                    <?php $__currentLoopData = $cars; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $car): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <option value="<?php echo e($car->id); ?>"><?php echo e($car->name); ?></option>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </select>
 
                 <button type="button" class="btn btn-info filter-btn" id="filterBtn">
                     <i class="las la-search"></i>
-                    {{ __('Search') }}
+                    <?php echo e(__('Search')); ?>
+
                 </button>
             </div>
         </form>
@@ -51,7 +55,8 @@
                 <div class="modal-header">
                     <h5 class="modal-title">
                         <i class="las la-car" style="color: #e31b23; margin-right: 8px;"></i>
-                        {{ __('Add Car Service') }}
+                        <?php echo e(__('Add Car Service')); ?>
+
                     </h5>
                     <button type="button" class="btn-close modal_close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -65,21 +70,21 @@
                             <div class="col-lg-4">
                                 <div class="upload-card">
                                     <div class="img-wrap">
-                                        <img src="{{ asset('assets/frontend/img/gallery/single-image-upload.png') }}" 
+                                        <img src="<?php echo e(asset('assets/frontend/img/gallery/single-image-upload.png')); ?>" 
                                              id="service_car_demo_image" alt="preview">
                                     </div>
                                     <input type="hidden" name="service_car_image1" id="service_car_image1">
                                     <button type="button" class="upload-btn media_upload_form_btn w-100"
-                                            data-btntitle="{{__('Select Image')}}"
-                                            data-modaltitle="{{__('Upload Image')}}"
+                                            data-btntitle="<?php echo e(__('Select Image')); ?>"
+                                            data-modaltitle="<?php echo e(__('Upload Image')); ?>"
                                             data-bs-toggle="modal"
                                             data-bs-target="#media_upload_modal">
                                         <i class="las la-cloud-upload-alt"></i>
-                                        <span>{{__('Upload Car Image')}}</span>
+                                        <span><?php echo e(__('Upload Car Image')); ?></span>
                                     </button>
                                     <div class="image-info">
-                                        <small><i class="las la-info-circle"></i> {{ __('jpg, jpeg, png, gif, webp') }}</small>
-                                        <small><i class="las la-image"></i> {{ __('810x450px recommended') }}</small>
+                                        <small><i class="las la-info-circle"></i> <?php echo e(__('jpg, jpeg, png, gif, webp')); ?></small>
+                                        <small><i class="las la-image"></i> <?php echo e(__('810x450px recommended')); ?></small>
                                     </div>
                                 </div>
                             </div>
@@ -88,50 +93,50 @@
                             <div class="col-lg-8">
                                 <!-- Brand Select -->
                                 <div class="form-group">
-                                    <label class="form-label">{{ __('Brand') }} <span class="required-star">*</span></label>
+                                    <label class="form-label"><?php echo e(__('Brand')); ?> <span class="required-star">*</span></label>
                                     <select name="brand_id[]" id="car_brand_id" class="form-select">
-                                        <option value="">{{__('Select Brand')}}</option>
-                                        @foreach($brands as $brand)
-                                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                        @endforeach
+                                        <option value=""><?php echo e(__('Select Brand')); ?></option>
+                                        <?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($brand->id); ?>"><?php echo e($brand->name); ?></option>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </div>
                                 
                                 <!-- Car Model Select -->
                                 <div class="form-group">
-                                    <label class="form-label">{{ __('Car Model') }}</label>
+                                    <label class="form-label"><?php echo e(__('Car Model')); ?></label>
                                     <select name="car_id[]" id="car_model_value" class="form-select car_model_id">
-                                        <option value="">{{__('Select Car Model')}}</option>
+                                        <option value=""><?php echo e(__('Select Car Model')); ?></option>
                                     </select>
                                 </div>
                                 
                                 <!-- Car Variant Select -->
                                 <div class="form-group">
-                                    <label class="form-label">{{ __('Car Variant') }}</label>
+                                    <label class="form-label"><?php echo e(__('Car Variant')); ?></label>
                                     <select name="variant_id[]" id="car_variant" class="form-select car_variant">
-                                        <option value="">{{__('Select Car Variant')}}</option>
+                                        <option value=""><?php echo e(__('Select Car Variant')); ?></option>
                                     </select>
                                 </div>
                                 
                                 <!-- Price -->
                                 <div class="form-group">
-                                    <label class="form-label">{{ __('Price') }} <span class="required-star">*</span></label>
+                                    <label class="form-label"><?php echo e(__('Price')); ?> <span class="required-star">*</span></label>
                                     <input type="number" class="form-control" name="price1[]" 
                                            id="price1" placeholder="0.00" step="0.01">
                                 </div>
                                 
                                 <!-- Discount Price -->
                                 <div class="form-group">
-                                    <label class="form-label">{{ __('Discount Price') }}</label>
+                                    <label class="form-label"><?php echo e(__('Discount Price')); ?></label>
                                     <input type="number" class="form-control" name="discount_price1[]" 
                                            id="discount_price1" placeholder="0.00" step="0.01">
                                 </div>
                                 
                                 <!-- Duration -->
                                 <div class="form-group">
-                                    <label class="form-label">{{ __('Duration') }}</label>
+                                    <label class="form-label"><?php echo e(__('Duration')); ?></label>
                                     <input type="text" class="form-control" name="duration1[]" id="duration1" 
-                                           placeholder="{{ __('e.g. 2 hours, 30 minutes') }}">
+                                           placeholder="<?php echo e(__('e.g. 2 hours, 30 minutes')); ?>">
                                 </div>
                                 
                                 <!-- Default Price Checkbox -->
@@ -139,7 +144,7 @@
                                     <label class="checkbox-label">
                                         <input type="checkbox" name="duration_checkbox[]" id="duration_checkbox">
                                         <span class="checkbox-custom"></span>
-                                        <span class="checkbox-text">{{ __('Use Default Service Price') }}</span>
+                                        <span class="checkbox-text"><?php echo e(__('Use Default Service Price')); ?></span>
                                     </label>
                                 </div>
                             </div>
@@ -149,11 +154,13 @@
                 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        {{ __('Cancel') }}
+                        <?php echo e(__('Cancel')); ?>
+
                     </button>
                     <button type="button" class="btn btn-primary" id="addRowBtn">
                         <i class="las la-save"></i>
-                        {{ __('Add to List') }}
+                        <?php echo e(__('Add to List')); ?>
+
                     </button>
                 </div>
             </div>
@@ -162,17 +169,19 @@
 
     <!-- Session Data Container -->
     <div id="session_data" class="session-data-container">
-        @include("backend.pages.services.admin.session_data")
+        <?php echo $__env->make("backend.pages.services.admin.session_data", array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     </div>
 
     <!-- Navigation Buttons -->
     <div class="navigation-wrapper">
         <button class="btn btn-outline-secondary prev-btn" id="prevBtn" type="button">
             <i class="las la-arrow-left"></i>
-            {{ __('Previous') }}
+            <?php echo e(__('Previous')); ?>
+
         </button>
         <button type="submit" class="btn btn-primary submit-btn validate_subscription_type">
-            {{ __('Add Service') }}
+            <?php echo e(__('Add Service')); ?>
+
             <i class="las la-check-circle"></i>
         </button>
     </div>
@@ -716,4 +725,4 @@
         justify-content: center;
     }
 }
-</style>
+</style><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/backend/pages/services/admin/select-service-car.blade.php ENDPATH**/ ?>

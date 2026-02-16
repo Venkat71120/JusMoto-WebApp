@@ -6,20 +6,20 @@
             <div class="single-settings">
                 <h5 class="input-title"> 
                     <i class="las la-gift"></i>
-                    {{__('Whats Included This Package')}} 
+                    <?php echo e(__('Whats Included This Package')); ?> 
                 </h5>
                 <div class="append-additional-includes">
                     <div class="single-dashboard-input what-include-element">
                         <div class="single-info-input margin-top-20">
-                            <label>{{ __('Title') }}</label>
-                            <input class="form-control" type="text" name="include_service_title[]" placeholder="{{__('Service title')}}">
+                            <label><?php echo e(__('Title')); ?></label>
+                            <input class="form-control" type="text" name="include_service_title[]" placeholder="<?php echo e(__('Service title')); ?>">
                         </div>
                     </div>
                 </div>
                 <div class="btn-wrapper margin-top-20">
                     <a href="javascript:void(0)" class="cmnBtn btn_5 btn_bg_blue radius-5 add-what-includes"> 
                         <i class="las la-plus-circle"></i>
-                        {{__('Add More')}} 
+                        <?php echo e(__('Add More')); ?> 
                     </a>
                 </div>
             </div>
@@ -28,24 +28,24 @@
             <div class="single-settings margin-top-40 faq_show_hide">
                 <h5 class="input-title">
                     <i class="las la-question-circle"></i>
-                    {{__('Faqs')}} 
+                    <?php echo e(__('Faqs')); ?> 
                 </h5>
                 <div class="append-faqs">
                     <div class="single-dashboard-input faqs">
                         <div class="single-info-input margin-top-20">
-                            <label>{{ __('Question') }}</label>
-                            <input class="form-control" type="text" name="faqs_title[]" placeholder="{{__('Faq Title')}}">
+                            <label><?php echo e(__('Question')); ?></label>
+                            <input class="form-control" type="text" name="faqs_title[]" placeholder="<?php echo e(__('Faq Title')); ?>">
                         </div>
                         <div class="single-info-input margin-top-20">
-                            <label>{{ __('Answer') }}</label>
-                            <textarea class="form-control" name="faqs_description[]" cols="20" rows="5" placeholder="{{__('Faq Description')}}"></textarea>
+                            <label><?php echo e(__('Answer')); ?></label>
+                            <textarea class="form-control" name="faqs_description[]" cols="20" rows="5" placeholder="<?php echo e(__('Faq Description')); ?>"></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="btn-wrapper margin-top-20">
                     <a href="javascript:void(0)" class="cmnBtn btn_5 btn_bg_blue radius-5 add-faqs"> 
                         <i class="las la-plus-circle"></i>
-                        {{__('Add More')}} 
+                        <?php echo e(__('Add More')); ?> 
                     </a>
                 </div>
             </div>
@@ -57,27 +57,27 @@
                     <div class="single-settings">
                         <h5 class="input-title">
                             <i class="las la-info-circle"></i>
-                            {{__('Add Services Additional Info')}} 
+                            <?php echo e(__('Add Services Additional Info')); ?> 
                         </h5>
                         <div class="append-services-info">
                             <div class="single-dashboard-input service-info">
                                 <div class="single-info-input margin-top-20">
-                                    <label>{{ __('Title') }}</label>
-                                    <input class="form-control" type="text" name="service_info_title[]" placeholder="{{__('Service Information title')}}">
+                                    <label><?php echo e(__('Title')); ?></label>
+                                    <input class="form-control" type="text" name="service_info_title[]" placeholder="<?php echo e(__('Service Information title')); ?>">
                                 </div>
                                 <div class="upload-img margin-top-20">
                                     <div class="media-upload-btn-wrapper">
                                         <div class="img-wrap">
-                                            <img src="{{ asset('assets/frontend/img/gallery/single-image-upload.png') }}" alt="images">
+                                            <img src="<?php echo e(asset('assets/frontend/img/gallery/single-image-upload.png')); ?>" alt="images">
                                         </div>
                                         <input type="hidden" name="service_information_image[]">
                                         <button type="button" class="btn btn-info media_upload_form_btn upload-btn-custom"
-                                            data-btntitle="{{__('Select Image')}}"
-                                            data-modaltitle="{{__('Upload Image')}}"
+                                            data-btntitle="<?php echo e(__('Select Image')); ?>"
+                                            data-modaltitle="<?php echo e(__('Upload Image')); ?>"
                                             data-bs-toggle="modal"
                                             data-bs-target="#media_upload_modal">
                                             <i class="las la-cloud-upload-alt"></i>
-                                            <span>{{__('Upload Image')}}</span>
+                                            <span><?php echo e(__('Upload Image')); ?></span>
                                         </button>
                                     </div>
                                 </div>
@@ -86,7 +86,7 @@
                         <div class="btn-wrapper margin-top-20">
                             <a href="javascript:void(0)" class="cmnBtn btn_5 btn_bg_blue radius-5 add-services-info"> 
                                 <i class="las la-plus-circle"></i>
-                                {{__('Add More')}} 
+                                <?php echo e(__('Add More')); ?> 
                             </a>
                         </div>
                     </div>
@@ -97,27 +97,27 @@
                     <div class="single-settings">
                         <h5 class="input-title">
                             <i class="las la-clipboard-list"></i>
-                            {{__('Add Services Specification')}} 
+                            <?php echo e(__('Add Services Specification')); ?> 
                         </h5>
                         <div class="append-services-specification">
                             <div class="single-dashboard-input service-specification">
                                 <div class="single-info-input margin-top-20">
-                                    <label>{{ __('Title') }}</label>
-                                    <input class="form-control" type="text" name="service_specification_title[]" placeholder="{{__('Service Specification title')}}">
+                                    <label><?php echo e(__('Title')); ?></label>
+                                    <input class="form-control" type="text" name="service_specification_title[]" placeholder="<?php echo e(__('Service Specification title')); ?>">
                                 </div>
                                 <div class="upload-img margin-top-20">
                                     <div class="media-upload-btn-wrapper">
                                         <div class="img-wrap">
-                                            <img src="{{ asset('assets/frontend/img/gallery/single-image-upload.png') }}" alt="images">
+                                            <img src="<?php echo e(asset('assets/frontend/img/gallery/single-image-upload.png')); ?>" alt="images">
                                         </div>
                                         <input type="hidden" name="service_specification_image[]">
                                         <button type="button" class="btn btn-info media_upload_form_btn upload-btn-custom"
-                                            data-btntitle="{{__('Select Image')}}"
-                                            data-modaltitle="{{__('Upload Image')}}"
+                                            data-btntitle="<?php echo e(__('Select Image')); ?>"
+                                            data-modaltitle="<?php echo e(__('Upload Image')); ?>"
                                             data-bs-toggle="modal"
                                             data-bs-target="#media_upload_modal">
                                             <i class="las la-cloud-upload-alt"></i>
-                                            <span>{{__('Upload Image')}}</span>
+                                            <span><?php echo e(__('Upload Image')); ?></span>
                                         </button>
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@
                         <div class="btn-wrapper margin-top-20">
                             <a href="javascript:void(0)" class="cmnBtn btn_5 btn_bg_blue radius-5 add-services-specification"> 
                                 <i class="las la-plus-circle"></i>
-                                {{__('Add More')}} 
+                                <?php echo e(__('Add More')); ?> 
                             </a>
                         </div>
                     </div>
@@ -138,10 +138,12 @@
                 <div class="btn_wrapper d-flex justify-content-end gap-3">
                     <button class="cmnBtn btn_5 btn_bg_info radius-5" id="prevBtn" type="button">
                         <i class="las la-arrow-left"></i>
-                        {{__('Previous')}}
+                        <?php echo e(__('Previous')); ?>
+
                     </button>
                     <button class="cmnBtn btn_5 btn_bg_blue radius-5" id="nextBtn" type="button">
-                        {{__('Next')}}
+                        <?php echo e(__('Next')); ?>
+
                         <i class="las la-arrow-right"></i>
                     </button>
                 </div>
@@ -498,4 +500,4 @@ textarea.form-control {
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(227, 27, 35, 0.2);
 }
-</style>
+</style><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/backend/pages/services/admin/service-include.blade.php ENDPATH**/ ?>

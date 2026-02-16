@@ -214,7 +214,9 @@
     transition: all 0.2s ease;
     background: #fff;
 }
-
+.cmnBtn.btn_5.btn_bg_blue:hover span, .cmnBtn.btn_5.btn_bg_blue:hover {
+    color: white !important;
+}
 .form-control:focus {
     outline: none;
     border-color: #e31b23;
@@ -278,6 +280,10 @@ textarea.form-control {
     justify-content: center !important;
     gap: 8px !important;
 }
+.upload-btn-custom:hover,
+.upload-btn-custom:hover span {
+    color: white !important;
+}
 
 .upload-btn-custom i {
     color: #e31b23 !important;
@@ -296,6 +302,10 @@ textarea.form-control {
 }
 
 .upload-btn-custom:hover i {
+    color: white !important;
+}
+.upload-btn-custom:hover,
+.upload-btn-custom:hover span {
     color: white !important;
 }
 
@@ -339,8 +349,8 @@ textarea.form-control {
     box-shadow: 0 4px 12px rgba(227, 27, 35, 0.2);
 }
 
-.cmnBtn.btn_5.btn_bg_blue:hover i {
-    color: white;
+.cmnBtn.btn_5.btn_bg_blue:hover span, .cmnBtn.btn_5.btn_bg_blue:hover {
+    color: rgb(20, 20, 20) !important;
 }
 
 /* Navigation Buttons */

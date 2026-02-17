@@ -836,11 +836,11 @@ href="<?php echo e(route('admin.all.services')); ?>">
         
         $(document).ready(function () {
             // Initialize Select2
-            $('.select2').select2({
-                width: '100%',
-                placeholder: '<?php echo e(__("Select option")); ?>',
-                allowClear: true
-            });
+            // $('.select2').select2({
+            //     width: '100%',
+            //     placeholder: '<?php echo e(__("Select option")); ?>',
+            //     allowClear: true
+            // });
 
             $('#category').select2({
                 width: '100%',

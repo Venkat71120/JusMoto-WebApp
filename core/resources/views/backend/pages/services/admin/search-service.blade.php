@@ -15,8 +15,8 @@
         <th class="category-col">{{__('Category')}}</th>
         <th class="price-col">{{__('Price')}}</th>
         <th class="date-col">{{__('Created')}}</th>
-        <th class="publish-col">{{__('Publishing')}}</th>
-        <th class="status-col">{{__('Status')}}</th>
+        {{-- <th class="publish-col">{{__('Publishing')}}</th>
+        <th class="status-col">{{__('Status')}}</th> --}}
         <th class="actions-col">{{__('Actions')}}</th>
         </thead>
         <tbody>
@@ -71,7 +71,7 @@
                 </td>
                 
                 <!-- Publishing Status -->
-                <td class="publish-col">
+                {{-- <td class="publish-col">
                     <div class="status-wrapper">
                         @if($data->is_published === 1)
                             <span class="status-badge published">
@@ -88,10 +88,10 @@
                             <x-status.admin-services-published-change :url="route('admin.service.published.status.change.by',$data->id)"/>
                         @endcan
                     </div>
-                </td>
+                </td> --}}
 
                 <!-- Status -->
-                <td class="status-col">
+                {{-- <td class="status-col">
                     <div class="status-wrapper">
                         @if($data->status==1)
                             <span class="status-badge approved">
@@ -108,7 +108,7 @@
                             <x-status.status-change :url="route('admin.service.status.change.by',$data->id)"/>
                         @endcan
                     </div>
-                </td>
+                </td> --}}
 
                 <!-- Actions -->
                 <td class="actions-col">

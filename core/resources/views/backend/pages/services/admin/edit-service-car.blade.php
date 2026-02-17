@@ -47,11 +47,11 @@
 
     <!-- Modal for Adding Data -->
     <div class="modal" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog_custom" role="document">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="las la-car modal-title-icon"></i>
+                        <i class="las la-car modal-icon"></i>
                         {{ __('Add Car Service') }}
                     </h5>
                     <button type="button" class="btn-close modal_close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -63,12 +63,11 @@
                         
                         <div class="row">
                             <!-- Left Column - Image Upload -->
-                            <div class="col-lg-3 mt-3">
-                                <div class="upload-card" id="service_product_edit_img">
-                                    <div class="media-upload-btn-wrapper">
-                                        <div class="img-wrap">
-                                            <img src="{{ asset('assets/frontend/img/gallery/single-image-upload.png') }}" 
-                                                 id="service_car_demo_image" alt="images" class="w-100">
+                            <div class="col-lg-4">
+                                <div class="upload-card">
+                                    <div class="media-upload-wrapper">
+                                        <div class="image-preview">
+                                            <img src="{{ asset('assets/frontend/img/gallery/single-image-upload.png') }}" alt="preview" class="preview-img">
                                         </div>
                                         <input type="hidden" name="service_car_image1" id="service_car_image1">
                                         <button type="button" class="upload-btn media_upload_form_btn"
@@ -77,9 +76,9 @@
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#media_upload_modal">
                                             <i class="las la-cloud-upload-alt"></i>
-                                            <span>{{__('Upload Car Image')}}</span>
+                                            {{__('Upload Image')}}
                                         </button>
-                                        <div class="image-info">
+                                        <div class="upload-info">
                                             <small><i class="las la-info-circle"></i> {{ __('jpg, jpeg, png, gif, webp') }}</small>
                                             <small><i class="las la-image"></i> {{ __('810x450px recommended') }}</small>
                                         </div>
@@ -88,9 +87,10 @@
                             </div>
                             
                             <!-- Right Column - Form Fields -->
-                            <div class="col-lg-9">    
-                                <div class="form__input__single">
-                                    <label class="form__input__single__label brand">{{ __('Brand') }} <span class="required-star">*</span></label>
+                            <div class="col-lg-8">
+                                <!-- Brand Select -->
+                                <div class="form-group">
+                                    <label class="form-label">{{ __('Brand') }} <span class="required">*</span></label>
                                     <select name="brand_id[]" id="car_brand" class="form-select">
                                         <option value="">{{__('Select Brand')}}</option>
                                         @foreach($brands as $brand)
@@ -99,46 +99,46 @@
                                     </select>
                                 </div>
                                 
-                                <div class="form__input__single mt-2" id="car_model">
-                                    <label for="car" class="form__input__single__label">{{__('Car Model')}}</label>
+                                <!-- Car Model Select -->
+                                <div class="form-group">
+                                    <label class="form-label">{{ __('Car Model') }}</label>
                                     <select name="car_id[]" id="car_model_value" class="form-select car_model">
                                         <option value="">{{__('Select Car Model')}}</option>
                                     </select>
                                 </div>
                                 
-                                <div class="form__input__single mt-2" id="variant">
-                                    <label for="car_variant" class="form__input__single__label">{{__('Car Variant')}}</label>
+                                <!-- Car Variant Select -->
+                                <div class="form-group">
+                                    <label class="form-label">{{ __('Car Variant') }}</label>
                                     <select name="variant_id[]" id="car_variant" class="form-select car_variant">
                                         <option value="">{{__('Select Car Variant')}}</option>
                                     </select>
                                 </div>
                                 
-                                <div class="form__input__single mt-2 position-relative">
-                                    <label for="price1" class="form__input__single__label">{{ __('Price') }} <span class="required-star">*</span></label>
-                                    <div class="input-form input-form2">
-                                        <input type="number" class="form__control radius-5" name="price1[]" id="price1" placeholder="{{__('0.00')}}">
-                                    </div>
+                                <!-- Price -->
+                                <div class="form-group">
+                                    <label class="form-label">{{ __('Price') }} <span class="required">*</span></label>
+                                    <input type="number" class="form-control" name="price1[]" id="price1" placeholder="0.00" step="0.01">
                                 </div>
                                 
-                                <div class="form__input__single mt-2 position-relative">
-                                    <label for="discount_price1" class="form__input__single__label">{{ __('Discount Price') }}</label>
-                                    <div class="input-form input-form2">
-                                        <input type="number" class="form__control radius-5" name="discount_price1[]" id="discount_price1" placeholder="{{__('0.00')}}">
-                                    </div>
+                                <!-- Discount Price -->
+                                <div class="form-group">
+                                    <label class="form-label">{{ __('Discount Price') }}</label>
+                                    <input type="number" class="form-control" name="discount_price1[]" id="discount_price1" placeholder="0.00" step="0.01">
                                 </div>
                                 
-                                <div class="form__input__single mt-2 position-relative">
-                                    <label for="duration1" class="form__input__single__label">{{ __('Duration') }}</label>
-                                    <div class="input-form input-form2">
-                                        <input type="text" class="form__control radius-5" name="duration1[]" id="duration1" placeholder="{{ __('e.g. 2 hours, 30 minutes') }}">
-                                    </div>
+                                <!-- Duration -->
+                                <div class="form-group">
+                                    <label class="form-label">{{ __('Duration') }}</label>
+                                    <input type="text" class="form-control" name="duration1[]" id="duration1" placeholder="{{ __('e.g. 2 hours, 30 minutes') }}">
                                 </div>
                                 
-                                <div class="form__input__single mt-2 position-relative">
+                                <!-- Default Price Checkbox -->
+                                <div class="form-group">
                                     <label class="checkbox-label">
                                         <input type="checkbox" name="duration_checkbox[]" id="duration_checkbox">
                                         <span class="checkbox-custom"></span>
-                                        <span class="checkbox-text">{{ __('Use Default Service Price') }}</span>
+                                        {{ __('Use Default Service Price') }}
                                     </label>
                                 </div>
                             </div>
@@ -147,7 +147,7 @@
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="button" class="btn-secondary modal_close" data-bs-dismiss="modal">
+                    <button type="button" class="btn-secondary" data-bs-dismiss="modal">
                         {{ __('Cancel') }}
                     </button>
                     <button type="button" class="btn-primary" id="addRowBtn">
@@ -160,7 +160,7 @@
     </div>
 
     <!-- Session Data Container -->
-    <div id="edit_session_data" class="session-data-container">
+    <div id="edit_session_data" class="session-container">
         @include("backend.pages.services.admin.edit_session_data")
     </div>
 
@@ -178,29 +178,26 @@
 </div>
 
 <style>
-/* ===== ENHANCED CSS FOR EDIT SERVICE - SELECT CAR TAB ===== */
-/* PURE CSS - NO JS CHANGES */
+/* ===== CLEAN CSS FOR EDIT SERVICE - SELECT CAR TAB ===== */
+/* No hover effects - just clean, modern styling */
 
 :root {
-    --red: #e31b23;
-    --red-light: #fff5f5;
-    --red-soft: #ffe3e3;
-    --red-dark: #b11218;
-    --dark: #111827;
-    --dark-soft: #1f2937;
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
     --gray-700: #374151;
-    --gray-400: #9CA3AF;
-    --gray-300: #D1D5DB;
-    --gray-200: #E5E7EB;
-    --gray-100: #F3F4F6;
-    --gray-50: #F9FAFB;
-    --white: #FFFFFF;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
-    --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.05);
-    --radius-md: 8px;
+    --gray-800: #1f2937;
+    --red: #e31b23;
+    --red-light: #fee2e2;
+    --orange-light: #ffedd5;
+    --orange: #f97316;
+    --radius: 8px;
     --radius-lg: 12px;
-    --transition: all 0.2s ease;
 }
 
 /* Action Bar */
@@ -214,7 +211,7 @@
     padding: 16px;
     background: var(--white);
     border: 1px solid var(--gray-200);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
 }
 
 .action-left {
@@ -224,64 +221,42 @@
     flex-wrap: wrap;
 }
 
-/* Button Styles - Keeping original button classes */
+/* Buttons */
 .btn-outline-danger {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 20px;
+    padding: 8px 16px;
     background: var(--red-light);
-    border: 1px solid var(--red-soft);
+    border: 1px solid var(--red);
     border-radius: 40px;
     color: var(--red);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: var(--transition);
-}
-
-.btn-outline-danger:hover {
-    background: var(--red);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(227, 27, 35, 0.2);
-}
-
-.btn-outline-danger i {
-    font-size: 16px;
+    border: none;
 }
 
 .btn-outline-warning {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 20px;
-    background: #fffaeb;
-    border: 1px solid #fed7aa;
+    padding: 8px 16px;
+    background: var(--orange-light);
+    border: 1px solid var(--orange);
     border-radius: 40px;
-    color: #b54708;
+    color: var(--orange);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: var(--transition);
-}
-
-.btn-outline-warning:hover {
-    background: #f59e0b;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
-}
-
-.btn-outline-warning i {
-    font-size: 16px;
+    border: none;
 }
 
 .btn-primary {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 24px;
+    padding: 8px 20px;
     background: var(--red);
     border: none;
     border-radius: 40px;
@@ -289,17 +264,6 @@
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: var(--transition);
-}
-
-.btn-primary:hover {
-    background: var(--red-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(227, 27, 35, 0.3);
-}
-
-.btn-primary i {
-    font-size: 16px;
 }
 
 /* Filter Form */
@@ -316,52 +280,44 @@
 
 .filter-select {
     flex: 1;
-    padding: 10px 14px;
-    border: 1px solid var(--gray-300);
-    border-radius: 8px;
-    font-size: 14px;
-    color: var(--dark);
+    padding: 8px 12px;
     background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-size: 14px;
+    color: var(--gray-800);
     cursor: pointer;
-    transition: var(--transition);
-}
-
-.filter-select:focus {
-    outline: none;
-    border-color: var(--red);
-    box-shadow: 0 0 0 3px var(--red-soft);
 }
 
 .filter-btn {
+    padding: 8px 20px;
     background: var(--red);
     border: none;
+    border-radius: var(--radius);
     color: white;
-    padding: 10px 24px;
-    border-radius: 8px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: var(--transition);
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
 }
 
-.filter-btn:hover {
-    background: var(--red-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(227, 27, 35, 0.2);
+/* Modal */
+.modal-dialog.modal-lg {
+    max-width: 800px;
+    margin: 30px auto;
 }
 
-/* Modal Styling - Keeping original modal structure */
 .modal-content {
     border: none;
-    border-radius: 16px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .modal-header {
-    padding: 20px 24px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--gray-200);
     background: var(--gray-50);
 }
@@ -369,110 +325,89 @@
 .modal-title {
     font-size: 18px;
     font-weight: 600;
-    color: var(--dark);
+    color: var(--gray-800);
     display: flex;
     align-items: center;
 }
 
-.modal-title-icon {
+.modal-icon {
     color: var(--red);
     margin-right: 8px;
-    font-size: 22px;
+    font-size: 20px;
 }
 
 .modal-body {
-    padding: 24px;
+    padding: 20px;
 }
 
 .modal-footer {
-    padding: 20px 24px;
+    padding: 16px 20px;
     border-top: 1px solid var(--gray-200);
     display: flex;
     justify-content: flex-end;
     gap: 12px;
 }
 
-/* Upload Card - Keeping original structure */
+/* Upload Card */
 .upload-card {
     background: var(--gray-50);
     border: 1px dashed var(--gray-300);
-    border-radius: 12px;
+    border-radius: var(--radius);
     padding: 16px;
-    transition: var(--transition);
+    height: 100%;
 }
 
-.upload-card:hover {
-    border-color: var(--red);
-    background: var(--red-light);
+.media-upload-wrapper {
+    display: flex;
+    flex-direction: column;
 }
 
-.media-upload-btn-wrapper .img-wrap {
+.image-preview {
     width: 100%;
-    height: 120px;
-    border-radius: 8px;
+    height: 140px;
+    border-radius: 6px;
     overflow: hidden;
     background: var(--white);
     border: 1px solid var(--gray-200);
     margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.media-upload-btn-wrapper .img-wrap img {
+.image-preview img {
+    max-width: 100%;
+    max-height: 140px;
+    object-fit: contain;
+}
+
+.upload-btn {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Upload Button - Fixed hover text visibility */
-.media-upload-btn-wrapper .upload-btn {
+    padding: 8px 12px;
     background: var(--white);
     border: 1px solid var(--gray-300);
-    color: var(--gray-700);
-    padding: 10px 16px;
     border-radius: 40px;
+    color: var(--gray-700);
     font-size: 14px;
-    font-weight: 500;
     cursor: pointer;
-    transition: var(--transition);
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    margin-bottom: 8px;
 }
 
-.media-upload-btn-wrapper .upload-btn i {
+.upload-btn i {
     color: var(--red);
-    font-size: 16px;
-    transition: var(--transition);
 }
 
-.media-upload-btn-wrapper .upload-btn span {
-    color: var(--gray-700);
-    transition: var(--transition);
-}
-
-.media-upload-btn-wrapper .upload-btn:hover {
-    background: var(--red);
-    border-color: var(--red);
-}
-
-.media-upload-btn-wrapper .upload-btn:hover i {
-    color: white;
-}
-
-.media-upload-btn-wrapper .upload-btn:hover span {
-    color: white;
-}
-
-/* Image Info */
-.image-info {
-    margin-top: 8px;
+.upload-info {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
-.image-info small {
+.upload-info small {
     display: flex;
     align-items: center;
     gap: 4px;
@@ -480,84 +415,55 @@
     color: var(--gray-500);
 }
 
-.image-info small i {
+.upload-info small i {
     color: var(--red);
-    font-size: 12px;
 }
 
-/* Form Elements - Keeping original classes */
-.form__input__single__label {
+/* Form Elements */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
     display: block;
     font-size: 13px;
     font-weight: 600;
     color: var(--gray-700);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
-.required-star {
+.required {
     color: var(--red);
     margin-left: 2px;
 }
 
 .form-select,
-.form__control {
+.form-control {
     width: 100%;
-    padding: 10px 14px;
-    border: 1px solid var(--gray-300);
-    border-radius: 8px;
-    font-size: 14px;
-    color: var(--dark);
+    padding: 8px 12px;
     background: var(--white);
-    transition: var(--transition);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-size: 14px;
+    color: var(--gray-800);
 }
 
-.form-select:focus,
-.form__control:focus {
-    outline: none;
-    border-color: var(--red);
-    box-shadow: 0 0 0 3px var(--red-soft);
-}
-
-/* Custom Checkbox - Keeping original functionality */
+/* Checkbox */
 .checkbox-label {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     cursor: pointer;
 }
 
 .checkbox-label input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     accent-color: var(--red);
-    margin: 0;
 }
 
-.checkbox-text {
-    font-size: 14px;
-    color: var(--gray-700);
-}
-
-/* Secondary Button */
-.btn-secondary {
-    background: var(--white);
-    border: 1px solid var(--gray-300);
-    color: var(--gray-700);
-    padding: 10px 24px;
-    border-radius: 40px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.btn-secondary:hover {
-    background: var(--gray-100);
-    border-color: var(--gray-400);
-}
-
-/* Session Data Container */
-.session-data-container {
+/* Session Container */
+.session-container {
     margin-top: 24px;
 }
 
@@ -566,9 +472,9 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 16px;
+    gap: 12px;
     margin-top: 32px;
-    padding-top: 24px;
+    padding-top: 20px;
     border-top: 1px solid var(--gray-200);
 }
 
@@ -576,12 +482,11 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 28px;
+    padding: 10px 24px;
     border-radius: 40px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: var(--transition);
     border: none;
 }
 
@@ -591,102 +496,54 @@
     color: var(--gray-700);
 }
 
-.prev-btn:hover {
-    background: var(--gray-100);
-    border-color: var(--gray-400);
-    transform: translateX(-2px);
-}
-
 .submit-btn {
     background: var(--red);
     color: white;
-    box-shadow: 0 4px 12px rgba(227, 27, 35, 0.2);
 }
 
-.submit-btn:hover {
-    background: var(--red-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(227, 27, 35, 0.3);
+/* No hover effects - explicitly set */
+.btn-outline-danger:hover,
+.btn-outline-warning:hover,
+.btn-primary:hover,
+.filter-btn:hover,
+.upload-btn:hover,
+.nav-btn:hover,
+.submit-btn:hover,
+.prev-btn:hover {
+    background: var(--red);
+    color: white;
 }
 
-/* Modal Close Button */
+/* Secondary button */
+.btn-secondary {
+    padding: 8px 20px;
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: 40px;
+    color: var(--gray-700);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Modal Close */
 .modal_close {
     background: none;
     border: none;
     font-size: 20px;
     cursor: pointer;
     opacity: 0.5;
-    transition: opacity 0.2s ease;
 }
 
-.modal_close:hover {
-    opacity: 1;
-}
-
-/* Dark Mode */
-body.dark-mode .action-bar {
-    background: var(--dark-soft);
-    border-color: #374151;
-}
-
-body.dark-mode .filter-select {
-    background: #374151;
-    border-color: #4B5563;
-    color: #F3F4F6;
-}
-
-body.dark-mode .modal-content {
-    background: var(--dark-soft);
-}
-
-body.dark-mode .modal-header {
-    background: #374151;
-    border-color: #4B5563;
-}
-
-body.dark-mode .modal-title {
-    color: #F3F4F6;
-}
-
-body.dark-mode .upload-card {
-    background: #374151;
-    border-color: #4B5563;
-}
-
-body.dark-mode .media-upload-btn-wrapper .img-wrap {
-    background: var(--dark-soft);
-    border-color: #4B5563;
-}
-
-body.dark-mode .media-upload-btn-wrapper .upload-btn {
-    background: var(--dark-soft);
-    border-color: #4B5563;
-}
-
-body.dark-mode .media-upload-btn-wrapper .upload-btn span {
-    color: #E5E7EB;
-}
-
-body.dark-mode .form-select,
-body.dark-mode .form__control {
-    background: #374151;
-    border-color: #4B5563;
-    color: #F3F4F6;
-}
-
-body.dark-mode .form__input__single__label {
-    color: #E5E7EB;
-}
-
-body.dark-mode .checkbox-text {
-    color: #E5E7EB;
-}
-
-body.dark-mode .prev-btn {
-    background: #374151;
-    border-color: #4B5563;
-    color: #E5E7EB;
-}
+/* Preserve original classes */
+.d-none { display: none; }
+.d-flex { display: flex; }
+.me-2 { margin-right: 8px; }
+.me-3 { margin-right: 12px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mt-4 { margin-top: 20px; }
+.gap-3 { gap: 12px; }
+.w-100 { width: 100%; }
 
 /* Responsive */
 @media (max-width: 992px) {
@@ -719,13 +576,6 @@ body.dark-mode .prev-btn {
         justify-content: space-between;
     }
     
-    .btn-outline-danger,
-    .btn-outline-warning,
-    .btn-primary {
-        flex: 1;
-        justify-content: center;
-    }
-    
     .filter-select {
         flex: 1 1 100%;
     }
@@ -740,18 +590,16 @@ body.dark-mode .prev-btn {
     }
 }
 
-/* Preserve original classes */
-.modal-dialog_custom {
-    max-width: 800px !important;
-    width: 100%;
-}
-
+/* Column widths */
 #edit_select_brand_name,
 #edit_select_car_name {
     width: 210px;
 }
 
-.position-relative {
-    position: relative;
+@media (max-width: 992px) {
+    #edit_select_brand_name,
+    #edit_select_car_name {
+        width: 100%;
+    }
 }
 </style>

@@ -737,11 +737,11 @@ href="{{route('admin.all.services')}}">
         
         $(document).ready(function () {
             // Initialize Select2
-            $('.select2').select2({
-                width: '100%',
-                placeholder: '{{__("Select option")}}',
-                allowClear: true
-            });
+            // $('.select2').select2({
+            //     width: '100%',
+            //     placeholder: '{{__("Select option")}}',
+            //     allowClear: true
+            // });
 
             $('#category').select2({
                 width: '100%',

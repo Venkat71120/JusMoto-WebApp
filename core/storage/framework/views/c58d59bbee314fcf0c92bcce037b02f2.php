@@ -219,26 +219,6 @@
                             <button type="button" class="action-item delete" onclick="deleteService(<?php echo e($data->id); ?>)" title="<?php echo e(__('Delete')); ?>">
                                 <i class="las la-trash"></i>
                             </button>
-                            <?php if (isset($component)) { $__componentOriginal7973b0ce98592c79f9209abd6e46a09b = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal7973b0ce98592c79f9209abd6e46a09b = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.popup.delete-popup','data' => ['url' => route('admin.delete.service',$data->id)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('popup.delete-popup'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['url' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(route('admin.delete.service',$data->id))]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal7973b0ce98592c79f9209abd6e46a09b)): ?>
-<?php $attributes = $__attributesOriginal7973b0ce98592c79f9209abd6e46a09b; ?>
-<?php unset($__attributesOriginal7973b0ce98592c79f9209abd6e46a09b); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal7973b0ce98592c79f9209abd6e46a09b)): ?>
-<?php $component = $__componentOriginal7973b0ce98592c79f9209abd6e46a09b; ?>
-<?php unset($__componentOriginal7973b0ce98592c79f9209abd6e46a09b); ?>
-<?php endif; ?>
                         <?php endif; ?>
                     </div>
                 </td>

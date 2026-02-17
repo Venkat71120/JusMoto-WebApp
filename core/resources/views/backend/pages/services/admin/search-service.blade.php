@@ -135,7 +135,6 @@
                             <button type="button" class="action-item delete" onclick="deleteService({{$data->id}})" title="{{__('Delete')}}">
                                 <i class="las la-trash"></i>
                             </button>
-                            <x-popup.delete-popup :url="route('admin.delete.service',$data->id)"/>
                         @endcan
                     </div>
                 </td>

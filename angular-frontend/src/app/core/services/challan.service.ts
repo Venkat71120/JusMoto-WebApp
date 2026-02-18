@@ -32,8 +32,9 @@ export class ChallanService {
     return this.api.get<any>(`/challans/${id}`);
   }
 
-  checkChallans(vehicle_number: string): Observable<any> {
-    return this.api.post<any>('/challans/check', { vehicle_number });
+  checkChallans(params: { vehicle_number?: string; license_number?: string } | string): Observable<any> {
+    const data = typeof params === 'string' ? { vehicle_number: params } : params;
+    return this.api.post<any>('/challans/check', data);
   }
 
   addChallan(data: Partial<Challan>): Observable<any> {

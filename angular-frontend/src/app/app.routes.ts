@@ -131,6 +131,12 @@ export const routes: Routes = [
     ]
   },
 
+  // Client dashboard routes (with sidebar layout)
+  {
+    path: 'client',
+    loadChildren: () => import('./features/client/client.routes').then(m => m.clientRoutes)
+  },
+
   // Admin routes
   {
     path: 'admin',

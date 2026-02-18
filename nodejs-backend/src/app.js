@@ -148,30 +148,4 @@ io.on('connection', (socket) => {
   });
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
-
-const startServer = async () => {
-  try {
-    // Test database connection
-    await testConnection();
-
-    // Sync models (in development only)
-    if (process.env.NODE_ENV === 'development') {
-      // await sequelize.sync({ alter: true });
-      console.log('📦 Models synchronized');
-    }
-
-    httpServer.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    process.exit(1);
-  }
-};
-
-startServer();
-
-module.exports = { app, io };
+module.exports = { app, httpServer, io };

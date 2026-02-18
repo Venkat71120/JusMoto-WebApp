@@ -97,4 +97,21 @@ export class ServiceService {
   getVariants(car_id: number): Observable<any> {
     return this.api.get<any>(`/cars/${car_id}/variants`);
   }
+
+  // Favourites
+  getFavourites(): Observable<any> {
+    return this.api.get<any>('/favourites');
+  }
+
+  addToFavourites(serviceId: number): Observable<any> {
+    return this.api.post<any>('/favourites', { service_id: serviceId });
+  }
+
+  removeFromFavourites(id: number): Observable<any> {
+    return this.api.delete<any>(`/favourites/${id}`);
+  }
+
+  isFavourite(serviceId: number): Observable<any> {
+    return this.api.get<any>(`/favourites/check/${serviceId}`);
+  }
 }

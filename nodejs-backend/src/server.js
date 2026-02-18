@@ -1,5 +1,5 @@
 require('dotenv').config();
-const app = require('./app');
+const { app, httpServer, io } = require('./app');
 const { sequelize, testConnection } = require('./config/database');
 const config = require('./config/app');
 
@@ -19,8 +19,8 @@ const startServer = async () => {
       console.log('📦 Database models synchronized');
     }
 
-    // Start server
-    app.listen(PORT, () => {
+    // Start server (use httpServer for Socket.io support)
+    httpServer.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`🔗 API URL: ${config.url}/api/v1`);

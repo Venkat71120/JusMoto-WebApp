@@ -39,7 +39,7 @@ export interface CreateOrderData {
 export class OrderService {
   constructor(private api: ApiService) {}
 
-  getOrders(params?: { status?: number; payment_status?: number; page?: number; limit?: number }): Observable<any> {
+  getOrders(params?: { status?: string | number; payment_status?: number; page?: number; limit?: number }): Observable<any> {
     return this.api.get<any>('/orders', params);
   }
 
@@ -74,5 +74,14 @@ export class OrderService {
 
   getAvailableCoupons(): Observable<any> {
     return this.api.get<any>('/coupons/available');
+  }
+
+  // Refunds
+  getRefunds(params?: { status?: string; page?: number; limit?: number }): Observable<any> {
+    return this.api.get<any>('/refunds', params);
+  }
+
+  getRefund(id: number): Observable<any> {
+    return this.api.get<any>(`/refunds/${id}`);
   }
 }

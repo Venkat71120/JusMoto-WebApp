@@ -370,7 +370,7 @@ export class ChallanCheckComponent {
 
     const vehicleNumber = this.searchForm.get('vehicleNumber')?.value.toUpperCase();
 
-    this.challanService.fetchChallans(vehicleNumber).subscribe({
+    this.challanService.checkChallans(vehicleNumber).subscribe({
       next: (response) => {
         this.isLoading.set(false);
         this.searched.set(true);

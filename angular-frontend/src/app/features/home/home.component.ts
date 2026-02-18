@@ -388,7 +388,7 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    this.serviceService.getServices({ limit: 8, featured: true }).subscribe({
+    this.serviceService.getFeaturedServices(8).subscribe({
       next: (response) => {
         if (response.success) {
           this.popularServices = response.data;

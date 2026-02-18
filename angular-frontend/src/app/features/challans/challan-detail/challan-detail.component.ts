@@ -427,7 +427,7 @@ export class ChallanDetailComponent implements OnInit {
   }
 
   loadChallan(id: string): void {
-    this.challanService.getChallanDetails(id).subscribe({
+    this.challanService.getChallan(+id).subscribe({
       next: (response) => {
         this.isLoading.set(false);
         if (response.success) {

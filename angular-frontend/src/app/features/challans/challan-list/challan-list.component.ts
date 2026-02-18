@@ -408,7 +408,7 @@ export class ChallanListComponent implements OnInit {
 
   loadChallans(page: number = 1): void {
     this.isLoading.set(true);
-    this.challanService.getHistory(page).subscribe({
+    this.challanService.getChallans({ page }).subscribe({
       next: (response) => {
         this.isLoading.set(false);
         if (response.success) {
@@ -425,7 +425,7 @@ export class ChallanListComponent implements OnInit {
   }
 
   loadStats(): void {
-    this.challanService.getStats().subscribe({
+    this.challanService.getChallanStats().subscribe({
       next: (response) => {
         if (response.success) {
           this.stats.set(response.data);

@@ -156,7 +156,7 @@ export class LoginComponent {
       password: ['', Validators.required]
     });
 
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/client/dashboard';
   }
 
   onSubmit(): void {

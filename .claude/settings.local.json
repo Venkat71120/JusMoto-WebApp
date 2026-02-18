@@ -47,7 +47,9 @@
       "WebFetch(domain:softcareinfotech.com)",
       "Bash(curl:*)",
       "Bash(find:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm install)"
     ],
     "deny": [],
     "ask": []

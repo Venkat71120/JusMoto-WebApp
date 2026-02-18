@@ -1,0 +1,153 @@
+import { Routes } from '@angular/router';
+import { AuthGuard, GuestGuard } from './core/guards/auth.guard';
+
+export const routes: Routes = [
+  // Public routes
+  {
+    path: '',
+    loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
+  },
+  {
+    path: 'services',
+    loadComponent: () => import('./features/services/service-list/service-list.component').then(m => m.ServiceListComponent)
+  },
+  {
+    path: 'services/:slug',
+    loadComponent: () => import('./features/services/service-detail/service-detail.component').then(m => m.ServiceDetailComponent)
+  },
+  {
+    path: 'categories/:slug',
+    loadComponent: () => import('./features/services/category-services/category-services.component').then(m => m.CategoryServicesComponent)
+  },
+
+  // Auth routes (guest only)
+  {
+    path: 'auth',
+    canActivate: [GuestGuard],
+    children: [
+      {
+        path: 'login',
+        loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent)
+      },
+      {
+        path: 'forgot-password',
+        loadComponent: () => import('./features/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+      },
+      {
+        path: 'verify-email',
+        loadComponent: () => import('./features/auth/verify-email/verify-email.component').then(m => m.VerifyEmailComponent)
+      }
+    ]
+  },
+
+  // Protected routes
+  {
+    path: 'dashboard',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+  },
+  {
+    path: 'profile',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent)
+  },
+  {
+    path: 'cart',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./features/cart/cart.component').then(m => m.CartComponent)
+  },
+  {
+    path: 'checkout',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./features/cart/checkout/checkout.component').then(m => m.CheckoutComponent)
+  },
+  {
+    path: 'orders',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/orders/order-list/order-list.component').then(m => m.OrderListComponent)
+      },
+      {
+        path: ':id',
+        loadComponent: () => import('./features/orders/order-detail/order-detail.component').then(m => m.OrderDetailComponent)
+      }
+    ]
+  },
+  {
+    path: 'challans',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/challans/challan-list/challan-list.component').then(m => m.ChallanListComponent)
+      },
+      {
+        path: 'check',
+        loadComponent: () => import('./features/challans/challan-check/challan-check.component').then(m => m.ChallanCheckComponent)
+      },
+      {
+        path: ':id',
+        loadComponent: () => import('./features/challans/challan-detail/challan-detail.component').then(m => m.ChallanDetailComponent)
+      }
+    ]
+  },
+  {
+    path: 'wallet',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./features/wallet/wallet.component').then(m => m.WalletComponent)
+  },
+  {
+    path: 'my-cars',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./features/profile/my-cars/my-cars.component').then(m => m.MyCarsComponent)
+  },
+  {
+    path: 'addresses',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('./features/profile/addresses/addresses.component').then(m => m.AddressesComponent)
+  },
+  {
+    path: 'tickets',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/tickets/ticket-list/ticket-list.component').then(m => m.TicketListComponent)
+      },
+      {
+        path: 'new',
+        loadComponent: () => import('./features/tickets/create-ticket/create-ticket.component').then(m => m.CreateTicketComponent)
+      },
+      {
+        path: ':id',
+        loadComponent: () => import('./features/tickets/ticket-detail/ticket-detail.component').then(m => m.TicketDetailComponent)
+      }
+    ]
+  },
+
+  // Admin routes
+  {
+    path: 'admin',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/admin/admin.routes').then(m => m.adminRoutes)
+  },
+
+  // Franchise routes
+  {
+    path: 'franchise',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/franchise/franchise.routes').then(m => m.franchiseRoutes)
+  },
+
+  // 404
+  {
+    path: '**',
+    loadComponent: () => import('./features/not-found/not-found.component').then(m => m.NotFoundComponent)
+  }
+];

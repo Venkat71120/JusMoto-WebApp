@@ -1,147 +1,443 @@
-<div class="product__details__single">
-    <div class="editProduct">
-        <div class="row g-4">
-            <div class="col-xxl-4 col-lg-4">
-                <div class="editProduct__contents__category mb-2">
-                    <strong class="editProduct__contents__sku__para"><?php echo e(__('Service Image:')); ?></strong>
-                </div>
-                <div class="editProduct__thumb">
-                    <div class="editProduct__thumb__main">
-                        <?php echo render_image_markup_by_attachment_id($service->image, '', 'thumb'); ?>
+<script>
+    (function ($) {
+        "use strict";
+        
+        $(document).ready(function() {
+            
+            // ===== WHAT'S INCLUDED SECTION =====
+            // Add new include item
+            $(".add-what-includes").on('click', function() {
+                let total_element = $(".what-include-element").length;
+                let max = 15;
+                
+                if (total_element < max) {
+                    $(".append-additional-includes").append(
+                        '<div class="single-dashboard-input what-include-element">\
+                            <div class="single-info-input margin-top-20">\
+                                <label><?php echo e(__('Title')); ?> </label>\
+                                <div class="d-flex align-items-center">\
+                                    <input class="form-control me-2" type="text" name="include_service_title[]" placeholder="<?php echo e(__('Service title')); ?>">\
+                                    <button type="button" class="btn btn-danger remove-include" style="min-width: 40px;">\
+                                        <i class="las la-trash"></i>\
+                                    </button>\
+                                </div>\
+                            </div>\
+                        </div>'
+                    );
+                    
+                    // Show success message
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success("<?php echo e(__('New item added')); ?>", "<?php echo e(__('Success')); ?>");
+                    }
+                } else {
+                    if (typeof toastr !== 'undefined') {
+                        toastr.warning("<?php echo e(__('Maximum')); ?> " + max + " <?php echo e(__('items allowed')); ?>", "<?php echo e(__('Limit reached')); ?>");
+                    } else {
+                        alert("<?php echo e(__('Maximum')); ?> " + max + " <?php echo e(__('items allowed')); ?>");
+                    }
+                }
+            });
 
-                    </div>
-                </div>
-                <div class="editProduct__contents__category mt-3">
-                    <strong class="editProduct__contents__sku__para"><?php echo e(__('Gallery Images:')); ?></strong>
-                </div>
-                <div class="dashboard__rates__card__thumb">
-                    <?php echo render_gallery_image_attachment_preview($service->gallery_images ?? ''); ?>
+            // Remove include service with confirmation
+            $(document).on('click', ".remove-include", function(e) {
+                e.preventDefault();
+                let item = $(this).closest('.what-include-element');
+                
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: '<?php echo e(__("Remove item?")); ?>',
+                        text: '<?php echo e(__("Are you sure you want to remove this item?")); ?>',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#e31b23',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: '<?php echo e(__("Yes, remove")); ?>',
+                        cancelButtonText: '<?php echo e(__("Cancel")); ?>'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            item.fadeOut(300, function() {
+                                $(this).remove();
+                                if (typeof toastr !== 'undefined') {
+                                    toastr.success("<?php echo e(__('Item removed')); ?>", "<?php echo e(__('Success')); ?>");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    if (confirm('<?php echo e(__("Are you sure you want to remove this item?")); ?>')) {
+                        item.remove();
+                    }
+                }
+            });
 
-                </div>
+            // ===== FAQS SECTION =====
+            // Add new FAQ
+            $(".add-faqs").on('click', function() {
+                let total_element = $(".faqs").length;
+                let max = 15;
+                
+                if (total_element < max) {
+                    $(".append-faqs").append(
+                        '<div class="single-dashboard-input faqs">\
+                            <div class="single-info-input margin-top-20">\
+                                <label><?php echo e(__('Question')); ?></label>\
+                                <div class="d-flex align-items-center">\
+                                    <input class="form-control me-2" type="text" name="faqs_title[]" placeholder="<?php echo e(__('Faq Title')); ?>">\
+                                    <button type="button" class="btn btn-danger remove-faqs" style="min-width: 40px;">\
+                                        <i class="las la-trash"></i>\
+                                    </button>\
+                                </div>\
+                            </div>\
+                            <div class="single-info-input margin-top-20">\
+                                <label><?php echo e(__('Answer')); ?></label>\
+                                <textarea class="form-control" name="faqs_description[]" cols="20" rows="5" placeholder="<?php echo e(__('Faq Description')); ?>"></textarea>\
+                            </div>\
+                        </div>'
+                    );
+                    
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success("<?php echo e(__('New FAQ added')); ?>", "<?php echo e(__('Success')); ?>");
+                    }
+                } else {
+                    if (typeof toastr !== 'undefined') {
+                        toastr.warning("<?php echo e(__('Maximum')); ?> " + max + " <?php echo e(__('FAQs allowed')); ?>", "<?php echo e(__('Limit reached')); ?>");
+                    } else {
+                        alert("<?php echo e(__('Maximum')); ?> " + max + " <?php echo e(__('FAQs allowed')); ?>");
+                    }
+                }
+            });
 
-                <div class="customer__details__author__item__header mt-3">
-                    <div class="customer__details__author__item__header__flex">
-                        <div class="customer__details__author__item__header__left">
-                            <h4 class="customer__details__author__item__title">
-                                <?php if($service->admin_id != null && $service->admin_id != 0): ?>
-                                <?php echo e(__('Admin Info:')); ?>
+            // Remove FAQ with confirmation
+            $(document).on('click', ".remove-faqs", function(e) {
+                e.preventDefault();
+                let item = $(this).closest('.faqs');
+                
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: '<?php echo e(__("Remove FAQ?")); ?>',
+                        text: '<?php echo e(__("Are you sure you want to remove this FAQ?")); ?>',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#e31b23',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: '<?php echo e(__("Yes, remove")); ?>',
+                        cancelButtonText: '<?php echo e(__("Cancel")); ?>'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            item.fadeOut(300, function() {
+                                $(this).remove();
+                                if (typeof toastr !== 'undefined') {
+                                    toastr.success("<?php echo e(__('FAQ removed')); ?>", "<?php echo e(__('Success')); ?>");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    if (confirm('<?php echo e(__("Are you sure you want to remove this FAQ?")); ?>')) {
+                        item.remove();
+                    }
+                }
+            });
 
-                                <?php else: ?>
-                                   
-                                <?php endif; ?>
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="customer__details__author__item__inner border_top_1 top_15">
-                    <div class="customer__account__details">
-                        <?php if($service->admin_id != null && $service->admin_id != 0): ?>
-                           <!-- Admin Info -->
-                           <div class="customer__account__details__item">
-                            <div class="customer__account__details__item__flex">
-                                <strong></strong>
-                                <a href="<?php echo e(optional($service->admin)->username); ?>" target="_blank">
-                                    <div class="customer__details__author__thumb">
-                                        <?php echo render_image_markup_by_attachment_id($service->admin->image, '', 'thumb'); ?>
+            // ===== ADDITIONAL INFO SECTION =====
+            // Add new information
+            $(".add-services-info").on('click', function() {
+                let total_element = $(".service-info").length;
+                let max = 15;
+                
+                if (total_element < max) {
+                    $(".append-services-info").append(
+                        '<div class="single-dashboard-input service-info">\
+                            <div class="row">\
+                                <div class="col-lg-12">\
+                                    <div class="single-info-input margin-top-20">\
+                                        <label><?php echo e(__('Title')); ?></label>\
+                                        <div class="d-flex align-items-center">\
+                                            <input class="form-control me-2" type="text" name="service_info_title[]" placeholder="<?php echo e(__('Service Information title')); ?>">\
+                                            <button type="button" class="btn btn-danger remove-info" style="min-width: 40px;">\
+                                                <i class="las la-trash"></i>\
+                                            </button>\
+                                        </div>\
+                                    </div>\
+                                </div>\
+                                <div class="col-lg-12 mt-4">\
+                                    <div class="upload-img">\
+                                        <div class="media-upload-btn-wrapper">\
+                                            <div class="img-wrap">\
+                                                <img src="<?php echo e(asset('assets/frontend/img/gallery/single-image-upload.png')); ?>" alt="images" class="w-100 preview-img">\
+                                            </div>\
+                                            <input type="hidden" name="service_information_image[]" class="image-input">\
+                                            <button type="button" class="btn btn-info media_upload_form_btn"\
+                                                data-btntitle="<?php echo e(__('Select Image')); ?>"\
+                                                data-modaltitle="<?php echo e(__('Upload Image')); ?>"\
+                                                data-bs-toggle="modal"\
+                                                data-bs-target="#media_upload_modal">\
+                                                <i class="las la-cloud-upload-alt"></i>\
+                                                <?php echo e(__('Upload Image')); ?>\
+                                            </button>\
+                                            <div class="image-info mt-2">\
+                                                <small><i class="las la-info-circle"></i> <?php echo e(__('Format: jpg,jpeg,png,gif,webp')); ?></small><br>\
+                                                <small><i class="las la-image"></i> <?php echo e(__('Recommended: 810x450')); ?></small>\
+                                            </div>\
+                                        </div>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </div>'
+                    );
+                    
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success("<?php echo e(__('New information added')); ?>", "<?php echo e(__('Success')); ?>");
+                    }
+                } else {
+                    if (typeof toastr !== 'undefined') {
+                        toastr.warning("<?php echo e(__('Maximum')); ?> " + max + " <?php echo e(__('items allowed')); ?>", "<?php echo e(__('Limit reached')); ?>");
+                    } else {
+                        alert("<?php echo e(__('Maximum')); ?> " + max + " <?php echo e(__('items allowed')); ?>");
+                    }
+                }
+            });
 
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="customer__account__details__item">
-                            <div class="customer__account__details__item__flex">
-                                <strong><?php echo e(__('Name')); ?></strong>
-                                <a href="<?php echo e(optional($service->admin)->username); ?>" target="_blank">
-                                    <span><?php echo e(optional($service->admin)->name); ?></span>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="customer__account__details__item">
-                            <div class="customer__account__details__item__flex">
-                                <strong><?php echo e(__('Email')); ?></strong>
-                                <span><?php echo e(optional($service->admin)->email); ?></span>
-                            </div>
-                        </div>
-                        <div class="customer__account__details__item">
-                            <div class="customer__account__details__item__flex">
-                                <strong><?php echo e(__('Phone')); ?></strong>
-                                <span><?php echo e(optional($service->admin)->phone); ?></span>
-                            </div>
-                        </div>
-                        <?php else: ?>
-                           
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
+            // Remove service info with confirmation
+            $(document).on('click', ".remove-info", function(e) {
+                e.preventDefault();
+                let item = $(this).closest('.service-info');
+                
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: '<?php echo e(__("Remove information?")); ?>',
+                        text: '<?php echo e(__("Are you sure you want to remove this information?")); ?>',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#e31b23',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: '<?php echo e(__("Yes, remove")); ?>',
+                        cancelButtonText: '<?php echo e(__("Cancel")); ?>'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            item.fadeOut(300, function() {
+                                $(this).remove();
+                                if (typeof toastr !== 'undefined') {
+                                    toastr.success("<?php echo e(__('Information removed')); ?>", "<?php echo e(__('Success')); ?>");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    if (confirm('<?php echo e(__("Are you sure you want to remove this information?")); ?>')) {
+                        item.remove();
+                    }
+                }
+            });
 
-            <!--step two -->
-            <div class="col-xxl-8 col-lg-8">
-                <div class="editProduct__contents">
-                    <div class="editProduct__contents__category mt-3">
-                        <span class="editProduct__contents__sku__para"><strong><?php echo e(__('Service Title:')); ?></strong> <?php echo e($service->title); ?></span>
-                    </div>
-                    <div class="editProduct__contents__category mt-3">
-                        <span class="editProduct__contents__sku__para">
-                            <strong><?php echo e(__('Price:')); ?></strong>
-                            <?php if($service->discount_price > 0): ?>
-                                <span class="discount-price">
-                                    <del> <?php echo e(float_amount_with_currency_symbol($service->price)); ?> </del>
-                               </span>
-                            <?php else: ?>
-                                <?php echo e(float_amount_with_currency_symbol($service->price)); ?>
+            // ===== SPECIFICATIONS SECTION =====
+            // Add new specification
+            $(".add-services-specification").on('click', function() {
+                let total_element = $(".service-specification").length;
+                let max = 15;
+                
+                if (total_element < max) {
+                    $(".append-services-specification").append(
+                        '<div class="single-dashboard-input service-specification">\
+                            <div class="row">\
+                                <div class="col-lg-12">\
+                                    <div class="single-info-input margin-top-20">\
+                                        <label><?php echo e(__('Title')); ?></label>\
+                                        <div class="d-flex align-items-center">\
+                                            <input class="form-control me-2" type="text" name="service_specification_title[]" placeholder="<?php echo e(__('Service Specification title')); ?>">\
+                                            <button type="button" class="btn btn-danger remove-specification" style="min-width: 40px;">\
+                                                <i class="las la-trash"></i>\
+                                            </button>\
+                                        </div>\
+                                    </div>\
+                                </div>\
+                                <div class="col-lg-12 mt-4">\
+                                    <div class="upload-img">\
+                                        <div class="media-upload-btn-wrapper">\
+                                            <div class="img-wrap">\
+                                                <img src="<?php echo e(asset('assets/frontend/img/gallery/single-image-upload.png')); ?>" alt="images" class="w-100 preview-img">\
+                                            </div>\
+                                            <input type="hidden" name="service_specification_image[]" class="image-input">\
+                                            <button type="button" class="btn btn-info media_upload_form_btn"\
+                                                data-btntitle="<?php echo e(__('Select Image')); ?>"\
+                                                data-modaltitle="<?php echo e(__('Upload Image')); ?>"\
+                                                data-bs-toggle="modal"\
+                                                data-bs-target="#media_upload_modal">\
+                                                <i class="las la-cloud-upload-alt"></i>\
+                                                <?php echo e(__('Upload Image')); ?>\
+                                            </button>\
+                                            <div class="image-info mt-2">\
+                                                <small><i class="las la-info-circle"></i> <?php echo e(__('Format: jpg,jpeg,png,gif,webp')); ?></small><br>\
+                                                <small><i class="las la-image"></i> <?php echo e(__('Recommended: 810x450')); ?></small>\
+                                            </div>\
+                                        </div>\
+                                    </div>\
+                                </div>\
+                            </div>\
+                        </div>'
+                    );
+                    
+                    if (typeof toastr !== 'undefined') {
+                        toastr.success("<?php echo e(__('New specification added')); ?>", "<?php echo e(__('Success')); ?>");
+                    }
+                } else {
+                    if (typeof toastr !== 'undefined') {
+                        toastr.warning("<?php echo e(__('Maximum')); ?> " + max + " <?php echo e(__('items allowed')); ?>", "<?php echo e(__('Limit reached')); ?>");
+                    } else {
+                        alert("<?php echo e(__('Maximum')); ?> " + max + " <?php echo e(__('items allowed')); ?>");
+                    }
+                }
+            });
 
-                            <?php endif; ?>
-                        </span>
-                    </div>
-                    <?php if($service->discount_price > 0): ?>
-                    <div class="editProduct__contents__category mt-3">
-                        <span class="editProduct__contents__sku__para"><strong><?php echo e(__('Discount Price:')); ?></strong>
-                            <?php echo e(float_amount_with_currency_symbol($service->discount_price)); ?>
+            // Remove service specification with confirmation
+            $(document).on('click', ".remove-specification", function(e) {
+                e.preventDefault();
+                let item = $(this).closest('.service-specification');
+                
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: '<?php echo e(__("Remove specification?")); ?>',
+                        text: '<?php echo e(__("Are you sure you want to remove this specification?")); ?>',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#e31b23',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: '<?php echo e(__("Yes, remove")); ?>',
+                        cancelButtonText: '<?php echo e(__("Cancel")); ?>'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            item.fadeOut(300, function() {
+                                $(this).remove();
+                                if (typeof toastr !== 'undefined') {
+                                    toastr.success("<?php echo e(__('Specification removed')); ?>", "<?php echo e(__('Success')); ?>");
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    if (confirm('<?php echo e(__("Are you sure you want to remove this specification?")); ?>')) {
+                        item.remove();
+                    }
+                }
+            });
 
-                        </span>
-                    </div>
-                    <?php endif; ?>
-                    <div class="editProduct__contents__category mt-3">
-                        <span class="editProduct__contents__sku__para"><strong><?php echo e(__('Category:')); ?></strong> <?php echo e(optional($service->category)->name); ?></span>
-                    </div>
-                    <div class="editProduct__contents__category mt-3">
-                        <span class="editProduct__contents__sku__para"><strong><?php echo e(__('Sub Category:')); ?></strong> <?php echo e(optional($service->sub_category)->name); ?></span>
-                    </div>
-                    <div class="editProduct__contents__category mt-3">
-                        <span class="editProduct__contents__sku__para"><strong><?php echo e(__('Child Category:')); ?></strong> <?php echo e(optional($service->child_category)->name); ?></span>
-                    </div>
-                    <div class="editProduct__contents__brand mt-3">
-                        <span class="editProduct__contents__sku__para"><strong><?php echo e(__('View Count:')); ?></strong> <?php echo e($service->view); ?></span>
-                    </div>
-                    <div class="editProduct__contents__brand mt-3">
-                            <span class="editProduct__contents__sku__para"><strong><?php echo e(__('Status:')); ?></strong>
-                                <?php if($service->status==1): ?>
-                                    <span class="status_btn completed"><?php echo e(__('Approved')); ?></span>
-                                <?php else: ?>
-                                    <span class="status_btn cancelled"><?php echo e(__('Pending')); ?></span>
-                                <?php endif; ?>
-                            </span>
-                    </div>
-                    <div class="editProduct__contents__category mt-3">
-                        <span class="editProduct__contents__sku__para"><strong><?php echo e(__('Is Featured:')); ?></strong></span>
-                        <input class="effectBorder" type="checkbox" <?php if(!empty($service->is_featured)): ?> checked <?php endif; ?>>
-                        <span class="checkmark"></span>
-                    </div>
-                    <div class="editProduct__contents__brand mt-3">
-                        <span class="editProduct__contents__sku__para"><strong><?php echo e(__('State:')); ?></strong> <?php echo e(optional($service->state)->state); ?></span>
-                    </div>
-                    <div class="editProduct__contents__brand mt-3">
-                        <span class="editProduct__contents__sku__para"><strong><?php echo e(__('City:')); ?></strong> <?php echo e(optional($service->city)->city); ?></span>
-                    </div>
-                    <div class="product__details__description mt-3">
-                        <span class="editProduct__contents__sku__para"><strong><?php echo e(__('Description:')); ?></strong></span>
-                        <p class="product__details__para"><?php echo $service->description; ?></p>
-                    </div>
-                </div>
-            </div>
+            // ===== MEDIA UPLOAD HANDLER =====
+            // Handle media upload for dynamically added items
+            $(document).on('click', '.media_upload_form_btn', function(e) {
+                e.preventDefault();
+                
+                let parent = $(this).closest('.media-upload-btn-wrapper');
+                let inputField = parent.find('.image-input');
+                let previewImg = parent.find('.preview-img');
+                
+                // Store reference for callback
+                window.mediaUploadCallback = function(imageData) {
+                    if (imageData && imageData.image_id) {
+                        inputField.val(imageData.image_id);
+                        previewImg.attr('src', imageData.img_url);
+                        
+                        if (typeof toastr !== 'undefined') {
+                            toastr.success("<?php echo e(__('Image uploaded successfully')); ?>", "<?php echo e(__('Success')); ?>");
+                        }
+                    }
+                };
+            });
 
-        </div>
-    </div>
-</div>
-<?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/backend/pages/services/service-details-basic-info.blade.php ENDPATH**/ ?>
+            // ===== PRICE CALCULATION =====
+            // Calculate total price
+            $(document).on("change", ".include-price", function() {
+                let sum = 0;
+                let isValid = true;
+                
+                $(".include-price").each(function() {
+                    let value = $(this).val();
+                    
+                    if (value && isNaN(value)) {
+                        isValid = false;
+                        if (typeof toastr !== 'undefined') {
+                            toastr.error("<?php echo e(__('Please enter numeric value only')); ?>", "<?php echo e(__('Invalid input')); ?>");
+                        } else {
+                            alert('<?php echo e(__("Please Enter Numeric Value only")); ?>');
+                        }
+                        $(this).addClass('is-invalid');
+                        return false;
+                    } else {
+                        $(this).removeClass('is-invalid');
+                        sum += parseFloat(value) || 0;
+                    }
+                });
+                
+                if (isValid) {
+                    $("#service_total_price").val(sum.toFixed(2));
+                }
+            });
+
+            // Validate numeric values
+            $(document).on("change", ".numeric-value", function() {
+                let value = $(this).val();
+                
+                if (value && isNaN(value)) {
+                    if (typeof toastr !== 'undefined') {
+                        toastr.error("<?php echo e(__('Please enter numeric value only')); ?>", "<?php echo e(__('Invalid input')); ?>");
+                    } else {
+                        alert('<?php echo e(__("Please Enter Numeric Value only")); ?>');
+                    }
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+
+            // Real-time numeric validation
+            $(document).on("keyup", ".numeric-value, .include-price", function() {
+                let value = $(this).val();
+                
+                if (value && isNaN(value)) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+
+            // Add some CSS for validation
+            $('<style>')
+                .prop('type', 'text/css')
+                .html(`
+                    .is-invalid {
+                        border-color: #e31b23 !important;
+                        background-color: #fff5f5 !important;
+                    }
+                    .btn-danger {
+                        background: #e31b23;
+                        border-color: #e31b23;
+                        color: white;
+                        transition: all 0.2s ease;
+                    }
+                    .btn-danger:hover {
+                        background: #b11218;
+                        border-color: #b11218;
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 10px rgba(227, 27, 35, 0.2);
+                    }
+                    .image-info {
+                        font-size: 11px;
+                        color: #6b7280;
+                        margin-top: 8px;
+                    }
+                    .image-info i {
+                        color: #e31b23;
+                        margin-right: 4px;
+                    }
+                `)
+                .appendTo('head');
+
+            // Set up CSRF token for all AJAX requests
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+        });
+    })(jQuery)
+</script><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/backend/pages/services/service-details-basic-info.blade.php ENDPATH**/ ?>

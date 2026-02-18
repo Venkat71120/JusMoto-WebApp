@@ -1,4 +1,4 @@
-<div class="outlet-zone-section">
+<div class="outlet-zone-wrapper">
     <div class="row g-4">
         <div class="col-12">
             
@@ -7,17 +7,19 @@
                 <div class="zone-header">
                     <h6 class="zone-title">
                         <i class="las la-map-marker"></i>
-                        {{__('Outlet Zone Settings')}}
+                        <?php echo e(__('Outlet Zone Settings')); ?>
+
                     </h6>
                 </div>
                 
                 <div class="notice-board">
                     <p class="notice-text">
                         <i class="las la-info-circle"></i>
-                        {{__('Search your outlet location, pick a location, and submit.')}}
+                        <?php echo e(__('Search your service location, pick a location, and submit.')); ?>
+
                         <a href="https://drive.google.com/file/d/1BwDAjSLAeb4LaxzOkrdsgGO_Io2jM6S6/view?usp=sharing" target="_blank" class="video-link">
                             <i class="las la-video"></i>
-                            <strong>{{__('Video link')}}</strong>
+                            <strong><?php echo e(__('Video link')); ?></strong>
                         </a>
                     </p>
                 </div>
@@ -27,7 +29,7 @@
                     <div class="col-lg-8 mt-4">
                         <div class="map-card">
                             <div class="map-container">
-                                <input id="pac-input" class="map-search" type="text" placeholder="{{ __('Search your Zone') }}"/>
+                                <input id="pac-input" class="map-search" type="text" placeholder="<?php echo e(__('Search your Outlet Zone')); ?>"/>
                                 <div id="map_canvas" class="map-canvas"></div>
                             </div>
                         </div>
@@ -35,74 +37,70 @@
 
                     <!-- Form Section -->
                     <div class="col-lg-4">
-                        <form action="{{route('admin.outletAddress.add')}}" enctype="multipart/form-data" method="POST">
-                            @csrf
+                        <form action="<?php echo e(route('admin.outletAddress.add')); ?>" enctype="multipart/form-data" method="POST">
+                            <?php echo csrf_field(); ?>
                             
                             <div class="form-group">
-                                <label class="form-label">{{ __('Outlet Name') }} <span class="required">*</span></label>
-                                <input type="text" name="name" id="outlet_name" class="form-control" placeholder="{{ __('Outlet Name') }}" value="{{ $outlet->name ?? "" }}">
+                                <label class="form-label"><?php echo e(__('Outlet Name')); ?> <span class="required">*</span></label>
+                                <input type="text" name="name" id="outlet_name" class="form-control" placeholder="<?php echo e(__('Outlet Name')); ?>" value="<?php echo e(old('name')); ?>">
                             </div>
                             
                             <div class="form-group">
-                                <label class="form-label">{{ __('Outlet Location') }} <span class="required">*</span></label>
-                                <input type="text" name="outlet_address" id="outlet_address" class="form-control" placeholder="{{ __('Outlet Location') }}" value="{{ $outlet->address ?? "" }}">
+                                <label class="form-label"><?php echo e(__('Outlet Location')); ?> <span class="required">*</span></label>
+                                <input type="text" name="outlet_address" id="outlet_address" class="form-control" placeholder="<?php echo e(__('Outlet Location')); ?>" value="<?php echo e(old('outlet_address')); ?>">
                             </div>
 
                             <div class="coordinates-row">
                                 <div class="form-group">
-                                    <label class="form-label">{{ __('Latitude') }} <span class="required">*</span></label>
-                                    <input type="text" name="latitude" id="latitude" class="form-control" placeholder="{{ __('Latitude') }}" value="{{ $outlet->latitude ?? "" }}">
+                                    <label class="form-label"><?php echo e(__('Latitude')); ?> <span class="required">*</span></label>
+                                    <input type="text" name="latitude" id="latitude" class="form-control" placeholder="<?php echo e(__('Latitude')); ?>" value="<?php echo e(old('latitude')); ?>">
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label class="form-label">{{ __('Longitude') }} <span class="required">*</span></label>
-                                    <input type="text" name="longitude" id="longitude" class="form-control" placeholder="{{ __('Longitude') }}" value="{{ $outlet->longitude ?? "" }}">
+                                    <label class="form-label"><?php echo e(__('Longitude')); ?> <span class="required">*</span></label>
+                                    <input type="text" name="longitude" id="longitude" class="form-control" placeholder="<?php echo e(__('Longitude')); ?>" value="<?php echo e(old('longitude')); ?>">
                                 </div>
                             </div>
                             
                             <div class="form-group">
-                                <label class="form-label">{{ __('State') }} <span class="required">*</span></label>
+                                <label class="form-label"><?php echo e(__('State')); ?> <span class="required">*</span></label>
                                 <select name="state_id" id="state" class="form-select">
-                                    <option value="">{{__('Select State')}}</option>
-                                    @foreach($states as $state)
-                                        <option value="{{ $state->id }}" @if(isset($outlet->state_id) && $outlet->state_id == $state->id) selected @endif>{{ $state->state }}</option>
-                                    @endforeach
+                                    <option value=""><?php echo e(__('Select State')); ?></option>
+                                    <?php $__currentLoopData = $states; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $state): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($state->id); ?>" <?php if(old('state_id') == $state->id): ?> selected <?php endif; ?>><?php echo e($state->state); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                             
                             <div class="form-group">
-                                <label class="form-label">{{ __('City') }} <span class="required">*</span></label>
+                                <label class="form-label"><?php echo e(__('City')); ?> <span class="required">*</span></label>
                                 <select name="city_id" id="city" class="form-select">
-                                    <option value="">{{__('Select City')}}</option>
-                                    @if ($outlet?->city_id)
-                                        <option value="{{$outlet->city_id ?? ""}}" selected>{{$outlet?->city?->city }}</option>
-                                    @endif
+                                    <option value=""><?php echo e(__('Select City')); ?></option>
                                 </select>
                             </div>
                             
                             <div class="form-group">
-                                <label class="form-label">{{ __('Area') }} <span class="required">*</span></label>
-                                <select name="area_id" id="area" class="form-select" data-id="{{ $outlet?->area_id }}">
-                                    <option value="">{{__('Select Area')}}</option>
-                                    @if ($outlet?->area_id)
-                                        <option value="{{$outlet->area_id ?? ""}}" selected>{{ $outlet?->area?->area }}</option>
-                                    @endif
+                                <label class="form-label"><?php echo e(__('Area')); ?> <span class="required">*</span></label>
+                                <select name="area_id" id="area" class="form-select">
+                                    <option value=""><?php echo e(__('Select Area')); ?></option>
                                 </select>
                             </div>
                             
                             <div class="form-group">
-                                <label class="form-label">{{ __('Zip Code') }} <span class="required">*</span></label>
-                                <input type="text" name="zipcode" id="zipcode" class="form-control" placeholder="{{ __('Zip Code') }}" value="{{ $outlet->post_code ?? "" }}">
+                                <label class="form-label"><?php echo e(__('Zip Code')); ?> <span class="required">*</span></label>
+                                <input type="text" name="zipcode" id="zipcode" class="form-control" placeholder="<?php echo e(__('Zip Code')); ?>" value="<?php echo e(old('zipcode')); ?>">
                             </div>
 
                             <div class="action-buttons">
                                 <button type="submit" class="btn-submit" id="outlet_submit">
                                     <i class="las la-check-circle"></i>
-                                    {{ __('Submit') }}
+                                    <?php echo e(__('Submit')); ?>
+
                                 </button>
                                 <button type="reset" class="btn-clear clear_all_value">
                                     <i class="las la-undo"></i>
-                                    {{ __('Clear') }}
+                                    <?php echo e(__('Clear')); ?>
+
                                 </button>
                             </div>
                         </form>
@@ -139,7 +137,7 @@
     --transition: all 0.2s ease;
 }
 
-.outlet-zone-section {
+.outlet-zone-wrapper {
     padding: 24px;
     background: var(--gray-50);
 }
@@ -365,7 +363,7 @@
 
 /* Responsive */
 @media (max-width: 992px) {
-    .outlet-zone-section {
+    .outlet-zone-wrapper {
         padding: 16px;
     }
     
@@ -423,4 +421,8 @@
 .mt-5 {
     margin-top: 28px;
 }
-</style>
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+</style><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/backend/pages/admin/serviceLocation/location-general-info.blade.php ENDPATH**/ ?>

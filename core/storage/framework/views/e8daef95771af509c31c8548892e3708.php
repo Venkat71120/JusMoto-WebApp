@@ -1,9 +1,28 @@
-@extends('backend.admin-master')
-@section('site-title')
-    {{__('Edit Outlet')}}
-@endsection
-@section('style')
-    <x-media.css/>
+<?php $__env->startSection('site-title'); ?>
+    <?php echo e(__('Edit Outlet')); ?>
+
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('style'); ?>
+    <?php if (isset($component)) { $__componentOriginalbc1bcd20222d67be5eb46ea1d22a74fa = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalbc1bcd20222d67be5eb46ea1d22a74fa = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.media.css','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('media.css'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalbc1bcd20222d67be5eb46ea1d22a74fa)): ?>
+<?php $attributes = $__attributesOriginalbc1bcd20222d67be5eb46ea1d22a74fa; ?>
+<?php unset($__attributesOriginalbc1bcd20222d67be5eb46ea1d22a74fa); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalbc1bcd20222d67be5eb46ea1d22a74fa)): ?>
+<?php $component = $__componentOriginalbc1bcd20222d67be5eb46ea1d22a74fa; ?>
+<?php unset($__componentOriginalbc1bcd20222d67be5eb46ea1d22a74fa); ?>
+<?php endif; ?>
     <style>
         /* ===== CLEAN & MODERN EDIT OUTLET PAGE ===== */
 
@@ -391,45 +410,67 @@
             flex-shrink: 0;
         }
     </style>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="edit-outlet-page">
         <div class="row g-4 mt-0">
             <div class="col-xl-12 col-lg-12 mt-0">
                 <div class="dashboard__card">
                     <div class="header-wrap d-flex justify-content-between">
                         <div class="left-content">
-                            <h4 class="header-title">{{__('Edit Outlet Details')}}</h4>
+                            <h4 class="header-title"><?php echo e(__('Edit Outlet Details')); ?></h4>
                         </div>
                         <div class="right-content">
-                            <a class="btn_bg_info" href="{{route('admin.outletAddress.all')}}">
+                            <a class="btn_bg_info" href="<?php echo e(route('admin.outletAddress.all')); ?>">
                                 <i class="las la-arrow-left"></i>
-                                {{__('All Outlets')}}
+                                <?php echo e(__('All Outlets')); ?>
+
                             </a>
                         </div>
                     </div>
 
-                    <x-validation.error/>
+                    <?php if (isset($component)) { $__componentOriginal4bb59b834d778ff0cb72af5a473e2885 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal4bb59b834d778ff0cb72af5a473e2885 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.validation.error','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('validation.error'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal4bb59b834d778ff0cb72af5a473e2885)): ?>
+<?php $attributes = $__attributesOriginal4bb59b834d778ff0cb72af5a473e2885; ?>
+<?php unset($__attributesOriginal4bb59b834d778ff0cb72af5a473e2885); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal4bb59b834d778ff0cb72af5a473e2885)): ?>
+<?php $component = $__componentOriginal4bb59b834d778ff0cb72af5a473e2885; ?>
+<?php unset($__componentOriginal4bb59b834d778ff0cb72af5a473e2885); ?>
+<?php endif; ?>
 
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="add-listing-wrapper">
-                                <form action="{{route('admin.outlet.edit', $outlet->id)}}" method="post" enctype="multipart/form-data">
-                                    @csrf
+                                <form action="<?php echo e(route('admin.outlet.edit', $outlet->id)); ?>" method="post" enctype="multipart/form-data">
+                                    <?php echo csrf_field(); ?>
                                     <div class="add-listing-content-wrapper">
                                         <div class="tab-content" id="add-listing-tabContent">
-                                            @include('backend.pages.admin.serviceLocation.edit-outlet-details')
+                                            <?php echo $__env->make('backend.pages.admin.serviceLocation.edit-outlet-details', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                                         </div>
                                         
                                         <div class="btn-wrapper">
                                             <button type="button" class="clear_all_value">
                                                 <i class="las la-undo"></i>
-                                                {{__('Clear All')}}
+                                                <?php echo e(__('Clear All')); ?>
+
                                             </button>
                                             <button type="submit" class="btn-primary" id="outlet_submit">
                                                 <i class="las la-save"></i>
-                                                {{__('Update Outlet')}}
+                                                <?php echo e(__('Update Outlet')); ?>
+
                                             </button>
                                         </div>
                                     </div>
@@ -442,16 +483,73 @@
         </div>
     </div>
 
-    <x-media.markup/>
-@endsection
+    <?php if (isset($component)) { $__componentOriginal0a0c44ec0e77c6e781a03c2fda86fc75 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal0a0c44ec0e77c6e781a03c2fda86fc75 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.media.markup','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('media.markup'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal0a0c44ec0e77c6e781a03c2fda86fc75)): ?>
+<?php $attributes = $__attributesOriginal0a0c44ec0e77c6e781a03c2fda86fc75; ?>
+<?php unset($__attributesOriginal0a0c44ec0e77c6e781a03c2fda86fc75); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal0a0c44ec0e77c6e781a03c2fda86fc75)): ?>
+<?php $component = $__componentOriginal0a0c44ec0e77c6e781a03c2fda86fc75; ?>
+<?php unset($__componentOriginal0a0c44ec0e77c6e781a03c2fda86fc75); ?>
+<?php endif; ?>
+<?php $__env->stopSection(); ?>
 
-@section('scripts')
-    <x-media.js />
-    <x-frontend.js.new-tag-add-js/>
-    <script src="{{asset('assets/backend/js/sweetalert2.js')}}"></script>
+<?php $__env->startSection('scripts'); ?>
+    <?php if (isset($component)) { $__componentOriginal9c9e2f22010721f1a8a11abf87b15b5e = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9c9e2f22010721f1a8a11abf87b15b5e = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.media.js','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('media.js'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9c9e2f22010721f1a8a11abf87b15b5e)): ?>
+<?php $attributes = $__attributesOriginal9c9e2f22010721f1a8a11abf87b15b5e; ?>
+<?php unset($__attributesOriginal9c9e2f22010721f1a8a11abf87b15b5e); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9c9e2f22010721f1a8a11abf87b15b5e)): ?>
+<?php $component = $__componentOriginal9c9e2f22010721f1a8a11abf87b15b5e; ?>
+<?php unset($__componentOriginal9c9e2f22010721f1a8a11abf87b15b5e); ?>
+<?php endif; ?>
+    <?php if (isset($component)) { $__componentOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.frontend.js.new-tag-add-js','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('frontend.js.new-tag-add-js'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a)): ?>
+<?php $attributes = $__attributesOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a; ?>
+<?php unset($__attributesOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a)): ?>
+<?php $component = $__componentOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a; ?>
+<?php unset($__componentOriginal0d851ffbab1e1fe1ae11dfa476c2ee2a); ?>
+<?php endif; ?>
+    <script src="<?php echo e(asset('assets/backend/js/sweetalert2.js')); ?>"></script>
     
     <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key={{get_static_option('google_map_api_key')}}&libraries=places&v=3.46.0"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo e(get_static_option('google_map_api_key')); ?>&libraries=places&v=3.46.0"></script>
     
     <script>
         function readURL(input) {
@@ -471,17 +569,17 @@
         $(document).ready(function () {
             // Initialize Select2
             $('#state').select2({
-                placeholder: '{{ __('Select State') }}', 
+                placeholder: '<?php echo e(__('Select State')); ?>', 
                 allowClear: true,
             });
             
             $('#city').select2({
-                placeholder: '{{ __('Select City') }}',
+                placeholder: '<?php echo e(__('Select City')); ?>',
                 allowClear: true, 
             });
             
             $('#area').select2({
-                placeholder: '{{ __('Select Area') }}',  
+                placeholder: '<?php echo e(__('Select Area')); ?>',  
                 allowClear: true, 
             });
 
@@ -491,7 +589,7 @@
                 const citySelect = document.getElementById('city');
                 const areaSelect = document.getElementById('area');
                
-                citySelect.innerHTML = '<option value="">{{ __("Select City") }}</option>';
+                citySelect.innerHTML = '<option value=""><?php echo e(__("Select City")); ?></option>';
                 
                 if (stateId) {
                     $.ajax({
@@ -521,7 +619,7 @@
                 const areaSelect = document.getElementById('area');
                 const stateId = document.getElementById('state').value;
                 
-                areaSelect.innerHTML = '<option value="">{{ __("Select area") }}</option>';
+                areaSelect.innerHTML = '<option value=""><?php echo e(__("Select area")); ?></option>';
                
                 if (cityId) {
                     $.ajax({
@@ -685,4 +783,5 @@
             initAutocomplete();
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('backend.admin-master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/backend/pages/admin/serviceLocation/edit-outlet.blade.php ENDPATH**/ ?>

@@ -64,14 +64,14 @@
                                     </a>
                                 </li>
                             @endcan
-                            @can('admin-service-list')
+                            {{-- @can('admin-service-list')
                                 <li class="submenu-item @if(request()->is('admin/service/schedule/list')) selected @endif">
                                     <a href="{{ route('admin.schedule.all') }}">
                                         <span class="submenu-dot"></span>
                                         {{ __('Schedule Manage') }}
                                     </a>
                                 </li>
-                            @endcan
+                            @endcan --}}
                         </ul>
                     </li>
                 @endcanany

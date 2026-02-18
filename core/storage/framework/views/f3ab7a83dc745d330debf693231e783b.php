@@ -68,15 +68,7 @@
                                     </a>
                                 </li>
                             <?php endif; ?>
-                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('admin-service-list')): ?>
-                                <li class="submenu-item <?php if(request()->is('admin/service/schedule/list')): ?> selected <?php endif; ?>">
-                                    <a href="<?php echo e(route('admin.schedule.all')); ?>">
-                                        <span class="submenu-dot"></span>
-                                        <?php echo e(__('Schedule Manage')); ?>
-
-                                    </a>
-                                </li>
-                            <?php endif; ?>
+                            
                         </ul>
                     </li>
                 <?php endif; ?>

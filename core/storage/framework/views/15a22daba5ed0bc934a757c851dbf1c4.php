@@ -2,50 +2,50 @@
     <div class="details-grid">
         <!-- Outlet Name -->
         <div class="detail-item">
-            <span class="detail-label">{{ __('Outlet Name:') }}</span>
-            <span class="detail-value">{{ $outlet?->name }}</span>
+            <span class="detail-label"><?php echo e(__('Outlet Name:')); ?></span>
+            <span class="detail-value"><?php echo e($outlet?->name); ?></span>
         </div>
 
         <!-- Address -->
         <div class="detail-item">
-            <span class="detail-label">{{ __('Address:') }}</span>
-            <span class="detail-value">{{ $outlet?->address }}</span>
+            <span class="detail-label"><?php echo e(__('Address:')); ?></span>
+            <span class="detail-value"><?php echo e($outlet?->address); ?></span>
         </div>
 
         <!-- State -->
         <div class="detail-item">
-            <span class="detail-label">{{ __('State:') }}</span>
-            <span class="detail-value">{{ $outlet?->state?->state }}</span>
+            <span class="detail-label"><?php echo e(__('State:')); ?></span>
+            <span class="detail-value"><?php echo e($outlet?->state?->state); ?></span>
         </div>
 
         <!-- City -->
         <div class="detail-item">
-            <span class="detail-label">{{ __('City:') }}</span>
-            <span class="detail-value">{{ $outlet?->city?->city }}</span>
+            <span class="detail-label"><?php echo e(__('City:')); ?></span>
+            <span class="detail-value"><?php echo e($outlet?->city?->city); ?></span>
         </div>
 
         <!-- Area -->
         <div class="detail-item">
-            <span class="detail-label">{{ __('Area:') }}</span>
-            <span class="detail-value">{{ $outlet?->area?->area }}</span>
+            <span class="detail-label"><?php echo e(__('Area:')); ?></span>
+            <span class="detail-value"><?php echo e($outlet?->area?->area); ?></span>
         </div>
 
         <!-- Longitude -->
         <div class="detail-item">
-            <span class="detail-label">{{ __('Longitude:') }}</span>
-            <span class="detail-value">{{ $outlet?->longitude }}</span>
+            <span class="detail-label"><?php echo e(__('Longitude:')); ?></span>
+            <span class="detail-value"><?php echo e($outlet?->longitude); ?></span>
         </div>
 
         <!-- Latitude -->
         <div class="detail-item">
-            <span class="detail-label">{{ __('Latitude:') }}</span>
-            <span class="detail-value">{{ $outlet?->latitude }}</span>
+            <span class="detail-label"><?php echo e(__('Latitude:')); ?></span>
+            <span class="detail-value"><?php echo e($outlet?->latitude); ?></span>
         </div>
 
         <!-- Zip Code -->
         <div class="detail-item">
-            <span class="detail-label">{{ __('Zip Code:') }}</span>
-            <span class="detail-value">{{ $outlet?->post_code }}</span>
+            <span class="detail-label"><?php echo e(__('Zip Code:')); ?></span>
+            <span class="detail-value"><?php echo e($outlet?->post_code); ?></span>
         </div>
     </div>
 </div>
@@ -126,4 +126,4 @@
 .editProduct__contents__sku__para {
     /* Original classes preserved */
 }
-</style>
+</style><?php /**PATH C:\xampp\htdocs\JusMoto-WebApp\core\resources\views/backend/pages/admin/serviceLocation/details-basic-info.blade.php ENDPATH**/ ?>

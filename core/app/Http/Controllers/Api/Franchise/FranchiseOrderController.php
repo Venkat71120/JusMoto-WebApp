@@ -180,7 +180,7 @@ class FranchiseOrderController extends Controller
         // Send notification to user
         if ($order->user_id) {
             $statusMessage = $this->getStatusChangeMessage($newStatus, $order->id);
-            user_notification($order->id, $order->user_id, 'order', $statusMessage);
+            user_notification($order->id, $order->user_id, 'order', $statusMessage, 0);
         }
 
         // Send email notification
@@ -239,7 +239,7 @@ class FranchiseOrderController extends Controller
             $message = $newPaymentStatus == 1
                 ? __('Your order (#:order_id) payment is completed.', ['order_id' => $order->id])
                 : __('Your order (#:order_id) payment is pending.', ['order_id' => $order->id]);
-            user_notification($order->id, $order->user_id, 'order', $message);
+            user_notification($order->id, $order->user_id, 'order', $message, 0);
         }
 
         return response()->json([
@@ -300,7 +300,7 @@ class FranchiseOrderController extends Controller
                 'staff' => $staff->first_name,
                 'date' => $order->date
             ]);
-            user_notification($order->id, $order->user_id, 'order', $message);
+            user_notification($order->id, $order->user_id, 'order', $message, 0);
         }
 
         return response()->json([

@@ -41,7 +41,7 @@ class SuspendActiveController extends Controller
     {
         $user = User::find($id);
         User::where('id',$id)->update(['is_suspend'=>0]);
-         user_notification($id,$user->id,'Account',__('Account Unsuspended'));
+         user_notification($id,$user->id,'Account',__('Account Unsuspended'), 0);
 
         //Email to user according to their id
         try {

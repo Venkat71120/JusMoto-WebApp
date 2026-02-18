@@ -185,7 +185,7 @@ class FranchiseSupportTicketController extends Controller
 
         // Send notification to user
         if ($ticket->user_id) {
-            user_notification($ticket->id, $ticket->user_id, 'ticket', __('New reply on your support ticket'));
+            user_notification($ticket->id, $ticket->user_id, 'ticket', __('New reply on your support ticket'), 0);
         }
 
         // Send email notification if requested
@@ -253,7 +253,7 @@ class FranchiseSupportTicketController extends Controller
                 ? __('Your support ticket has been closed.')
                 : __('Your support ticket has been reopened.');
 
-            user_notification($ticket->id, $ticket->user_id, 'ticket', $statusMessage);
+            user_notification($ticket->id, $ticket->user_id, 'ticket', $statusMessage, 0);
         }
 
         return response()->json([

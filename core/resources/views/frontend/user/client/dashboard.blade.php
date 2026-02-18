@@ -5,15 +5,22 @@
     <div class="overlay"></div>
     <div class="main_container">
         <div class="p_15">
-            <div class="row g-4">
-                <div class="col-12 col-lg-6">
+            <!-- First Row: Greeting and Welcome Message -->
+            <div class="row g-4 mb-4">
+                <div class="col-12">
                     <div class="page_header">
                         <h3 class="page-heading" id="greeting"></h3>
                         <p>{{__('Manage your dashboard here')}}</p>
                     </div>
-                    <div class="cards_wrapper bg_active p_6 br_8">
+                </div>
+            </div>
+
+            <!-- Second Row: Dashboard Cards (All in one row) -->
+            <div class="row g-4 mb-4">
+                <div class="col-12">
+                    <div class="cards_wrapper bg_active p_6 br_8 d-flex flex-wrap gap-3">
                         <!-- Total Orders Card -->
-                        <div class="dashborad_card bg_light br_8 py_13 px_10">
+                        <div class="dashborad_card bg_light br_8 py_13 px_10 flex-fill" style="min-width: 200px;">
                             <div class="card_content">
                                 <span>{{__('Total Orders')}}</span>
                                 <h6>{{ $totalOrders }}</h6>
@@ -45,7 +52,7 @@
                         </div>
 
                         <!-- Order Cancelled Card -->
-                        <div class="dashborad_card bg_light br_8 py_13 px_10">
+                        <div class="dashborad_card bg_light br_8 py_13 px_10 flex-fill" style="min-width: 200px;">
                             <div class="card_content">
                                 <span>{{__('Order Cancelled')}}</span>
                                 <h6>{{ $cancelledOrders }}</h6>
@@ -68,7 +75,7 @@
                         </div>
 
                         <!-- Order Pending Card -->
-                        <div class="dashborad_card bg_light br_8 py_13 px_10">
+                        <div class="dashborad_card bg_light br_8 py_13 px_10 flex-fill" style="min-width: 200px;">
                             <div class="card_content">
                                 <span>{{__('Order Pending')}}</span>
                                 <h6>{{ $pendingOrders }}</h6>
@@ -91,7 +98,7 @@
                         </div>
 
                         <!-- Order Completed Card -->
-                        <div class="dashborad_card bg_light br_8 py_13 px_10">
+                        <div class="dashborad_card bg_light br_8 py_13 px_10 flex-fill" style="min-width: 200px;">
                             <div class="card_content">
                                 <span>{{__('Order completed')}}</span>
                                 <h6>{{ $completedOrders }}</h6>
@@ -114,116 +121,160 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Third Row: My Cars Section (Left Column) and Empty Right Column (if needed) -->
+            <div class="row g-4 mb-4">
                 <div class="col-12 col-lg-6">
-                    <div class="page_header2 mt_12 mb_12">
-                        <h3 class="page_title">{{__('My Car')}}</h3>
+                    <div class="page_header2 mt_12 mb_12 d-flex justify-content-between align-items-center">
+                        <h3 class="page_title">{{__('My Cars')}}</h3>
+                        <button class="cmn-btn black-btn openPop">
+                            + Add Car
+                        </button>
                     </div>
-                    <div class="my_car_wrapper br_8">
-                        <a href="#" class="edit_my_car">
-                            <i class="icon-28px ti tabler-edit openPop"></i>
-                        </a>
-                        <div class="my_car">
-                            <div class="my_car_img">
-                                {!! render_image_markup_by_attachment_id($user->user_selected_car?->car?->image,'','thumb') !!}
+
+                    <div class="table_wrapper">
+                        <table class="table w-100">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Car Name</th>
+                                    <th>Registration</th>
+                                    <th>Fuel Type</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($cars as $car)
+                                    <tr>
+                                        <td>
+                                            {!! render_image_markup_by_attachment_id(
+                                                $car->car?->image,'','thumb'
+                                            ) !!}
+                                        </td>
+                                        <td>{{ $car->car?->name }}</td>
+                                        <td>{{ $car->registration_number }}</td>
+                                        <td>{{ $car->fuelType?->name ?? '-' }}</td>
+                                        {{-- <td>
+                                            <button class="openPop">
+                                                <i class="ti tabler-edit"></i>
+                                            </button>
+                                        </td> --}}
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            No cars added
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Right Column - Can be used for additional content if needed -->
+                <div class="col-12 col-lg-6">
+                    <!-- Additional content can go here -->
+                    <!-- For now, it's empty but ready for future widgets -->
+                </div>
+            </div>
+
+            <!-- Fourth Row: Order List Section (Full Width) -->
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="section-header px_15">{{__('Order List')}}</h4>
+                    <div class="table_wrapper px_15">
+                        @if($orders->count() > 0)
+                            <table class="data-table table w-100 br_4 overflow-hidden">
+                                <colgroup>
+                                    <col data-dt-column="1" style="width: 235px;">
+                                    <col data-dt-column="2" style="width: 371px;">
+                                    <col data-dt-column="3" style="width: 179px;">
+                                    <col data-dt-column="4" style="width: 259px;">
+                                    <col data-dt-column="5" style="width: 177px;">
+                                    <col data-dt-column="6" style="width: 115px;">
+                                </colgroup>
+                                <thead class="table_head">
+                                    <tr>
+                                        <th>{{__('Order Id')}}</th>
+                                        <th>{{__('Address')}}</th>
+                                        <th>{{__('Payment')}}</th>
+                                        <th>{{__('Date')}}</th>
+                                        <th>{{__('Status')}}</th>
+                                        <th>{{__('Action')}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table_body">
+                                    @foreach($orders as $order)
+                                        <tr>
+                                            <td>ID: {{ $order->id}}</td>
+                                            <td>
+                                                @if($order->orderLocations)
+                                                    {{ Str::limit($order->orderLocations->address ?? 'N/A', 50) }}
+                                                    @if($order->orderLocations->post_code)
+                                                        , {{ $order->orderLocations->post_code }}
+                                                    @endif
+                                                @elseif($order->outletLocation)
+                                                    {{ Str::limit($order->outletLocation->address ?? 'N/A', 50) }}
+                                                    @if($order->outletLocation->post_code)
+                                                        , {{ $order->outletLocation->post_code }}
+                                                    @endif
+                                                @else
+                                                    N/A
+                                                @endif
+                                            </td>
+                                            <td class="table_payment {{ $order->payment_status == 1 ? 'complete' : 'pending' }}">
+                                                {{ $order->payment_status == 1 ? 'Complete' : 'Pending' }}
+                                            </td>
+                                            <td>
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                                <span>{{ \Carbon\Carbon::parse($order->date ?? $order->created_at)->format('d-m-Y') }}</span>
+                                                <span>{{ \Carbon\Carbon::parse($order->created_at)->format('h:iA') }}</span>
+                                            </td>
+                                            <td>
+                                                <span class="table_status
+                                                    @if($order->status == 0) pending
+                                                    @elseif($order->status == 1) in-progress
+                                                    @elseif($order->status == 2) complete
+                                                    @elseif($order->status == 3) complete
+                                                    @elseif($order->status == 4) cancelled
+                                                    @endif">
+                                                    @if($order->status == 0) Pending
+                                                    @elseif($order->status == 1) Active
+                                                    @elseif($order->status == 2) Completed
+                                                    @elseif($order->status == 3) Delivered
+                                                    @elseif($order->status == 4) Cancelled
+                                                    @else Unknown
+                                                    @endif
+                                                </span>
+                                            </td>
+                                            <td class="action_icon">
+                                                <a href="{{ route('order.details', $order->id) }}" title="View Order">
+                                                    <i class="icon-base ti tabler-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                            <!-- Pagination -->
+                            <div class="pagination mt-3" id="tablePagination">
+                                <x-frontend.dashboard-pagination.pagination :paginator="$orders" />
                             </div>
-                            <div class="page_header">
-                                <p class="page_title m-0">{{$user->user_selected_car?->car?->name}}</p>
+                        @else
+                            <div class="alert alert-info text-center p-4">
+                                <i class="fa-solid fa-info-circle fa-2x mb-3"></i>
+                                <p class="mb-0">{{__('No orders found. Start ordering to see your order history!')}}</p>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Order List Section -->
-        <h4 class="section-header px_15">{{__('Order List')}}</h4>
-        <div class="table_wrapper px_15">
-            @if($orders->count() > 0)
-                <table class="data-table table w-100 br_4 overflow-hidden">
-                    <colgroup>
-                        <col data-dt-column="1" style="width: 235px;">
-                        <col data-dt-column="2" style="width: 371px;">
-                        <col data-dt-column="3" style="width: 179px;">
-                        <col data-dt-column="4" style="width: 259px;">
-                        <col data-dt-column="5" style="width: 177px;">
-                        <col data-dt-column="6" style="width: 115px;">
-                    </colgroup>
-                    <thead class="table_head">
-                    <tr>
-                        <th>{{__('Order Id')}}</th>
-                        <th>{{__('Address')}}</th>
-                        <th>{{__('Payment')}}</th>
-                        <th>{{__('Date')}}</th>
-                        <th>{{__('Status')}}</th>
-                        <th>{{__('Action')}}</th>
-                    </tr>
-                    </thead>
-                    <tbody class="table_body">
-                    @foreach($orders as $order)
-                        <tr>
-                            <td>ID: {{ $order->id}}</td>
-                            <td>
-                                @if($order->orderLocations)
-                                    {{ Str::limit($order->orderLocations->address ?? 'N/A', 50) }}
-                                    @if($order->orderLocations->post_code)
-                                        , {{ $order->orderLocations->post_code }}
-                                    @endif
-                                @elseif($order->outletLocation)
-                                    {{ Str::limit($order->outletLocation->address ?? 'N/A', 50) }}
-                                    @if($order->outletLocation->post_code)
-                                        , {{ $order->outletLocation->post_code }}
-                                    @endif
-                                @else
-                                    N/A
-                                @endif
-                            </td>
-                            <td class="table_payment {{ $order->payment_status == 1 ? 'complete' : 'pending' }}">
-                                {{ $order->payment_status == 1 ? 'Complete' : 'Pending' }}
-                            </td>
-                            <td>
-                                <i class="fa-regular fa-pen-to-square"></i>
-                                <span>{{ \Carbon\Carbon::parse($order->date ?? $order->created_at)->format('d-m-Y') }}</span>
-                                <span>{{ \Carbon\Carbon::parse($order->created_at)->format('h:iA') }}</span>
-                            </td>
-                            <td>
-                            <span class="table_status
-                                @if($order->status == 0) pending
-                                @elseif($order->status == 1) in-progress
-                                @elseif($order->status == 2) complete
-                                @elseif($order->status == 3) complete
-                                @elseif($order->status == 4) cancelled
-                                @endif">
-                                @if($order->status == 0) Pending
-                                @elseif($order->status == 1) Active
-                                @elseif($order->status == 2) Completed
-                                @elseif($order->status == 3) Delivered
-                                @elseif($order->status == 4) Cancelled
-                                @else Unknown
-                                @endif
-                            </span>
-                            </td>
-                            <td class="action_icon">
-                                <a href="{{ route('order.details', $order->id) }}" title="View Order">
-                                    <i class="icon-base ti tabler-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-
-                <!-- Pagination -->
-                <div class="pagination mt-3" id="tablePagination">
-                    <x-frontend.dashboard-pagination.pagination :paginator="$orders" />
-                </div>
-            @else
-                <div class="alert alert-info text-center p-4">
-                    <i class="fa-solid fa-info-circle fa-2x mb-3"></i>
-                    <p class="mb-0">{{__('No orders found. Start ordering to see your order history!')}}</p>
-                </div>
-            @endif
-        </div>
     </div>
+
     <div id="popupContainer" data-popup-url="{{ route('client.car.select.popup') }}">
     </div>
 
@@ -256,7 +307,5 @@
         let greeting = hour < 12 ? "Good Morning" :
             hour < 18 ? "Good Afternoon" : "Good Evening";
         document.getElementById("greeting").innerText = greeting;
-
-
     </script>
 @endsection

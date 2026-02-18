@@ -12,7 +12,8 @@ class UserSelectedCar extends Model
         'brand_id',
         'car_id',
         'engine_type_id',
-        'fual_type_id'
+        'fual_type_id',
+        'registration_number'
     ];
 
     public function user()

@@ -1,119 +1,424 @@
-<div class="row g-4">
-    <div class="col-12">
+<div class="outlet-zone-wrapper">
+    <div class="row g-4">
+        <div class="col-12">
+            
+            <!-- Map Section -->
+            <div class="zone-card">
+                <div class="zone-header">
+                    <h6 class="zone-title">
+                        <i class="las la-map-marker"></i>
+                        {{__('Outlet Zone Settings')}}
+                    </h6>
+                </div>
                 
-    <!-- map section start-->
-        <div class="dashboard_table__wrapper dashboard_border  padding-20 radius-10 bg-white">
-            <div class="dashboard_table__title__flex">
-                <h6 class="dashboard_table__title"> {{__('Outlet Zone Settings')}} </h6>
-                <div class="btn-wrapper" data-bs-toggle="modal" data-bs-target="#openTicket">  </div>
-            </div>
-            <div class="notice-board">
-                <p class="text-info">{{__('Search your service location, pick a location, and submit.')}}
-                    <a href="https://drive.google.com/file/d/1BwDAjSLAeb4LaxzOkrdsgGO_Io2jM6S6/view?usp=sharing" target="_blank">
-                        <strong class="text-warning">{{__('Video link')}}</strong></a></p>
-            </div>
-            <div class="row">
-                    <!-- google map show -->
+                <div class="notice-board">
+                    <p class="notice-text">
+                        <i class="las la-info-circle"></i>
+                        {{__('Search your service location, pick a location, and submit.')}}
+                        <a href="https://drive.google.com/file/d/1BwDAjSLAeb4LaxzOkrdsgGO_Io2jM6S6/view?usp=sharing" target="_blank" class="video-link">
+                            <i class="las la-video"></i>
+                            <strong>{{__('Video link')}}</strong>
+                        </a>
+                    </p>
+                </div>
+                
+                <div class="row">
+                    <!-- Google Map -->
                     <div class="col-lg-8 mt-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <!-- Start Map -->
-                                <div class="map-warper dark-support rounded overflow-hidden">
-                                    <input id="pac-input" class="controls rounded"
-                                            type="text" placeholder="{{ __('Search your Outlet Zone')}}"/>
-                                    <div id="map_canvas"></div>
-                                </div>
-                                <!-- End Map -->
+                        <div class="map-card">
+                            <div class="map-container">
+                                <input id="pac-input" class="map-search" type="text" placeholder="{{ __('Search your Outlet Zone') }}"/>
+                                <div id="map_canvas" class="map-canvas"></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- lat lon section start -->
+                    <!-- Form Section -->
                     <div class="col-lg-4">
-                        
                         <form action="{{route('admin.outletAddress.add')}}" enctype="multipart/form-data" method="POST">
                             @csrf
-                            <div class="mb-30">
-                                <div class="form-group mt-3">
-                                    <label for="outlet_name" class="label_title"> {{ __('Outlet Name') }} <span class="text-danger">*</span> </label>
-                                    <input type="text" name="name" id="outlet_name" class="form-control"  placeholder="{{ __('Outlet Name') }}"  value="{{ old('name') }}">
+                            
+                            <div class="form-group">
+                                <label class="form-label">{{ __('Outlet Name') }} <span class="required">*</span></label>
+                                <input type="text" name="name" id="outlet_name" class="form-control" placeholder="{{ __('Outlet Name') }}" value="{{ old('name') }}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">{{ __('Outlet Location') }} <span class="required">*</span></label>
+                                <input type="text" name="outlet_address" id="outlet_address" class="form-control" placeholder="{{ __('Outlet Location') }}" value="{{ old('outlet_address') }}">
+                            </div>
+
+                            <div class="coordinates-row">
+                                <div class="form-group">
+                                    <label class="form-label">{{ __('Latitude') }} <span class="required">*</span></label>
+                                    <input type="text" name="latitude" id="latitude" class="form-control" placeholder="{{ __('Latitude') }}" value="{{ old('latitude') }}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">{{ __('Longitude') }} <span class="required">*</span></label>
+                                    <input type="text" name="longitude" id="longitude" class="form-control" placeholder="{{ __('Longitude') }}" value="{{ old('longitude') }}">
                                 </div>
                             </div>
-                        <div class="mb-30">
-                            <div class="form-group mt-3">
-                                <label for="outlet_address" class="label_title"> {{ __('Outlet Location') }} <span class="text-danger">*</span> </label>
-                                <input type="text" name="outlet_address" id="outlet_address" class="form-control"  placeholder="{{ __('Outlet Location') }}"  value="{{ old('outlet_address')}}">
-                            </div>
-                        </div>
-
-                    <div class="mb-30">
-                            <div class="form-group mt-3">
-                                <label for="latitude" class="label_title"> {{ __('Latitude') }} <span class="text-danger">*</span> </label>
-                                <input type="text" name="latitude" id="latitude" class="form-control" placeholder="{{ __('Latitude') }}" value="{{ old('latitude')}}">
-                            </div>
-                        </div>
-                        <div class="mb-30">
-                            <div class="form-group mt-3">
-                                <label for="longitude" class="label_title"> {{ __('Longitude') }} <span class="text-danger">*</span> </label>
-                                <input type="text" name="longitude" id="longitude" class="form-control"  placeholder="{{ __('Longitude') }}" value="{{ old('longitude') }}">
-                            </div>
-                        </div>
-                        <div class="mb-30">
-                            <div class="form-group mt-3">
-                                <label class="form__input__single__label">{{ __('State') }}  <span class="text-danger">*</span> </label>
-                                <select name="state_id" id="state" class="form-select" >
+                            
+                            <div class="form-group">
+                                <label class="form-label">{{ __('State') }} <span class="required">*</span></label>
+                                <select name="state_id" id="state" class="form-select">
                                     <option value="">{{__('Select State')}}</option>
                                     @foreach($states as $state)
-                                        <option value="{{ $state->id }}" @if(old('state_id') == $state->id) selected @endif>{{ $state->state}}</option>
+                                        <option value="{{ $state->id }}" @if(old('state_id') == $state->id) selected @endif>{{ $state->state }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <div class="mb-30">
-                            <div class="form-group mt-3">
-                                <label class="form__input__single__label">{{ __('City') }}  <span class="text-danger">*</span> </label>
+                            
+                            <div class="form-group">
+                                <label class="form-label">{{ __('City') }} <span class="required">*</span></label>
                                 <select name="city_id" id="city" class="form-select">
                                     <option value="">{{__('Select City')}}</option>
-                                  
                                 </select>
                             </div>
-                        </div>
-                        <div class="mb-30">
-                            <div class="form-group mt-3">
-                                <label class="form__input__single__label">{{ __('Area') }}  <span class="text-danger">*</span> </label>
-                                <select name="area_id" id="area" class="form-select" >
+                            
+                            <div class="form-group">
+                                <label class="form-label">{{ __('Area') }} <span class="required">*</span></label>
+                                <select name="area_id" id="area" class="form-select">
                                     <option value="">{{__('Select Area')}}</option>
-                                    
                                 </select>
                             </div>
-                        </div>
-                        <div class="mb-30">
-                            <div class="form-group mt-3">
-                                <label for="zipcode" class="label_title"> {{ __('Zip code') }} <span class="text-danger">*</span> </label>
-                                <input type="text" name="zipcode" id="zipcode" class="form-control"  placeholder="{{ __('Zip Code') }}" value="{{ old('zipcode')}}">
+                            
+                            <div class="form-group">
+                                <label class="form-label">{{ __('Zip Code') }} <span class="required">*</span></label>
+                                <input type="text" name="zipcode" id="zipcode" class="form-control" placeholder="{{ __('Zip Code') }}" value="{{ old('zipcode') }}">
                             </div>
-                        </div>
 
-                        <div class="d-flex justify-content-end mt-5">
-                            <button href="#" class="dashboard_table__title__btn btn-bg-1 radius-5" type="submit"  id="outlet_submit">{{ __('submit')}}</button>
-                            <button href="#" class="dashboard_table__title__btn btn btn-danger mx-3 clear_all_value" type="reset">{{ __('Clear')}}</button>
-                        </div>
-
+                            <div class="action-buttons">
+                                <button type="submit" class="btn-submit" id="outlet_submit">
+                                    <i class="las la-check-circle"></i>
+                                    {{ __('Submit') }}
+                                </button>
+                                <button type="reset" class="btn-clear clear_all_value">
+                                    <i class="las la-undo"></i>
+                                    {{ __('Clear') }}
+                                </button>
+                            </div>
                         </form>
-                        
                     </div>
-                    <!-- lat lon section end -->
+                </div>
             </div>
         </div>
-           
-        <div class="col-sm-12 text-end">
-        
-        </div>    
-    </div>    
+    </div>
 </div>
 
+<style>
+/* ===== CLEAN OUTLET ZONE SETTINGS ===== */
 
+:root {
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --red: #e31b23;
+    --red-light: #fee2e2;
+    --red-dark: #b91c1c;
+    --blue: #3b82f6;
+    --blue-light: #eff6ff;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --transition: all 0.2s ease;
+}
 
+.outlet-zone-wrapper {
+    padding: 24px;
+    background: var(--gray-50);
+}
 
+/* Zone Card */
+.zone-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+}
 
+/* Zone Header */
+.zone-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--gray-200);
+}
 
+.zone-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.zone-title i {
+    color: var(--red);
+    font-size: 20px;
+}
+
+/* Notice Board */
+.notice-board {
+    background: var(--blue-light);
+    border: 1px solid var(--blue);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+}
+
+.notice-text {
+    font-size: 14px;
+    color: var(--gray-700);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.notice-text i {
+    color: var(--blue);
+    font-size: 16px;
+}
+
+.video-link {
+    color: var(--blue);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: var(--transition);
+}
+
+.video-link:hover {
+    color: var(--red);
+}
+
+.video-link i {
+    color: var(--red);
+}
+
+/* Map Card */
+.map-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    height: 100%;
+}
+
+.map-container {
+    position: relative;
+    height: 400px;
+}
+
+.map-canvas {
+    width: 100%;
+    height: 100%;
+    background: var(--gray-100);
+}
+
+.map-search {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    height: 42px;
+    padding: 8px 16px;
+    border: 1px solid var(--gray-300);
+    border-radius: 40px;
+    font-size: 14px;
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+    z-index: 10;
+}
+
+.map-search:focus {
+    outline: none;
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px var(--red-light);
+}
+
+/* Form Elements */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 6px;
+}
+
+.required {
+    color: var(--red);
+    margin-left: 2px;
+}
+
+.form-control,
+.form-select {
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-size: 14px;
+    color: var(--gray-800);
+    transition: var(--transition);
+}
+
+.form-control:focus,
+.form-select:focus {
+    outline: none;
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px var(--red-light);
+}
+
+.form-control::placeholder {
+    color: var(--gray-400);
+    font-size: 13px;
+}
+
+/* Coordinates Row */
+.coordinates-row {
+    display: flex;
+    gap: 12px;
+}
+
+.coordinates-row .form-group {
+    flex: 1;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.btn-submit {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--red);
+    border: none;
+    border-radius: 40px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-submit:hover {
+    background: var(--red-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(227, 27, 35, 0.2);
+}
+
+.btn-clear {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: 40px;
+    color: var(--gray-700);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-clear:hover {
+    background: var(--gray-100);
+    border-color: var(--gray-400);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .outlet-zone-wrapper {
+        padding: 16px;
+    }
+    
+    .coordinates-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .map-container {
+        height: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .zone-card {
+        padding: 16px;
+    }
+    
+    .notice-text {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .map-container {
+        height: 300px;
+    }
+}
+
+/* Preserve original classes */
+.dashboard_table__wrapper {
+    /* Original styles preserved */
+}
+
+.dashboard_table__title {
+    /* Original styles preserved */
+}
+
+.dashboard_table__title__btn {
+    /* Original styles preserved */
+}
+
+.btn-bg-1 {
+    /* Original styles preserved */
+}
+
+.mx-3 {
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.mt-5 {
+    margin-top: 28px;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+</style>

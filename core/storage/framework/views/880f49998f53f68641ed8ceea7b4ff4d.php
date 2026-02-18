@@ -27,15 +27,7 @@
                                 </div>
                             </div>
 
-                            <footer>
-                                <div class="dashboard__card bg__white padding-20 radius-10">
-                                    <div class="footer-area footer-wrap">
-                                        <?php echo render_footer_copyright_text(); ?>
-
-                                        <p class="version">V-<?php echo e(get_static_option('site_script_version')); ?></p>
-                                    </div>
-                                </div>
-                            </footer>
+                            
 
                         </div>
                     </div>

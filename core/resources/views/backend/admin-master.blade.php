@@ -27,14 +27,14 @@
                                 </div>
                             </div>
 
-                            <footer>
+                            {{-- <footer>
                                 <div class="dashboard__card bg__white padding-20 radius-10">
                                     <div class="footer-area footer-wrap">
                                         {!! render_footer_copyright_text() !!}
                                         <p class="version">V-{{get_static_option('site_script_version')}}</p>
                                     </div>
                                 </div>
-                            </footer>
+                            </footer> --}}
 
                         </div>
                     </div>

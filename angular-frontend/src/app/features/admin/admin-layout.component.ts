@@ -9,10 +9,8 @@ import { AuthService } from '../../core/services/auth.service';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="panel-container">
-      <!-- Mobile Overlay -->
       <div class="sidebar-overlay" (click)="closeSidebar()" *ngIf="sidebarOpen()"></div>
 
-      <!-- Sidebar -->
       <aside class="sidebar" [class.open]="sidebarOpen()">
         <div class="sidebar-header">
           <a routerLink="/admin" class="logo">
@@ -25,81 +23,174 @@ import { AuthService } from '../../core/services/auth.service';
           <ul class="nav-list">
             <li>
               <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item" (click)="closeSidebar()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-                  <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 <span>Dashboard</span>
               </a>
             </li>
 
-            <li class="nav-section">MANAGEMENT</li>
+            <li class="nav-section">ORDERS</li>
+            <li>
+              <a routerLink="/admin/orders" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h6"/></svg>
+                <span>Orders</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/refunded-orders" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 105.64-12.36L1 10"/></svg>
+                <span>Refunded Orders</span>
+              </a>
+            </li>
 
+            <li class="nav-section">USERS</li>
             <li>
               <a routerLink="/admin/users" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                  <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
                 <span>Users</span>
               </a>
             </li>
             <li>
-              <a routerLink="/admin/orders" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
-                  <rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h6"/>
-                </svg>
-                <span>Orders</span>
+              <a routerLink="/admin/staff" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                <span>Staff / Admins</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/roles" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Roles</span>
               </a>
             </li>
 
             <li class="nav-section">CATALOG</li>
-
             <li>
               <a routerLink="/admin/services" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
                 <span>Services</span>
               </a>
             </li>
             <li>
               <a routerLink="/admin/categories" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
                 <span>Categories</span>
               </a>
             </li>
             <li>
+              <a routerLink="/admin/sub-categories" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7z"/><path d="M3 14h7v7H3z" stroke-dasharray="2 2"/></svg>
+                <span>Sub-Categories</span>
+              </a>
+            </li>
+            <li>
               <a routerLink="/admin/brands" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
-                  <line x1="7" y1="7" x2="7.01" y2="7"/>
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
                 <span>Brands</span>
               </a>
             </li>
             <li>
               <a routerLink="/admin/cars" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M5 17h2m10 0h2M2 9l2-4h16l2 4M2 9h20M2 9v8a1 1 0 001 1h1m16 0h1a1 1 0 001-1V9"/>
-                  <circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17h2m10 0h2M2 9l2-4h16l2 4M2 9h20M2 9v8a1 1 0 001 1h1m16 0h1a1 1 0 001-1V9"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
                 <span>Cars</span>
               </a>
             </li>
 
-            <li class="nav-section">MARKETING</li>
+            <li class="nav-section">VEHICLE</li>
+            <li>
+              <a routerLink="/admin/variants" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                <span>Variants</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/engine-types" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg>
+                <span>Engine Types</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/fuel-types" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22h12V6L9 2 3 6v16z"/><path d="M15 22h3a2 2 0 002-2v-6l-3-3"/><path d="M6 12h6M6 16h6"/></svg>
+                <span>Fuel Types</span>
+              </a>
+            </li>
 
+            <li class="nav-section">MARKETING</li>
             <li>
               <a routerLink="/admin/coupons" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 8v4M12 16h.01"/>
-                  <path d="M3.27 11l7.97-7.97a1 1 0 011.32-.08l8.16 6.54a1 1 0 01.27 1.24l-4.15 8.3a1 1 0 01-1.15.52L3.4 16.08a1 1 0 01-.7-.86L2.6 12a1 1 0 01.67-1z"/>
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V8H6a2 2 0 01-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 00-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></svg>
                 <span>Coupons</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/offers" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="7" y1="17" x2="17" y2="7"/></svg>
+                <span>Offers</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/sliders" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                <span>Sliders</span>
+              </a>
+            </li>
+
+            <li class="nav-section">SUPPORT</li>
+            <li>
+              <a routerLink="/admin/tickets" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                <span>Tickets</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/departments" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Departments</span>
+              </a>
+            </li>
+
+            <li class="nav-section">LOCATIONS</li>
+            <li>
+              <a routerLink="/admin/states" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span>States</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/cities" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h1M9 13h1M9 17h1"/></svg>
+                <span>Cities</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/areas" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                <span>Areas</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/outlet-locations" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 10-16 0c0 3 2.7 7 8 11.7z"/></svg>
+                <span>Outlet Locations</span>
+              </a>
+            </li>
+
+            <li class="nav-section">CONTENT</li>
+            <li>
+              <a routerLink="/admin/reviews" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>Reviews</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/notifications" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                <span>Notifications</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/media" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>Media Library</span>
               </a>
             </li>
           </ul>
@@ -107,11 +198,7 @@ import { AuthService } from '../../core/services/auth.service';
           <ul class="nav-list nav-bottom">
             <li>
               <a (click)="logout()" class="nav-item logout-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
-                  <polyline points="16 17 21 12 16 7"/>
-                  <line x1="21" y1="12" x2="9" y2="12"/>
-                </svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 <span>Log Out</span>
               </a>
             </li>
@@ -119,21 +206,17 @@ import { AuthService } from '../../core/services/auth.service';
         </nav>
       </aside>
 
-      <!-- Main Content -->
       <main class="main-content">
         <header class="main-header">
           <div class="header-left">
             <button class="menu-toggle" (click)="toggleSidebar()">
-              <span></span>
-              <span></span>
-              <span></span>
+              <span></span><span></span><span></span>
             </button>
           </div>
           <div class="header-right">
             <span class="admin-name">{{ adminName() }}</span>
           </div>
         </header>
-
         <div class="page-content">
           <router-outlet></router-outlet>
         </div>
@@ -142,208 +225,40 @@ import { AuthService } from '../../core/services/auth.service';
   `,
   styles: [`
     * { box-sizing: border-box; }
-
-    .panel-container {
-      display: flex;
-      min-height: 100vh;
-      background: #fff5f5;
-    }
-
-    .sidebar-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 99;
-    }
-
-    .sidebar {
-      width: 260px;
-      background: #0a0c0d;
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      height: 100vh;
-      z-index: 100;
-      transition: transform 0.3s ease;
-    }
-
-    .sidebar-header {
-      padding: 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .close-btn {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      color: #94a3b8;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: 700;
-      font-size: 20px;
-    }
-
-    .sidebar-nav {
-      flex: 1;
-      overflow-y: auto;
-      padding: 15px 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .nav-list {
-      list-style: none;
-      padding: 0 10px;
-      margin: 0;
-    }
-
-    .nav-bottom {
-      margin-top: auto;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding-top: 15px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 15px;
-      color: #94a3b8;
-      text-decoration: none;
-      border-radius: 8px;
-      margin-bottom: 4px;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-
-    .nav-item:hover {
-      background: rgba(227, 27, 35, 0.1);
-      color: #ff6b6b;
-    }
-
-    .nav-item.active {
-      background: #e31b23;
-      color: #fff;
-    }
-
-    .nav-item svg {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-    }
-
-    .nav-section {
-      font-size: 11px;
-      font-weight: 600;
-      color: #64748b;
-      letter-spacing: 0.05em;
-      padding: 20px 15px 8px;
-      text-transform: uppercase;
-    }
-
-    .logout-btn {
-      color: #f87171 !important;
-    }
-
-    .logout-btn:hover {
-      background: rgba(248, 113, 113, 0.1) !important;
-    }
-
-    .main-content {
-      flex: 1;
-      margin-left: 260px;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    .main-header {
-      background: #fff;
-      padding: 15px 25px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #e5e7eb;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-    }
-
-    .menu-toggle {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 5px;
-    }
-
-    .menu-toggle span {
-      width: 25px;
-      height: 2px;
-      background: #333;
-      border-radius: 2px;
-      transition: 0.3s;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .admin-name {
-      font-weight: 500;
-      color: #333;
-    }
-
-    .page-content {
-      padding: 25px;
-      flex: 1;
-    }
-
+    .panel-container { display: flex; min-height: 100vh; background: #fff5f5; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 99; }
+    .sidebar { width: 260px; background: #0a0c0d; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100; transition: transform 0.3s ease; }
+    .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; }
+    .close-btn { display: none; background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 700; font-size: 20px; }
+    .sidebar-nav { flex: 1; overflow-y: auto; padding: 15px 0; display: flex; flex-direction: column; }
+    .sidebar-nav::-webkit-scrollbar { width: 4px; }
+    .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+    .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+    .nav-list { list-style: none; padding: 0 10px; margin: 0; }
+    .nav-bottom { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; color: #94a3b8; text-decoration: none; border-radius: 8px; margin-bottom: 2px; transition: all 0.2s; cursor: pointer; font-size: 14px; }
+    .nav-item:hover { background: rgba(227, 27, 35, 0.1); color: #ff6b6b; }
+    .nav-item.active { background: #e31b23; color: #fff; }
+    .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .nav-section { font-size: 10px; font-weight: 600; color: #64748b; letter-spacing: 0.08em; padding: 16px 15px 6px; text-transform: uppercase; }
+    .logout-btn { color: #f87171 !important; }
+    .logout-btn:hover { background: rgba(248, 113, 113, 0.1) !important; }
+    .main-content { flex: 1; margin-left: 260px; display: flex; flex-direction: column; min-height: 100vh; }
+    .main-header { background: #fff; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 50; }
+    .header-left { display: flex; align-items: center; }
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 5px; }
+    .menu-toggle span { width: 25px; height: 2px; background: #333; border-radius: 2px; transition: 0.3s; }
+    .header-right { display: flex; align-items: center; gap: 15px; }
+    .admin-name { font-weight: 500; color: #333; }
+    .page-content { padding: 25px; flex: 1; }
     @media (max-width: 991px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .sidebar-overlay {
-        display: block;
-      }
-
-      .close-btn {
-        display: block;
-      }
-
-      .main-content {
-        margin-left: 0;
-      }
-
-      .menu-toggle {
-        display: flex;
-      }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay { display: block; }
+      .close-btn { display: block; }
+      .main-content { margin-left: 0; }
+      .menu-toggle { display: flex; }
     }
   `]
 })
@@ -351,27 +266,14 @@ export class AdminLayoutComponent implements OnInit {
   adminName = signal('Admin');
   sidebarOpen = signal(false);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     const admin = this.authService.currentAdmin;
-    if (admin) {
-      this.adminName.set(admin.name);
-    }
+    if (admin) this.adminName.set(admin.name);
   }
 
-  toggleSidebar(): void {
-    this.sidebarOpen.update(v => !v);
-  }
-
-  closeSidebar(): void {
-    this.sidebarOpen.set(false);
-  }
-
-  logout(): void {
-    this.authService.adminLogout();
-  }
+  toggleSidebar(): void { this.sidebarOpen.update(v => !v); }
+  closeSidebar(): void { this.sidebarOpen.set(false); }
+  logout(): void { this.authService.adminLogout(); }
 }

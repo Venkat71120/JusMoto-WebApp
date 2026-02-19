@@ -3,54 +3,41 @@ const { sequelize } = require('../config/database');
 
 const RefundedOrder = sequelize.define('RefundedOrder', {
   id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.BIGINT.UNSIGNED,
     autoIncrement: true,
     primaryKey: true
   },
   order_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
-    references: {
-      model: 'orders',
-      key: 'id'
-    }
-  },
-  user_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
-    references: {
-      model: 'users',
-      key: 'id'
-    }
-  },
-  refund_amount: {
-    type: DataTypes.DECIMAL(10, 2),
+    type: DataTypes.BIGINT.UNSIGNED,
     allowNull: false
   },
-  reason: {
-    type: DataTypes.TEXT,
+  user_id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    allowNull: false
+  },
+  amount: {
+    type: DataTypes.DOUBLE,
+    allowNull: false
+  },
+  cancel_reason: {
+    type: DataTypes.TEXT('long'),
     allowNull: true
   },
-  admin_note: {
-    type: DataTypes.TEXT,
+  gateway_id: {
+    type: DataTypes.BIGINT,
+    allowNull: true
+  },
+  gateway_fields: {
+    type: DataTypes.TEXT('long'),
+    allowNull: true
+  },
+  image: {
+    type: DataTypes.STRING(191),
     allowNull: true
   },
   status: {
-    type: DataTypes.ENUM('pending', 'approved', 'rejected', 'completed'),
-    defaultValue: 'pending'
-  },
-  refund_method: {
-    type: DataTypes.STRING(50),
-    allowNull: true,
-    comment: 'wallet, original_payment'
-  },
-  processed_at: {
-    type: DataTypes.DATE,
-    allowNull: true
-  },
-  processed_by: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   }
 }, {
   tableName: 'refunded_orders',

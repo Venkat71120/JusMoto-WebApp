@@ -3,25 +3,25 @@ const { sequelize } = require('../config/database');
 
 const City = sequelize.define('City', {
   id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.BIGINT.UNSIGNED,
     autoIncrement: true,
     primaryKey: true
   },
   state_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
-    references: {
-      model: 'states',
-      key: 'id'
-    }
+    type: DataTypes.INTEGER,
+    allowNull: true
   },
-  name: {
+  city: {
     type: DataTypes.STRING(191),
-    allowNull: false
+    allowNull: true
   },
   status: {
     type: DataTypes.TINYINT,
     defaultValue: 1
+  },
+  timezone: {
+    type: DataTypes.STRING(191),
+    allowNull: true
   }
 }, {
   tableName: 'cities',

@@ -4,44 +4,24 @@ const { sequelize } = require('../config/database');
 const Slider = sequelize.define('Slider', {
   id: {
     type: DataTypes.BIGINT.UNSIGNED,
-    primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
+    primaryKey: true
   },
-  title: {
-    type: DataTypes.STRING(255),
+  identity: {
+    type: DataTypes.BIGINT.UNSIGNED,
     allowNull: true
   },
-  subtitle: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  description: {
-    type: DataTypes.TEXT,
-    allowNull: true
-  },
-  button_text: {
-    type: DataTypes.STRING(100),
-    allowNull: true
-  },
-  button_link: {
-    type: DataTypes.STRING(255),
+  type: {
+    type: DataTypes.STRING(191),
     allowNull: true
   },
   image: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.STRING(191),
     allowNull: true
-  },
-  mobile_image: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  order: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
   },
   status: {
-    type: DataTypes.TINYINT,
-    defaultValue: 1
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   }
 }, {
   tableName: 'sliders',

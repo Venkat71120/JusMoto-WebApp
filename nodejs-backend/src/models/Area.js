@@ -3,24 +3,20 @@ const { sequelize } = require('../config/database');
 
 const Area = sequelize.define('Area', {
   id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.BIGINT.UNSIGNED,
     autoIncrement: true,
     primaryKey: true
   },
+  state_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
   city_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
-    references: {
-      model: 'cities',
-      key: 'id'
-    }
+    type: DataTypes.INTEGER,
+    allowNull: true
   },
-  name: {
+  area: {
     type: DataTypes.STRING(191),
-    allowNull: false
-  },
-  zip_code: {
-    type: DataTypes.STRING(20),
     allowNull: true
   },
   status: {

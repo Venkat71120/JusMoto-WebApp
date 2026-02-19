@@ -3,57 +3,42 @@ const { sequelize } = require('../config/database');
 
 const Offer = sequelize.define('Offer', {
   id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.BIGINT.UNSIGNED,
     autoIncrement: true,
     primaryKey: true
   },
   title: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+    type: DataTypes.STRING(191),
+    allowNull: true
   },
-  slug: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-    unique: true
-  },
-  description: {
-    type: DataTypes.TEXT,
+  subTitle: {
+    type: DataTypes.TEXT('long'),
     allowNull: true
   },
   image: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  offer_percentage: {
-    type: DataTypes.DECIMAL(5, 2),
-    allowNull: false,
-    defaultValue: 0.00,
-    field: 'offerPercentage'
-  },
-  start_date: {
-    type: DataTypes.DATE,
-    allowNull: true
-  },
-  expires_at: {
-    type: DataTypes.DATE,
+    type: DataTypes.INTEGER,
     allowNull: true
   },
   status: {
-    type: DataTypes.TINYINT,
-    defaultValue: 1
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  is_primary: {
+    type: DataTypes.ENUM('0', '1'),
+    defaultValue: '0'
+  },
+  expires_at: {
+    type: DataTypes.DATEONLY,
+    allowNull: true
+  },
+  offerPercentage: {
+    type: DataTypes.INTEGER,
+    allowNull: true
   }
 }, {
   tableName: 'offers',
   timestamps: true,
-  underscored: true
+  underscored: false
 });
-
-// Check if offer is active
-Offer.prototype.isActive = function() {
-  const now = new Date();
-  if (this.status !== 1) return false;
-  if (this.expires_at && new Date(this.expires_at) < now) return false;
-  return true;
-};
 
 module.exports = Offer;

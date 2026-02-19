@@ -34,6 +34,16 @@ const UserLocation = require('./UserLocation');
 const State = require('./State');
 const City = require('./City');
 const Area = require('./Area');
+const MediaUpload = require('./MediaUpload');
+const Department = require('./Department');
+const ChatMessage = require('./ChatMessage');
+const EngineType = require('./EngineType');
+const FuelType = require('./FuelType');
+const Slider = require('./Slider');
+const AdminOutletLocation = require('./AdminOutletLocation');
+const AdminNotification = require('./AdminNotification');
+const Role = require('./Role');
+const Permission = require('./Permission');
 
 // ==================== Define Associations ====================
 
@@ -51,9 +61,15 @@ Service.belongsTo(SubCategory, { foreignKey: 'sub_category_id', as: 'subCategory
 Brand.hasMany(Car, { foreignKey: 'brand_id', as: 'cars' });
 Car.belongsTo(Brand, { foreignKey: 'brand_id', as: 'brand' });
 
-// Variant table does not exist in DB - associations disabled
-// Car.hasMany(Variant, { foreignKey: 'car_id', as: 'variants' });
-// Variant.belongsTo(Car, { foreignKey: 'car_id', as: 'car' });
+// Variant associations
+Car.hasMany(Variant, { foreignKey: 'car_id', as: 'variants' });
+Variant.belongsTo(Car, { foreignKey: 'car_id', as: 'car' });
+
+EngineType.hasMany(Variant, { foreignKey: 'engine_type_id', as: 'variants' });
+Variant.belongsTo(EngineType, { foreignKey: 'engine_type_id', as: 'engineType' });
+
+FuelType.hasMany(Variant, { foreignKey: 'fual_type_id', as: 'variants' });
+Variant.belongsTo(FuelType, { foreignKey: 'fual_type_id', as: 'fuelType' });
 
 // Service associations
 Admin.hasMany(Service, { foreignKey: 'admin_id', as: 'services' });
@@ -91,8 +107,8 @@ OfferService.belongsTo(Offer, { foreignKey: 'offer_id', as: 'offer' });
 User.hasMany(Order, { foreignKey: 'user_id', as: 'orders' });
 Order.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
-User.hasMany(Review, { foreignKey: 'user_id', as: 'reviews' });
-Review.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+User.hasMany(Review, { foreignKey: 'reviewer_id', as: 'reviews' });
+Review.belongsTo(User, { foreignKey: 'reviewer_id', as: 'reviewer' });
 
 User.hasMany(UserCartItem, { foreignKey: 'user_id', as: 'cartItems' });
 UserCartItem.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
@@ -107,7 +123,6 @@ User.hasMany(UserSelectedCar, { foreignKey: 'user_id', as: 'selectedCars' });
 UserSelectedCar.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 UserSelectedCar.belongsTo(Brand, { foreignKey: 'brand_id', as: 'brand' });
 UserSelectedCar.belongsTo(Car, { foreignKey: 'car_id', as: 'car' });
-// UserSelectedCar.belongsTo(Variant, { foreignKey: 'variant_id', as: 'variant' });
 
 User.hasMany(UserLocation, { foreignKey: 'user_id', as: 'locations' });
 UserLocation.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
@@ -115,17 +130,13 @@ UserLocation.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 User.hasMany(FavoriteItem, { foreignKey: 'user_id', as: 'favorites' });
 FavoriteItem.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
-User.hasMany(Notification, { foreignKey: 'user_id', as: 'notifications' });
-Notification.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
-
 User.hasMany(RefundedOrder, { foreignKey: 'user_id', as: 'refundedOrders' });
 RefundedOrder.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 User.hasMany(Ticket, { foreignKey: 'user_id', as: 'tickets' });
 Ticket.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
-// Location associations (User no longer has state_id/city_id/area_id columns)
-
+// Location associations
 State.hasMany(City, { foreignKey: 'state_id', as: 'cities' });
 City.belongsTo(State, { foreignKey: 'state_id', as: 'state' });
 
@@ -162,7 +173,13 @@ WalletTransaction.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 Admin.hasMany(Ticket, { foreignKey: 'admin_id', as: 'tickets' });
 Ticket.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });
 
-Ticket.hasMany(TicketMessage, { foreignKey: 'ticket_id', as: 'messages' });
+Department.hasMany(Ticket, { foreignKey: 'department_id', as: 'tickets' });
+Ticket.belongsTo(Department, { foreignKey: 'department_id', as: 'department' });
+
+Ticket.hasMany(ChatMessage, { foreignKey: 'ticket_id', as: 'messages' });
+ChatMessage.belongsTo(Ticket, { foreignKey: 'ticket_id', as: 'ticket' });
+
+Ticket.hasMany(TicketMessage, { foreignKey: 'ticket_id', as: 'ticketMessages' });
 TicketMessage.belongsTo(Ticket, { foreignKey: 'ticket_id', as: 'ticket' });
 
 User.hasMany(TicketMessage, { foreignKey: 'user_id', as: 'ticketMessages' });
@@ -171,8 +188,13 @@ TicketMessage.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 Admin.hasMany(TicketMessage, { foreignKey: 'admin_id', as: 'ticketMessages' });
 TicketMessage.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });
 
-Admin.hasMany(Notification, { foreignKey: 'admin_id', as: 'notifications' });
-Notification.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });
+// Review - Admin association
+Admin.hasMany(Review, { foreignKey: 'admin_id', as: 'reviews' });
+Review.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });
+
+// Outlet location associations
+Admin.hasMany(AdminOutletLocation, { foreignKey: 'admin_id', as: 'outletLocations' });
+AdminOutletLocation.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });
 
 // Export all models
 module.exports = {
@@ -209,5 +231,15 @@ module.exports = {
   UserLocation,
   State,
   City,
-  Area
+  Area,
+  MediaUpload,
+  Department,
+  ChatMessage,
+  EngineType,
+  FuelType,
+  Slider,
+  AdminOutletLocation,
+  AdminNotification,
+  Role,
+  Permission
 };

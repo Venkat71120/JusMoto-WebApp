@@ -3,16 +3,28 @@ const { sequelize } = require('../config/database');
 
 const State = sequelize.define('State', {
   id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.BIGINT.UNSIGNED,
     autoIncrement: true,
     primaryKey: true
   },
-  name: {
+  state: {
     type: DataTypes.STRING(191),
-    allowNull: false
+    allowNull: true
   },
-  country_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+  state_code: {
+    type: DataTypes.STRING(191),
+    allowNull: true
+  },
+  dial_code: {
+    type: DataTypes.STRING(191),
+    allowNull: true
+  },
+  latitude: {
+    type: DataTypes.STRING(191),
+    allowNull: true
+  },
+  longitude: {
+    type: DataTypes.STRING(191),
     allowNull: true
   },
   status: {

@@ -3,65 +3,52 @@ const { sequelize } = require('../config/database');
 
 const Ticket = sequelize.define('Ticket', {
   id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.BIGINT.UNSIGNED,
     autoIncrement: true,
     primaryKey: true
   },
-  user_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true,
-    references: {
-      model: 'users',
-      key: 'id'
-    }
-  },
-  admin_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true,
-    references: {
-      model: 'admins',
-      key: 'id'
-    }
-  },
-  ticket_number: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-    unique: true
-  },
-  subject: {
-    type: DataTypes.STRING(255),
-    allowNull: false
-  },
-  priority: {
-    type: DataTypes.ENUM('low', 'medium', 'high', 'urgent'),
-    defaultValue: 'medium'
-  },
-  status: {
-    type: DataTypes.ENUM('open', 'in_progress', 'resolved', 'closed'),
-    defaultValue: 'open'
-  },
-  department: {
-    type: DataTypes.STRING(100),
+  department_id: {
+    type: DataTypes.BIGINT,
     allowNull: true
   },
-  description: {
+  admin_id: {
+    type: DataTypes.BIGINT,
+    allowNull: true
+  },
+  user_id: {
+    type: DataTypes.BIGINT,
+    allowNull: true
+  },
+  title: {
     type: DataTypes.TEXT,
     allowNull: true
   },
-  attachment: {
-    type: DataTypes.STRING(255),
+  subject: {
+    type: DataTypes.TEXT,
     allowNull: true
   },
-  assigned_to: {
-    type: DataTypes.INTEGER.UNSIGNED,
+  priority: {
+    type: DataTypes.STRING(191),
     allowNull: true
   },
-  resolved_at: {
-    type: DataTypes.DATE,
+  status: {
+    type: DataTypes.STRING(191),
+    defaultValue: 'open'
+  },
+  via: {
+    type: DataTypes.TEXT,
     allowNull: true
   },
-  closed_at: {
-    type: DataTypes.DATE,
+  operating_system: {
+    type: DataTypes.STRING(191),
+    allowNull: true
+  },
+  user_agent: {
+    type: DataTypes.STRING(191),
+    allowNull: true
+  },
+  description: {
+    type: DataTypes.TEXT('long'),
     allowNull: true
   }
 }, {

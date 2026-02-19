@@ -22,7 +22,10 @@
       "Bash(npx pm2 start:*)",
       "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFkbWluIiwicm9sZSI6InN1cGVyX2FkbWluIiwiZW1haWwiOiJhZG1pbkBnb2Nhci5jb20iLCJpYXQiOjE3NzE0ODQ3OTEsImV4cCI6MTc3MjA4OTU5MX0.GMAcYjNa8je7dAm9gMpBLmhGLSMF6mUHXtfwA7WJP-8\")",
       "Bash(export:*)",
-      "Bash(npx pm2:*)"
+      "Bash(npx pm2:*)",
+      "Bash(dir:*)",
+      "Bash(ls:*)",
+      "Bash(node test-endpoints.js:*)"
     ]
   }
 }

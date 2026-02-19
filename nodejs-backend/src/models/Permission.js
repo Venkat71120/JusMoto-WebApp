@@ -7,6 +7,10 @@ const Permission = sequelize.define('Permission', {
     primaryKey: true,
     autoIncrement: true
   },
+  menu_name: {
+    type: DataTypes.STRING(191),
+    allowNull: true
+  },
   name: {
     type: DataTypes.STRING(125),
     allowNull: false,

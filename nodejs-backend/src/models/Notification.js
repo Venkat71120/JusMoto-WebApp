@@ -3,33 +3,25 @@ const { sequelize } = require('../config/database');
 
 const Notification = sequelize.define('Notification', {
   id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    autoIncrement: true,
-    primaryKey: true
+    type: DataTypes.CHAR(36),
+    primaryKey: true,
+    defaultValue: DataTypes.UUIDV4
   },
-  user_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true,
-    references: {
-      model: 'users',
-      key: 'id'
-    }
+  notifiable_id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    allowNull: true
   },
-  admin_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true,
-    references: {
-      model: 'admins',
-      key: 'id'
-    }
+  notifiable_type: {
+    type: DataTypes.STRING(191),
+    allowNull: true
   },
   type: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.STRING(191),
     allowNull: true
   },
   title: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+    type: DataTypes.STRING(191),
+    allowNull: true
   },
   message: {
     type: DataTypes.TEXT,
@@ -40,15 +32,8 @@ const Notification = sequelize.define('Notification', {
     allowNull: true,
     get() {
       const value = this.getDataValue('data');
-      return value ? JSON.parse(value) : null;
-    },
-    set(value) {
-      this.setDataValue('data', JSON.stringify(value));
+      try { return value ? JSON.parse(value) : null; } catch { return value; }
     }
-  },
-  is_read: {
-    type: DataTypes.TINYINT,
-    defaultValue: 0
   },
   read_at: {
     type: DataTypes.DATE,

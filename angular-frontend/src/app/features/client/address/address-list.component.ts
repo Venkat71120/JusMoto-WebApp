@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-address-list',
@@ -87,7 +88,7 @@ import { environment } from '../../../../environments/environment';
 
     .btn-primary {
       padding: 12px 24px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -104,7 +105,7 @@ import { environment } from '../../../../environments/environment';
       width: 40px;
       height: 40px;
       border: 3px solid #e5e7eb;
-      border-top-color: #0066cc;
+      border-top-color: #e31b23;
       border-radius: 50%;
       margin: 0 auto 16px;
       animation: spin 1s linear infinite;
@@ -153,12 +154,12 @@ import { environment } from '../../../../environments/environment';
     }
 
     .address-card:hover {
-      border-color: #0066cc;
+      border-color: #e31b23;
     }
 
     .address-card.default {
-      border-color: #0066cc;
-      box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
+      border-color: #e31b23;
+      box-shadow: 0 4px 12px rgba(227, 27, 35, 0.15);
     }
 
     .card-header {
@@ -184,7 +185,7 @@ import { environment } from '../../../../environments/environment';
 
     .default-badge {
       font-size: 11px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       padding: 3px 8px;
       border-radius: 10px;
@@ -234,8 +235,8 @@ import { environment } from '../../../../environments/environment';
     }
 
     .action-btn:hover {
-      border-color: #0066cc;
-      color: #0066cc;
+      border-color: #e31b23;
+      color: #e31b23;
     }
 
     .action-btn.danger:hover {
@@ -248,7 +249,7 @@ export class AddressListComponent implements OnInit {
   addresses = signal<any[]>([]);
   loading = signal(true);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit(): void {
     this.loadAddresses();
@@ -256,7 +257,7 @@ export class AddressListComponent implements OnInit {
 
   loadAddresses(): void {
     this.loading.set(true);
-    this.http.get<any>(`${environment.apiUrl}/addresses`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/user/addresses`).subscribe({
       next: (response) => {
         this.addresses.set(response.data || response.addresses || []);
         this.loading.set(false);
@@ -268,20 +269,28 @@ export class AddressListComponent implements OnInit {
   }
 
   setDefault(id: number): void {
-    this.http.put(`${environment.apiUrl}/addresses/${id}/default`, {}).subscribe({
+    this.http.put(`${environment.apiUrl}/user/addresses/${id}/default`, {}).subscribe({
       next: () => {
         this.addresses.update(items =>
           items.map(addr => ({ ...addr, is_default: addr.id === id }))
         );
+        this.toast.success('Default address updated');
+      },
+      error: () => {
+        this.toast.error('Failed to update default address');
       }
     });
   }
 
   deleteAddress(id: number): void {
     if (confirm('Are you sure you want to delete this address?')) {
-      this.http.delete(`${environment.apiUrl}/addresses/${id}`).subscribe({
+      this.http.delete(`${environment.apiUrl}/user/addresses/${id}`).subscribe({
         next: () => {
           this.addresses.update(items => items.filter(addr => addr.id !== id));
+          this.toast.success('Address deleted successfully');
+        },
+        error: () => {
+          this.toast.error('Failed to delete address');
         }
       });
     }

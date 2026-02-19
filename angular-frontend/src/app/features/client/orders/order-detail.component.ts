@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../../../core/services/order.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-client-order-detail',
@@ -149,7 +150,7 @@ import { OrderService } from '../../../core/services/order.service';
     }
 
     .back-link a {
-      color: #0066cc;
+      color: #e31b23;
       text-decoration: none;
       font-size: 14px;
     }
@@ -167,7 +168,7 @@ import { OrderService } from '../../../core/services/order.service';
       width: 40px;
       height: 40px;
       border: 3px solid #e5e7eb;
-      border-top-color: #0066cc;
+      border-top-color: #e31b23;
       border-radius: 50%;
       margin: 0 auto 16px;
       animation: spin 1s linear infinite;
@@ -355,7 +356,7 @@ import { OrderService } from '../../../core/services/order.service';
     }
 
     .timeline-item.active .timeline-dot {
-      background: #0066cc;
+      background: #e31b23;
     }
 
     .timeline-content h4 {
@@ -422,7 +423,7 @@ import { OrderService } from '../../../core/services/order.service';
 
     .btn-primary {
       padding: 12px 24px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -465,7 +466,8 @@ export class ClientOrderDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private toast: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -493,7 +495,11 @@ export class ClientOrderDetailComponent implements OnInit {
     if (confirm('Are you sure you want to cancel this order?')) {
       this.orderService.cancelOrder(this.order().id).subscribe({
         next: () => {
+          this.toast.success('Order cancelled successfully');
           this.loadOrder(this.order().id);
+        },
+        error: () => {
+          this.toast.error('Failed to cancel order. Please try again.');
         }
       });
     }
@@ -501,6 +507,6 @@ export class ClientOrderDetailComponent implements OnInit {
 
   reorder(): void {
     // Implement reorder logic
-    alert('Reorder functionality coming soon!');
+    this.toast.info('Reorder functionality coming soon!');
   }
 }

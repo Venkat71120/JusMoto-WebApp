@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { ChallanService } from '../../../core/services/challan.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-client-challan-detail',
@@ -156,7 +157,7 @@ import { ChallanService } from '../../../core/services/challan.service';
     }
 
     .back-link a {
-      color: #0066cc;
+      color: #e31b23;
       text-decoration: none;
       font-size: 14px;
     }
@@ -170,7 +171,7 @@ import { ChallanService } from '../../../core/services/challan.service';
       width: 40px;
       height: 40px;
       border: 3px solid #e5e7eb;
-      border-top-color: #0066cc;
+      border-top-color: #e31b23;
       border-radius: 50%;
       margin: 0 auto 16px;
       animation: spin 1s linear infinite;
@@ -312,7 +313,7 @@ import { ChallanService } from '../../../core/services/challan.service';
     }
 
     .payment-card {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #e31b23 0%, #b11218 100%);
       color: #fff;
     }
 
@@ -345,7 +346,7 @@ import { ChallanService } from '../../../core/services/challan.service';
     .btn-primary {
       padding: 14px 24px;
       background: #fff;
-      color: #764ba2;
+      color: #b11218;
       border: none;
       border-radius: 8px;
       font-weight: 600;
@@ -391,7 +392,8 @@ export class ClientChallanDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private challanService: ChallanService
+    private challanService: ChallanService,
+    private toast: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -416,10 +418,10 @@ export class ClientChallanDetailComponent implements OnInit {
   }
 
   payChallan(): void {
-    alert('Payment flow coming soon!');
+    this.toast.info('Payment flow coming soon!');
   }
 
   downloadReceipt(): void {
-    alert('Download receipt - Coming soon!');
+    this.toast.info('Download receipt - Coming soon!');
   }
 }

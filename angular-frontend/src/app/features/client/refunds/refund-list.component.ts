@@ -124,7 +124,7 @@ import { OrderService } from '../../../core/services/order.service';
       width: 40px;
       height: 40px;
       border: 3px solid #e5e7eb;
-      border-top-color: #0066cc;
+      border-top-color: #e31b23;
       border-radius: 50%;
       margin: 0 auto 16px;
       animation: spin 1s linear infinite;
@@ -160,7 +160,7 @@ import { OrderService } from '../../../core/services/order.service';
 
     .btn-primary {
       padding: 12px 24px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -207,7 +207,7 @@ import { OrderService } from '../../../core/services/order.service';
     }
 
     .order-link a {
-      color: #0066cc;
+      color: #e31b23;
       text-decoration: none;
     }
 
@@ -316,7 +316,7 @@ import { OrderService } from '../../../core/services/order.service';
     }
 
     .timeline-step.completed::before {
-      background: #0066cc;
+      background: #e31b23;
     }
 
     .step-dot {
@@ -329,7 +329,7 @@ import { OrderService } from '../../../core/services/order.service';
     }
 
     .timeline-step.completed .step-dot {
-      background: #0066cc;
+      background: #e31b23;
     }
 
     .timeline-step span {
@@ -339,7 +339,7 @@ import { OrderService } from '../../../core/services/order.service';
     }
 
     .timeline-step.completed span {
-      color: #0066cc;
+      color: #e31b23;
     }
   `]
 })

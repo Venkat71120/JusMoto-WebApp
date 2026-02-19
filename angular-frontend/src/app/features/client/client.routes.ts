@@ -76,6 +76,10 @@ export const clientRoutes: Routes = [
         loadComponent: () => import('./my-cars/my-cars.component').then(m => m.MyCarsComponent)
       },
       {
+        path: 'wallet',
+        loadComponent: () => import('./wallet/wallet.component').then(m => m.ClientWalletComponent)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

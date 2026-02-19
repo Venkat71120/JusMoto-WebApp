@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ChallanService } from '../../../core/services/challan.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-client-challan-check',
@@ -126,7 +127,7 @@ import { ChallanService } from '../../../core/services/challan.service';
     }
 
     .back-link a {
-      color: #0066cc;
+      color: #e31b23;
       text-decoration: none;
       font-size: 14px;
     }
@@ -168,12 +169,12 @@ import { ChallanService } from '../../../core/services/challan.service';
     }
 
     .tab-btn:hover {
-      border-color: #0066cc;
+      border-color: #e31b23;
     }
 
     .tab-btn.active {
-      background: #0066cc;
-      border-color: #0066cc;
+      background: #e31b23;
+      border-color: #e31b23;
       color: #fff;
     }
 
@@ -200,8 +201,8 @@ import { ChallanService } from '../../../core/services/challan.service';
 
     .form-control:focus {
       outline: none;
-      border-color: #0066cc;
-      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+      border-color: #e31b23;
+      box-shadow: 0 0 0 3px rgba(227, 27, 35, 0.1);
     }
 
     .error {
@@ -212,7 +213,7 @@ import { ChallanService } from '../../../core/services/challan.service';
 
     .btn-primary {
       padding: 14px 24px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
       border-radius: 8px;
@@ -370,7 +371,8 @@ export class ClientChallanCheckComponent {
   constructor(
     private fb: FormBuilder,
     private challanService: ChallanService,
-    private router: Router
+    private router: Router,
+    private toast: ToastService
   ) {
     this.searchForm = this.fb.group({
       vehicle_number: [''],
@@ -419,10 +421,10 @@ export class ClientChallanCheckComponent {
   }
 
   payChallan(challan: any): void {
-    alert('Payment flow coming soon!');
+    this.toast.info('Payment flow coming soon!');
   }
 
   payAll(): void {
-    alert('Pay all challans - Coming soon!');
+    this.toast.info('Pay all challans - Coming soon!');
   }
 }

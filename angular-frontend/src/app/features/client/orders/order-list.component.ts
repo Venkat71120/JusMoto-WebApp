@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { OrderService } from '../../../core/services/order.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-client-order-list',
@@ -143,13 +144,13 @@ import { OrderService } from '../../../core/services/order.service';
     }
 
     .filter-tab:hover {
-      border-color: #0066cc;
-      color: #0066cc;
+      border-color: #e31b23;
+      color: #e31b23;
     }
 
     .filter-tab.active {
-      background: #0066cc;
-      border-color: #0066cc;
+      background: #e31b23;
+      border-color: #e31b23;
       color: #fff;
     }
 
@@ -162,7 +163,7 @@ import { OrderService } from '../../../core/services/order.service';
       width: 40px;
       height: 40px;
       border: 3px solid #e5e7eb;
-      border-top-color: #0066cc;
+      border-top-color: #e31b23;
       border-radius: 50%;
       margin: 0 auto 16px;
       animation: spin 1s linear infinite;
@@ -328,8 +329,8 @@ import { OrderService } from '../../../core/services/order.service';
 
     .btn-outline {
       padding: 8px 20px;
-      border: 1px solid #0066cc;
-      color: #0066cc;
+      border: 1px solid #e31b23;
+      color: #e31b23;
       background: #fff;
       border-radius: 6px;
       text-decoration: none;
@@ -339,13 +340,13 @@ import { OrderService } from '../../../core/services/order.service';
     }
 
     .btn-outline:hover {
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
     }
 
     .btn-primary {
       padding: 12px 24px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -407,7 +408,7 @@ export class ClientOrderListComponent implements OnInit {
     { label: 'Cancelled', value: 'cancelled' }
   ];
 
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService, private toast: ToastService) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -445,7 +446,11 @@ export class ClientOrderListComponent implements OnInit {
     if (confirm('Are you sure you want to cancel this order?')) {
       this.orderService.cancelOrder(orderId).subscribe({
         next: () => {
+          this.toast.success('Order cancelled successfully');
           this.loadOrders();
+        },
+        error: () => {
+          this.toast.error('Failed to cancel order. Please try again.');
         }
       });
     }

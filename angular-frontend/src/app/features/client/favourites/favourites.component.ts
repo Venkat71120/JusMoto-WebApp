@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ServiceService } from '../../../core/services/service.service';
 import { CartService } from '../../../core/services/cart.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-favourites',
@@ -82,7 +83,7 @@ import { CartService } from '../../../core/services/cart.service';
       width: 40px;
       height: 40px;
       border: 3px solid #e5e7eb;
-      border-top-color: #0066cc;
+      border-top-color: #e31b23;
       border-radius: 50%;
       margin: 0 auto 16px;
       animation: spin 1s linear infinite;
@@ -201,7 +202,7 @@ import { CartService } from '../../../core/services/cart.service';
     .price {
       font-size: 18px;
       font-weight: 700;
-      color: #0066cc;
+      color: #e31b23;
     }
 
     .duration {
@@ -234,14 +235,14 @@ import { CartService } from '../../../core/services/cart.service';
     }
 
     .btn-outline:hover {
-      border-color: #0066cc;
-      color: #0066cc;
+      border-color: #e31b23;
+      color: #e31b23;
     }
 
     .btn-primary {
       flex: 1;
       padding: 10px 16px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -252,7 +253,7 @@ import { CartService } from '../../../core/services/cart.service';
     }
 
     .btn-primary:hover {
-      background: #0052a3;
+      background: #b11218;
     }
   `]
 })
@@ -262,7 +263,8 @@ export class FavouritesComponent implements OnInit {
 
   constructor(
     private serviceService: ServiceService,
-    private cartService: CartService
+    private cartService: CartService,
+    private toast: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -286,6 +288,7 @@ export class FavouritesComponent implements OnInit {
     this.serviceService.removeFromFavourites(id).subscribe({
       next: () => {
         this.favourites.update(items => items.filter(item => item.id !== id));
+        this.toast.success('Removed from favourites');
       }
     });
   }
@@ -294,7 +297,7 @@ export class FavouritesComponent implements OnInit {
     if (service) {
       this.cartService.addItem({ service_id: service.id, quantity: 1 }).subscribe({
         next: () => {
-          alert('Added to cart!');
+          this.toast.success('Added to cart!');
         }
       });
     }

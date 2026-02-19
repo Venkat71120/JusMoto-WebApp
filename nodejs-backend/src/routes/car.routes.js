@@ -5,6 +5,76 @@ const { Car, Brand, Variant } = require('../models');
 const { Op } = require('sequelize');
 const { createSlug } = require('../utils/helpers');
 
+// ── NHTSA API: Fetch & import car brands ──
+router.post('/fetch-brands', authenticate, async (req, res) => {
+  try {
+    const fetch = (...args) => import('node-fetch').then(({ default: f }) => f(...args));
+    const resp = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json');
+    const json = await resp.json();
+
+    if (!json.Results || json.Results.length === 0) {
+      return res.status(400).json({ success: false, error: 'No brands returned from API' });
+    }
+
+    let imported = 0;
+    for (const make of json.Results) {
+      const name = make.Make_Name;
+      if (!name) continue;
+      const [brand, created] = await Brand.findOrCreate({
+        where: { name },
+        defaults: { name }
+      });
+      if (created) imported++;
+    }
+
+    res.json({ success: true, message: `Imported ${imported} new brands (${json.Results.length} total from API)` });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ── NHTSA API: Fetch & import car models for a brand ──
+router.post('/fetch-models', authenticate, async (req, res) => {
+  try {
+    const { brand_id } = req.body;
+    if (!brand_id) return res.status(400).json({ success: false, error: 'brand_id is required' });
+
+    const brand = await Brand.findByPk(brand_id);
+    if (!brand) return res.status(404).json({ success: false, error: 'Brand not found' });
+
+    const fetch = (...args) => import('node-fetch').then(({ default: f }) => f(...args));
+    const url = `https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${encodeURIComponent(brand.name)}?format=json`;
+    const resp = await fetch(url);
+    const json = await resp.json();
+
+    if (!json.Results || json.Results.length === 0) {
+      return res.json({ success: true, message: 'No models found for this brand', data: [] });
+    }
+
+    let imported = 0;
+    for (const model of json.Results) {
+      const name = model.Model_Name;
+      if (!name) continue;
+      const [car, created] = await Car.findOrCreate({
+        where: { brand_id, name },
+        defaults: { brand_id, name }
+      });
+      if (created) imported++;
+    }
+
+    // Return updated car list
+    const cars = await Car.findAll({
+      where: { brand_id },
+      include: [{ model: Variant, as: 'variants', required: false }],
+      order: [['name', 'ASC']]
+    });
+
+    res.json({ success: true, message: `Imported ${imported} new models (${json.Results.length} from API)`, data: cars });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Get all cars
 router.get('/', async (req, res) => {
   try {

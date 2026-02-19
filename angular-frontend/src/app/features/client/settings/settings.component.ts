@@ -1,15 +1,17 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../../core/services/auth.service';
+import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="settings-container">
       <div class="page-header">
@@ -24,125 +26,123 @@ import { environment } from '../../../../environments/environment';
             [class.active]="activeTab() === tab.id"
             (click)="activeTab.set(tab.id)"
             class="sidebar-btn">
-            <span class="tab-icon">{{ tab.icon }}</span>
+            <span class="tab-icon" [innerHTML]="tab.icon"></span>
             {{ tab.label }}
           </button>
         </div>
 
         <div class="settings-content">
           <!-- Profile Tab -->
-          <div *ngIf="activeTab() === 'profile'" class="tab-content">
+          <div class="tab-content" [hidden]="activeTab() !== 'profile'">
             <h2>Profile Information</h2>
-            <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
-              <div class="avatar-section">
-                <div class="avatar">
-                  <img [src]="currentUser?.image || '/assets/images/avatar.png'" alt="Profile">
-                </div>
-                <div class="avatar-actions">
-                  <input type="file" id="avatar" (change)="onAvatarSelect($event)" accept="image/*" hidden>
-                  <label for="avatar" class="btn-outline">Change Photo</label>
-                </div>
+            <div class="avatar-section">
+              <div class="avatar">
+                <img [src]="avatarUrl()" alt="Profile">
               </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="first_name">First Name</label>
-                  <input type="text" id="first_name" formControlName="first_name" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label for="last_name">Last Name</label>
-                  <input type="text" id="last_name" formControlName="last_name" class="form-control">
-                </div>
+              <div class="avatar-actions">
+                <input type="file" id="avatar-upload" (change)="onAvatarSelect($event)" accept="image/*" hidden>
+                <label for="avatar-upload" class="btn-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Change Photo
+                </label>
               </div>
+            </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" id="email" formControlName="email" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="phone">Phone</label>
-                  <input type="tel" id="phone" formControlName="phone" class="form-control">
-                </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" [(ngModel)]="profile.first_name" class="form-control" placeholder="Enter first name">
               </div>
+              <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" [(ngModel)]="profile.last_name" class="form-control" placeholder="Enter last name">
+              </div>
+            </div>
 
-              <button type="submit" class="btn-primary" [disabled]="savingProfile()">
-                {{ savingProfile() ? 'Saving...' : 'Save Changes' }}
-              </button>
-            </form>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" [(ngModel)]="profile.phone" class="form-control" placeholder="Enter phone number">
+              </div>
+              <div class="form-group">
+                <label for="date_of_birth">Date of Birth</label>
+                <input type="date" id="date_of_birth" [(ngModel)]="profile.date_of_birth" class="form-control">
+              </div>
+            </div>
+
+            <button class="btn-primary" (click)="updateProfile()" [disabled]="savingProfile()">
+              {{ savingProfile() ? 'Saving...' : 'Save Changes' }}
+            </button>
           </div>
 
           <!-- Password Tab -->
-          <div *ngIf="activeTab() === 'password'" class="tab-content">
+          <div class="tab-content" [hidden]="activeTab() !== 'password'">
             <h2>Change Password</h2>
-            <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-              <div class="form-group">
-                <label for="current_password">Current Password</label>
-                <input type="password" id="current_password" formControlName="current_password" class="form-control">
-              </div>
+            <div class="form-group">
+              <label for="current_password">Current Password</label>
+              <input type="password" id="current_password" [(ngModel)]="passwords.current_password" class="form-control" placeholder="Enter current password">
+            </div>
 
-              <div class="form-group">
-                <label for="new_password">New Password</label>
-                <input type="password" id="new_password" formControlName="new_password" class="form-control">
-                <small class="help-text">Password must be at least 8 characters</small>
-              </div>
+            <div class="form-group">
+              <label for="new_password">New Password</label>
+              <input type="password" id="new_password" [(ngModel)]="passwords.new_password" class="form-control" placeholder="Enter new password">
+              <small class="help-text">Password must be at least 8 characters</small>
+            </div>
 
-              <div class="form-group">
-                <label for="confirm_password">Confirm New Password</label>
-                <input type="password" id="confirm_password" formControlName="confirm_password" class="form-control">
-              </div>
+            <div class="form-group">
+              <label for="confirm_password">Confirm New Password</label>
+              <input type="password" id="confirm_password" [(ngModel)]="passwords.confirm_password" class="form-control" placeholder="Re-enter new password">
+            </div>
 
-              <button type="submit" class="btn-primary" [disabled]="savingPassword() || passwordForm.invalid">
-                {{ savingPassword() ? 'Updating...' : 'Update Password' }}
-              </button>
-            </form>
+            <button class="btn-primary" (click)="changePassword()" [disabled]="savingPassword()">
+              {{ savingPassword() ? 'Updating...' : 'Update Password' }}
+            </button>
           </div>
 
           <!-- Notifications Tab -->
-          <div *ngIf="activeTab() === 'notifications'" class="tab-content">
+          <div class="tab-content" [hidden]="activeTab() !== 'notifications'">
             <h2>Notification Preferences</h2>
-            <form [formGroup]="notificationForm" (ngSubmit)="updateNotifications()">
-              <div class="preference-group">
-                <h3>Email Notifications</h3>
-                <label class="toggle-label">
-                  <span>Order Updates</span>
-                  <input type="checkbox" formControlName="email_orders">
-                  <span class="toggle"></span>
-                </label>
-                <label class="toggle-label">
-                  <span>Promotional Offers</span>
-                  <input type="checkbox" formControlName="email_promos">
-                  <span class="toggle"></span>
-                </label>
-                <label class="toggle-label">
-                  <span>Challan Alerts</span>
-                  <input type="checkbox" formControlName="email_challans">
-                  <span class="toggle"></span>
-                </label>
-              </div>
 
-              <div class="preference-group">
-                <h3>Push Notifications</h3>
-                <label class="toggle-label">
-                  <span>Order Updates</span>
-                  <input type="checkbox" formControlName="push_orders">
-                  <span class="toggle"></span>
-                </label>
-                <label class="toggle-label">
-                  <span>Promotional Offers</span>
-                  <input type="checkbox" formControlName="push_promos">
-                  <span class="toggle"></span>
-                </label>
-              </div>
+            <div class="preference-group">
+              <h3>Email Notifications</h3>
+              <label class="toggle-label">
+                <span>Order Updates</span>
+                <input type="checkbox" [(ngModel)]="notifications.email_orders">
+                <span class="toggle"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Promotional Offers</span>
+                <input type="checkbox" [(ngModel)]="notifications.email_promos">
+                <span class="toggle"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Challan Alerts</span>
+                <input type="checkbox" [(ngModel)]="notifications.email_challans">
+                <span class="toggle"></span>
+              </label>
+            </div>
 
-              <button type="submit" class="btn-primary" [disabled]="savingNotifications()">
-                {{ savingNotifications() ? 'Saving...' : 'Save Preferences' }}
-              </button>
-            </form>
+            <div class="preference-group">
+              <h3>Push Notifications</h3>
+              <label class="toggle-label">
+                <span>Order Updates</span>
+                <input type="checkbox" [(ngModel)]="notifications.push_orders">
+                <span class="toggle"></span>
+              </label>
+              <label class="toggle-label">
+                <span>Promotional Offers</span>
+                <input type="checkbox" [(ngModel)]="notifications.push_promos">
+                <span class="toggle"></span>
+              </label>
+            </div>
+
+            <button class="btn-primary" (click)="updateNotifications()" [disabled]="savingNotifications()">
+              {{ savingNotifications() ? 'Saving...' : 'Save Preferences' }}
+            </button>
           </div>
 
           <!-- Security Tab -->
-          <div *ngIf="activeTab() === 'security'" class="tab-content">
+          <div class="tab-content" [hidden]="activeTab() !== 'security'">
             <h2>Security Settings</h2>
 
             <div class="security-section">
@@ -168,12 +168,23 @@ import { environment } from '../../../../environments/environment';
             <div class="security-section danger-zone">
               <h3>Danger Zone</h3>
               <p>Permanent actions that cannot be undone</p>
-              <button class="btn-danger" (click)="deleteAccount()">Delete Account</button>
+              <button class="btn-danger" (click)="showDeleteModal.set(true)">Delete Account</button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <app-confirm-modal
+      [open]="showDeleteModal()"
+      title="Delete Account"
+      message="Are you sure you want to delete your account? This will permanently remove all your data and cannot be undone."
+      confirmText="Delete My Account"
+      type="danger"
+      [loading]="deletingAccount()"
+      (confirmed)="deleteAccount()"
+      (cancelled)="showDeleteModal.set(false)">
+    </app-confirm-modal>
   `,
   styles: [`
     .settings-container {
@@ -234,16 +245,25 @@ import { environment } from '../../../../environments/environment';
     }
 
     .sidebar-btn:hover {
-      background: #f5f5f5;
+      background: #fff5f5;
+      color: #e31b23;
     }
 
     .sidebar-btn.active {
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
     }
 
+    .sidebar-btn.active .tab-icon :is(svg) {
+      stroke: #fff;
+    }
+
     .tab-icon {
-      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
     }
 
     .settings-content {
@@ -272,13 +292,19 @@ import { environment } from '../../../../environments/environment';
       height: 100px;
       border-radius: 50%;
       overflow: hidden;
-      border: 4px solid #e5e7eb;
+      border: 4px solid #fecdd3;
     }
 
     .avatar img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .avatar-actions .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .form-row {
@@ -311,12 +337,14 @@ import { environment } from '../../../../environments/environment';
       border: 1px solid #e5e7eb;
       border-radius: 8px;
       font-size: 15px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-sizing: border-box;
     }
 
     .form-control:focus {
       outline: none;
-      border-color: #0066cc;
-      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+      border-color: #e31b23;
+      box-shadow: 0 0 0 3px rgba(227, 27, 35, 0.1);
     }
 
     .form-control[readonly] {
@@ -332,12 +360,18 @@ import { environment } from '../../../../environments/environment';
 
     .btn-primary {
       padding: 12px 24px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
+      font-size: 15px;
       font-weight: 500;
       cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #c8171e;
     }
 
     .btn-primary:disabled {
@@ -350,9 +384,15 @@ import { environment } from '../../../../environments/environment';
       border: 1px solid #e5e7eb;
       background: #fff;
       color: #444;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 14px;
       cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-outline:hover {
+      border-color: #e31b23;
+      color: #e31b23;
     }
 
     .btn-danger {
@@ -360,9 +400,15 @@ import { environment } from '../../../../environments/environment';
       background: #dc3545;
       color: #fff;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
+      font-size: 15px;
       font-weight: 500;
       cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-danger:hover {
+      background: #b91c1c;
     }
 
     .preference-group {
@@ -380,9 +426,14 @@ import { environment } from '../../../../environments/environment';
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid #e5e7eb;
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
       cursor: pointer;
+    }
+
+    .toggle-label span:first-child {
+      font-size: 15px;
+      color: #333;
     }
 
     .toggle-label input {
@@ -396,6 +447,7 @@ import { environment } from '../../../../environments/environment';
       border-radius: 12px;
       position: relative;
       transition: background 0.3s;
+      flex-shrink: 0;
     }
 
     .toggle::before {
@@ -408,10 +460,11 @@ import { environment } from '../../../../environments/environment';
       background: #fff;
       border-radius: 50%;
       transition: transform 0.3s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     }
 
     .toggle-label input:checked + .toggle {
-      background: #0066cc;
+      background: #e31b23;
     }
 
     .toggle-label input:checked + .toggle::before {
@@ -420,7 +473,7 @@ import { environment } from '../../../../environments/environment';
 
     .security-section {
       padding: 24px 0;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid #f0f0f0;
     }
 
     .security-section:last-child {
@@ -448,14 +501,15 @@ import { environment } from '../../../../environments/environment';
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px;
+      padding: 14px 16px;
       background: #f9fafb;
-      border-radius: 8px;
+      border-radius: 10px;
     }
 
     .session-info strong {
       display: block;
       color: #1a1a1a;
+      font-size: 14px;
     }
 
     .session-info span {
@@ -465,7 +519,8 @@ import { environment } from '../../../../environments/environment';
 
     .session-status {
       font-size: 12px;
-      padding: 4px 10px;
+      font-weight: 500;
+      padding: 4px 12px;
       border-radius: 12px;
     }
 
@@ -478,6 +533,7 @@ import { environment } from '../../../../environments/environment';
       margin-top: 24px;
       padding-top: 24px;
       border-top: 2px solid #fee2e2;
+      border-bottom: none;
     }
 
     .danger-zone h3 {
@@ -486,64 +542,102 @@ import { environment } from '../../../../environments/environment';
   `]
 })
 export class SettingsComponent implements OnInit {
-  activeTab = signal('profile');
-  profileForm: FormGroup;
-  passwordForm: FormGroup;
-  notificationForm: FormGroup;
+  activeTab = signal<string>('profile');
   savingProfile = signal(false);
   savingPassword = signal(false);
   savingNotifications = signal(false);
-  currentUser: any;
+  showDeleteModal = signal(false);
+  deletingAccount = signal(false);
+  avatarUrl = signal<string>('/assets/images/avatar.png');
 
   tabs = [
-    { id: 'profile', label: 'Profile', icon: '👤' },
-    { id: 'password', label: 'Password', icon: '🔒' },
-    { id: 'notifications', label: 'Notifications', icon: '🔔' },
-    { id: 'security', label: 'Security', icon: '🛡️' }
+    { id: 'profile', label: 'Profile', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' },
+    { id: 'password', label: 'Password', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>' },
+    { id: 'notifications', label: 'Notifications', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>' },
+    { id: 'security', label: 'Security', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' }
   ];
 
+  profile = {
+    first_name: '',
+    last_name: '',
+    phone: '',
+    date_of_birth: ''
+  };
+
+  passwords = {
+    current_password: '',
+    new_password: '',
+    confirm_password: ''
+  };
+
+  notifications = {
+    email_orders: true,
+    email_promos: true,
+    email_challans: true,
+    push_orders: true,
+    push_promos: false
+  };
+
   constructor(
-    private fb: FormBuilder,
     private authService: AuthService,
-    private http: HttpClient
-  ) {
-    this.currentUser = this.authService.currentUser;
-
-    this.profileForm = this.fb.group({
-      first_name: [this.currentUser?.first_name || ''],
-      last_name: [this.currentUser?.last_name || ''],
-      email: [this.currentUser?.email || ''],
-      phone: [this.currentUser?.phone || '']
-    });
-
-    this.passwordForm = this.fb.group({
-      current_password: ['', Validators.required],
-      new_password: ['', [Validators.required, Validators.minLength(8)]],
-      confirm_password: ['', Validators.required]
-    });
-
-    this.notificationForm = this.fb.group({
-      email_orders: [true],
-      email_promos: [true],
-      email_challans: [true],
-      push_orders: [true],
-      push_promos: [false]
-    });
-  }
+    private http: HttpClient,
+    private toast: ToastService
+  ) {}
 
   ngOnInit(): void {
-    // Load user preferences
+    this.loadProfile();
+  }
+
+  private loadProfile(): void {
+    const user = this.authService.currentUser;
+    if (user) {
+      this.profile.first_name = user.first_name || '';
+      this.profile.last_name = user.last_name || '';
+      this.profile.phone = user.phone || '';
+      this.avatarUrl.set(user.image || '/assets/images/avatar.png');
+    }
+
+    this.http.get<any>(`${environment.apiUrl}/user/profile`).subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          const u = res.data.user || res.data;
+          this.profile.first_name = u.first_name || '';
+          this.profile.last_name = u.last_name || '';
+          this.profile.phone = u.phone || '';
+          this.profile.date_of_birth = u.date_of_birth || '';
+          if (u.image) {
+            this.avatarUrl.set(u.image);
+          }
+        }
+      },
+      error: () => {}
+    });
   }
 
   onAvatarSelect(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      const formData = new FormData();
-      formData.append('avatar', input.files[0]);
+      const file = input.files[0];
 
-      this.http.post(`${environment.apiUrl}/profile/avatar`, formData).subscribe({
-        next: (response: any) => {
-          this.currentUser.image = response.avatar_url;
+      // Preview immediately
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.avatarUrl.set(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      this.http.post<any>(`${environment.apiUrl}/upload/avatar`, formData).subscribe({
+        next: (res) => {
+          if (res.avatar_url) {
+            this.avatarUrl.set(res.avatar_url);
+          }
+          this.toast.success('Avatar updated successfully');
+        },
+        error: () => {
+          this.toast.error('Failed to upload avatar');
         }
       });
     }
@@ -551,60 +645,79 @@ export class SettingsComponent implements OnInit {
 
   updateProfile(): void {
     this.savingProfile.set(true);
-    this.http.put(`${environment.apiUrl}/profile`, this.profileForm.value).subscribe({
+    this.http.put<any>(`${environment.apiUrl}/user/profile`, this.profile).subscribe({
       next: () => {
         this.savingProfile.set(false);
-        alert('Profile updated successfully!');
+        this.toast.success('Profile updated successfully');
       },
       error: () => {
         this.savingProfile.set(false);
-        alert('Failed to update profile.');
+        this.toast.error('Failed to update profile');
       }
     });
   }
 
   changePassword(): void {
-    if (this.passwordForm.value.new_password !== this.passwordForm.value.confirm_password) {
-      alert('Passwords do not match');
+    if (!this.passwords.current_password || !this.passwords.new_password || !this.passwords.confirm_password) {
+      this.toast.warning('Please fill in all password fields');
+      return;
+    }
+
+    if (this.passwords.new_password.length < 8) {
+      this.toast.warning('New password must be at least 8 characters');
+      return;
+    }
+
+    if (this.passwords.new_password !== this.passwords.confirm_password) {
+      this.toast.error('Passwords do not match');
       return;
     }
 
     this.savingPassword.set(true);
-    this.http.put(`${environment.apiUrl}/profile/password`, this.passwordForm.value).subscribe({
+    this.http.put<any>(`${environment.apiUrl}/user/change-password`, {
+      current_password: this.passwords.current_password,
+      new_password: this.passwords.new_password,
+      confirm_password: this.passwords.confirm_password
+    }).subscribe({
       next: () => {
         this.savingPassword.set(false);
-        this.passwordForm.reset();
-        alert('Password changed successfully!');
+        this.passwords = { current_password: '', new_password: '', confirm_password: '' };
+        this.toast.success('Password changed successfully');
       },
-      error: () => {
+      error: (err) => {
         this.savingPassword.set(false);
-        alert('Failed to change password.');
+        this.toast.error(err.error?.message || 'Failed to change password');
       }
     });
   }
 
   updateNotifications(): void {
     this.savingNotifications.set(true);
-    this.http.put(`${environment.apiUrl}/profile/notifications`, this.notificationForm.value).subscribe({
+    this.http.put<any>(`${environment.apiUrl}/user/profile`, { notifications: this.notifications }).subscribe({
       next: () => {
         this.savingNotifications.set(false);
-        alert('Preferences saved!');
+        this.toast.success('Notification preferences saved');
       },
       error: () => {
         this.savingNotifications.set(false);
+        this.toast.error('Failed to save preferences');
       }
     });
   }
 
   deleteAccount(): void {
-    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-      if (confirm('This will permanently delete all your data. Continue?')) {
-        this.http.delete(`${environment.apiUrl}/profile`).subscribe({
-          next: () => {
-            this.authService.logout();
-          }
-        });
+    this.deletingAccount.set(true);
+    this.http.delete<any>(`${environment.apiUrl}/user/profile`).subscribe({
+      next: () => {
+        this.deletingAccount.set(false);
+        this.showDeleteModal.set(false);
+        this.toast.success('Account deleted');
+        this.authService.logout();
+      },
+      error: () => {
+        this.deletingAccount.set(false);
+        this.toast.error('Failed to delete account');
       }
-    }
+    });
   }
 }

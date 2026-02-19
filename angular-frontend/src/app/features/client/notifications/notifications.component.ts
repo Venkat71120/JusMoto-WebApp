@@ -1,7 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 
@@ -107,8 +106,8 @@ import { environment } from '../../../../environments/environment';
     }
 
     .btn-outline:hover {
-      border-color: #0066cc;
-      color: #0066cc;
+      border-color: #e31b23;
+      color: #e31b23;
     }
 
     .loading {
@@ -120,7 +119,7 @@ import { environment } from '../../../../environments/environment';
       width: 40px;
       height: 40px;
       border: 3px solid #e5e7eb;
-      border-top-color: #0066cc;
+      border-top-color: #e31b23;
       border-radius: 50%;
       margin: 0 auto 16px;
       animation: spin 1s linear infinite;
@@ -179,7 +178,7 @@ import { environment } from '../../../../environments/environment';
 
     .notification-card.unread {
       background: #f0f9ff;
-      border-left: 4px solid #0066cc;
+      border-left: 4px solid #e31b23;
     }
 
     .notification-icon {
@@ -328,7 +327,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   markAsRead(id: number): void {
-    this.http.post(`${environment.apiUrl}/notifications/${id}/read`, {}).subscribe({
+    this.http.put(`${environment.apiUrl}/notifications/${id}/read`, {}).subscribe({
       next: () => {
         this.notifications.update(items =>
           items.map(n => n.id === id ? { ...n, read_at: new Date().toISOString() } : n)
@@ -338,7 +337,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   markAllAsRead(): void {
-    this.http.post(`${environment.apiUrl}/notifications/read-all`, {}).subscribe({
+    this.http.put(`${environment.apiUrl}/notifications/read-all`, {}).subscribe({
       next: () => {
         this.notifications.update(items =>
           items.map(n => ({ ...n, read_at: new Date().toISOString() }))

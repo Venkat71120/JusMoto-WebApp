@@ -19,7 +19,20 @@ const startServer = async () => {
         console.log('Migration: Added order_id to tickets table');
       }
     } catch (e) {
-      console.log('Migration check skipped:', e.message);
+      console.log('Migration check (tickets):', e.message);
+    }
+
+    // Add name and status to varients table
+    try {
+      const [vCols] = await sequelize.query("SHOW COLUMNS FROM varients LIKE 'name'");
+      if (vCols.length === 0) {
+        await sequelize.query("ALTER TABLE varients ADD COLUMN name VARCHAR(191) NULL AFTER car_id, ADD COLUMN status TINYINT DEFAULT 1 AFTER fual_type_id");
+        console.log('Migration: Added name, status to varients table');
+      }
+      // Make engine_type_id and fual_type_id nullable for user-added variants
+      await sequelize.query("ALTER TABLE varients MODIFY COLUMN engine_type_id BIGINT UNSIGNED NULL, MODIFY COLUMN fual_type_id BIGINT UNSIGNED NULL");
+    } catch (e) {
+      console.log('Migration check (varients):', e.message);
     }
     console.log('Database models synchronized');
 

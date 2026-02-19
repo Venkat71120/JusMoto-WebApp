@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ChallanService } from '../../../core/services/challan.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-client-challan-list',
@@ -126,7 +127,7 @@ import { ChallanService } from '../../../core/services/challan.service';
 
     .btn-primary {
       padding: 12px 24px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -197,7 +198,7 @@ import { ChallanService } from '../../../core/services/challan.service';
       width: 40px;
       height: 40px;
       border: 3px solid #e5e7eb;
-      border-top-color: #0066cc;
+      border-top-color: #e31b23;
       border-radius: 50%;
       margin: 0 auto 16px;
       animation: spin 1s linear infinite;
@@ -363,7 +364,7 @@ export class ClientChallanListComponent implements OnInit {
   stats = signal<any>(null);
   loading = signal(true);
 
-  constructor(private challanService: ChallanService) {}
+  constructor(private challanService: ChallanService, private toast: ToastService) {}
 
   ngOnInit(): void {
     this.loadChallans();
@@ -392,7 +393,6 @@ export class ClientChallanListComponent implements OnInit {
   }
 
   payChallan(challan: any): void {
-    // Implement payment flow
-    alert('Payment flow coming soon!');
+    this.toast.info('Payment flow coming soon!');
   }
 }

@@ -36,6 +36,17 @@ import { AuthService } from '../../core/services/auth.service';
               </a>
             </li>
             <li>
+              <a routerLink="/client/my-cars" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M5 17h2m10 0h2M5 17H3v-3.5l1.5-5A2 2 0 016.4 7h11.2a2 2 0 011.9 1.5l1.5 5V17h-2M5 17a2 2 0 01-2-2m18 2a2 2 0 002-2"/>
+                  <circle cx="7.5" cy="17" r="1.5"/>
+                  <circle cx="16.5" cy="17" r="1.5"/>
+                  <path d="M3 12h18"/>
+                </svg>
+                <span>My Cars</span>
+              </a>
+            </li>
+            <li>
               <a routerLink="/client/orders" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
                 <svg width="19" height="18" viewBox="0 0 19 18" fill="none">
                   <path d="M7.55 4.5H15.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -104,6 +115,17 @@ import { AuthService } from '../../core/services/auth.service';
                   <path d="M7.55 15.75V11.25C7.55 10.85 7.71 10.47 7.99 10.19C8.28 9.91 8.66 9.75 9.05 9.75H10.55C10.95 9.75 11.33 9.91 11.62 10.19C11.9 10.47 12.05 10.85 12.05 11.25V15.75" stroke="currentColor" stroke-width="1.5"/>
                 </svg>
                 <span>Address</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/client/wallet" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="2" y="5" width="20" height="15" rx="2"/>
+                  <path d="M2 10h20"/>
+                  <path d="M17 15h2"/>
+                  <path d="M2 10V7a2 2 0 012-2h12l4 5"/>
+                </svg>
+                <span>Wallet</span>
               </a>
             </li>
             <li>
@@ -301,12 +323,12 @@ import { AuthService } from '../../core/services/auth.service';
     }
 
     .nav-item:hover {
-      background: #f0f9ff;
-      color: #0066cc;
+      background: #fff5f5;
+      color: #e31b23;
     }
 
     .nav-item.active {
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
     }
 
@@ -391,7 +413,7 @@ import { AuthService } from '../../core/services/auth.service';
       position: absolute;
       top: -8px;
       right: -8px;
-      background: #dc3545;
+      background: #e31b23;
       color: #fff;
       font-size: 10px;
       padding: 2px 6px;

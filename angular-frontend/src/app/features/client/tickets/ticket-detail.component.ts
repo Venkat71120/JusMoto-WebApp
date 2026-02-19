@@ -4,6 +4,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TicketService } from '../../../core/services/ticket.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-client-ticket-detail',
@@ -124,7 +125,7 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     .back-link a {
-      color: #0066cc;
+      color: #e31b23;
       text-decoration: none;
       font-size: 14px;
     }
@@ -138,7 +139,7 @@ import { AuthService } from '../../../core/services/auth.service';
       width: 40px;
       height: 40px;
       border: 3px solid #e5e7eb;
-      border-top-color: #0066cc;
+      border-top-color: #e31b23;
       border-radius: 50%;
       margin: 0 auto 16px;
       animation: spin 1s linear infinite;
@@ -211,8 +212,8 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     .message-card.admin-reply {
-      background: #f0f9ff;
-      border-left: 4px solid #0066cc;
+      background: #fff5f5;
+      border-left: 4px solid #e31b23;
     }
 
     .message-header {
@@ -238,7 +239,7 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     .admin-avatar {
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
     }
 
@@ -268,7 +269,7 @@ import { AuthService } from '../../../core/services/auth.service';
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      color: #0066cc;
+      color: #e31b23;
       text-decoration: none;
       font-size: 14px;
     }
@@ -302,8 +303,8 @@ import { AuthService } from '../../../core/services/auth.service';
 
     .form-control:focus {
       outline: none;
-      border-color: #0066cc;
-      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+      border-color: #e31b23;
+      box-shadow: 0 0 0 3px rgba(227, 27, 35, 0.1);
     }
 
     .reply-actions {
@@ -319,7 +320,7 @@ import { AuthService } from '../../../core/services/auth.service';
 
     .btn-primary {
       padding: 12px 24px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -359,7 +360,8 @@ export class ClientTicketDetailComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private ticketService: TicketService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toast: ToastService
   ) {
     this.replyForm = this.fb.group({
       message: ['', Validators.required]
@@ -416,11 +418,12 @@ export class ClientTicketDetailComponent implements OnInit {
         this.submitting.set(false);
         this.replyForm.reset();
         this.selectedFile = null;
+        this.toast.success('Reply sent successfully');
         this.loadTicket(this.ticket().id);
       },
       error: () => {
         this.submitting.set(false);
-        alert('Failed to send reply. Please try again.');
+        this.toast.error('Failed to send reply. Please try again.');
       }
     });
   }

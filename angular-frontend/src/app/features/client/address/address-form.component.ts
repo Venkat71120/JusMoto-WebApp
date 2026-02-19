@@ -4,6 +4,7 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-address-form',
@@ -149,7 +150,7 @@ import { environment } from '../../../../environments/environment';
     }
 
     .back-link a {
-      color: #0066cc;
+      color: #e31b23;
       text-decoration: none;
       font-size: 14px;
     }
@@ -203,8 +204,8 @@ import { environment } from '../../../../environments/environment';
 
     .form-control:focus {
       outline: none;
-      border-color: #0066cc;
-      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+      border-color: #e31b23;
+      box-shadow: 0 0 0 3px rgba(227, 27, 35, 0.1);
     }
 
     select.form-control {
@@ -266,7 +267,7 @@ import { environment } from '../../../../environments/environment';
 
     .btn-primary {
       padding: 12px 24px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -299,7 +300,8 @@ export class AddressFormComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toast: ToastService
   ) {
     this.addressForm = this.fb.group({
       name: ['', Validators.required],
@@ -324,7 +326,7 @@ export class AddressFormComponent implements OnInit {
   }
 
   loadAddress(id: number): void {
-    this.http.get<any>(`${environment.apiUrl}/addresses/${id}`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/user/addresses/${id}`).subscribe({
       next: (response) => {
         const address = response.data || response.address || response;
         this.addressForm.patchValue(address);
@@ -339,17 +341,18 @@ export class AddressFormComponent implements OnInit {
 
     const data = this.addressForm.value;
     const request = this.isEditing()
-      ? this.http.put(`${environment.apiUrl}/addresses/${this.addressId}`, data)
-      : this.http.post(`${environment.apiUrl}/addresses`, data);
+      ? this.http.put(`${environment.apiUrl}/user/addresses/${this.addressId}`, data)
+      : this.http.post(`${environment.apiUrl}/user/addresses`, data);
 
     request.subscribe({
       next: () => {
         this.submitting.set(false);
+        this.toast.success(this.isEditing() ? 'Address updated successfully' : 'Address added successfully');
         this.router.navigate(['/client/address']);
       },
       error: () => {
         this.submitting.set(false);
-        alert('Failed to save address. Please try again.');
+        this.toast.error('Failed to save address. Please try again.');
       }
     });
   }

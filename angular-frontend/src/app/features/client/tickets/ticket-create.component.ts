@@ -4,6 +4,7 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TicketService } from '../../../core/services/ticket.service';
 import { OrderService } from '../../../core/services/order.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-ticket-create',
@@ -111,7 +112,7 @@ import { OrderService } from '../../../core/services/order.service';
     }
 
     .back-link a {
-      color: #0066cc;
+      color: #e31b23;
       text-decoration: none;
       font-size: 14px;
     }
@@ -162,8 +163,8 @@ import { OrderService } from '../../../core/services/order.service';
 
     .form-control:focus {
       outline: none;
-      border-color: #0066cc;
-      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+      border-color: #e31b23;
+      box-shadow: 0 0 0 3px rgba(227, 27, 35, 0.1);
     }
 
     textarea.form-control {
@@ -219,7 +220,7 @@ import { OrderService } from '../../../core/services/order.service';
 
     .btn-primary {
       padding: 12px 24px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -253,7 +254,8 @@ export class TicketCreateComponent implements OnInit {
     private ticketService: TicketService,
     private orderService: OrderService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toast: ToastService
   ) {
     this.ticketForm = this.fb.group({
       category: ['', Validators.required],
@@ -310,7 +312,7 @@ export class TicketCreateComponent implements OnInit {
       },
       error: () => {
         this.submitting.set(false);
-        alert('Failed to create ticket. Please try again.');
+        this.toast.error('Failed to create ticket. Please try again.');
       }
     });
   }

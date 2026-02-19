@@ -88,8 +88,8 @@ router.get('/cars', authenticate, isClient, async (req, res) => {
 
 router.post('/cars', authenticate, isClient, async (req, res) => {
   try {
-    const { brand_id, car_id, variant_id, registration_number, is_default } = req.body;
-    const { UserSelectedCar } = require('../models');
+    const { brand_id, car_id, variant_id, variant_name, registration_number, is_default } = req.body;
+    const { UserSelectedCar, Variant } = require('../models');
 
     // If setting as default, unset other defaults
     if (is_default) {
@@ -99,11 +99,21 @@ router.post('/cars', authenticate, isClient, async (req, res) => {
       );
     }
 
+    // Auto-create variant if variant_name is provided and no variant_id
+    let resolvedVariantId = variant_id || null;
+    if (variant_name && !variant_id && car_id) {
+      const [variant] = await Variant.findOrCreate({
+        where: { car_id, name: variant_name },
+        defaults: { car_id, name: variant_name, status: 1 }
+      });
+      resolvedVariantId = variant.id;
+    }
+
     const car = await UserSelectedCar.create({
       user_id: req.user.id,
       brand_id,
       car_id,
-      variant_id,
+      variant_id: resolvedVariantId,
       registration_number,
       is_default: is_default ? 1 : 0
     });
@@ -116,8 +126,8 @@ router.post('/cars', authenticate, isClient, async (req, res) => {
 
 router.put('/cars/:id', authenticate, isClient, async (req, res) => {
   try {
-    const { brand_id, car_id, variant_id, registration_number, is_default } = req.body;
-    const { UserSelectedCar } = require('../models');
+    const { brand_id, car_id, variant_id, variant_name, registration_number, is_default } = req.body;
+    const { UserSelectedCar, Variant } = require('../models');
 
     const car = await UserSelectedCar.findOne({
       where: { id: req.params.id, user_id: req.user.id }
@@ -134,7 +144,17 @@ router.put('/cars/:id', authenticate, isClient, async (req, res) => {
       );
     }
 
-    await car.update({ brand_id, car_id, variant_id, registration_number, is_default: is_default ? 1 : 0 });
+    // Auto-create variant if variant_name is provided and no variant_id
+    let resolvedVariantId = variant_id || null;
+    if (variant_name && !variant_id && car_id) {
+      const [variant] = await Variant.findOrCreate({
+        where: { car_id, name: variant_name },
+        defaults: { car_id, name: variant_name, status: 1 }
+      });
+      resolvedVariantId = variant.id;
+    }
+
+    await car.update({ brand_id, car_id, variant_id: resolvedVariantId, registration_number, is_default: is_default ? 1 : 0 });
 
     res.json({ success: true, data: car, message: 'Car updated successfully' });
   } catch (error) {
@@ -247,6 +267,94 @@ router.delete('/addresses/:id', authenticate, isClient, async (req, res) => {
     }
 
     res.json({ success: true, message: 'Address deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Dashboard aggregation
+router.get('/dashboard', authenticate, isClient, async (req, res) => {
+  try {
+    const { Order, UserSelectedCar, Brand, Car, Variant, Wallet, OrderItem, OrderLocation, Service } = require('../models');
+    const { Op } = require('sequelize');
+
+    const userId = req.user.id;
+
+    // Order stats
+    const [totalOrders, pendingOrders, completedOrders, cancelledOrders, inProgressOrders] = await Promise.all([
+      Order.count({ where: { user_id: userId } }),
+      Order.count({ where: { user_id: userId, status: 0 } }),
+      Order.count({ where: { user_id: userId, status: 3 } }),
+      Order.count({ where: { user_id: userId, status: 4 } }),
+      Order.count({ where: { user_id: userId, status: 2 } })
+    ]);
+
+    // Recent orders (last 5)
+    const orders = await Order.findAll({
+      where: { user_id: userId },
+      include: [
+        { model: OrderLocation, as: 'orderLocation' },
+        { model: OrderItem, as: 'items', include: [{ model: Service, as: 'service', attributes: ['id', 'title'] }] }
+      ],
+      order: [['created_at', 'DESC']],
+      limit: 5
+    });
+
+    // User cars
+    const cars = await UserSelectedCar.findAll({
+      where: { user_id: userId },
+      include: [
+        { model: Brand, as: 'brand' },
+        { model: Car, as: 'car' },
+        { model: Variant, as: 'variant' }
+      ]
+    });
+
+    // Wallet balance
+    const wallet = await Wallet.findOne({ where: { user_id: userId } });
+
+    res.json({
+      success: true,
+      data: {
+        totalOrders,
+        pendingOrders,
+        completedOrders,
+        cancelledOrders,
+        inProgressOrders,
+        walletBalance: wallet ? parseFloat(wallet.available_balance || 0) : 0,
+        totalCars: cars.length,
+        cars,
+        orders
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Set car as default
+router.put('/cars/:id/default', authenticate, isClient, async (req, res) => {
+  try {
+    const { UserSelectedCar } = require('../models');
+
+    const car = await UserSelectedCar.findOne({
+      where: { id: req.params.id, user_id: req.user.id }
+    });
+
+    if (!car) {
+      return res.status(404).json({ success: false, error: 'Car not found' });
+    }
+
+    // Unset all defaults
+    await UserSelectedCar.update(
+      { is_default: 0 },
+      { where: { user_id: req.user.id } }
+    );
+
+    // Set this one as default
+    await car.update({ is_default: 1 });
+
+    res.json({ success: true, message: 'Default car updated' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

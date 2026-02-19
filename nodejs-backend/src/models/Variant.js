@@ -11,13 +11,21 @@ const Variant = sequelize.define('Variant', {
     type: DataTypes.BIGINT.UNSIGNED,
     allowNull: false
   },
+  name: {
+    type: DataTypes.STRING(191),
+    allowNull: true
+  },
   engine_type_id: {
     type: DataTypes.BIGINT.UNSIGNED,
-    allowNull: false
+    allowNull: true
   },
   fual_type_id: {
     type: DataTypes.BIGINT.UNSIGNED,
-    allowNull: false
+    allowNull: true
+  },
+  status: {
+    type: DataTypes.TINYINT,
+    defaultValue: 1
   }
 }, {
   tableName: 'varients',

@@ -107,7 +107,7 @@ import { TicketService } from '../../../core/services/ticket.service';
 
     .btn-primary {
       padding: 12px 24px;
-      background: #0066cc;
+      background: #e31b23;
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -137,13 +137,13 @@ import { TicketService } from '../../../core/services/ticket.service';
     }
 
     .filter-tab:hover {
-      border-color: #0066cc;
-      color: #0066cc;
+      border-color: #e31b23;
+      color: #e31b23;
     }
 
     .filter-tab.active {
-      background: #0066cc;
-      border-color: #0066cc;
+      background: #e31b23;
+      border-color: #e31b23;
       color: #fff;
     }
 
@@ -156,7 +156,7 @@ import { TicketService } from '../../../core/services/ticket.service';
       width: 40px;
       height: 40px;
       border: 3px solid #e5e7eb;
-      border-top-color: #0066cc;
+      border-top-color: #e31b23;
       border-radius: 50%;
       margin: 0 auto 16px;
       animation: spin 1s linear infinite;

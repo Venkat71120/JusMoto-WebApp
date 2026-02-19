@@ -4,15 +4,17 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-sub-category-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Sub Categories</h1>
-      <a routerLink="/admin/sub-categories/create" class="btn-primary">+ Add Sub Category</a>
+      <a routerLink="/admin/subcategory/add-new-subcategory" class="btn-primary">+ Add Sub Category</a>
     </div>
 
     <div class="filters-bar">
@@ -46,13 +48,13 @@ import { environment } from '../../../../environments/environment';
             <td>{{ sub.category?.name || '-' }}</td>
             <td class="text-muted">{{ sub.slug }}</td>
             <td>
-              <span class="badge" [class.badge-green]="sub.status" [class.badge-red]="!sub.status">
+              <button class="badge badge-clickable" [class.badge-green]="sub.status" [class.badge-red]="!sub.status" (click)="statusItem.set(sub)">
                 {{ sub.status ? 'Active' : 'Inactive' }}
-              </span>
+              </button>
             </td>
             <td>
               <div class="action-btns">
-                <a [routerLink]="['/admin/sub-categories', sub.id, 'edit']" class="action-btn" title="Edit">
+                <a [routerLink]="['/admin/subcategory/edit-subcategory', sub.id]" class="action-btn" title="Edit">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </a>
                 <button class="action-btn" (click)="toggleStatus(sub)" title="Toggle Status">
@@ -76,6 +78,26 @@ import { environment } from '../../../../environments/environment';
       <span class="page-info">Page {{ pagination().page }} of {{ pagination().totalPages }}</span>
       <button class="page-btn" [disabled]="!pagination().hasNextPage" (click)="goToPage(pagination().page + 1)">Next &raquo;</button>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingItem()"
+      title="Delete Sub Category"
+      [message]="'Delete &quot;' + (deletingItem()?.name || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingItem.set(null)">
+    </app-confirm-modal>
+
+    <app-confirm-modal
+      [open]="!!statusItem()"
+      title="Change Status"
+      [message]="'Change status of &quot;' + (statusItem()?.name || '') + '&quot; to ' + (statusItem()?.status ? 'Inactive' : 'Active') + '?'"
+      confirmText="Change Status"
+      type="warning"
+      (confirmed)="confirmToggleStatus()"
+      (cancelled)="statusItem.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
@@ -97,6 +119,8 @@ import { environment } from '../../../../environments/environment';
     .fw-600 { font-weight:600; }
     .text-muted { color:#94a3b8; }
     .badge { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+    .badge-clickable { cursor:pointer; transition:opacity 0.2s; border:none; }
+    .badge-clickable:hover { opacity:0.8; }
     .badge-green { background:#dcfce7; color:#16a34a; }
     .badge-red { background:#fee2e2; color:#dc2626; }
     .action-btns { display:flex; gap:6px; }
@@ -117,9 +141,11 @@ export class SubCategoryListComponent implements OnInit {
   search = '';
   categoryFilter = '';
   pagination = signal<any>({ page: 1, limit: 15, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false });
+  deletingItem = signal<any>(null);
+  statusItem = signal<any>(null);
   private searchTimeout: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() {
     this.loadCategories();
@@ -152,15 +178,28 @@ export class SubCategoryListComponent implements OnInit {
   goToPage(page: number) { this.loadSubCategories(page); }
 
   toggleStatus(sub: any) {
+    this.statusItem.set(sub);
+  }
+
+  confirmToggleStatus() {
+    const sub = this.statusItem();
+    if (!sub) return;
     this.http.put<any>(`${environment.apiUrl}/admin/sub-categories/${sub.id}`, { status: sub.status ? 0 : 1 }).subscribe({
-      next: () => this.loadSubCategories(this.pagination().page)
+      next: () => { this.toast.success('Status updated successfully'); this.statusItem.set(null); this.loadSubCategories(this.pagination().page); },
+      error: () => { this.toast.error('Failed to update status'); this.statusItem.set(null); }
     });
   }
 
   deleteSubCategory(sub: any) {
-    if (!confirm('Are you sure?')) return;
+    this.deletingItem.set(sub);
+  }
+
+  confirmDelete() {
+    const sub = this.deletingItem();
+    if (!sub) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/sub-categories/${sub.id}`).subscribe({
-      next: () => this.loadSubCategories(this.pagination().page)
+      next: () => { this.toast.success('Sub category deleted successfully'); this.deletingItem.set(null); this.loadSubCategories(this.pagination().page); },
+      error: () => { this.toast.error('Failed to delete sub category'); this.deletingItem.set(null); }
     });
   }
 }

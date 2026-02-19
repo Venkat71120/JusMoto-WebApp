@@ -4,13 +4,14 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-outlet-location-form',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   template: `
-    <a routerLink="/admin/outlet-locations" class="back-link">
+    <a routerLink="/admin/outletAddress/all" class="back-link">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
       Back to Outlet Locations
     </a>
@@ -46,21 +47,21 @@ import { environment } from '../../../../environments/environment';
           <label>State</label>
           <select class="form-control" [(ngModel)]="form.state_id" (change)="onStateChange()">
             <option value="">Select State</option>
-            <option *ngFor="let s of states()" [value]="s.id">{{ s.name }}</option>
+            <option *ngFor="let s of states()" [value]="s.id">{{ s.state || s.name }}</option>
           </select>
         </div>
         <div class="form-group">
           <label>City</label>
           <select class="form-control" [(ngModel)]="form.city_id" (change)="onCityChange()">
             <option value="">Select City</option>
-            <option *ngFor="let c of cities()" [value]="c.id">{{ c.name }}</option>
+            <option *ngFor="let c of cities()" [value]="c.id">{{ c.city || c.name }}</option>
           </select>
         </div>
         <div class="form-group">
           <label>Area</label>
           <select class="form-control" [(ngModel)]="form.area_id">
             <option value="">Select Area</option>
-            <option *ngFor="let a of areas()" [value]="a.id">{{ a.name }}</option>
+            <option *ngFor="let a of areas()" [value]="a.id">{{ a.area || a.name }}</option>
           </select>
         </div>
       </div>
@@ -73,7 +74,7 @@ import { environment } from '../../../../environments/environment';
       <div *ngIf="error()" class="error-msg">{{ error() }}</div>
 
       <div class="form-actions">
-        <a routerLink="/admin/outlet-locations" class="btn-cancel">Cancel</a>
+        <a routerLink="/admin/outletAddress/all" class="btn-cancel">Cancel</a>
         <button class="btn-save" (click)="onSubmit()" [disabled]="saving()">
           {{ saving() ? 'Saving...' : (isEdit ? 'Update' : 'Create') }}
         </button>
@@ -114,7 +115,7 @@ export class OutletLocationFormComponent implements OnInit {
   error = signal('');
   form: any = { name: '', address: '', post_code: '', latitude: '', longitude: '', state_id: '', city_id: '', area_id: '', status: true };
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
 
   ngOnInit() {
     this.locationId = this.route.snapshot.paramMap.get('id');
@@ -169,7 +170,7 @@ export class OutletLocationFormComponent implements OnInit {
         if (l.state_id) this.loadCities(String(l.state_id));
         if (l.city_id) this.loadAreas(String(l.city_id));
       },
-      error: () => this.router.navigate(['/admin/outlet-locations']),
+      error: () => this.router.navigate(['/admin/outletAddress/all']),
       complete: () => this.loadingData.set(false)
     });
   }
@@ -183,8 +184,8 @@ export class OutletLocationFormComponent implements OnInit {
       ? this.http.put<any>(`${environment.apiUrl}/admin/outlet-locations/${this.locationId}`, data)
       : this.http.post<any>(`${environment.apiUrl}/admin/outlet-locations`, data);
     req.subscribe({
-      next: () => this.router.navigate(['/admin/outlet-locations']),
-      error: (err) => { this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
+      next: () => { this.toast.success(this.isEdit ? 'Location updated successfully' : 'Location created successfully'); this.router.navigate(['/admin/outletAddress/all']); },
+      error: (err) => { this.toast.error(err.error?.error || 'Something went wrong'); this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }

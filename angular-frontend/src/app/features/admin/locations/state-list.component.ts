@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-state-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">States</h1>
@@ -74,6 +76,16 @@ import { environment } from '../../../../environments/environment';
         </tbody>
       </table>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingItem()"
+      title="Delete State"
+      [message]="'Delete &quot;' + (deletingItem()?.name || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingItem.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
@@ -110,6 +122,7 @@ export class StateListComponent implements OnInit {
   items = signal<any[]>([]);
   loading = signal(false);
   saving = signal(false);
+  deletingItem = signal<any>(null);
   newName = '';
   newCode = '';
   newStatus = true;
@@ -118,7 +131,7 @@ export class StateListComponent implements OnInit {
   editCode = '';
   editStatus = true;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadItems(); }
 
@@ -135,8 +148,8 @@ export class StateListComponent implements OnInit {
     if (!this.newName.trim()) return;
     this.saving.set(true);
     this.http.post<any>(`${environment.apiUrl}/admin/states`, { name: this.newName, state_code: this.newCode, status: this.newStatus ? 1 : 0 }).subscribe({
-      next: () => { this.newName = ''; this.newCode = ''; this.newStatus = true; this.loadItems(); },
-      error: () => {},
+      next: () => { this.newName = ''; this.newCode = ''; this.newStatus = true; this.toast.success('State added successfully'); this.loadItems(); },
+      error: () => { this.toast.error('Failed to add state'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }
@@ -152,16 +165,22 @@ export class StateListComponent implements OnInit {
     if (!this.editName.trim()) return;
     this.saving.set(true);
     this.http.put<any>(`${environment.apiUrl}/admin/states/${this.editId}`, { name: this.editName, state_code: this.editCode, status: this.editStatus ? 1 : 0 }).subscribe({
-      next: () => { this.editId = null; this.loadItems(); },
-      error: () => {},
+      next: () => { this.editId = null; this.toast.success('State updated successfully'); this.loadItems(); },
+      error: () => { this.toast.error('Failed to update state'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }
 
   deleteItem(item: any) {
-    if (!confirm('Are you sure?')) return;
+    this.deletingItem.set(item);
+  }
+
+  confirmDelete() {
+    const item = this.deletingItem();
+    if (!item) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/states/${item.id}`).subscribe({
-      next: () => this.loadItems()
+      next: () => { this.toast.success('State deleted successfully'); this.deletingItem.set(null); this.loadItems(); },
+      error: () => { this.toast.error('Failed to delete state'); this.deletingItem.set(null); }
     });
   }
 }

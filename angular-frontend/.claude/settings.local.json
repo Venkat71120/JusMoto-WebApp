@@ -25,7 +25,16 @@
       "Bash(npx pm2:*)",
       "Bash(dir:*)",
       "Bash(ls:*)",
-      "Bash(node test-endpoints.js:*)"
+      "Bash(node test-endpoints.js:*)",
+      "Bash(cmd //c \"netstat -an | findstr 3306\")",
+      "Bash(cmd //c \"netstat -an | findstr :3306\")",
+      "Bash(cmd //c \"netstat -an | findstr LISTEN | findstr :33\")",
+      "Bash(cmd //c \"netstat -an | findstr LISTEN | findstr mysql\")",
+      "Bash(while read f)",
+      "Bash(do echo \"Fixing: $f\")",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(node:*)"
     ]
   }
 }

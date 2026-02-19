@@ -4,11 +4,13 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Orders Management</h1>
@@ -63,7 +65,7 @@ import { environment } from '../../../../environments/environment';
             </td>
             <td class="amount-cell">&#8377;{{ order.total | number:'1.2-2' }}</td>
             <td>
-              <button class="badge badge-clickable" [class.badge-active]="order.payment_status" [class.badge-warning]="!order.payment_status" (click)="togglePayment(order)">
+              <button class="badge badge-clickable" [class.badge-active]="order.payment_status" [class.badge-warning]="!order.payment_status" (click)="paymentOrder.set(order)">
                 {{ order.payment_status ? 'Paid' : 'Pending' }}
               </button>
             </td>
@@ -78,7 +80,7 @@ import { environment } from '../../../../environments/environment';
             </td>
             <td>{{ order.created_at | date:'mediumDate' }}</td>
             <td>
-              <a [routerLink]="['/admin/orders', order.id]" class="btn-action btn-view" title="View Detail">
+              <a [routerLink]="['/admin/orders/details', order.id]" class="btn-action btn-view" title="View Detail">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </a>
             </td>
@@ -95,6 +97,16 @@ import { environment } from '../../../../environments/environment';
       <span class="page-info">Page {{ pagination().page }} of {{ pagination().totalPages }}</span>
       <button class="page-btn" [disabled]="!pagination().hasNextPage" (click)="goToPage(pagination().page + 1)">Next &raquo;</button>
     </div>
+
+    <app-confirm-modal
+      [open]="!!paymentOrder()"
+      title="Change Payment Status"
+      [message]="'Mark order ' + (paymentOrder()?.invoice_number || '#' + (paymentOrder()?.id || '')) + ' as ' + (paymentOrder()?.payment_status ? 'Pending' : 'Paid') + '?'"
+      confirmText="Confirm"
+      type="warning"
+      (confirmed)="confirmTogglePayment()"
+      (cancelled)="paymentOrder.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
@@ -150,6 +162,7 @@ export class OrderListComponent implements OnInit {
   statusFilter = '';
   paymentFilter = '';
   pagination = signal<any>({ page: 1, limit: 15, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false });
+  paymentOrder = signal<any>(null);
   private searchTimeout: any;
 
   statusTabs = [
@@ -161,7 +174,7 @@ export class OrderListComponent implements OnInit {
     { label: 'Cancelled', value: '4' }
   ];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadOrders(); }
 
@@ -187,14 +200,18 @@ export class OrderListComponent implements OnInit {
 
   changeStatus(order: any, newStatus: string) {
     this.http.put<any>(`${environment.apiUrl}/admin/orders/${order.id}/status`, { status: +newStatus }).subscribe({
-      next: () => { order.status = +newStatus; }
+      next: () => { order.status = +newStatus; this.toast.success('Order status updated'); },
+      error: () => this.toast.error('Something went wrong')
     });
   }
 
-  togglePayment(order: any) {
+  confirmTogglePayment() {
+    const order = this.paymentOrder();
+    if (!order) return;
     const newStatus = order.payment_status ? 0 : 1;
     this.http.put<any>(`${environment.apiUrl}/admin/orders/${order.id}/payment-status`, { payment_status: newStatus }).subscribe({
-      next: () => { order.payment_status = newStatus; }
+      next: () => { order.payment_status = newStatus; this.toast.success('Payment status updated'); this.paymentOrder.set(null); },
+      error: () => { this.toast.error('Failed to update payment status'); this.paymentOrder.set(null); }
     });
   }
 

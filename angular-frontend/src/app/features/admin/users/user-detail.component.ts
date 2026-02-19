@@ -10,7 +10,7 @@ import { environment } from '../../../../environments/environment';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="page-header">
-      <a routerLink="/admin/users" class="back-btn">
+      <a routerLink="/admin/user/all-users" class="back-btn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
         Back to Users
       </a>
@@ -125,7 +125,7 @@ export class UserDetailComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     this.http.get<any>(`${environment.apiUrl}/admin/users/${id}`).subscribe({
       next: (res) => this.user.set(res.data),
-      error: () => this.router.navigate(['/admin/users']),
+      error: () => this.router.navigate(['/admin/user/all-users']),
       complete: () => this.loading.set(false)
     });
   }

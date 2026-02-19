@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-review-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Reviews</h1>
@@ -83,6 +85,16 @@ import { environment } from '../../../../environments/environment';
       <span class="page-info">Page {{ pagination().page }} of {{ pagination().totalPages }}</span>
       <button class="page-btn" [disabled]="!pagination().hasNextPage" (click)="goToPage(pagination().page + 1)">Next &raquo;</button>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingItem()"
+      title="Delete Review"
+      [message]="'Delete this review? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingItem.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
@@ -122,10 +134,11 @@ import { environment } from '../../../../environments/environment';
 export class ReviewListComponent implements OnInit {
   reviews = signal<any[]>([]);
   loading = signal(false);
+  deletingItem = signal<any>(null);
   statusFilter = '';
   pagination = signal<any>({ page: 1, limit: 15, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false });
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadReviews(); }
 
@@ -144,14 +157,21 @@ export class ReviewListComponent implements OnInit {
 
   changeStatus(review: any, status: string) {
     this.http.put<any>(`${environment.apiUrl}/admin/reviews/${review.id}`, { status }).subscribe({
-      next: () => this.loadReviews(this.pagination().page)
+      next: () => { this.toast.success('Review status updated'); this.loadReviews(this.pagination().page); },
+      error: () => this.toast.error('Failed to update review status')
     });
   }
 
   deleteReview(review: any) {
-    if (!confirm('Are you sure?')) return;
+    this.deletingItem.set(review);
+  }
+
+  confirmDelete() {
+    const review = this.deletingItem();
+    if (!review) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/reviews/${review.id}`).subscribe({
-      next: () => this.loadReviews(this.pagination().page)
+      next: () => { this.toast.success('Review deleted successfully'); this.deletingItem.set(null); this.loadReviews(this.pagination().page); },
+      error: () => { this.toast.error('Failed to delete review'); this.deletingItem.set(null); }
     });
   }
 }

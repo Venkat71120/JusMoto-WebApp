@@ -4,13 +4,14 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-staff-form',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   template: `
-    <a routerLink="/admin/staff" class="back-link">
+    <a routerLink="/admin/staff/all-staff" class="back-link">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
       Back to Staff
     </a>
@@ -47,7 +48,7 @@ import { environment } from '../../../../environments/environment';
       <div *ngIf="error()" class="error-msg">{{ error() }}</div>
 
       <div class="form-actions">
-        <a routerLink="/admin/staff" class="btn-cancel">Cancel</a>
+        <a routerLink="/admin/staff/all-staff" class="btn-cancel">Cancel</a>
         <button class="btn-save" (click)="onSubmit()" [disabled]="saving()">
           {{ saving() ? 'Saving...' : (isEdit ? 'Update' : 'Create') }}
         </button>
@@ -85,7 +86,7 @@ export class StaffFormComponent implements OnInit {
   error = signal('');
   form: any = { name: '', email: '', password: '', role_id: '', status: true };
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
 
   ngOnInit() {
     this.staffId = this.route.snapshot.paramMap.get('id');
@@ -107,7 +108,7 @@ export class StaffFormComponent implements OnInit {
         const s = res.data;
         this.form = { name: s.name || '', email: s.email || '', password: '', role_id: s.role_id || '', status: !!s.status };
       },
-      error: () => this.router.navigate(['/admin/staff']),
+      error: () => this.router.navigate(['/admin/staff/all-staff']),
       complete: () => this.loadingData.set(false)
     });
   }
@@ -124,8 +125,8 @@ export class StaffFormComponent implements OnInit {
       ? this.http.put<any>(`${environment.apiUrl}/admin/staff/${this.staffId}`, data)
       : this.http.post<any>(`${environment.apiUrl}/admin/staff`, data);
     req.subscribe({
-      next: () => this.router.navigate(['/admin/staff']),
-      error: (err) => { this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
+      next: () => { this.toast.success(this.isEdit ? 'Staff updated successfully' : 'Staff created successfully'); this.router.navigate(['/admin/staff/all-staff']); },
+      error: (err) => { this.toast.error(err.error?.error || 'Something went wrong'); this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }

@@ -4,14 +4,16 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { MediaPickerComponent } from '../../../shared/components/media-picker/media-picker.component';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-category-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, MediaPickerComponent],
   template: `
     <div class="page-header">
-      <a routerLink="/admin/categories" class="back-btn">
+      <a routerLink="/admin/category/index" class="back-btn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
         Back to Categories
       </a>
@@ -35,8 +37,7 @@ import { environment } from '../../../../environments/environment';
           <textarea formControlName="description" rows="3" placeholder="Category description"></textarea>
         </div>
         <div class="form-group full-width">
-          <label>Image URL</label>
-          <input type="text" formControlName="image" placeholder="https://...">
+          <app-media-picker [value]="imageValue" [label]="'Category Image'" (valueChange)="imageValue = $event; form.get('image')?.setValue($event)"></app-media-picker>
         </div>
         <div class="form-group">
           <label class="checkbox-label">
@@ -46,7 +47,7 @@ import { environment } from '../../../../environments/environment';
       </div>
       <div *ngIf="error()" class="error-msg">{{ error() }}</div>
       <div class="form-actions">
-        <a routerLink="/admin/categories" class="btn-cancel">Cancel</a>
+        <a routerLink="/admin/category/index" class="btn-cancel">Cancel</a>
         <button type="submit" class="btn-primary" [disabled]="saving()">
           {{ saving() ? 'Saving...' : (isEdit ? 'Update' : 'Create') }}
         </button>
@@ -86,8 +87,9 @@ export class CategoryFormComponent implements OnInit {
   loadingData = signal(false);
   saving = signal(false);
   error = signal('');
+  imageValue: any = '';
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
 
   ngOnInit() {
     this.categoryId = this.route.snapshot.paramMap.get('id');
@@ -110,8 +112,9 @@ export class CategoryFormComponent implements OnInit {
       next: (res) => {
         const c = res.data;
         this.form.patchValue({ name: c.name, description: c.description, image: c.image, icon: c.icon, status: !!c.status });
+        this.imageValue = c.image || '';
       },
-      error: () => this.router.navigate(['/admin/categories']),
+      error: () => this.router.navigate(['/admin/category/index']),
       complete: () => this.loadingData.set(false)
     });
   }
@@ -125,8 +128,8 @@ export class CategoryFormComponent implements OnInit {
       ? this.http.put<any>(`${environment.apiUrl}/admin/categories/${this.categoryId}`, data)
       : this.http.post<any>(`${environment.apiUrl}/admin/categories`, data);
     req.subscribe({
-      next: () => this.router.navigate(['/admin/categories']),
-      error: (err) => { this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
+      next: () => { this.toast.success(this.isEdit ? 'Category updated successfully' : 'Category created successfully'); this.router.navigate(['/admin/category/index']); },
+      error: (err) => { this.toast.error(err.error?.error || 'Something went wrong'); this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }

@@ -4,17 +4,19 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-service-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <div>
         <h1 class="page-title">Services Management</h1>
       </div>
-      <a routerLink="/admin/services/create" class="btn-primary">+ Add Service</a>
+      <a routerLink="/admin/services/add" class="btn-primary">+ Add Service</a>
     </div>
 
     <div class="filters-bar">
@@ -68,18 +70,18 @@ import { environment } from '../../../../environments/environment';
               <span *ngIf="!svc.discount_price" class="text-muted">-</span>
             </td>
             <td>
-              <button class="badge badge-clickable" [class.badge-active]="svc.status" [class.badge-inactive]="!svc.status" (click)="toggleStatus(svc)">
+              <button class="badge badge-clickable" [class.badge-active]="svc.status" [class.badge-inactive]="!svc.status" (click)="statusService.set(svc)">
                 {{ svc.status ? 'Active' : 'Inactive' }}
               </button>
             </td>
             <td>
-              <button class="badge badge-clickable" [class.badge-featured]="svc.is_featured" [class.badge-dim]="!svc.is_featured" (click)="toggleFeatured(svc)">
+              <button class="badge badge-clickable" [class.badge-featured]="svc.is_featured" [class.badge-dim]="!svc.is_featured" (click)="featuredService.set(svc)">
                 {{ svc.is_featured ? 'Yes' : 'No' }}
               </button>
             </td>
             <td>
               <div class="action-btns">
-                <a [routerLink]="['/admin/services', svc.id, 'edit']" class="btn-action btn-edit" title="Edit">
+                <a [routerLink]="['/admin/services/edit-service', svc.id]" class="btn-action btn-edit" title="Edit">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </a>
                 <button class="btn-action btn-delete" (click)="deleteService(svc)" title="Delete">
@@ -100,6 +102,36 @@ import { environment } from '../../../../environments/environment';
       <span class="page-info">Page {{ pagination().page }} of {{ pagination().totalPages }}</span>
       <button class="page-btn" [disabled]="!pagination().hasNextPage" (click)="goToPage(pagination().page + 1)">Next &raquo;</button>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingService()"
+      title="Delete Service"
+      [message]="'Delete &quot;' + (deletingService()?.title || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingService.set(null)">
+    </app-confirm-modal>
+
+    <app-confirm-modal
+      [open]="!!statusService()"
+      title="Change Status"
+      [message]="'Change status of &quot;' + (statusService()?.title || '') + '&quot; to ' + (statusService()?.status ? 'Inactive' : 'Active') + '?'"
+      confirmText="Change Status"
+      type="warning"
+      (confirmed)="confirmToggleStatus()"
+      (cancelled)="statusService.set(null)">
+    </app-confirm-modal>
+
+    <app-confirm-modal
+      [open]="!!featuredService()"
+      title="Change Featured Status"
+      [message]="'Mark &quot;' + (featuredService()?.title || '') + '&quot; as ' + (featuredService()?.is_featured ? 'Not Featured' : 'Featured') + '?'"
+      confirmText="Confirm"
+      type="info"
+      (confirmed)="confirmToggleFeatured()"
+      (cancelled)="featuredService.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
@@ -150,9 +182,12 @@ export class ServiceListComponent implements OnInit {
   statusFilter = '';
   featuredFilter = '';
   pagination = signal<any>({ page: 1, limit: 15, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false });
+  deletingService = signal<any>(null);
+  statusService = signal<any>(null);
+  featuredService = signal<any>(null);
   private searchTimeout: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadServices(); }
 
@@ -176,22 +211,34 @@ export class ServiceListComponent implements OnInit {
 
   goToPage(page: number) { this.loadServices(page); }
 
-  toggleStatus(svc: any) {
+  confirmToggleStatus() {
+    const svc = this.statusService();
+    if (!svc) return;
     this.http.put<any>(`${environment.apiUrl}/admin/services/${svc.id}/status`, {}).subscribe({
-      next: (res) => { svc.status = svc.status ? 0 : 1; }
+      next: () => { svc.status = svc.status ? 0 : 1; this.toast.success('Service status updated'); this.statusService.set(null); },
+      error: () => { this.toast.error('Failed to update status'); this.statusService.set(null); }
     });
   }
 
-  toggleFeatured(svc: any) {
+  confirmToggleFeatured() {
+    const svc = this.featuredService();
+    if (!svc) return;
     this.http.put<any>(`${environment.apiUrl}/admin/services/${svc.id}/featured`, {}).subscribe({
-      next: () => { svc.is_featured = svc.is_featured ? 0 : 1; }
+      next: () => { svc.is_featured = svc.is_featured ? 0 : 1; this.toast.success('Featured status updated'); this.featuredService.set(null); },
+      error: () => { this.toast.error('Failed to update featured status'); this.featuredService.set(null); }
     });
   }
 
   deleteService(svc: any) {
-    if (!confirm(`Delete service "${svc.title}"?`)) return;
+    this.deletingService.set(svc);
+  }
+
+  confirmDelete() {
+    const svc = this.deletingService();
+    if (!svc) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/services/${svc.id}`).subscribe({
-      next: () => this.loadServices(this.pagination().page)
+      next: () => { this.toast.success('Service deleted successfully'); this.deletingService.set(null); this.loadServices(this.pagination().page); },
+      error: () => { this.toast.error('Failed to delete service'); this.deletingService.set(null); }
     });
   }
 }

@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-engine-type-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Engine Types</h1>
@@ -58,6 +60,16 @@ import { environment } from '../../../../environments/environment';
         </tbody>
       </table>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingItem()"
+      title="Delete Engine Type"
+      [message]="'Delete &quot;' + (deletingItem()?.name || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingItem.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
@@ -88,11 +100,12 @@ export class EngineTypeListComponent implements OnInit {
   items = signal<any[]>([]);
   loading = signal(false);
   saving = signal(false);
+  deletingItem = signal<any>(null);
   newName = '';
   editId: any = null;
   editName = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadItems(); }
 
@@ -109,8 +122,8 @@ export class EngineTypeListComponent implements OnInit {
     if (!this.newName.trim()) return;
     this.saving.set(true);
     this.http.post<any>(`${environment.apiUrl}/admin/engine-types`, { name: this.newName }).subscribe({
-      next: () => { this.newName = ''; this.loadItems(); },
-      error: () => {},
+      next: () => { this.newName = ''; this.toast.success('Engine type added successfully'); this.loadItems(); },
+      error: () => { this.toast.error('Failed to add engine type'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }
@@ -124,16 +137,22 @@ export class EngineTypeListComponent implements OnInit {
     if (!this.editName.trim()) return;
     this.saving.set(true);
     this.http.put<any>(`${environment.apiUrl}/admin/engine-types/${this.editId}`, { name: this.editName }).subscribe({
-      next: () => { this.editId = null; this.loadItems(); },
-      error: () => {},
+      next: () => { this.editId = null; this.toast.success('Engine type updated successfully'); this.loadItems(); },
+      error: () => { this.toast.error('Failed to update engine type'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }
 
   deleteItem(item: any) {
-    if (!confirm('Are you sure?')) return;
+    this.deletingItem.set(item);
+  }
+
+  confirmDelete() {
+    const item = this.deletingItem();
+    if (!item) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/engine-types/${item.id}`).subscribe({
-      next: () => this.loadItems()
+      next: () => { this.toast.success('Engine type deleted successfully'); this.deletingItem.set(null); this.loadItems(); },
+      error: () => { this.toast.error('Failed to delete engine type'); this.deletingItem.set(null); }
     });
   }
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-refund-list',
@@ -109,7 +110,7 @@ export class RefundListComponent implements OnInit {
   statusFilter = '';
   pagination = signal<any>({ page: 1, limit: 15, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false });
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadRefunds(); }
 
@@ -133,7 +134,8 @@ export class RefundListComponent implements OnInit {
 
   changeStatus(refund: any, newStatus: any) {
     this.http.put<any>(`${environment.apiUrl}/admin/refunded-orders/${refund.id}`, { status: Number(newStatus) }).subscribe({
-      next: () => this.loadRefunds(this.pagination().page)
+      next: () => { this.toast.success('Refund status updated'); this.loadRefunds(this.pagination().page); },
+      error: () => this.toast.error('Failed to update refund status')
     });
   }
 }

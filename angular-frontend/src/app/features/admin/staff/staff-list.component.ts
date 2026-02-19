@@ -4,15 +4,17 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-staff-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Staff Members</h1>
-      <a routerLink="/admin/staff/create" class="btn-primary">+ Add Staff</a>
+      <a routerLink="/admin/staff/add-staff" class="btn-primary">+ Add Staff</a>
     </div>
 
     <div class="filters-bar">
@@ -42,13 +44,13 @@ import { environment } from '../../../../environments/environment';
             <td>{{ s.email }}</td>
             <td><span class="role-badge">{{ s.role?.name || s.role || '-' }}</span></td>
             <td>
-              <span class="badge" [class.badge-green]="s.status" [class.badge-red]="!s.status">
+              <button class="badge badge-clickable" [class.badge-green]="s.status" [class.badge-red]="!s.status" (click)="statusItem.set(s)">
                 {{ s.status ? 'Active' : 'Inactive' }}
-              </span>
+              </button>
             </td>
             <td>
               <div class="action-btns">
-                <a [routerLink]="['/admin/staff', s.id, 'edit']" class="action-btn" title="Edit">
+                <a [routerLink]="['/admin/staff/edit-user-info', s.id]" class="action-btn" title="Edit">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </a>
                 <button class="action-btn" (click)="deleteStaff(s)" title="Delete">
@@ -63,6 +65,26 @@ import { environment } from '../../../../environments/environment';
         </tbody>
       </table>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingItem()"
+      title="Delete Staff Member"
+      [message]="'Delete &quot;' + (deletingItem()?.name || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingItem.set(null)">
+    </app-confirm-modal>
+
+    <app-confirm-modal
+      [open]="!!statusItem()"
+      title="Change Status"
+      [message]="'Change status of &quot;' + (statusItem()?.name || '') + '&quot; to ' + (statusItem()?.status ? 'Inactive' : 'Active') + '?'"
+      confirmText="Change Status"
+      type="warning"
+      (confirmed)="confirmToggleStatus()"
+      (cancelled)="statusItem.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
@@ -83,6 +105,8 @@ import { environment } from '../../../../environments/environment';
     .fw-600 { font-weight:600; }
     .role-badge { background:#ede9fe; color:#7c3aed; padding:3px 10px; border-radius:6px; font-size:12px; font-weight:600; text-transform:capitalize; }
     .badge { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+    .badge-clickable { cursor:pointer; transition:opacity 0.2s; border:none; }
+    .badge-clickable:hover { opacity:0.8; }
     .badge-green { background:#dcfce7; color:#16a34a; }
     .badge-red { background:#fee2e2; color:#dc2626; }
     .action-btns { display:flex; gap:6px; }
@@ -94,10 +118,12 @@ import { environment } from '../../../../environments/environment';
 export class StaffListComponent implements OnInit {
   staff = signal<any[]>([]);
   loading = signal(false);
+  deletingItem = signal<any>(null);
+  statusItem = signal<any>(null);
   search = '';
   private searchTimeout: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadStaff(); }
 
@@ -118,9 +144,25 @@ export class StaffListComponent implements OnInit {
   }
 
   deleteStaff(s: any) {
-    if (!confirm('Are you sure?')) return;
+    this.deletingItem.set(s);
+  }
+
+  confirmDelete() {
+    const s = this.deletingItem();
+    if (!s) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/staff/${s.id}`).subscribe({
-      next: () => this.loadStaff()
+      next: () => { this.toast.success('Staff member deleted successfully'); this.deletingItem.set(null); this.loadStaff(); },
+      error: () => { this.toast.error('Failed to delete staff member'); this.deletingItem.set(null); }
+    });
+  }
+
+  confirmToggleStatus() {
+    const s = this.statusItem();
+    if (!s) return;
+    const newStatus = s.status ? 0 : 1;
+    this.http.put<any>(`${environment.apiUrl}/admin/staff/${s.id}`, { status: newStatus }).subscribe({
+      next: () => { s.status = newStatus; this.toast.success('Staff status updated'); this.statusItem.set(null); },
+      error: () => { this.toast.error('Failed to update status'); this.statusItem.set(null); }
     });
   }
 }

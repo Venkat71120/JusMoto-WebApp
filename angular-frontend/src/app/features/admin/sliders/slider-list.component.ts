@@ -3,15 +3,17 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-slider-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Sliders</h1>
-      <a routerLink="/admin/sliders/create" class="btn-primary">+ Add Slider</a>
+      <a routerLink="/admin/slider/add" class="btn-primary">+ Add Slider</a>
     </div>
 
     <div class="loading-center" *ngIf="loading()"><div class="spinner"></div></div>
@@ -29,7 +31,7 @@ import { environment } from '../../../../environments/environment';
           <div class="card-type">{{ slider.type || 'General' }}</div>
           <div class="card-identity" *ngIf="slider.identity">{{ slider.identity }}</div>
           <div class="card-actions">
-            <a [routerLink]="['/admin/sliders', slider.id, 'edit']" class="action-btn" title="Edit">
+            <a [routerLink]="['/admin/slider/edit', slider.id]" class="action-btn" title="Edit">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </a>
             <button class="action-btn" (click)="deleteSlider(slider)" title="Delete">
@@ -40,6 +42,16 @@ import { environment } from '../../../../environments/environment';
       </div>
       <div *ngIf="sliders().length === 0" class="empty-state">No sliders found</div>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingItem()"
+      title="Delete Slider"
+      [message]="'Delete this slider? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingItem.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
@@ -70,8 +82,9 @@ import { environment } from '../../../../environments/environment';
 export class SliderListComponent implements OnInit {
   sliders = signal<any[]>([]);
   loading = signal(false);
+  deletingItem = signal<any>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadSliders(); }
 
@@ -85,9 +98,15 @@ export class SliderListComponent implements OnInit {
   }
 
   deleteSlider(slider: any) {
-    if (!confirm('Are you sure?')) return;
+    this.deletingItem.set(slider);
+  }
+
+  confirmDelete() {
+    const slider = this.deletingItem();
+    if (!slider) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/sliders/${slider.id}`).subscribe({
-      next: () => this.loadSliders()
+      next: () => { this.toast.success('Slider deleted successfully'); this.deletingItem.set(null); this.loadSliders(); },
+      error: () => { this.toast.error('Failed to delete slider'); this.deletingItem.set(null); }
     });
   }
 }

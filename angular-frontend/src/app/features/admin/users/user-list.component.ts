@@ -4,11 +4,13 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Users Management</h1>
@@ -60,9 +62,9 @@ import { environment } from '../../../../environments/environment';
             <td>{{ user.email }}</td>
             <td>{{ user.phone || '-' }}</td>
             <td>
-              <span class="badge" [class.badge-active]="user.status" [class.badge-inactive]="!user.status">
+              <button class="badge badge-clickable" [class.badge-active]="user.status" [class.badge-inactive]="!user.status" (click)="statusUser.set(user)">
                 {{ user.status ? 'Active' : 'Inactive' }}
-              </span>
+              </button>
             </td>
             <td>
               <span class="badge" [class.badge-active]="user.email_verified" [class.badge-warning]="!user.email_verified">
@@ -72,7 +74,7 @@ import { environment } from '../../../../environments/environment';
             <td>{{ user.created_at | date:'mediumDate' }}</td>
             <td>
               <div class="action-btns">
-                <a [routerLink]="['/admin/users', user.id]" class="btn-action btn-view" title="View">
+                <a [routerLink]="['/admin/user/details', user.id]" class="btn-action btn-view" title="View">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 </a>
                 <button class="btn-action btn-toggle" (click)="toggleStatus(user)" title="Toggle Status">
@@ -96,6 +98,26 @@ import { environment } from '../../../../environments/environment';
       <span class="page-info">Page {{ pagination().page }} of {{ pagination().totalPages }}</span>
       <button class="page-btn" [disabled]="!pagination().hasNextPage" (click)="goToPage(pagination().page + 1)">Next &raquo;</button>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingUser()"
+      title="Delete User"
+      [message]="'Delete user &quot;' + (deletingUser()?.first_name || deletingUser()?.email || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingUser.set(null)">
+    </app-confirm-modal>
+
+    <app-confirm-modal
+      [open]="!!statusUser()"
+      title="Change User Status"
+      [message]="'Change status of &quot;' + (statusUser()?.first_name || statusUser()?.email || '') + '&quot; to ' + (statusUser()?.status ? 'Inactive' : 'Active') + '?'"
+      confirmText="Change Status"
+      type="warning"
+      (confirmed)="confirmToggleStatus()"
+      (cancelled)="statusUser.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
@@ -116,6 +138,8 @@ import { environment } from '../../../../environments/environment';
     .user-cell { display: flex; align-items: center; gap: 10px; }
     .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 600; flex-shrink: 0; }
     .badge { display: inline-flex; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .badge-clickable { cursor: pointer; transition: opacity 0.2s; border: none; }
+    .badge-clickable:hover { opacity: 0.8; }
     .badge-active { background: #dcfce7; color: #16a34a; }
     .badge-inactive { background: #fee2e2; color: #dc2626; }
     .badge-warning { background: #fef3c7; color: #d97706; }
@@ -139,9 +163,11 @@ export class UserListComponent implements OnInit {
   search = '';
   statusFilter = '';
   pagination = signal<any>({ page: 1, limit: 15, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false });
+  deletingUser = signal<any>(null);
+  statusUser = signal<any>(null);
   private searchTimeout: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadUsers(); }
 
@@ -165,16 +191,29 @@ export class UserListComponent implements OnInit {
   goToPage(page: number) { this.loadUsers(page); }
 
   toggleStatus(user: any) {
+    this.statusUser.set(user);
+  }
+
+  confirmToggleStatus() {
+    const user = this.statusUser();
+    if (!user) return;
     const newStatus = user.status ? 0 : 1;
     this.http.put<any>(`${environment.apiUrl}/admin/users/${user.id}/status`, { status: newStatus }).subscribe({
-      next: () => { user.status = newStatus; }
+      next: () => { user.status = newStatus; this.toast.success('User status updated'); this.statusUser.set(null); },
+      error: () => { this.toast.error('Failed to update status'); this.statusUser.set(null); }
     });
   }
 
   deleteUser(user: any) {
-    if (!confirm(`Delete user "${user.first_name || user.email}"? This cannot be undone.`)) return;
+    this.deletingUser.set(user);
+  }
+
+  confirmDelete() {
+    const user = this.deletingUser();
+    if (!user) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/users/${user.id}`).subscribe({
-      next: () => this.loadUsers(this.pagination().page)
+      next: () => { this.toast.success('User deleted successfully'); this.deletingUser.set(null); this.loadUsers(this.pagination().page); },
+      error: () => { this.toast.error('Failed to delete user'); this.deletingUser.set(null); }
     });
   }
 

@@ -4,15 +4,17 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-category-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Categories</h1>
-      <a routerLink="/admin/categories/create" class="btn-primary">+ Add Category</a>
+      <a routerLink="/admin/category/add-new-category" class="btn-primary">+ Add Category</a>
     </div>
 
     <div class="filters-bar">
@@ -40,13 +42,13 @@ import { environment } from '../../../../environments/environment';
             <td><img *ngIf="cat.image" [src]="cat.image" class="thumb" alt=""><span *ngIf="!cat.image" class="no-img">-</span></td>
             <td class="fw-600">{{ cat.name }}</td>
             <td>
-              <span class="badge" [class.badge-active]="cat.status" [class.badge-inactive]="!cat.status">
+              <button class="badge badge-clickable" [class.badge-active]="cat.status" [class.badge-inactive]="!cat.status" (click)="statusCategory.set(cat)">
                 {{ cat.status ? 'Active' : 'Inactive' }}
-              </span>
+              </button>
             </td>
             <td>
               <div class="action-btns">
-                <a [routerLink]="['/admin/categories', cat.id, 'edit']" class="btn-action btn-edit" title="Edit">
+                <a [routerLink]="['/admin/category/edit-category', cat.id]" class="btn-action btn-edit" title="Edit">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </a>
                 <button class="btn-action btn-delete" (click)="deleteCategory(cat)" title="Delete">
@@ -67,6 +69,26 @@ import { environment } from '../../../../environments/environment';
       <span class="page-info">Page {{ pagination().page }} of {{ pagination().totalPages }}</span>
       <button class="page-btn" [disabled]="!pagination().hasNextPage" (click)="goToPage(pagination().page + 1)">Next &raquo;</button>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingCategory()"
+      title="Delete Category"
+      [message]="'Delete &quot;' + (deletingCategory()?.name || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingCategory.set(null)">
+    </app-confirm-modal>
+
+    <app-confirm-modal
+      [open]="!!statusCategory()"
+      title="Change Status"
+      [message]="'Change status of &quot;' + (statusCategory()?.name || '') + '&quot; to ' + (statusCategory()?.status ? 'Inactive' : 'Active') + '?'"
+      confirmText="Change Status"
+      type="warning"
+      (confirmed)="confirmToggleStatus()"
+      (cancelled)="statusCategory.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
@@ -89,7 +111,8 @@ import { environment } from '../../../../environments/environment';
     .fw-600 { font-weight: 600; }
     .text-muted { color: #94a3b8; }
     .badge { display: inline-flex; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; border: none; }
-    .badge-clickable { cursor: pointer; }
+    .badge-clickable { cursor: pointer; transition: opacity 0.2s; border: none; }
+    .badge-clickable:hover { opacity: 0.8; }
     .badge-active { background: #dcfce7; color: #16a34a; }
     .badge-inactive { background: #fee2e2; color: #dc2626; }
     .action-btns { display: flex; gap: 6px; }
@@ -109,9 +132,11 @@ export class CategoryListComponent implements OnInit {
   loading = signal(false);
   search = '';
   pagination = signal<any>({ page: 1, limit: 15, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false });
+  deletingCategory = signal<any>(null);
+  statusCategory = signal<any>(null);
   private searchTimeout: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadCategories(); }
 
@@ -134,9 +159,25 @@ export class CategoryListComponent implements OnInit {
   goToPage(page: number) { this.loadCategories(page); }
 
   deleteCategory(cat: any) {
-    if (!confirm(`Delete category "${cat.name}"?`)) return;
+    this.deletingCategory.set(cat);
+  }
+
+  confirmDelete() {
+    const cat = this.deletingCategory();
+    if (!cat) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/categories/${cat.id}`).subscribe({
-      next: () => this.loadCategories(this.pagination().page)
+      next: () => { this.toast.success('Category deleted successfully'); this.deletingCategory.set(null); this.loadCategories(this.pagination().page); },
+      error: () => { this.toast.error('Failed to delete category'); this.deletingCategory.set(null); }
+    });
+  }
+
+  confirmToggleStatus() {
+    const cat = this.statusCategory();
+    if (!cat) return;
+    const newStatus = cat.status ? 0 : 1;
+    this.http.put<any>(`${environment.apiUrl}/admin/categories/${cat.id}`, { status: newStatus }).subscribe({
+      next: () => { cat.status = newStatus; this.toast.success('Category status updated'); this.statusCategory.set(null); },
+      error: () => { this.toast.error('Failed to update status'); this.statusCategory.set(null); }
     });
   }
 }

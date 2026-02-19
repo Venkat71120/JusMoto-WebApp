@@ -250,6 +250,20 @@ router.put('/orders/:id/payment-status', authenticate, isAdmin, async (req, res)
   }
 });
 
+router.put('/orders/:id', authenticate, isAdmin, async (req, res) => {
+  try {
+    const allowedFields = ['franchise_admin_id', 'order_note'];
+    const updateData = {};
+    for (const field of allowedFields) {
+      if (req.body[field] !== undefined) updateData[field] = req.body[field];
+    }
+    await Order.update(updateData, { where: { id: req.params.id } });
+    res.json({ success: true, message: 'Order updated successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // ==================== Services Management ====================
 router.get('/services', authenticate, isAdmin, async (req, res) => {
   try {
@@ -1334,6 +1348,104 @@ router.get('/reports/orders', authenticate, isAdmin, async (req, res) => {
       SELECT status, COUNT(*) as count, SUM(total) as total_amount FROM orders GROUP BY status
     `);
     res.json({ success: true, data: report });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ==================== Seed Data ====================
+router.post('/seed-data', authenticate, isAdmin, async (req, res) => {
+  try {
+    const results = { brands: 0, cars: 0, states: 0, cities: 0 };
+    const https = require('https');
+
+    function fetchJsonApi(url, body = null) {
+      return new Promise((resolve, reject) => {
+        const parsedUrl = new URL(url);
+        const options = { hostname: parsedUrl.hostname, port: 443, path: parsedUrl.pathname + parsedUrl.search, method: body ? 'POST' : 'GET', headers: { 'Content-Type': 'application/json', Accept: 'application/json' } };
+        if (body) options.headers['Content-Length'] = Buffer.byteLength(JSON.stringify(body));
+        const r = https.request(options, (response) => {
+          let data = '';
+          response.on('data', c => data += c);
+          response.on('end', () => { try { resolve(JSON.parse(data)); } catch(e) { reject(e); } });
+        });
+        r.on('error', reject);
+        r.setTimeout(30000, () => { r.destroy(); reject(new Error('Timeout')); });
+        if (body) r.write(JSON.stringify(body));
+        r.end();
+      });
+    }
+
+    const brandNames = ['Maruti Suzuki','Hyundai','Tata','Mahindra','Kia','Toyota','Honda','MG','Skoda','Volkswagen','Renault','Nissan','Jeep','Citroen','BMW','Mercedes-Benz','Audi','Ford','Chevrolet','Fiat'];
+    const carModels = {
+      'Maruti Suzuki':['Swift','Baleno','Dzire','Alto','WagonR','Brezza','Ertiga','Celerio','S-Presso','XL6','Ignis','Ciaz','Grand Vitara','Jimny','Fronx','Invicto'],
+      'Hyundai':['Creta','Venue','i20','i10 Nios','Verna','Tucson','Alcazar','Aura','Exter','Ioniq 5'],
+      'Tata':['Nexon','Punch','Harrier','Safari','Altroz','Tiago','Tigor','Curvv'],
+      'Mahindra':['Thar','XUV700','Scorpio N','XUV400','XUV300','Bolero','Bolero Neo','Marazzo','XUV 3XO'],
+      'Kia':['Seltos','Sonet','Carens','EV6','Carnival'],
+      'Toyota':['Fortuner','Innova Crysta','Innova Hycross','Glanza','Urban Cruiser Hyryder','Camry','Vellfire','Hilux'],
+      'Honda':['City','Amaze','Elevate','WR-V'],
+      'MG':['Hector','Astor','ZS EV','Gloster','Comet EV'],
+      'Skoda':['Kushaq','Slavia','Superb','Kodiaq','Octavia'],
+      'Volkswagen':['Taigun','Virtus','Tiguan'],
+      'Renault':['Kwid','Kiger','Triber'],
+      'Nissan':['Magnite','Kicks','X-Trail'],
+      'Jeep':['Compass','Meridian','Wrangler','Grand Cherokee'],
+      'BMW':['3 Series','5 Series','X1','X3','X5','X7','iX','2 Series Gran Coupe'],
+      'Mercedes-Benz':['C-Class','E-Class','S-Class','GLA','GLC','GLE','A-Class Limousine','EQS'],
+      'Audi':['A4','A6','Q3','Q5','Q7','Q8','e-tron']
+    };
+
+    // Seed brands
+    for (const name of brandNames) {
+      const [, created] = await Brand.findOrCreate({ where: { name }, defaults: { name, image: null } });
+      if (created) results.brands++;
+    }
+
+    // Seed cars
+    const allBrands = await Brand.findAll();
+    const brandMap = {};
+    for (const b of allBrands) brandMap[b.name] = b.id;
+    for (const [brandName, models] of Object.entries(carModels)) {
+      const brandId = brandMap[brandName];
+      if (!brandId) continue;
+      for (const modelName of models) {
+        const year = String(Math.floor(Math.random() * 6) + 2020);
+        const [, created] = await Car.findOrCreate({ where: { name: modelName, brand_id: brandId }, defaults: { brand_id: brandId, name: modelName, image: null, Year: year } });
+        if (created) results.cars++;
+      }
+    }
+
+    // Seed states from API
+    try {
+      const stateRes = await fetchJsonApi('https://countriesnow.space/api/v0.1/countries/states', { country: 'India' });
+      if (stateRes && stateRes.data && stateRes.data.states) {
+        for (const s of stateRes.data.states) {
+          const [, created] = await State.findOrCreate({ where: { state: s.name }, defaults: { state: s.name, state_code: s.state_code || null, status: 1 } });
+          if (created) results.states++;
+        }
+      }
+    } catch (e) { console.log('State API error:', e.message); }
+
+    // Seed cities from API
+    try {
+      const allStates = await State.findAll();
+      for (const stateRecord of allStates) {
+        try {
+          const cityRes = await fetchJsonApi('https://countriesnow.space/api/v0.1/countries/state/cities', { country: 'India', state: stateRecord.state });
+          if (cityRes && cityRes.data && Array.isArray(cityRes.data)) {
+            for (const cityName of cityRes.data) {
+              if (!cityName || typeof cityName !== 'string') continue;
+              const [, created] = await City.findOrCreate({ where: { city: cityName.trim(), state_id: stateRecord.id }, defaults: { state_id: stateRecord.id, city: cityName.trim(), status: 1 } });
+              if (created) results.cities++;
+            }
+          }
+          await new Promise(r => setTimeout(r, 150));
+        } catch (e) { continue; }
+      }
+    } catch (e) { console.log('City API error:', e.message); }
+
+    res.json({ success: true, message: 'Data seeded successfully', data: results });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

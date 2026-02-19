@@ -68,7 +68,7 @@ import { environment } from '../../../../environments/environment';
             </td>
             <td>{{ ticket.created_at | date:'mediumDate' }}</td>
             <td>
-              <a [routerLink]="['/admin/tickets', ticket.id]" class="action-btn" title="View">
+              <a [routerLink]="['/admin/support-ticket/details', ticket.id]" class="action-btn" title="View">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
               </a>
             </td>

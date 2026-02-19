@@ -4,13 +4,15 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { MediaPickerComponent } from '../../../shared/components/media-picker/media-picker.component';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-sub-category-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, MediaPickerComponent],
   template: `
-    <a routerLink="/admin/sub-categories" class="back-link">
+    <a routerLink="/admin/subcategory/index" class="back-link">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
       Back to Sub Categories
     </a>
@@ -39,8 +41,7 @@ import { environment } from '../../../../environments/environment';
         <textarea class="form-control" [(ngModel)]="form.description" rows="3" placeholder="Description"></textarea>
       </div>
       <div class="form-group">
-        <label>Image URL</label>
-        <input type="text" class="form-control" [(ngModel)]="form.image" placeholder="https://...">
+        <app-media-picker [value]="form.image" [label]="'Sub Category Image'" (valueChange)="form.image = $event"></app-media-picker>
       </div>
       <div class="form-group">
         <label class="toggle-label">
@@ -51,7 +52,7 @@ import { environment } from '../../../../environments/environment';
       <div *ngIf="error()" class="error-msg">{{ error() }}</div>
 
       <div class="form-actions">
-        <a routerLink="/admin/sub-categories" class="btn-cancel">Cancel</a>
+        <a routerLink="/admin/subcategory/index" class="btn-cancel">Cancel</a>
         <button class="btn-save" (click)="onSubmit()" [disabled]="saving()">
           {{ saving() ? 'Saving...' : (isEdit ? 'Update' : 'Create') }}
         </button>
@@ -89,7 +90,7 @@ export class SubCategoryFormComponent implements OnInit {
   error = signal('');
   form: any = { name: '', slug: '', category_id: '', description: '', image: '', status: true };
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
 
   ngOnInit() {
     this.subCategoryId = this.route.snapshot.paramMap.get('id');
@@ -111,7 +112,7 @@ export class SubCategoryFormComponent implements OnInit {
         const s = res.data;
         this.form = { name: s.name, slug: s.slug, category_id: s.category_id || '', description: s.description || '', image: s.image || '', status: !!s.status };
       },
-      error: () => this.router.navigate(['/admin/sub-categories']),
+      error: () => this.router.navigate(['/admin/subcategory/index']),
       complete: () => this.loadingData.set(false)
     });
   }
@@ -129,8 +130,8 @@ export class SubCategoryFormComponent implements OnInit {
       ? this.http.put<any>(`${environment.apiUrl}/admin/sub-categories/${this.subCategoryId}`, data)
       : this.http.post<any>(`${environment.apiUrl}/admin/sub-categories`, data);
     req.subscribe({
-      next: () => this.router.navigate(['/admin/sub-categories']),
-      error: (err) => { this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
+      next: () => { this.toast.success(this.isEdit ? 'Sub category updated successfully' : 'Sub category created successfully'); this.router.navigate(['/admin/subcategory/index']); },
+      error: (err) => { this.toast.error(err.error?.error || 'Something went wrong'); this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }

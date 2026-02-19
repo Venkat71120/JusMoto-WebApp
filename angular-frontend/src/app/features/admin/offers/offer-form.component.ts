@@ -4,13 +4,15 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { MediaPickerComponent } from '../../../shared/components/media-picker/media-picker.component';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-offer-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, MediaPickerComponent],
   template: `
-    <a routerLink="/admin/offers" class="back-link">
+    <a routerLink="/admin/offer/list" class="back-link">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
       Back to Offers
     </a>
@@ -28,11 +30,7 @@ import { environment } from '../../../../environments/environment';
         <textarea class="form-control" [(ngModel)]="form.subTitle" rows="2" placeholder="Short description"></textarea>
       </div>
       <div class="form-group">
-        <label>Image URL</label>
-        <input type="text" class="form-control" [(ngModel)]="form.image" placeholder="https://...">
-        <div class="image-preview" *ngIf="form.image">
-          <img [src]="form.image" alt="Preview">
-        </div>
+        <app-media-picker [value]="form.image" [label]="'Offer Image'" (valueChange)="form.image = $event"></app-media-picker>
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -70,7 +68,7 @@ import { environment } from '../../../../environments/environment';
       <div *ngIf="error()" class="error-msg">{{ error() }}</div>
 
       <div class="form-actions">
-        <a routerLink="/admin/offers" class="btn-cancel">Cancel</a>
+        <a routerLink="/admin/offer/list" class="btn-cancel">Cancel</a>
         <button class="btn-save" (click)="onSubmit()" [disabled]="saving()">
           {{ saving() ? 'Saving...' : (isEdit ? 'Update' : 'Create') }}
         </button>
@@ -117,7 +115,7 @@ export class OfferFormComponent implements OnInit {
   form: any = { title: '', subTitle: '', image: '', offerPercentage: '', expires_at: '', is_primary: false, status: true };
   selectedServiceIds: Set<any> = new Set();
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
 
   ngOnInit() {
     this.offerId = this.route.snapshot.paramMap.get('id');
@@ -146,7 +144,7 @@ export class OfferFormComponent implements OnInit {
         const sIds = o.service_ids || (o.services || []).map((s: any) => s.id);
         this.selectedServiceIds = new Set(sIds);
       },
-      error: () => this.router.navigate(['/admin/offers']),
+      error: () => this.router.navigate(['/admin/offer/list']),
       complete: () => this.loadingData.set(false)
     });
   }
@@ -179,8 +177,8 @@ export class OfferFormComponent implements OnInit {
       ? this.http.put<any>(`${environment.apiUrl}/admin/offers/${this.offerId}`, data)
       : this.http.post<any>(`${environment.apiUrl}/admin/offers`, data);
     req.subscribe({
-      next: () => this.router.navigate(['/admin/offers']),
-      error: (err) => { this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
+      next: () => { this.toast.success(this.isEdit ? 'Offer updated successfully' : 'Offer created successfully'); this.router.navigate(['/admin/offer/list']); },
+      error: (err) => { this.toast.error(err.error?.error || 'Something went wrong'); this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }

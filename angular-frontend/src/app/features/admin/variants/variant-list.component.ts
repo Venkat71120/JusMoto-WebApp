@@ -4,15 +4,17 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-variant-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Variants</h1>
-      <a routerLink="/admin/variants/create" class="btn-primary">+ Add Variant</a>
+      <a routerLink="/admin/variant/add" class="btn-primary">+ Add Variant</a>
     </div>
 
     <div class="filters-bar">
@@ -42,7 +44,7 @@ import { environment } from '../../../../environments/environment';
             <td>{{ v.fuel_type?.name || '-' }}</td>
             <td>
               <div class="action-btns">
-                <a [routerLink]="['/admin/variants', v.id, 'edit']" class="action-btn" title="Edit">
+                <a [routerLink]="['/admin/variant/edit', v.id]" class="action-btn" title="Edit">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </a>
                 <button class="action-btn" (click)="deleteVariant(v)" title="Delete">
@@ -57,6 +59,16 @@ import { environment } from '../../../../environments/environment';
         </tbody>
       </table>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingItem()"
+      title="Delete Variant"
+      [message]="'Delete this variant? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingItem.set(null)">
+    </app-confirm-modal>
 
     <div class="pagination" *ngIf="pagination().totalPages > 1">
       <button class="page-btn" [disabled]="!pagination().hasPrevPage" (click)="goToPage(pagination().page - 1)">&laquo; Prev</button>
@@ -95,10 +107,11 @@ export class VariantListComponent implements OnInit {
   variants = signal<any[]>([]);
   cars = signal<any[]>([]);
   loading = signal(false);
+  deletingItem = signal<any>(null);
   carFilter = '';
   pagination = signal<any>({ page: 1, limit: 15, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false });
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() {
     this.loadCars();
@@ -125,9 +138,15 @@ export class VariantListComponent implements OnInit {
   goToPage(page: number) { this.loadVariants(page); }
 
   deleteVariant(v: any) {
-    if (!confirm('Are you sure?')) return;
+    this.deletingItem.set(v);
+  }
+
+  confirmDelete() {
+    const v = this.deletingItem();
+    if (!v) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/variants/${v.id}`).subscribe({
-      next: () => this.loadVariants(this.pagination().page)
+      next: () => { this.toast.success('Variant deleted successfully'); this.deletingItem.set(null); this.loadVariants(this.pagination().page); },
+      error: () => { this.toast.error('Failed to delete variant'); this.deletingItem.set(null); }
     });
   }
 }

@@ -3,15 +3,17 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-coupon-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Coupons</h1>
-      <a routerLink="/admin/coupons/create" class="btn-primary">+ Add Coupon</a>
+      <a routerLink="/admin/coupons/new" class="btn-primary">+ Add Coupon</a>
     </div>
 
     <div class="table-container">
@@ -41,13 +43,13 @@ import { environment } from '../../../../environments/environment';
               <span *ngIf="!c.expire_date" class="text-muted">No expiry</span>
             </td>
             <td>
-              <span class="badge" [class.badge-active]="c.status" [class.badge-inactive]="!c.status">
+              <button class="badge badge-clickable" [class.badge-active]="c.status" [class.badge-inactive]="!c.status" (click)="statusCoupon.set(c)">
                 {{ c.status ? 'Active' : 'Inactive' }}
-              </span>
+              </button>
             </td>
             <td>
               <div class="action-btns">
-                <a [routerLink]="['/admin/coupons', c.id, 'edit']" class="btn-action btn-edit" title="Edit">
+                <a [routerLink]="['/admin/coupons/edit', c.id]" class="btn-action btn-edit" title="Edit">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </a>
                 <button class="btn-action btn-delete" (click)="deleteCoupon(c)" title="Delete">
@@ -62,6 +64,26 @@ import { environment } from '../../../../environments/environment';
         </tbody>
       </table>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingCoupon()"
+      title="Delete Coupon"
+      [message]="'Delete coupon &quot;' + (deletingCoupon()?.code || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingCoupon.set(null)">
+    </app-confirm-modal>
+
+    <app-confirm-modal
+      [open]="!!statusCoupon()"
+      title="Change Status"
+      [message]="'Change status of coupon &quot;' + (statusCoupon()?.code || '') + '&quot; to ' + (statusCoupon()?.status ? 'Inactive' : 'Active') + '?'"
+      confirmText="Change Status"
+      type="warning"
+      (confirmed)="confirmToggleStatus()"
+      (cancelled)="statusCoupon.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
@@ -81,6 +103,8 @@ import { environment } from '../../../../environments/environment';
     .text-muted { color: #94a3b8; }
     .text-red { color: #dc2626; }
     .badge { display: inline-flex; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .badge-clickable { cursor: pointer; transition: opacity 0.2s; border: none; }
+    .badge-clickable:hover { opacity: 0.8; }
     .badge-active { background: #dcfce7; color: #16a34a; }
     .badge-inactive { background: #fee2e2; color: #dc2626; }
     .badge-info { background: #dbeafe; color: #2563eb; }
@@ -96,8 +120,10 @@ import { environment } from '../../../../environments/environment';
 export class CouponListComponent implements OnInit {
   coupons = signal<any[]>([]);
   loading = signal(false);
+  deletingCoupon = signal<any>(null);
+  statusCoupon = signal<any>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadCoupons(); }
 
@@ -115,9 +141,25 @@ export class CouponListComponent implements OnInit {
   }
 
   deleteCoupon(c: any) {
-    if (!confirm(`Delete coupon "${c.code}"?`)) return;
+    this.deletingCoupon.set(c);
+  }
+
+  confirmDelete() {
+    const c = this.deletingCoupon();
+    if (!c) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/coupons/${c.id}`).subscribe({
-      next: () => this.loadCoupons()
+      next: () => { this.toast.success('Coupon deleted successfully'); this.deletingCoupon.set(null); this.loadCoupons(); },
+      error: () => { this.toast.error('Failed to delete coupon'); this.deletingCoupon.set(null); }
+    });
+  }
+
+  confirmToggleStatus() {
+    const c = this.statusCoupon();
+    if (!c) return;
+    const newStatus = c.status ? 0 : 1;
+    this.http.put<any>(`${environment.apiUrl}/admin/coupons/${c.id}`, { status: newStatus }).subscribe({
+      next: () => { c.status = newStatus; this.toast.success('Coupon status updated'); this.statusCoupon.set(null); },
+      error: () => { this.toast.error('Failed to update status'); this.statusCoupon.set(null); }
     });
   }
 }

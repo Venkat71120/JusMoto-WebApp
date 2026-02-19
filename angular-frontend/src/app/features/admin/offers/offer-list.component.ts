@@ -3,15 +3,17 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-offer-list',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Offers</h1>
-      <a routerLink="/admin/offers/create" class="btn-primary">+ Add Offer</a>
+      <a routerLink="/admin/offer/add" class="btn-primary">+ Add Offer</a>
     </div>
 
     <div class="table-container">
@@ -34,13 +36,13 @@ import { environment } from '../../../../environments/environment';
             <td><span class="pct-badge">{{ offer.offerPercentage || offer.offer_percentage }}%</span></td>
             <td>{{ offer.expires_at | date:'mediumDate' }}</td>
             <td>
-              <span class="badge" [class.badge-green]="offer.status" [class.badge-red]="!offer.status">
+              <button class="badge badge-clickable" [class.badge-green]="offer.status" [class.badge-red]="!offer.status" (click)="statusItem.set(offer)">
                 {{ offer.status ? 'Active' : 'Inactive' }}
-              </span>
+              </button>
             </td>
             <td>
               <div class="action-btns">
-                <a [routerLink]="['/admin/offers', offer.id, 'edit']" class="action-btn" title="Edit">
+                <a [routerLink]="['/admin/offer/edit-offer', offer.id]" class="action-btn" title="Edit">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </a>
                 <button class="action-btn" (click)="deleteOffer(offer)" title="Delete">
@@ -55,6 +57,26 @@ import { environment } from '../../../../environments/environment';
         </tbody>
       </table>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingItem()"
+      title="Delete Offer"
+      [message]="'Delete &quot;' + (deletingItem()?.title || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingItem.set(null)">
+    </app-confirm-modal>
+
+    <app-confirm-modal
+      [open]="!!statusItem()"
+      title="Change Status"
+      [message]="'Change status of &quot;' + (statusItem()?.title || '') + '&quot; to ' + (statusItem()?.status ? 'Inactive' : 'Active') + '?'"
+      confirmText="Change Status"
+      type="warning"
+      (confirmed)="confirmToggleStatus()"
+      (cancelled)="statusItem.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
@@ -72,6 +94,8 @@ import { environment } from '../../../../environments/environment';
     .fw-600 { font-weight:600; }
     .pct-badge { background:#fef3c7; color:#92400e; padding:3px 10px; border-radius:6px; font-size:13px; font-weight:700; }
     .badge { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+    .badge-clickable { cursor:pointer; transition:opacity 0.2s; border:none; }
+    .badge-clickable:hover { opacity:0.8; }
     .badge-green { background:#dcfce7; color:#16a34a; }
     .badge-red { background:#fee2e2; color:#dc2626; }
     .action-btns { display:flex; gap:6px; }
@@ -83,8 +107,10 @@ import { environment } from '../../../../environments/environment';
 export class OfferListComponent implements OnInit {
   offers = signal<any[]>([]);
   loading = signal(false);
+  deletingItem = signal<any>(null);
+  statusItem = signal<any>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadOffers(); }
 
@@ -98,9 +124,25 @@ export class OfferListComponent implements OnInit {
   }
 
   deleteOffer(offer: any) {
-    if (!confirm('Are you sure?')) return;
+    this.deletingItem.set(offer);
+  }
+
+  confirmDelete() {
+    const offer = this.deletingItem();
+    if (!offer) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/offers/${offer.id}`).subscribe({
-      next: () => this.loadOffers()
+      next: () => { this.toast.success('Offer deleted successfully'); this.deletingItem.set(null); this.loadOffers(); },
+      error: () => { this.toast.error('Failed to delete offer'); this.deletingItem.set(null); }
+    });
+  }
+
+  confirmToggleStatus() {
+    const offer = this.statusItem();
+    if (!offer) return;
+    const newStatus = offer.status ? 0 : 1;
+    this.http.put<any>(`${environment.apiUrl}/admin/offers/${offer.id}`, { status: newStatus }).subscribe({
+      next: () => { offer.status = newStatus; this.toast.success('Offer status updated'); this.statusItem.set(null); },
+      error: () => { this.toast.error('Failed to update status'); this.statusItem.set(null); }
     });
   }
 }

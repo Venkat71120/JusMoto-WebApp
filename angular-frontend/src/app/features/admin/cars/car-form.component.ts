@@ -4,14 +4,16 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { MediaPickerComponent } from '../../../shared/components/media-picker/media-picker.component';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-car-form',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, MediaPickerComponent],
   template: `
     <div class="page-header">
-      <a routerLink="/admin/cars" class="back-btn">
+      <a routerLink="/admin/car/list" class="back-btn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
         Back to Cars
       </a>
@@ -38,13 +40,12 @@ import { environment } from '../../../../environments/environment';
           <input type="text" formControlName="year" placeholder="e.g. 2024">
         </div>
         <div class="form-group">
-          <label>Image URL</label>
-          <input type="text" formControlName="image" placeholder="https://...">
+          <app-media-picker [value]="imageValue" [label]="'Car Image'" (valueChange)="imageValue = $event; form.get('image')?.setValue($event)"></app-media-picker>
         </div>
       </div>
       <div *ngIf="error()" class="error-msg">{{ error() }}</div>
       <div class="form-actions">
-        <a routerLink="/admin/cars" class="btn-cancel">Cancel</a>
+        <a routerLink="/admin/car/list" class="btn-cancel">Cancel</a>
         <button type="submit" class="btn-primary" [disabled]="saving()">
           {{ saving() ? 'Saving...' : (isEdit ? 'Update' : 'Create') }}
         </button>
@@ -82,8 +83,9 @@ export class CarFormComponent implements OnInit {
   loadingData = signal(false);
   saving = signal(false);
   error = signal('');
+  imageValue: any = '';
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
 
   ngOnInit() {
     this.carId = this.route.snapshot.paramMap.get('id');
@@ -112,8 +114,9 @@ export class CarFormComponent implements OnInit {
       next: (res) => {
         const c = res.data;
         this.form.patchValue({ brand_id: c.brand_id, name: c.name, year: c.Year, image: c.image });
+        this.imageValue = c.image || '';
       },
-      error: () => this.router.navigate(['/admin/cars']),
+      error: () => this.router.navigate(['/admin/car/list']),
       complete: () => this.loadingData.set(false)
     });
   }
@@ -127,8 +130,8 @@ export class CarFormComponent implements OnInit {
       ? this.http.put<any>(`${environment.apiUrl}/admin/cars/${this.carId}`, data)
       : this.http.post<any>(`${environment.apiUrl}/admin/cars`, data);
     req.subscribe({
-      next: () => this.router.navigate(['/admin/cars']),
-      error: (err) => { this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
+      next: () => { this.toast.success(this.isEdit ? 'Car updated successfully' : 'Car created successfully'); this.router.navigate(['/admin/car/list']); },
+      error: (err) => { this.toast.error(err.error?.error || 'Something went wrong'); this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }

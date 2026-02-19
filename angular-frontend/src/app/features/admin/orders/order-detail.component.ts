@@ -4,14 +4,16 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-order-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
-      <a routerLink="/admin/orders" class="back-btn">
+      <a routerLink="/admin/orders/all-orders" class="back-btn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
         Back to Orders
       </a>
@@ -26,17 +28,24 @@ import { environment } from '../../../../environments/environment';
           <p class="order-date">{{ order().created_at | date:'medium' }}</p>
         </div>
         <div class="order-controls">
-          <select class="status-select" [ngModel]="order().status" (ngModelChange)="changeStatus($event)">
-            <option [value]="0">Pending</option>
-            <option [value]="1">Accepted</option>
-            <option [value]="2">In Progress</option>
-            <option [value]="3">Completed</option>
-            <option [value]="4">Cancelled</option>
-          </select>
-          <button class="btn-payment" [class.paid]="order().payment_status" (click)="togglePayment()">
+          <button class="btn-status" (click)="openStatusModal()">
+            <span class="status-badge" [ngClass]="'status-' + order().status">{{ statusLabel(order().status) }}</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <button class="btn-payment" [class.paid]="order().payment_status" (click)="openPaymentModal()">
             {{ order().payment_status ? 'Paid' : 'Mark as Paid' }}
           </button>
+          <button class="btn-franchise" (click)="openFranchiseModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            {{ order().franchise_admin_id ? 'Reassign Franchise' : 'Assign Franchise' }}
+          </button>
         </div>
+      </div>
+
+      <!-- Franchise Info -->
+      <div class="franchise-info" *ngIf="order().franchise_admin_id">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        <span>Assigned to: <strong>{{ order().franchiseAdmin?.name || 'Franchise #' + order().franchise_admin_id }}</strong></span>
       </div>
 
       <div class="detail-grid">
@@ -93,6 +102,68 @@ import { environment } from '../../../../environments/environment';
         <p class="note-text">{{ order().order_note }}</p>
       </div>
     </div>
+
+    <!-- Status Change Modal -->
+    <div class="modal-overlay" *ngIf="statusModalOpen()" (click)="statusModalOpen.set(false)">
+      <div class="status-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Change Order Status</h3>
+          <button class="modal-close" (click)="statusModalOpen.set(false)">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Select new status for this order:</p>
+          <div class="status-options">
+            <button *ngFor="let s of statuses" class="status-option" [class.active]="pendingStatus() === s.value" [class.current]="order()?.status === s.value" (click)="pendingStatus.set(s.value)">
+              <span class="status-dot" [ngClass]="'dot-' + s.value"></span>
+              {{ s.label }}
+              <span class="current-label" *ngIf="order()?.status === s.value">(Current)</span>
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" (click)="statusModalOpen.set(false)">Cancel</button>
+          <button class="btn-save" [disabled]="pendingStatus() === order()?.status" (click)="confirmStatusChange()">Update Status</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Confirmation Modal -->
+    <app-confirm-modal
+      [open]="paymentModalOpen()"
+      [title]="order()?.payment_status ? 'Mark as Unpaid' : 'Mark as Paid'"
+      [message]="order()?.payment_status ? 'Mark this order as unpaid?' : 'Confirm payment received for this order?'"
+      [confirmText]="order()?.payment_status ? 'Mark Unpaid' : 'Confirm Payment'"
+      [type]="order()?.payment_status ? 'warning' : 'info'"
+      (confirmed)="confirmPaymentChange()"
+      (cancelled)="paymentModalOpen.set(false)">
+    </app-confirm-modal>
+
+    <!-- Franchise Assignment Modal -->
+    <div class="modal-overlay" *ngIf="franchiseModalOpen()" (click)="franchiseModalOpen.set(false)">
+      <div class="franchise-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Assign to Franchise Admin</h3>
+          <button class="modal-close" (click)="franchiseModalOpen.set(false)">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Select Franchise Admin</label>
+            <select class="form-control" [(ngModel)]="selectedFranchiseId">
+              <option value="">-- Select Franchise --</option>
+              <option *ngFor="let f of franchiseAdmins()" [value]="f.id">{{ f.name }} ({{ f.email }})</option>
+            </select>
+          </div>
+          <div class="franchise-empty" *ngIf="franchiseAdmins().length === 0 && !franchiseLoading()">
+            <p>No franchise admins found.</p>
+          </div>
+          <div class="loading-small" *ngIf="franchiseLoading()"><div class="spinner-sm"></div> Loading...</div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" (click)="franchiseModalOpen.set(false)">Cancel</button>
+          <button class="btn-save" [disabled]="!selectedFranchiseId" (click)="assignFranchise()">Assign</button>
+        </div>
+      </div>
+    </div>
   `,
   styles: [`
     .page-header { margin-bottom: 24px; }
@@ -104,11 +175,21 @@ import { environment } from '../../../../environments/environment';
     .order-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
     .order-title { font-size: 24px; font-weight: 700; color: #1a1a2e; margin: 0; }
     .order-date { color: #64748b; margin: 4px 0 0; }
-    .order-controls { display: flex; gap: 12px; align-items: center; }
-    .status-select { padding: 8px 14px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; background: #fff; }
-    .btn-payment { padding: 8px 20px; border: 2px solid #e31b23; border-radius: 8px; background: transparent; color: #e31b23; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .order-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .btn-status { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; cursor: pointer; font-weight: 600; font-size: 14px; }
+    .btn-status:hover { border-color: #e31b23; }
+    .status-badge { display: inline-flex; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .status-0 { background: #fef3c7; color: #d97706; }
+    .status-1 { background: #dbeafe; color: #2563eb; }
+    .status-2 { background: #e0e7ff; color: #4f46e5; }
+    .status-3 { background: #dcfce7; color: #16a34a; }
+    .status-4 { background: #fee2e2; color: #dc2626; }
+    .btn-payment { padding: 8px 20px; border: 2px solid #e31b23; border-radius: 8px; background: transparent; color: #e31b23; font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 13px; }
     .btn-payment.paid { background: #dcfce7; border-color: #16a34a; color: #16a34a; }
     .btn-payment:hover { opacity: 0.8; }
+    .btn-franchise { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid #8b5cf6; border-radius: 8px; background: #f5f3ff; color: #7c3aed; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+    .btn-franchise:hover { background: #ede9fe; }
+    .franchise-info { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 10px; margin-bottom: 20px; color: #7c3aed; font-size: 14px; }
     .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
     .detail-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; }
     .detail-card h3 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; }
@@ -123,36 +204,139 @@ import { environment } from '../../../../environments/environment';
     .item-cell { display: flex; align-items: center; gap: 10px; }
     .fw-600 { font-weight: 600; }
     .note-text { color: #334155; line-height: 1.6; margin: 0; }
-    @media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998; display: flex; align-items: center; justify-content: center; }
+    .status-modal, .franchise-modal { background: #fff; border-radius: 16px; width: 90vw; max-width: 480px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #e5e7eb; }
+    .modal-header h3 { margin: 0; font-size: 18px; font-weight: 700; color: #1a1a2e; }
+    .modal-close { background: none; border: none; font-size: 28px; cursor: pointer; color: #64748b; line-height: 1; }
+    .modal-body { padding: 20px 24px; }
+    .modal-body p { margin: 0 0 16px; color: #64748b; font-size: 14px; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 12px; padding: 16px 24px; border-top: 1px solid #e5e7eb; }
+    .btn-cancel { padding: 10px 20px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; color: #374151; font-weight: 600; cursor: pointer; font-size: 14px; }
+    .btn-save { padding: 10px 20px; border: none; border-radius: 8px; background: #e31b23; color: #fff; font-weight: 600; cursor: pointer; font-size: 14px; }
+    .btn-save:hover { background: #b11218; }
+    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .status-options { display: flex; flex-direction: column; gap: 8px; }
+    .status-option { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; cursor: pointer; font-size: 14px; font-weight: 500; color: #334155; transition: all 0.2s; text-align: left; }
+    .status-option:hover { border-color: #e31b23; background: #fff5f5; }
+    .status-option.active { border-color: #e31b23; background: #fff5f5; box-shadow: 0 0 0 2px rgba(227,27,35,0.15); }
+    .status-option.current { opacity: 0.6; }
+    .current-label { font-size: 11px; color: #94a3b8; margin-left: auto; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-0 { background: #d97706; }
+    .dot-1 { background: #2563eb; }
+    .dot-2 { background: #4f46e5; }
+    .dot-3 { background: #16a34a; }
+    .dot-4 { background: #dc2626; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #334155; font-size: 14px; }
+    .form-control { width: 100%; padding: 10px 14px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+    .form-control:focus { outline: none; border-color: #e31b23; }
+    .franchise-empty { text-align: center; padding: 16px; color: #94a3b8; }
+    .loading-small { display: flex; align-items: center; gap: 8px; padding: 12px; color: #64748b; font-size: 14px; }
+    .spinner-sm { width: 20px; height: 20px; border: 2px solid #f3f4f6; border-top-color: #e31b23; border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+    @media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } .order-controls { flex-direction: column; align-items: stretch; } }
   `]
 })
 export class OrderDetailComponent implements OnInit {
   order = signal<any>(null);
   loading = signal(true);
+  statusModalOpen = signal(false);
+  paymentModalOpen = signal(false);
+  franchiseModalOpen = signal(false);
+  pendingStatus = signal(0);
+  franchiseAdmins = signal<any[]>([]);
+  franchiseLoading = signal(false);
+  selectedFranchiseId = '';
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  statuses = [
+    { value: 0, label: 'Pending' },
+    { value: 1, label: 'Accepted' },
+    { value: 2, label: 'In Progress' },
+    { value: 3, label: 'Completed' },
+    { value: 4, label: 'Cancelled' }
+  ];
+
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     this.http.get<any>(`${environment.apiUrl}/admin/orders/${id}`).subscribe({
       next: (res) => this.order.set(res.data),
-      error: () => this.router.navigate(['/admin/orders']),
+      error: () => { this.toast.error('Failed to load order'); this.router.navigate(['/admin/orders/all-orders']); },
       complete: () => this.loading.set(false)
     });
   }
 
-  changeStatus(newStatus: string) {
+  statusLabel(status: number): string {
+    return this.statuses.find(s => s.value === status)?.label || 'Unknown';
+  }
+
+  openStatusModal() {
+    this.pendingStatus.set(this.order()?.status || 0);
+    this.statusModalOpen.set(true);
+  }
+
+  confirmStatusChange() {
     const o = this.order();
-    this.http.put<any>(`${environment.apiUrl}/admin/orders/${o.id}/status`, { status: +newStatus }).subscribe({
-      next: () => this.order.set({ ...o, status: +newStatus })
+    const newStatus = this.pendingStatus();
+    this.http.put<any>(`${environment.apiUrl}/admin/orders/${o.id}/status`, { status: newStatus }).subscribe({
+      next: () => {
+        this.order.set({ ...o, status: newStatus });
+        this.toast.success(`Order status changed to ${this.statusLabel(newStatus)}`);
+        this.statusModalOpen.set(false);
+      },
+      error: () => this.toast.error('Failed to update order status')
     });
   }
 
-  togglePayment() {
+  openPaymentModal() {
+    this.paymentModalOpen.set(true);
+  }
+
+  confirmPaymentChange() {
     const o = this.order();
     const newStatus = o.payment_status ? 0 : 1;
     this.http.put<any>(`${environment.apiUrl}/admin/orders/${o.id}/payment-status`, { payment_status: newStatus }).subscribe({
-      next: () => this.order.set({ ...o, payment_status: newStatus })
+      next: () => {
+        this.order.set({ ...o, payment_status: newStatus });
+        this.toast.success(newStatus ? 'Payment marked as paid' : 'Payment marked as unpaid');
+        this.paymentModalOpen.set(false);
+      },
+      error: () => { this.toast.error('Failed to update payment status'); this.paymentModalOpen.set(false); }
+    });
+  }
+
+  openFranchiseModal() {
+    this.franchiseModalOpen.set(true);
+    this.selectedFranchiseId = this.order()?.franchise_admin_id?.toString() || '';
+    this.loadFranchiseAdmins();
+  }
+
+  loadFranchiseAdmins() {
+    this.franchiseLoading.set(true);
+    this.http.get<any>(`${environment.apiUrl}/admin/franchises`).subscribe({
+      next: (res) => this.franchiseAdmins.set(res.data || []),
+      error: () => this.franchiseAdmins.set([]),
+      complete: () => this.franchiseLoading.set(false)
+    });
+  }
+
+  assignFranchise() {
+    if (!this.selectedFranchiseId) return;
+    const o = this.order();
+    this.http.put<any>(`${environment.apiUrl}/admin/orders/${o.id}`, { franchise_admin_id: +this.selectedFranchiseId }).subscribe({
+      next: () => {
+        const admin = this.franchiseAdmins().find(f => f.id == this.selectedFranchiseId);
+        this.order.set({ ...o, franchise_admin_id: +this.selectedFranchiseId, franchiseAdmin: admin });
+        this.toast.success('Franchise admin assigned successfully');
+        this.franchiseModalOpen.set(false);
+      },
+      error: () => this.toast.error('Failed to assign franchise admin')
     });
   }
 }

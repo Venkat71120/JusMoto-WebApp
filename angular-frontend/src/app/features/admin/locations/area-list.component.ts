@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-area-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Areas</h1>
@@ -90,6 +92,16 @@ import { environment } from '../../../../environments/environment';
         </tbody>
       </table>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingItem()"
+      title="Delete Area"
+      [message]="'Delete &quot;' + (deletingItem()?.name || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingItem.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
@@ -136,6 +148,7 @@ export class AreaListComponent implements OnInit {
   cities = signal<any[]>([]);
   loading = signal(false);
   saving = signal(false);
+  deletingItem = signal<any>(null);
   cityFilter = '';
   showForm = false;
   editItem: any = null;
@@ -144,7 +157,7 @@ export class AreaListComponent implements OnInit {
   formStatus = true;
   formError = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() {
     this.loadCities();
@@ -195,16 +208,22 @@ export class AreaListComponent implements OnInit {
       ? this.http.put<any>(`${environment.apiUrl}/admin/areas/${this.editItem.id}`, data)
       : this.http.post<any>(`${environment.apiUrl}/admin/areas`, data);
     req.subscribe({
-      next: () => { this.showForm = false; this.loadItems(); },
-      error: (err) => { this.formError = err.error?.error || 'Something went wrong'; this.saving.set(false); },
+      next: () => { this.showForm = false; this.toast.success(this.editItem ? 'Area updated successfully' : 'Area added successfully'); this.loadItems(); },
+      error: (err) => { this.formError = err.error?.error || 'Something went wrong'; this.toast.error(this.formError); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }
 
   deleteItem(item: any) {
-    if (!confirm('Are you sure?')) return;
+    this.deletingItem.set(item);
+  }
+
+  confirmDelete() {
+    const item = this.deletingItem();
+    if (!item) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/areas/${item.id}`).subscribe({
-      next: () => this.loadItems()
+      next: () => { this.toast.success('Area deleted successfully'); this.deletingItem.set(null); this.loadItems(); },
+      error: () => { this.toast.error('Failed to delete area'); this.deletingItem.set(null); }
     });
   }
 }

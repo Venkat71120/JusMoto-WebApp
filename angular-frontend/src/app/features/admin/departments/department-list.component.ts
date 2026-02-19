@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-department-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Departments</h1>
@@ -69,6 +71,16 @@ import { environment } from '../../../../environments/environment';
         </tbody>
       </table>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingItem()"
+      title="Delete Department"
+      [message]="'Delete &quot;' + (deletingItem()?.name || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingItem.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
@@ -104,13 +116,14 @@ export class DepartmentListComponent implements OnInit {
   departments = signal<any[]>([]);
   loading = signal(false);
   saving = signal(false);
+  deletingItem = signal<any>(null);
   newName = '';
   newStatus = true;
   editId: any = null;
   editName = '';
   editStatus = true;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadDepartments(); }
 
@@ -127,8 +140,8 @@ export class DepartmentListComponent implements OnInit {
     if (!this.newName.trim()) return;
     this.saving.set(true);
     this.http.post<any>(`${environment.apiUrl}/admin/departments`, { name: this.newName, status: this.newStatus ? 1 : 0 }).subscribe({
-      next: () => { this.newName = ''; this.newStatus = true; this.loadDepartments(); },
-      error: () => {},
+      next: () => { this.newName = ''; this.newStatus = true; this.toast.success('Department added successfully'); this.loadDepartments(); },
+      error: () => { this.toast.error('Failed to add department'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }
@@ -143,16 +156,22 @@ export class DepartmentListComponent implements OnInit {
     if (!this.editName.trim()) return;
     this.saving.set(true);
     this.http.put<any>(`${environment.apiUrl}/admin/departments/${this.editId}`, { name: this.editName, status: this.editStatus ? 1 : 0 }).subscribe({
-      next: () => { this.editId = null; this.loadDepartments(); },
-      error: () => {},
+      next: () => { this.editId = null; this.toast.success('Department updated successfully'); this.loadDepartments(); },
+      error: () => { this.toast.error('Failed to update department'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }
 
   deleteDepartment(dept: any) {
-    if (!confirm('Are you sure?')) return;
+    this.deletingItem.set(dept);
+  }
+
+  confirmDelete() {
+    const dept = this.deletingItem();
+    if (!dept) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/departments/${dept.id}`).subscribe({
-      next: () => this.loadDepartments()
+      next: () => { this.toast.success('Department deleted successfully'); this.deletingItem.set(null); this.loadDepartments(); },
+      error: () => { this.toast.error('Failed to delete department'); this.deletingItem.set(null); }
     });
   }
 }

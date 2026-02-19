@@ -10,7 +10,7 @@ import { environment } from '../../../../environments/environment';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   template: `
-    <a routerLink="/admin/tickets" class="back-link">
+    <a routerLink="/admin/support-ticket/tickets" class="back-link">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
       Back to Tickets
     </a>
@@ -128,7 +128,7 @@ export class TicketDetailComponent implements OnInit {
         this.selectedStatus = t.status || 'open';
         this.messages.set(t.chat_messages || t.messages || []);
       },
-      error: () => this.router.navigate(['/admin/tickets']),
+      error: () => this.router.navigate(['/admin/support-ticket/tickets']),
       complete: () => this.loading.set(false)
     });
   }

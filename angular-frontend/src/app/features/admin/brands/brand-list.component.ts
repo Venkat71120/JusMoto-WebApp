@@ -3,11 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { MediaPickerComponent } from '../../../shared/components/media-picker/media-picker.component';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-brand-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MediaPickerComponent, ConfirmModalComponent],
   template: `
     <div class="page-header">
       <h1 class="page-title">Brands</h1>
@@ -23,8 +26,7 @@ import { environment } from '../../../../environments/environment';
           <input type="text" [(ngModel)]="formName" placeholder="Brand name">
         </div>
         <div class="form-group">
-          <label>Image URL</label>
-          <input type="text" [(ngModel)]="formImage" placeholder="https://...">
+          <app-media-picker [value]="formImage" [label]="'Brand Logo'" (valueChange)="formImage = $event"></app-media-picker>
         </div>
         <div *ngIf="formError" class="error-msg">{{ formError }}</div>
         <div class="modal-actions">
@@ -76,6 +78,16 @@ import { environment } from '../../../../environments/environment';
         </tbody>
       </table>
     </div>
+
+    <app-confirm-modal
+      [open]="!!deletingBrand()"
+      title="Delete Brand"
+      [message]="'Delete &quot;' + (deletingBrand()?.name || '') + '&quot;? This cannot be undone.'"
+      confirmText="Delete"
+      type="danger"
+      (confirmed)="confirmDelete()"
+      (cancelled)="deletingBrand.set(null)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
@@ -119,6 +131,7 @@ export class BrandListComponent implements OnInit {
   brands = signal<any[]>([]);
   loading = signal(false);
   saving = signal(false);
+  deletingBrand = signal<any>(null);
   search = '';
   showForm = false;
   editBrand: any = null;
@@ -127,7 +140,7 @@ export class BrandListComponent implements OnInit {
   formError = '';
   private searchTimeout: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadBrands(); }
 
@@ -164,16 +177,22 @@ export class BrandListComponent implements OnInit {
       ? this.http.put<any>(`${environment.apiUrl}/admin/brands/${this.editBrand.id}`, data)
       : this.http.post<any>(`${environment.apiUrl}/admin/brands`, data);
     req.subscribe({
-      next: () => { this.showForm = false; this.loadBrands(); },
-      error: (err) => { this.formError = err.error?.error || 'Something went wrong'; this.saving.set(false); },
+      next: () => { this.toast.success('Brand saved successfully'); this.showForm = false; this.loadBrands(); },
+      error: (err) => { this.toast.error(err.error?.error || 'Something went wrong'); this.formError = err.error?.error || 'Something went wrong'; this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }
 
   deleteBrand(brand: any) {
-    if (!confirm(`Delete brand "${brand.name}"?`)) return;
+    this.deletingBrand.set(brand);
+  }
+
+  confirmDelete() {
+    const brand = this.deletingBrand();
+    if (!brand) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/brands/${brand.id}`).subscribe({
-      next: () => this.loadBrands()
+      next: () => { this.toast.success('Brand deleted successfully'); this.deletingBrand.set(null); this.loadBrands(); },
+      error: () => { this.toast.error('Failed to delete brand'); this.deletingBrand.set(null); }
     });
   }
 }

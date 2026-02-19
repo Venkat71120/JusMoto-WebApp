@@ -4,6 +4,7 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-coupon-form',
@@ -11,7 +12,7 @@ import { environment } from '../../../../environments/environment';
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   template: `
     <div class="page-header">
-      <a routerLink="/admin/coupons" class="back-btn">
+      <a routerLink="/admin/coupons/all" class="back-btn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
         Back to Coupons
       </a>
@@ -55,7 +56,7 @@ import { environment } from '../../../../environments/environment';
       </div>
       <div *ngIf="error()" class="error-msg">{{ error() }}</div>
       <div class="form-actions">
-        <a routerLink="/admin/coupons" class="btn-cancel">Cancel</a>
+        <a routerLink="/admin/coupons/all" class="btn-cancel">Cancel</a>
         <button type="submit" class="btn-primary" [disabled]="saving()">
           {{ saving() ? 'Saving...' : (isEdit ? 'Update' : 'Create') }}
         </button>
@@ -93,7 +94,7 @@ export class CouponFormComponent implements OnInit {
   saving = signal(false);
   error = signal('');
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
 
   ngOnInit() {
     this.couponId = this.route.snapshot.paramMap.get('id');
@@ -125,7 +126,7 @@ export class CouponFormComponent implements OnInit {
           status: c.status
         });
       },
-      error: () => this.router.navigate(['/admin/coupons']),
+      error: () => this.router.navigate(['/admin/coupons/all']),
       complete: () => this.loadingData.set(false)
     });
   }
@@ -139,8 +140,8 @@ export class CouponFormComponent implements OnInit {
       ? this.http.put<any>(`${environment.apiUrl}/admin/coupons/${this.couponId}`, data)
       : this.http.post<any>(`${environment.apiUrl}/admin/coupons`, data);
     req.subscribe({
-      next: () => this.router.navigate(['/admin/coupons']),
-      error: (err) => { this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
+      next: () => { this.toast.success(this.isEdit ? 'Coupon updated successfully' : 'Coupon created successfully'); this.router.navigate(['/admin/coupons/all']); },
+      error: (err) => { this.toast.error(err.error?.error || 'Something went wrong'); this.error.set(err.error?.error || 'Something went wrong'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });
   }

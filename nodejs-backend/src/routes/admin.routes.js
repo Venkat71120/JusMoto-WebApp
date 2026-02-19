@@ -1064,8 +1064,75 @@ router.delete('/staff/:id', authenticate, isAdmin, async (req, res) => {
 // ==================== Roles & Permissions ====================
 router.get('/roles', authenticate, isAdmin, async (req, res) => {
   try {
-    const roles = await Role.findAll({ order: [['name', 'ASC']] });
-    res.json({ success: true, data: roles });
+    const [roles] = await require('../models').sequelize.query(`
+      SELECT r.*, GROUP_CONCAT(p.id) as permission_ids, GROUP_CONCAT(p.name) as permission_names
+      FROM roles r
+      LEFT JOIN role_has_permissions rhp ON r.id = rhp.role_id
+      LEFT JOIN permissions p ON rhp.permission_id = p.id
+      GROUP BY r.id ORDER BY r.name ASC
+    `);
+    const mapped = roles.map(r => ({
+      ...r,
+      permissions: r.permission_ids ? r.permission_ids.split(',').map((id, i) => ({ id: Number(id), name: r.permission_names.split(',')[i] })) : []
+    }));
+    res.json({ success: true, data: mapped });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.get('/roles/:id', authenticate, isAdmin, async (req, res) => {
+  try {
+    const role = await Role.findByPk(req.params.id);
+    if (!role) return res.status(404).json({ success: false, error: 'Role not found' });
+    const [perms] = await require('../models').sequelize.query(
+      'SELECT p.id, p.name, p.menu_name FROM permissions p INNER JOIN role_has_permissions rhp ON p.id = rhp.permission_id WHERE rhp.role_id = ?',
+      { replacements: [req.params.id] }
+    );
+    res.json({ success: true, data: { ...role.toJSON(), permissions: perms } });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.post('/roles', authenticate, isAdmin, async (req, res) => {
+  try {
+    const { name, permission_ids } = req.body;
+    if (!name) return res.status(400).json({ success: false, error: 'Name is required' });
+    const role = await Role.create({ name, guard_name: 'admin' });
+    if (permission_ids && permission_ids.length > 0) {
+      const values = permission_ids.map(pid => `(${Number(pid)}, ${role.id})`).join(',');
+      await require('../models').sequelize.query(`INSERT INTO role_has_permissions (permission_id, role_id) VALUES ${values}`);
+    }
+    res.status(201).json({ success: true, data: role, message: 'Role created' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.put('/roles/:id', authenticate, isAdmin, async (req, res) => {
+  try {
+    const { name, permission_ids } = req.body;
+    await Role.update({ name }, { where: { id: req.params.id } });
+    if (permission_ids !== undefined) {
+      await require('../models').sequelize.query('DELETE FROM role_has_permissions WHERE role_id = ?', { replacements: [req.params.id] });
+      if (permission_ids.length > 0) {
+        const values = permission_ids.map(pid => `(${Number(pid)}, ${Number(req.params.id)})`).join(',');
+        await require('../models').sequelize.query(`INSERT INTO role_has_permissions (permission_id, role_id) VALUES ${values}`);
+      }
+    }
+    const role = await Role.findByPk(req.params.id);
+    res.json({ success: true, data: role, message: 'Role updated' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.delete('/roles/:id', authenticate, isAdmin, async (req, res) => {
+  try {
+    await require('../models').sequelize.query('DELETE FROM role_has_permissions WHERE role_id = ?', { replacements: [req.params.id] });
+    await Role.destroy({ where: { id: req.params.id } });
+    res.json({ success: true, message: 'Role deleted' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

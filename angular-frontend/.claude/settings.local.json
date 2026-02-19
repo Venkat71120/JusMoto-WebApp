@@ -34,7 +34,9 @@
       "Bash(do echo \"Fixing: $f\")",
       "Bash(done)",
       "Bash(find:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(echo:*)",
+      "Bash(npx ng serve --open)"
     ]
   }
 }

@@ -83,6 +83,22 @@ export const adminRoutes: Routes = [
 
       // Roles & Permissions
       { path: 'manage/permission/role/all', loadComponent: () => import('./roles/role-list.component').then(m => m.RoleListComponent) },
+      { path: 'manage/permission/role/add', loadComponent: () => import('./roles/role-form.component').then(m => m.RoleFormComponent) },
+      { path: 'manage/permission/role/edit/:id', loadComponent: () => import('./roles/role-form.component').then(m => m.RoleFormComponent) },
+
+      // Franchises
+      { path: 'franchise/list', loadComponent: () => import('./franchises/franchise-list.component').then(m => m.FranchiseListComponent) },
+      { path: 'franchise/add', loadComponent: () => import('./franchises/franchise-form.component').then(m => m.FranchiseFormComponent) },
+
+      // Reports
+      { path: 'reports/revenue', loadComponent: () => import('./reports/revenue-report.component').then(m => m.RevenueReportComponent) },
+      { path: 'reports/orders', loadComponent: () => import('./reports/order-report.component').then(m => m.OrderReportComponent) },
+
+      // Wallet Management
+      { path: 'wallet/manage', loadComponent: () => import('./wallet/wallet-management.component').then(m => m.WalletManagementComponent) },
+
+      // Settings
+      { path: 'settings/general', loadComponent: () => import('./settings/general-settings.component').then(m => m.GeneralSettingsComponent) },
 
       // Locations
       { path: 'location/state/all-state', loadComponent: () => import('./locations/state-list.component').then(m => m.StateListComponent) },

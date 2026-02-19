@@ -32,8 +32,8 @@ import { environment } from '../../../../environments/environment';
         </div>
 
         <div class="modal-tabs">
-          <button [class.active]="tab() === 'library'" (click)="tab.set('library')">Library</button>
-          <button [class.active]="tab() === 'upload'" (click)="tab.set('upload')">Upload New</button>
+          <button type="button" [class.active]="tab() === 'library'" (click)="tab.set('library')">Library</button>
+          <button type="button" [class.active]="tab() === 'upload'" (click)="tab.set('upload')">Upload New</button>
         </div>
 
         <!-- Upload Tab -->

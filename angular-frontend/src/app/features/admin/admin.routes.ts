@@ -100,11 +100,6 @@ export const adminRoutes: Routes = [
       // Settings
       { path: 'settings/general', loadComponent: () => import('./settings/general-settings.component').then(m => m.GeneralSettingsComponent) },
 
-      // Locations
-      { path: 'location/state/all-state', loadComponent: () => import('./locations/state-list.component').then(m => m.StateListComponent) },
-      { path: 'location/city/all-city', loadComponent: () => import('./locations/city-list.component').then(m => m.CityListComponent) },
-      { path: 'location/area/all-area', loadComponent: () => import('./locations/area-list.component').then(m => m.AreaListComponent) },
-
       // Outlet Locations
       { path: 'outletAddress/all', loadComponent: () => import('./outlet-locations/outlet-location-list.component').then(m => m.OutletLocationListComponent) },
       { path: 'outletAddress/add', loadComponent: () => import('./outlet-locations/outlet-location-form.component').then(m => m.OutletLocationFormComponent) },

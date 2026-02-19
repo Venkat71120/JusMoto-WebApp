@@ -36,6 +36,7 @@ import { environment } from '../../../../environments/environment';
             <th>#</th>
             <th>Title / Subject</th>
             <th>Customer</th>
+            <th>Assigned To</th>
             <th>Department</th>
             <th>Priority</th>
             <th>Status</th>
@@ -47,8 +48,9 @@ import { environment } from '../../../../environments/environment';
           <tr *ngFor="let ticket of tickets(); let i = index">
             <td>{{ (pagination().page - 1) * pagination().limit + i + 1 }}</td>
             <td class="fw-600">{{ ticket.title || ticket.subject }}</td>
-            <td>{{ ticket.user?.name || ticket.customer_name || '-' }}</td>
-            <td>{{ ticket.department?.name || ticket.department_name || '-' }}</td>
+            <td>{{ ticket.user?.first_name ? (ticket.user.first_name + ' ' + (ticket.user.last_name || '')) : '-' }}</td>
+            <td>{{ ticket.admin?.name || '-' }}</td>
+            <td>{{ ticket.department?.name || '-' }}</td>
             <td>
               <span class="badge"
                 [class.badge-red]="ticket.priority === 'high' || ticket.priority === 'urgent'"
@@ -74,7 +76,7 @@ import { environment } from '../../../../environments/environment';
             </td>
           </tr>
           <tr *ngIf="tickets().length === 0 && !loading()">
-            <td colspan="8" class="empty-state">No tickets found</td>
+            <td colspan="9" class="empty-state">No tickets found</td>
           </tr>
         </tbody>
       </table>

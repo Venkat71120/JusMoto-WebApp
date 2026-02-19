@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["toast.component.ts"],
-  "sourcesContent": ["\n    .toast-container { position:fixed; top:20px; right:20px; z-index:10000; display:flex; flex-direction:column; gap:10px; max-width:400px; }\n    .toast { display:flex; align-items:center; gap:10px; padding:14px 20px; border-radius:10px; color:#fff; font-weight:500; font-size:14px; cursor:pointer; animation:slideIn 0.3s ease; box-shadow:0 4px 12px rgba(0,0,0,0.15); }\n    .toast-success { background:#16a34a; }\n    .toast-error { background:#dc2626; }\n    .toast-warning { background:#d97706; }\n    .toast-info { background:#2563eb; }\n    .toast-msg { flex:1; }\n    @keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }\n  "],
-  "mappings": ";AACI,CAAA;AAAmB,YAAA;AAAgB,OAAA;AAAU,SAAA;AAAY,WAAA;AAAe,WAAA;AAAc,kBAAA;AAAuB,OAAA;AAAU,aAAA;;AACvH,CAAA;AAAS,WAAA;AAAc,eAAA;AAAoB,OAAA;AAAU,WAAA,KAAA;AAAmB,iBAAA;AAAoB,SAAA;AAAY,eAAA;AAAiB,aAAA;AAAgB,UAAA;AAAgB,aAAA,QAAA,KAAA;AAA6B,cAAA,EAAA,IAAA,KAAA,KAAA,CAAA,EAAA,CAAA,EAAA,CAAA,EAAA;;AACtL,CAAA;AAAiB,cAAA;;AACjB,CAAA;AAAe,cAAA;;AACf,CAAA;AAAiB,cAAA;;AACjB,CAAA;AAAc,cAAA;;AACd,CAAA;AAAa,QAAA;;AACb,WANyJ;AAMpI;AAAO,eAAA,WAAA;AAA4B,aAAA;;AAAa;AAAK,eAAA,WAAA;AAAyB,aAAA;;;",
-  "names": []
-}

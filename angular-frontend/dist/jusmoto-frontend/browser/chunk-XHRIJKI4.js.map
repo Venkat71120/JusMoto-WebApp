@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/features/franchise/franchise.routes.ts"],
-  "sourcesContent": ["import { Routes } from '@angular/router';\r\n\r\nexport const franchiseRoutes: Routes = [\r\n  {\r\n    path: '',\r\n    loadComponent: () => import('./franchise-dashboard.component').then(m => m.FranchiseDashboardComponent)\r\n  }\r\n];\r\n"],
-  "mappings": ";;;AAEO,IAAM,kBAA0B;EACrC;IACE,MAAM;IACN,eAAe,MAAM,OAAO,qBAAiC,EAAE,KAAK,OAAK,EAAE,2BAA2B;;;",
-  "names": []
-}

@@ -250,6 +250,58 @@ router.put('/orders/:id/payment-status', authenticate, isAdmin, async (req, res)
   }
 });
 
+// Generate invoice HTML for download
+router.get('/orders/:id/invoice', authenticate, isAdmin, async (req, res) => {
+  try {
+    const order = await Order.findByPk(req.params.id, {
+      include: [
+        { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'phone'] },
+        { association: 'items', include: [{ association: 'service', attributes: ['id', 'title'] }] },
+        { association: 'location' }
+      ]
+    });
+    if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
+
+    const itemsHtml = (order.items || []).map((item, i) =>
+      `<tr><td>${i+1}</td><td>${item.service?.title || 'Service #'+item.service_id}</td><td>&#8377;${Number(item.price).toFixed(2)}</td><td>${item.qty}</td><td style="text-align:right">&#8377;${(item.price * item.qty).toFixed(2)}</td></tr>`
+    ).join('');
+
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Invoice ${order.invoice_number || order.id}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#333;padding:40px;max-width:800px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px;border-bottom:3px solid #e31b23;padding-bottom:20px}
+.brand{font-size:28px;font-weight:700;color:#e31b23}
+.invoice-title{text-align:right}.invoice-title h2{font-size:24px;color:#333;margin-bottom:5px}.invoice-title p{color:#666;font-size:13px}
+.info-grid{display:flex;justify-content:space-between;margin-bottom:30px}.info-box h4{font-size:12px;text-transform:uppercase;color:#999;margin-bottom:8px}
+.info-box p{font-size:14px;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin-bottom:20px}th{background:#f8f9fa;padding:10px 12px;text-align:left;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #e5e7eb}
+td{padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:14px}
+.totals{margin-left:auto;width:280px}.totals .row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
+.totals .total{border-top:2px solid #333;padding-top:10px;margin-top:6px;font-weight:700;font-size:18px;color:#e31b23}
+.footer{margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;text-align:center;color:#999;font-size:12px}
+@media print{body{padding:20px}}
+</style></head><body>
+<div class="header"><div class="brand">JusMoto</div><div class="invoice-title"><h2>INVOICE</h2><p>${order.invoice_number || 'INV-'+order.id}</p><p>${new Date(order.created_at).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'})}</p></div></div>
+<div class="info-grid"><div class="info-box"><h4>Bill To</h4><p><strong>${order.user?.first_name || ''} ${order.user?.last_name || ''}</strong><br>${order.user?.email || ''}<br>${order.user?.phone || ''}</p></div>
+<div class="info-box"><h4>Delivery Address</h4><p>${order.location?.address || '-'}<br>${order.location?.post_code ? 'PIN: '+order.location.post_code : ''}<br>${order.location?.phone ? 'Ph: '+order.location.phone : ''}</p></div>
+<div class="info-box"><h4>Order Info</h4><p>Order #${order.id}<br>Status: ${['Pending','Accepted','In Progress','Completed','Cancelled'][order.status] || order.status}<br>Payment: ${order.payment_status ? 'Paid' : 'Unpaid'}</p></div></div>
+<table><thead><tr><th>#</th><th>Service</th><th>Price</th><th>Qty</th><th style="text-align:right">Total</th></tr></thead><tbody>${itemsHtml}</tbody></table>
+<div class="totals"><div class="row"><span>Subtotal</span><span>&#8377;${Number(order.sub_total||0).toFixed(2)}</span></div>
+<div class="row"><span>Tax</span><span>&#8377;${Number(order.tax||0).toFixed(2)}</span></div>
+${order.coupon_amount > 0 ? `<div class="row"><span>Coupon (${order.coupon_code||''})</span><span style="color:#16a34a">-&#8377;${Number(order.coupon_amount).toFixed(2)}</span></div>` : ''}
+${order.delivery_charge > 0 ? `<div class="row"><span>Delivery</span><span>&#8377;${Number(order.delivery_charge).toFixed(2)}</span></div>` : ''}
+<div class="row total"><span>Grand Total</span><span>&#8377;${Number(order.total||0).toFixed(2)}</span></div></div>
+<div class="footer"><p>Thank you for choosing JusMoto!</p><p>This is a computer-generated invoice.</p></div>
+</body></html>`;
+
+    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Content-Disposition', `inline; filename="invoice-${order.invoice_number || order.id}.html"`);
+    res.send(html);
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 router.put('/orders/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const allowedFields = ['franchise_admin_id', 'order_note'];
@@ -257,7 +309,35 @@ router.put('/orders/:id', authenticate, isAdmin, async (req, res) => {
     for (const field of allowedFields) {
       if (req.body[field] !== undefined) updateData[field] = req.body[field];
     }
-    await Order.update(updateData, { where: { id: req.params.id } });
+    const order = await Order.findByPk(req.params.id, {
+      include: [
+        { association: 'user', attributes: ['id', 'first_name', 'last_name'] },
+        { association: 'items', include: [{ association: 'service', attributes: ['id', 'title'] }] }
+      ]
+    });
+    if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
+    await order.update(updateData);
+
+    // Auto-create ticket when franchise admin is assigned
+    if (req.body.franchise_admin_id) {
+      const existingTicket = await Ticket.findOne({ where: { order_id: order.id, admin_id: req.body.franchise_admin_id } });
+      if (!existingTicket) {
+        const itemsList = (order.items || []).map(i => `- ${i.service?.title || 'Service #' + i.service_id} (Qty: ${i.qty}, Price: ₹${i.price})`).join('\n');
+        const desc = `ORDER DETAILS\nOrder ID: #${order.invoice_number || order.id}\nCustomer: ${order.user?.first_name || ''} ${order.user?.last_name || ''}\nTotal: ₹${order.total}\n\nItems:\n${itemsList}`;
+        const ticket = await Ticket.create({
+          admin_id: req.body.franchise_admin_id,
+          user_id: order.user_id,
+          order_id: order.id,
+          title: `Order #${order.invoice_number || order.id} - Service Assignment`,
+          subject: `Franchise service ticket for Order #${order.invoice_number || order.id}`,
+          priority: 'normal',
+          status: 'open',
+          via: 'admin',
+          description: desc
+        });
+        await ChatMessage.create({ ticket_id: ticket.id, message: desc, type: 'admin', notify: 'user' });
+      }
+    }
     res.json({ success: true, message: 'Order updated successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -765,6 +845,10 @@ router.get('/tickets', authenticate, isAdmin, async (req, res) => {
     const { status, priority, search, page = 1, limit = 15 } = req.query;
     const pagination = paginate(page, limit);
     const where = {};
+    // Franchise admins only see their assigned tickets
+    if (req.admin.is_franchise) {
+      where.admin_id = req.admin.id;
+    }
     if (status) where.status = status;
     if (priority) where.priority = priority;
     if (search) {
@@ -777,7 +861,8 @@ router.get('/tickets', authenticate, isAdmin, async (req, res) => {
       where,
       include: [
         { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email'] },
-        { association: 'department', attributes: ['id', 'name'] }
+        { association: 'department', attributes: ['id', 'name'] },
+        { association: 'admin', attributes: ['id', 'name', 'email'] }
       ],
       ...pagination, order: [['created_at', 'DESC']]
     });
@@ -1330,10 +1415,7 @@ router.delete('/areas/:id', authenticate, isAdmin, async (req, res) => {
 router.post('/locations/import-states', authenticate, isAdmin, async (req, res) => {
   try {
     const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
-    const resp = await fetch('https://countriesnow.space/api/v0.1/countries/states', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ country: 'India' })
-    });
+    const resp = await fetch('https://countriesnow.space/api/v0.1/countries/states/q?country=India');
     const json = await resp.json();
     if (!json.data || !json.data.states) return res.status(400).json({ success: false, error: 'Could not fetch states' });
     const states = json.data.states;
@@ -1358,10 +1440,8 @@ router.post('/locations/import-cities', authenticate, isAdmin, async (req, res) 
     const stateRecord = await State.findByPk(state_id);
     if (!stateRecord) return res.status(404).json({ success: false, error: 'State not found' });
     const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
-    const resp = await fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ country: 'India', state: stateRecord.state })
-    });
+    const url = `https://countriesnow.space/api/v0.1/countries/state/cities/q?country=India&state=${encodeURIComponent(stateRecord.state)}`;
+    const resp = await fetch(url);
     const json = await resp.json();
     if (!json.data || !Array.isArray(json.data)) return res.status(400).json({ success: false, error: 'Could not fetch cities' });
     let added = 0;

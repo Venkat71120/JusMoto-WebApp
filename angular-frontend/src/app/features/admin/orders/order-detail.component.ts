@@ -39,6 +39,10 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
             {{ order().franchise_admin_id ? 'Reassign Franchise' : 'Assign Franchise' }}
           </button>
+          <button class="btn-invoice" (click)="downloadInvoice()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Invoice
+          </button>
         </div>
       </div>
 
@@ -189,6 +193,8 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .btn-payment:hover { opacity: 0.8; }
     .btn-franchise { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid #8b5cf6; border-radius: 8px; background: #f5f3ff; color: #7c3aed; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s; }
     .btn-franchise:hover { background: #ede9fe; }
+    .btn-invoice { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid #e31b23; border-radius: 8px; background: #fff; color: #e31b23; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+    .btn-invoice:hover { background: #fee2e2; }
     .franchise-info { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 10px; margin-bottom: 20px; color: #7c3aed; font-size: 14px; }
     .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
     .detail-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; }
@@ -333,10 +339,23 @@ export class OrderDetailComponent implements OnInit {
       next: () => {
         const admin = this.franchiseAdmins().find(f => f.id == this.selectedFranchiseId);
         this.order.set({ ...o, franchise_admin_id: +this.selectedFranchiseId, franchiseAdmin: admin });
-        this.toast.success('Franchise admin assigned successfully');
+        this.toast.success('Franchise admin assigned & ticket created automatically');
         this.franchiseModalOpen.set(false);
       },
       error: () => this.toast.error('Failed to assign franchise admin')
+    });
+  }
+
+  downloadInvoice() {
+    const o = this.order();
+    if (!o) return;
+    this.http.get(`${environment.apiUrl}/admin/orders/${o.id}/invoice`, { responseType: 'text' }).subscribe({
+      next: (html) => {
+        const blob = new Blob([html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      },
+      error: () => this.toast.error('Failed to generate invoice')
     });
   }
 }

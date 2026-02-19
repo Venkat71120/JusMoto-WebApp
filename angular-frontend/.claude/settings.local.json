@@ -36,7 +36,8 @@
       "Bash(find:*)",
       "Bash(node:*)",
       "Bash(echo:*)",
-      "Bash(npx ng serve --open)"
+      "Bash(npx ng serve --open)",
+      "Bash(python:*)"
     ]
   }
 }

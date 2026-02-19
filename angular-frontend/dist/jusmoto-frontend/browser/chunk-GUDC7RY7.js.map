@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/environments/environment.ts"],
-  "sourcesContent": ["export const environment = {\r\n  production: false,\r\n  apiUrl: 'http://localhost:3000/api/v1',\r\n  socketUrl: 'http://localhost:3000',\r\n  appName: 'JusMoto',\r\n  defaultLanguage: 'en',\r\n  supportedLanguages: ['en', 'hi'],\r\n  currency: 'INR',\r\n  currencySymbol: '₹',\r\n  googleMapsApiKey: '',\r\n  stripePublishableKey: '',\r\n  razorpayKeyId: ''\r\n};\r\n"],
-  "mappings": ";AAAO,IAAM,cAAc;EACzB,YAAY;EACZ,QAAQ;EACR,WAAW;EACX,SAAS;EACT,iBAAiB;EACjB,oBAAoB,CAAC,MAAM,IAAI;EAC/B,UAAU;EACV,gBAAgB;EAChB,kBAAkB;EAClB,sBAAsB;EACtB,eAAe;;",
-  "names": []
-}

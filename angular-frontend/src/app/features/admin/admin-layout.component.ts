@@ -159,24 +159,6 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
 
             <li class="nav-section">LOCATIONS</li>
             <li>
-              <a routerLink="/admin/location/state/all-state" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span>States</span>
-              </a>
-            </li>
-            <li>
-              <a routerLink="/admin/location/city/all-city" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h1M9 13h1M9 17h1"/></svg>
-                <span>Cities</span>
-              </a>
-            </li>
-            <li>
-              <a routerLink="/admin/location/area/all-area" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-                <span>Areas</span>
-              </a>
-            </li>
-            <li>
               <a routerLink="/admin/outletAddress/all" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 10-16 0c0 3 2.7 7 8 11.7z"/></svg>
                 <span>Outlet Locations</span>

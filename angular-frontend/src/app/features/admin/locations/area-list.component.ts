@@ -18,7 +18,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     <div class="filters-bar">
       <select class="filter-select" [(ngModel)]="cityFilter" (change)="loadItems()">
         <option value="">All Cities</option>
-        <option *ngFor="let c of cities()" [value]="c.id">{{ c.name }}</option>
+        <option *ngFor="let c of cities()" [value]="c.id">{{ c.city }}</option>
       </select>
     </div>
 
@@ -34,7 +34,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           <label>City *</label>
           <select [(ngModel)]="formCityId" class="form-control">
             <option value="">Select City</option>
-            <option *ngFor="let c of cities()" [value]="c.id">{{ c.name }}</option>
+            <option *ngFor="let c of cities()" [value]="c.id">{{ c.city }}</option>
           </select>
         </div>
         <div class="form-group">
@@ -68,8 +68,8 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         <tbody>
           <tr *ngFor="let item of items(); let i = index">
             <td>{{ i + 1 }}</td>
-            <td class="fw-600">{{ item.name }}</td>
-            <td>{{ item.city?.name || '-' }}</td>
+            <td class="fw-600">{{ item.area }}</td>
+            <td>{{ item.city?.city || '-' }}</td>
             <td>
               <span class="badge" [class.badge-green]="item.status" [class.badge-red]="!item.status">
                 {{ item.status ? 'Active' : 'Inactive' }}
@@ -96,7 +96,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     <app-confirm-modal
       [open]="!!deletingItem()"
       title="Delete Area"
-      [message]="'Delete &quot;' + (deletingItem()?.name || '') + '&quot;? This cannot be undone.'"
+      [message]="'Delete &quot;' + (deletingItem()?.area || '') + '&quot;? This cannot be undone.'"
       confirmText="Delete"
       type="danger"
       (confirmed)="confirmDelete()"
@@ -192,7 +192,7 @@ export class AreaListComponent implements OnInit {
 
   startEdit(item: any) {
     this.editItem = item;
-    this.formName = item.name;
+    this.formName = item.area;
     this.formCityId = item.city_id || '';
     this.formStatus = !!item.status;
     this.formError = '';
@@ -203,7 +203,7 @@ export class AreaListComponent implements OnInit {
     if (!this.formName.trim() || !this.formCityId) { this.formError = 'Name and City are required'; return; }
     this.saving.set(true);
     this.formError = '';
-    const data = { name: this.formName, city_id: this.formCityId, status: this.formStatus ? 1 : 0 };
+    const data = { area: this.formName, city_id: this.formCityId, status: this.formStatus ? 1 : 0 };
     const req = this.editItem
       ? this.http.put<any>(`${environment.apiUrl}/admin/areas/${this.editItem.id}`, data)
       : this.http.post<any>(`${environment.apiUrl}/admin/areas`, data);

@@ -13,16 +13,41 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
   template: `
     <div class="page-header">
       <h1 class="page-title">Cities</h1>
+      <button class="btn-fetch" (click)="showImport = true" [disabled]="fetching()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9"/></svg>
+        Fetch Cities from API
+      </button>
     </div>
 
     <div class="filters-bar">
       <select class="filter-select" [(ngModel)]="stateFilter" (change)="loadItems()">
         <option value="">All States</option>
-        <option *ngFor="let s of states()" [value]="s.id">{{ s.name }}</option>
+        <option *ngFor="let s of states()" [value]="s.id">{{ s.state }}</option>
       </select>
     </div>
 
-    <!-- Add New Modal -->
+    <!-- Import Cities Modal -->
+    <div class="modal-overlay" *ngIf="showImport" (click)="showImport = false">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3>Import Cities from API</h3>
+        <p class="modal-desc">Select a state to fetch all its cities from the CountriesNow API.</p>
+        <div class="form-group">
+          <label>State *</label>
+          <select [(ngModel)]="importStateId" class="form-control">
+            <option value="">Select State</option>
+            <option *ngFor="let s of states()" [value]="s.id">{{ s.state }}</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="showImport = false">Cancel</button>
+          <button class="btn-primary" (click)="fetchCitiesFromApi()" [disabled]="!importStateId || fetching()">
+            {{ fetching() ? 'Importing...' : 'Import Cities' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
     <div class="modal-overlay" *ngIf="showForm" (click)="showForm = false">
       <div class="modal-card" (click)="$event.stopPropagation()">
         <h3>{{ editItem ? 'Edit City' : 'Add City' }}</h3>
@@ -34,7 +59,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           <label>State *</label>
           <select [(ngModel)]="formStateId" class="form-control">
             <option value="">Select State</option>
-            <option *ngFor="let s of states()" [value]="s.id">{{ s.name }}</option>
+            <option *ngFor="let s of states()" [value]="s.id">{{ s.state }}</option>
           </select>
         </div>
         <div class="form-group">
@@ -73,8 +98,8 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         <tbody>
           <tr *ngFor="let item of items(); let i = index">
             <td>{{ i + 1 }}</td>
-            <td class="fw-600">{{ item.name }}</td>
-            <td>{{ item.state?.name || '-' }}</td>
+            <td class="fw-600">{{ item.city }}</td>
+            <td>{{ item.state?.state || '-' }}</td>
             <td class="text-muted">{{ item.timezone || '-' }}</td>
             <td>
               <span class="badge" [class.badge-green]="item.status" [class.badge-red]="!item.status">
@@ -102,7 +127,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     <app-confirm-modal
       [open]="!!deletingItem()"
       title="Delete City"
-      [message]="'Delete &quot;' + (deletingItem()?.name || '') + '&quot;? This cannot be undone.'"
+      [message]="'Delete &quot;' + (deletingItem()?.city || '') + '&quot;? This cannot be undone.'"
       confirmText="Delete"
       type="danger"
       (confirmed)="confirmDelete()"
@@ -112,6 +137,9 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
     .page-title { font-size:24px; font-weight:700; color:#1a1a2e; margin:0; }
+    .btn-fetch { display:flex; align-items:center; gap:8px; padding:10px 20px; border:1px solid #e5e7eb; border-radius:8px; background:#fff; cursor:pointer; font-weight:600; color:#334155; font-size:14px; }
+    .btn-fetch:hover:not(:disabled) { border-color:#e31b23; color:#e31b23; }
+    .btn-fetch:disabled { opacity:0.6; cursor:not-allowed; }
     .filters-bar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
     .filter-select { padding:10px 16px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; background:#fff; }
     .table-container { position:relative; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
@@ -138,6 +166,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:200; display:flex; align-items:center; justify-content:center; }
     .modal-card { background:#fff; border-radius:12px; padding:32px; width:100%; max-width:440px; box-shadow:0 20px 60px rgba(0,0,0,0.2); }
     .modal-card h3 { font-size:20px; font-weight:700; color:#1a1a2e; margin:0 0 20px; }
+    .modal-desc { color:#64748b; font-size:14px; margin:0 0 20px; }
     .form-group { margin-bottom:16px; }
     .form-group label { display:block; margin-bottom:6px; font-weight:600; color:#334155; font-size:14px; }
     .form-control { width:100%; padding:10px 14px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box; }
@@ -155,9 +184,12 @@ export class CityListComponent implements OnInit {
   states = signal<any[]>([]);
   loading = signal(false);
   saving = signal(false);
+  fetching = signal(false);
   deletingItem = signal<any>(null);
   stateFilter = '';
   showForm = false;
+  showImport = false;
+  importStateId = '';
   editItem: any = null;
   formName = '';
   formStateId = '';
@@ -201,7 +233,7 @@ export class CityListComponent implements OnInit {
 
   startEdit(item: any) {
     this.editItem = item;
-    this.formName = item.name;
+    this.formName = item.city;
     this.formStateId = item.state_id || '';
     this.formTimezone = item.timezone || '';
     this.formStatus = !!item.status;
@@ -213,7 +245,7 @@ export class CityListComponent implements OnInit {
     if (!this.formName.trim() || !this.formStateId) { this.formError = 'Name and State are required'; return; }
     this.saving.set(true);
     this.formError = '';
-    const data = { name: this.formName, state_id: this.formStateId, timezone: this.formTimezone, status: this.formStatus ? 1 : 0 };
+    const data = { city: this.formName, state_id: this.formStateId, timezone: this.formTimezone, status: this.formStatus ? 1 : 0 };
     const req = this.editItem
       ? this.http.put<any>(`${environment.apiUrl}/admin/cities/${this.editItem.id}`, data)
       : this.http.post<any>(`${environment.apiUrl}/admin/cities`, data);
@@ -221,6 +253,16 @@ export class CityListComponent implements OnInit {
       next: () => { this.showForm = false; this.toast.success(this.editItem ? 'City updated successfully' : 'City added successfully'); this.loadItems(); },
       error: (err) => { this.formError = err.error?.error || 'Something went wrong'; this.toast.error(this.formError); this.saving.set(false); },
       complete: () => this.saving.set(false)
+    });
+  }
+
+  fetchCitiesFromApi() {
+    if (!this.importStateId) return;
+    this.fetching.set(true);
+    this.http.post<any>(`${environment.apiUrl}/admin/locations/import-cities`, { state_id: this.importStateId }).subscribe({
+      next: (res) => { this.toast.success(res.message || 'Cities imported!'); this.showImport = false; this.loadItems(); },
+      error: (err) => { this.toast.error(err.error?.error || 'Failed to fetch cities'); },
+      complete: () => this.fetching.set(false)
     });
   }
 

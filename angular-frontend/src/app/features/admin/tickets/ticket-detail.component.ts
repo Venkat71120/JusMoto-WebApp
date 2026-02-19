@@ -1,9 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -18,51 +19,116 @@ import { environment } from '../../../../environments/environment';
     <div class="loading-center" *ngIf="loading()"><div class="spinner"></div></div>
 
     <div *ngIf="!loading() && ticket()">
+      <!-- Ticket Header -->
       <div class="ticket-header">
-        <div>
+        <div class="header-left">
           <h1 class="page-title">{{ ticket().title || ticket().subject }}</h1>
           <div class="ticket-meta">
-            <span><strong>Customer:</strong> {{ ticket().user?.name || '-' }}</span>
-            <span><strong>Department:</strong> {{ ticket().department?.name || '-' }}</span>
+            <span><strong>Customer:</strong> {{ ticket().user?.first_name }} {{ ticket().user?.last_name || '' }}</span>
+            <span *ngIf="ticket().user?.email"><strong>Email:</strong> {{ ticket().user.email }}</span>
+            <span *ngIf="ticket().department"><strong>Dept:</strong> {{ ticket().department.name }}</span>
             <span><strong>Priority:</strong>
               <span class="badge"
                 [class.badge-red]="ticket().priority === 'high' || ticket().priority === 'urgent'"
-                [class.badge-yellow]="ticket().priority === 'medium'"
+                [class.badge-yellow]="ticket().priority === 'medium' || ticket().priority === 'normal'"
                 [class.badge-green]="ticket().priority === 'low'">
                 {{ ticket().priority }}
               </span>
             </span>
           </div>
         </div>
-        <div class="status-control">
-          <label>Status:</label>
-          <select [(ngModel)]="selectedStatus" (change)="changeStatus()">
-            <option value="open">Open</option>
-            <option value="in_progress">In Progress</option>
-            <option value="resolved">Resolved</option>
-            <option value="closed">Closed</option>
-          </select>
+        <div class="header-controls">
+          <div class="control-group">
+            <label>Status:</label>
+            <select [(ngModel)]="selectedStatus" (change)="changeStatus()">
+              <option value="open">Open</option>
+              <option value="close">Closed</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label>Assign to:</label>
+            <select [(ngModel)]="selectedAdminId" (change)="assignFranchise()">
+              <option value="">Unassigned</option>
+              <option *ngFor="let f of franchiseAdmins()" [value]="f.id">{{ f.name }} ({{ f.email }})</option>
+            </select>
+          </div>
         </div>
       </div>
 
+      <!-- Order Info Card (if linked) -->
+      <div class="order-card" *ngIf="ticket().order">
+        <div class="order-card-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e31b23" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+          <span>Linked Order: <strong>#{{ ticket().order.invoice_number || ticket().order.id }}</strong></span>
+        </div>
+        <div class="order-details">
+          <span>Total: <strong>₹{{ ticket().order.total }}</strong></span>
+          <span>Status: <span class="badge badge-blue">{{ getOrderStatus(ticket().order.status) }}</span></span>
+          <span>Payment: <span class="badge" [class.badge-green]="ticket().order.payment_status == 1" [class.badge-yellow]="ticket().order.payment_status != 1">{{ ticket().order.payment_status == 1 ? 'Paid' : 'Unpaid' }}</span></span>
+        </div>
+      </div>
+
+      <!-- Payment Button (visible only when ticket is closed) -->
+      <div class="payment-section" *ngIf="ticket().status === 'close' || ticket().status === 'closed'">
+        <div class="payment-card">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          <div class="payment-info">
+            <h4>Ticket Closed - Payment Required</h4>
+            <p>This ticket has been closed. Click to process payment for the service.</p>
+          </div>
+          <button class="btn-payment" (click)="processPayment()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Process Payment
+          </button>
+        </div>
+      </div>
+
+      <!-- Chat Container -->
       <div class="chat-container">
-        <div class="messages-area">
+        <div class="messages-area" #messagesArea>
           <div *ngFor="let msg of messages()"
                class="message-bubble"
-               [class.admin-msg]="msg.sender_type === 'admin' || msg.is_admin"
-               [class.user-msg]="msg.sender_type !== 'admin' && !msg.is_admin">
-            <div class="msg-sender">{{ msg.sender_name || (msg.is_admin ? 'Admin' : ticket().user?.name || 'Customer') }}</div>
-            <div class="msg-text">{{ msg.message || msg.content || msg.body }}</div>
+               [class.admin-msg]="msg.type === 'admin'"
+               [class.user-msg]="msg.type !== 'admin'">
+            <div class="msg-sender">{{ msg.type === 'admin' ? 'Admin' : (ticket().user?.first_name || 'Customer') }}</div>
+            <div class="msg-text" *ngIf="msg.message">{{ msg.message }}</div>
+            <div class="msg-attachment" *ngIf="msg.attachment">
+              <a [href]="getAttachmentUrl(msg.attachment)" target="_blank" class="attachment-link">
+                <img *ngIf="isImage(msg.attachment)" [src]="getAttachmentUrl(msg.attachment)" class="attachment-img" alt="Attachment">
+                <div *ngIf="!isImage(msg.attachment)" class="attachment-file">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <span>{{ getFilename(msg.attachment) }}</span>
+                </div>
+              </a>
+            </div>
             <div class="msg-time">{{ msg.created_at | date:'short' }}</div>
           </div>
-          <div *ngIf="messages().length === 0" class="no-messages">No messages yet</div>
+          <div *ngIf="messages().length === 0" class="no-messages">No messages yet. Start the conversation.</div>
         </div>
 
-        <div class="reply-box">
-          <textarea [(ngModel)]="replyText" placeholder="Type your reply..." rows="3"></textarea>
-          <button class="btn-primary" (click)="sendReply()" [disabled]="sending() || !replyText.trim()">
-            {{ sending() ? 'Sending...' : 'Send Reply' }}
-          </button>
+        <!-- Reply Box with Attachment -->
+        <div class="reply-box" *ngIf="ticket().status !== 'close' && ticket().status !== 'closed'">
+          <div class="reply-input-area">
+            <textarea [(ngModel)]="replyText" placeholder="Type your reply..." rows="3"></textarea>
+            <div class="attachment-preview" *ngIf="attachmentFile">
+              <span>{{ attachmentFile.name }}</span>
+              <button class="remove-attachment" (click)="removeAttachment()">&times;</button>
+            </div>
+          </div>
+          <div class="reply-actions">
+            <label class="btn-attach" title="Attach file">
+              <input type="file" accept="image/*,.pdf,.doc,.docx" (change)="onFileSelect($event)" style="display:none" #fileInput>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            </label>
+            <button class="btn-primary" (click)="sendReply()" [disabled]="sending() || (!replyText.trim() && !attachmentFile)">
+              {{ sending() ? 'Sending...' : 'Send' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="closed-notice" *ngIf="ticket().status === 'close' || ticket().status === 'closed'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span>This ticket is closed. Reopen to reply.</span>
         </div>
       </div>
     </div>
@@ -73,50 +139,91 @@ import { environment } from '../../../../environments/environment';
     .loading-center { display:flex; justify-content:center; padding:60px; }
     .spinner { width:36px; height:36px; border:3px solid #f3f4f6; border-top-color:#e31b23; border-radius:50%; animation:spin 0.8s linear infinite; }
     @keyframes spin { to { transform:rotate(360deg); } }
-    .page-title { font-size:24px; font-weight:700; color:#1a1a2e; margin:0 0 8px; }
-    .ticket-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; flex-wrap:wrap; gap:16px; background:#fff; padding:24px; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
-    .ticket-meta { display:flex; gap:20px; flex-wrap:wrap; font-size:14px; color:#64748b; }
-    .ticket-meta span { display:inline-flex; align-items:center; gap:6px; }
-    .status-control { display:flex; align-items:center; gap:8px; }
-    .status-control label { font-weight:600; color:#334155; font-size:14px; }
-    .status-control select { padding:8px 14px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; }
-    .status-control select:focus { outline:none; border-color:#e31b23; }
-    .badge { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; text-transform:capitalize; }
+    .page-title { font-size:22px; font-weight:700; color:#1a1a2e; margin:0 0 8px; }
+    .ticket-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; flex-wrap:wrap; gap:16px; background:#fff; padding:24px; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+    .ticket-meta { display:flex; gap:16px; flex-wrap:wrap; font-size:13px; color:#64748b; }
+    .ticket-meta span { display:inline-flex; align-items:center; gap:4px; }
+    .header-controls { display:flex; flex-direction:column; gap:10px; }
+    .control-group { display:flex; align-items:center; gap:8px; }
+    .control-group label { font-weight:600; color:#334155; font-size:13px; white-space:nowrap; }
+    .control-group select { padding:7px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; min-width:180px; }
+    .control-group select:focus { outline:none; border-color:#e31b23; }
+    .badge { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; text-transform:capitalize; }
     .badge-green { background:#dcfce7; color:#16a34a; }
     .badge-red { background:#fee2e2; color:#dc2626; }
     .badge-yellow { background:#fef9c3; color:#a16207; }
+    .badge-blue { background:#dbeafe; color:#2563eb; }
+
+    .order-card { background:#fff; border-radius:12px; padding:16px 24px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.08); border-left:4px solid #e31b23; }
+    .order-card-header { display:flex; align-items:center; gap:8px; font-size:14px; color:#334155; margin-bottom:8px; }
+    .order-details { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:#64748b; }
+    .order-details span { display:inline-flex; align-items:center; gap:6px; }
+
+    .payment-section { margin-bottom:16px; }
+    .payment-card { display:flex; align-items:center; gap:16px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:20px 24px; }
+    .payment-info { flex:1; }
+    .payment-info h4 { margin:0 0 4px; font-size:15px; color:#166534; font-weight:700; }
+    .payment-info p { margin:0; font-size:13px; color:#16a34a; }
+    .btn-payment { display:inline-flex; align-items:center; gap:8px; background:#16a34a; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:600; font-size:14px; cursor:pointer; white-space:nowrap; }
+    .btn-payment:hover { background:#15803d; }
+
     .chat-container { background:#fff; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.08); overflow:hidden; }
     .messages-area { padding:24px; max-height:500px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; background:#f8f9fa; }
     .message-bubble { max-width:70%; padding:12px 16px; border-radius:12px; }
     .user-msg { align-self:flex-start; background:#e5e7eb; color:#334155; border-bottom-left-radius:4px; }
     .admin-msg { align-self:flex-end; background:#fde8e9; color:#1a1a2e; border-bottom-right-radius:4px; }
-    .msg-sender { font-size:12px; font-weight:700; margin-bottom:4px; color:#64748b; }
+    .msg-sender { font-size:11px; font-weight:700; margin-bottom:4px; color:#64748b; }
     .admin-msg .msg-sender { color:#e31b23; }
-    .msg-text { font-size:14px; line-height:1.5; }
-    .msg-time { font-size:11px; color:#94a3b8; margin-top:6px; text-align:right; }
+    .msg-text { font-size:14px; line-height:1.5; white-space:pre-wrap; }
+    .msg-attachment { margin-top:8px; }
+    .attachment-link { text-decoration:none; }
+    .attachment-img { max-width:280px; max-height:200px; border-radius:8px; object-fit:cover; border:1px solid #e5e7eb; display:block; }
+    .attachment-file { display:inline-flex; align-items:center; gap:8px; background:#f1f5f9; padding:8px 14px; border-radius:8px; color:#3b82f6; font-size:13px; font-weight:500; }
+    .msg-time { font-size:10px; color:#94a3b8; margin-top:6px; text-align:right; }
     .no-messages { text-align:center; padding:40px; color:#94a3b8; }
-    .reply-box { padding:20px 24px; border-top:1px solid #e5e7eb; display:flex; gap:12px; align-items:flex-end; }
-    .reply-box textarea { flex:1; padding:10px 14px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; resize:vertical; font-family:inherit; }
-    .reply-box textarea:focus { outline:none; border-color:#e31b23; box-shadow:0 0 0 3px rgba(227,27,35,0.1); }
-    .btn-primary { background:#e31b23; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer; white-space:nowrap; }
+
+    .reply-box { padding:16px 24px; border-top:1px solid #e5e7eb; display:flex; gap:12px; align-items:flex-end; }
+    .reply-input-area { flex:1; }
+    .reply-input-area textarea { width:100%; padding:10px 14px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; resize:vertical; font-family:inherit; box-sizing:border-box; }
+    .reply-input-area textarea:focus { outline:none; border-color:#e31b23; box-shadow:0 0 0 3px rgba(227,27,35,0.1); }
+    .attachment-preview { display:flex; align-items:center; gap:8px; background:#f1f5f9; padding:6px 12px; border-radius:6px; margin-top:8px; font-size:13px; color:#334155; }
+    .remove-attachment { background:none; border:none; color:#dc2626; font-size:18px; cursor:pointer; line-height:1; }
+    .reply-actions { display:flex; flex-direction:column; gap:8px; }
+    .btn-attach { display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; color:#64748b; transition:all 0.2s; }
+    .btn-attach:hover { color:#e31b23; border-color:#e31b23; background:#fff5f5; }
+    .btn-primary { background:#e31b23; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer; white-space:nowrap; font-size:14px; }
     .btn-primary:hover { background:#b11218; }
     .btn-primary:disabled { opacity:0.6; cursor:not-allowed; }
+    .closed-notice { display:flex; align-items:center; justify-content:center; gap:8px; padding:16px; border-top:1px solid #e5e7eb; color:#64748b; font-size:14px; }
   `]
 })
 export class TicketDetailComponent implements OnInit {
+  @ViewChild('messagesArea') messagesArea!: ElementRef;
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
   ticket = signal<any>(null);
   messages = signal<any[]>([]);
+  franchiseAdmins = signal<any[]>([]);
   loading = signal(false);
   sending = signal(false);
   selectedStatus = '';
+  selectedAdminId = '';
   replyText = '';
+  attachmentFile: File | null = null;
   private ticketId = '';
+  private uploadsBase = environment.apiUrl.replace('/api/v1', '') + '/uploads/';
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private router: Router,
+    private toast: ToastService
+  ) {}
 
   ngOnInit() {
     this.ticketId = this.route.snapshot.paramMap.get('id') || '';
     this.loadTicket();
+    this.loadFranchiseAdmins();
   }
 
   loadTicket() {
@@ -126,27 +233,113 @@ export class TicketDetailComponent implements OnInit {
         const t = res.data;
         this.ticket.set(t);
         this.selectedStatus = t.status || 'open';
-        this.messages.set(t.chat_messages || t.messages || []);
+        this.selectedAdminId = t.admin_id ? String(t.admin_id) : '';
+        this.messages.set(t.messages || []);
+        setTimeout(() => this.scrollToBottom(), 100);
       },
       error: () => this.router.navigate(['/admin/support-ticket/tickets']),
       complete: () => this.loading.set(false)
     });
   }
 
-  changeStatus() {
-    this.http.put<any>(`${environment.apiUrl}/admin/tickets/${this.ticketId}`, { status: this.selectedStatus }).subscribe({
-      next: () => {},
-      error: () => {}
+  loadFranchiseAdmins() {
+    this.http.get<any>(`${environment.apiUrl}/admin/franchises`).subscribe({
+      next: (res) => this.franchiseAdmins.set(res.data || [])
+    });
+    // Also load all staff (non-franchise admins can be assigned too)
+    this.http.get<any>(`${environment.apiUrl}/admin/staff?limit=100`).subscribe({
+      next: (res) => {
+        const staff = res.data || [];
+        const existing = this.franchiseAdmins();
+        const existingIds = new Set(existing.map((f: any) => f.id));
+        const merged = [...existing, ...staff.filter((s: any) => !existingIds.has(s.id))];
+        this.franchiseAdmins.set(merged);
+      }
     });
   }
 
+  changeStatus() {
+    this.http.put<any>(`${environment.apiUrl}/admin/tickets/${this.ticketId}/status`, { status: this.selectedStatus }).subscribe({
+      next: () => { this.toast.success('Status updated'); this.loadTicket(); },
+      error: () => this.toast.error('Failed to update status')
+    });
+  }
+
+  assignFranchise() {
+    this.http.put<any>(`${environment.apiUrl}/admin/tickets/${this.ticketId}/assign`, {
+      admin_id: this.selectedAdminId ? Number(this.selectedAdminId) : null
+    }).subscribe({
+      next: () => this.toast.success('Ticket assigned'),
+      error: () => this.toast.error('Failed to assign ticket')
+    });
+  }
+
+  onFileSelect(event: any) {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        this.toast.error('File too large. Max 10MB.');
+        return;
+      }
+      this.attachmentFile = file;
+    }
+  }
+
+  removeAttachment() {
+    this.attachmentFile = null;
+    if (this.fileInput) this.fileInput.nativeElement.value = '';
+  }
+
   sendReply() {
-    if (!this.replyText.trim()) return;
+    if (!this.replyText.trim() && !this.attachmentFile) return;
     this.sending.set(true);
-    this.http.post<any>(`${environment.apiUrl}/admin/tickets/${this.ticketId}/reply`, { message: this.replyText }).subscribe({
-      next: () => { this.replyText = ''; this.loadTicket(); },
-      error: () => {},
+    const formData = new FormData();
+    formData.append('message', this.replyText);
+    if (this.attachmentFile) formData.append('attachment', this.attachmentFile);
+    this.http.post<any>(`${environment.apiUrl}/admin/tickets/${this.ticketId}/reply`, formData).subscribe({
+      next: () => {
+        this.replyText = '';
+        this.attachmentFile = null;
+        if (this.fileInput) this.fileInput.nativeElement.value = '';
+        this.loadTicket();
+      },
+      error: () => { this.toast.error('Failed to send reply'); this.sending.set(false); },
       complete: () => this.sending.set(false)
     });
+  }
+
+  processPayment() {
+    if (this.ticket()?.order) {
+      this.router.navigate(['/admin/orders/details', this.ticket().order.id]);
+    } else {
+      this.toast.info('No order linked to this ticket. Link an order first.');
+    }
+  }
+
+  getAttachmentUrl(attachment: string): string {
+    if (!attachment) return '';
+    if (attachment.startsWith('http')) return attachment;
+    return this.uploadsBase + attachment;
+  }
+
+  isImage(attachment: string): boolean {
+    if (!attachment) return false;
+    const ext = attachment.toLowerCase().split('.').pop() || '';
+    return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext);
+  }
+
+  getFilename(attachment: string): string {
+    return attachment.split('/').pop() || attachment;
+  }
+
+  getOrderStatus(status: number): string {
+    const labels: any = { 0: 'Pending', 1: 'Confirmed', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' };
+    return labels[status] || 'Unknown';
+  }
+
+  private scrollToBottom() {
+    if (this.messagesArea?.nativeElement) {
+      this.messagesArea.nativeElement.scrollTop = this.messagesArea.nativeElement.scrollHeight;
+    }
   }
 }

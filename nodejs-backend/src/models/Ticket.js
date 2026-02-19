@@ -19,6 +19,10 @@ const Ticket = sequelize.define('Ticket', {
     type: DataTypes.BIGINT,
     allowNull: true
   },
+  order_id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    allowNull: true
+  },
   title: {
     type: DataTypes.TEXT,
     allowNull: true

@@ -13,6 +13,10 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
   template: `
     <div class="page-header">
       <h1 class="page-title">States</h1>
+      <button class="btn-fetch" (click)="fetchFromApi()" [disabled]="fetching()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9"/></svg>
+        {{ fetching() ? 'Importing...' : 'Fetch Indian States from API' }}
+      </button>
     </div>
 
     <div class="table-container">
@@ -42,11 +46,11 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           <tr *ngFor="let item of items(); let i = index">
             <td>{{ i + 1 }}</td>
             <td>
-              <span *ngIf="editId !== item.id">{{ item.name }}</span>
+              <span *ngIf="editId !== item.id">{{ item.state }}</span>
               <input *ngIf="editId === item.id" type="text" [(ngModel)]="editName" class="inline-input">
             </td>
             <td>
-              <span *ngIf="editId !== item.id">{{ item.state_code || item.code || '-' }}</span>
+              <span *ngIf="editId !== item.id">{{ item.state_code || '-' }}</span>
               <input *ngIf="editId === item.id" type="text" [(ngModel)]="editCode" class="inline-input inline-sm">
             </td>
             <td>
@@ -80,7 +84,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     <app-confirm-modal
       [open]="!!deletingItem()"
       title="Delete State"
-      [message]="'Delete &quot;' + (deletingItem()?.name || '') + '&quot;? This cannot be undone.'"
+      [message]="'Delete &quot;' + (deletingItem()?.state || '') + '&quot;? This cannot be undone.'"
       confirmText="Delete"
       type="danger"
       (confirmed)="confirmDelete()"
@@ -90,6 +94,9 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
   styles: [`
     .page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
     .page-title { font-size:24px; font-weight:700; color:#1a1a2e; margin:0; }
+    .btn-fetch { display:flex; align-items:center; gap:8px; padding:10px 20px; border:1px solid #e5e7eb; border-radius:8px; background:#fff; cursor:pointer; font-weight:600; color:#334155; font-size:14px; }
+    .btn-fetch:hover:not(:disabled) { border-color:#e31b23; color:#e31b23; }
+    .btn-fetch:disabled { opacity:0.6; cursor:not-allowed; }
     .table-container { position:relative; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
     .loading-overlay { position:absolute; inset:0; background:rgba(255,255,255,0.7); display:flex; align-items:center; justify-content:center; z-index:10; }
     .spinner { width:36px; height:36px; border:3px solid #f3f4f6; border-top-color:#e31b23; border-radius:50%; animation:spin 0.8s linear infinite; }
@@ -122,6 +129,7 @@ export class StateListComponent implements OnInit {
   items = signal<any[]>([]);
   loading = signal(false);
   saving = signal(false);
+  fetching = signal(false);
   deletingItem = signal<any>(null);
   newName = '';
   newCode = '';
@@ -147,7 +155,7 @@ export class StateListComponent implements OnInit {
   addItem() {
     if (!this.newName.trim()) return;
     this.saving.set(true);
-    this.http.post<any>(`${environment.apiUrl}/admin/states`, { name: this.newName, state_code: this.newCode, status: this.newStatus ? 1 : 0 }).subscribe({
+    this.http.post<any>(`${environment.apiUrl}/admin/states`, { state: this.newName, state_code: this.newCode, status: this.newStatus ? 1 : 0 }).subscribe({
       next: () => { this.newName = ''; this.newCode = ''; this.newStatus = true; this.toast.success('State added successfully'); this.loadItems(); },
       error: () => { this.toast.error('Failed to add state'); this.saving.set(false); },
       complete: () => this.saving.set(false)
@@ -156,18 +164,27 @@ export class StateListComponent implements OnInit {
 
   startEdit(item: any) {
     this.editId = item.id;
-    this.editName = item.name;
-    this.editCode = item.state_code || item.code || '';
+    this.editName = item.state;
+    this.editCode = item.state_code || '';
     this.editStatus = !!item.status;
   }
 
   saveEdit() {
     if (!this.editName.trim()) return;
     this.saving.set(true);
-    this.http.put<any>(`${environment.apiUrl}/admin/states/${this.editId}`, { name: this.editName, state_code: this.editCode, status: this.editStatus ? 1 : 0 }).subscribe({
+    this.http.put<any>(`${environment.apiUrl}/admin/states/${this.editId}`, { state: this.editName, state_code: this.editCode, status: this.editStatus ? 1 : 0 }).subscribe({
       next: () => { this.editId = null; this.toast.success('State updated successfully'); this.loadItems(); },
       error: () => { this.toast.error('Failed to update state'); this.saving.set(false); },
       complete: () => this.saving.set(false)
+    });
+  }
+
+  fetchFromApi() {
+    this.fetching.set(true);
+    this.http.post<any>(`${environment.apiUrl}/admin/locations/import-states`, {}).subscribe({
+      next: (res) => { this.toast.success(res.message || 'States imported!'); this.loadItems(); },
+      error: (err) => { this.toast.error(err.error?.error || 'Failed to fetch states'); },
+      complete: () => this.fetching.set(false)
     });
   }
 

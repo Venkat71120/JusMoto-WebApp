@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +12,7 @@ import { environment } from '../../../../environments/environment';
     <!-- Preview / Trigger -->
     <div class="picker-trigger" (click)="openModal()">
       <div class="preview" *ngIf="previewUrl()">
-        <img [src]="previewUrl()" alt="Selected image">
+        <img [src]="previewUrl()" alt="Selected image" (error)="onImageError()">
         <button class="remove-btn" (click)="removeImage($event)" title="Remove">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
@@ -125,8 +125,8 @@ import { environment } from '../../../../environments/environment';
     .btn-select:hover:not(:disabled) { background:#b11218; }
   `]
 })
-export class MediaPickerComponent implements OnInit {
-  @Input() value: any = null; // media_upload id or path
+export class MediaPickerComponent implements OnInit, OnChanges {
+  @Input() value: any = null;
   @Input() label = 'Select Image';
   @Output() valueChange = new EventEmitter<any>();
   @Output() mediaSelected = new EventEmitter<any>();
@@ -145,6 +145,7 @@ export class MediaPickerComponent implements OnInit {
   searchQuery = '';
 
   private apiUrl = environment.apiUrl;
+  private baseUrl = this.apiUrl.replace('/api/v1', '');
 
   constructor(private http: HttpClient) {}
 
@@ -152,23 +153,41 @@ export class MediaPickerComponent implements OnInit {
     if (this.value) this.loadPreview();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['value'] && !changes['value'].firstChange) {
+      this.loadPreview();
+    }
+  }
+
   loadPreview() {
     if (!this.value) { this.previewUrl.set(''); return; }
-    // If value is a number (media_upload id), fetch it
-    if (typeof this.value === 'number' || /^\d+$/.test(String(this.value))) {
-      // Try to get from media library
-      this.http.get<any>(`${this.apiUrl}/admin/media?limit=1&search=`).subscribe({
+    const val = String(this.value);
+    if (val.startsWith('http')) {
+      this.previewUrl.set(val);
+    } else if (val.startsWith('media/') || val.startsWith('uploads/')) {
+      const filename = val.replace('uploads/media/', '').replace('media/', '');
+      this.previewUrl.set(`${this.baseUrl}/uploads/media/${filename}`);
+    } else if (/^\d+$/.test(val)) {
+      this.http.get<any>(`${this.apiUrl}/admin/media`, { params: { limit: 200 } }).subscribe({
         next: (res) => {
-          // Find in existing data or just show thumb path
-          const baseUrl = this.apiUrl.replace('/api/v1', '');
-          this.previewUrl.set(`${baseUrl}/uploads/media/thumb/${this.value}`);
+          const items = res.data || [];
+          const match = items.find((m: any) => String(m.id) === val);
+          if (match) {
+            this.previewUrl.set(this.getFullUrl(match));
+          }
         }
       });
-    } else if (typeof this.value === 'string' && this.value.startsWith('http')) {
-      this.previewUrl.set(this.value);
-    } else if (typeof this.value === 'string') {
-      const baseUrl = this.apiUrl.replace('/api/v1', '');
-      this.previewUrl.set(`${baseUrl}/uploads/media/thumb/${this.value}`);
+    } else {
+      this.previewUrl.set(`${this.baseUrl}/uploads/media/${val}`);
+    }
+  }
+
+  onImageError() {
+    const current = this.previewUrl();
+    if (current.includes('/thumb/')) {
+      this.previewUrl.set(current.replace('/thumb/', '/'));
+    } else if (current.includes('/grid/')) {
+      this.previewUrl.set(current.replace('/grid/', '/'));
     }
   }
 
@@ -199,7 +218,13 @@ export class MediaPickerComponent implements OnInit {
   getThumbUrl(item: any): string {
     if (!item.path) return '';
     const filename = item.path.replace('media/', '');
-    return `${this.apiUrl.replace('/api/v1', '')}/uploads/media/thumb/${filename}`;
+    return `${this.baseUrl}/uploads/media/thumb/${filename}`;
+  }
+
+  getFullUrl(item: any): string {
+    if (!item.path) return '';
+    const filename = item.path.replace('media/', '');
+    return `${this.baseUrl}/uploads/media/${filename}`;
   }
 
   selectFromLibrary(item: any) {
@@ -209,11 +234,11 @@ export class MediaPickerComponent implements OnInit {
   confirmSelection() {
     const item = this.selectedLibItem();
     if (!item) return;
-    this.value = item.id;
-    this.valueChange.emit(item.id);
+    const fullUrl = this.getFullUrl(item);
+    this.value = fullUrl;
+    this.valueChange.emit(fullUrl);
     this.mediaSelected.emit(item);
-    const filename = item.path?.replace('media/', '');
-    this.previewUrl.set(this.getThumbUrl(item));
+    this.previewUrl.set(fullUrl);
     this.closeModal();
   }
 
@@ -226,10 +251,11 @@ export class MediaPickerComponent implements OnInit {
     this.http.post<any>(`${this.apiUrl}/admin/media/upload`, fd).subscribe({
       next: (res) => {
         const media = res.data;
-        this.value = media.id;
-        this.valueChange.emit(media.id);
+        const fullUrl = this.getFullUrl(media);
+        this.value = fullUrl;
+        this.valueChange.emit(fullUrl);
         this.mediaSelected.emit(media);
-        this.previewUrl.set(this.getThumbUrl(media));
+        this.previewUrl.set(fullUrl);
         this.uploading.set(false);
         this.closeModal();
       },

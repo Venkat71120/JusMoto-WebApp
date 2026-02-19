@@ -791,8 +791,10 @@ router.get('/tickets/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const ticket = await Ticket.findByPk(req.params.id, {
       include: [
-        { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'image'] },
+        { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'image', 'phone'] },
+        { association: 'admin', attributes: ['id', 'name', 'email'] },
         { association: 'department' },
+        { association: 'order', attributes: ['id', 'invoice_number', 'total', 'status', 'payment_status'] },
         { association: 'messages', order: [['created_at', 'ASC']] }
       ]
     });
@@ -805,23 +807,77 @@ router.get('/tickets/:id', authenticate, isAdmin, async (req, res) => {
 
 router.put('/tickets/:id/status', authenticate, isAdmin, async (req, res) => {
   try {
-    await Ticket.update({ status: req.body.status }, { where: { id: req.params.id } });
-    res.json({ success: true, message: 'Ticket status updated' });
+    const updateData = {};
+    if (req.body.status) updateData.status = req.body.status;
+    if (req.body.admin_id !== undefined) updateData.admin_id = req.body.admin_id || null;
+    await Ticket.update(updateData, { where: { id: req.params.id } });
+    res.json({ success: true, message: 'Ticket updated' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
-router.post('/tickets/:id/reply', authenticate, isAdmin, async (req, res) => {
+router.post('/tickets/:id/reply', authenticate, isAdmin, ...uploadSingle('attachment'), async (req, res) => {
   try {
     const { message, type } = req.body;
+    let attachment = null;
+    if (req.file) {
+      const filename = req.file.filename;
+      const destDir = path.join(__dirname, '../../uploads/ticket');
+      if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+      fs.renameSync(req.file.path, path.join(destDir, filename));
+      attachment = `ticket/${filename}`;
+    }
     const chatMsg = await ChatMessage.create({
       ticket_id: req.params.id,
       message,
+      attachment,
       type: type || 'admin',
       notify: 'user'
     });
     res.status(201).json({ success: true, data: chatMsg, message: 'Reply sent' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Assign ticket to franchise admin
+router.put('/tickets/:id/assign', authenticate, isAdmin, async (req, res) => {
+  try {
+    const { admin_id } = req.body;
+    const ticket = await require('../models').Ticket.findByPk(req.params.id);
+    if (!ticket) return res.status(404).json({ success: false, error: 'Ticket not found' });
+    await ticket.update({ admin_id: admin_id || null });
+    res.json({ success: true, data: ticket, message: 'Ticket assigned' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Create ticket from order (admin)
+router.post('/tickets/create-from-order', authenticate, isAdmin, async (req, res) => {
+  try {
+    const { order_id, admin_id, title, subject, priority, description, department_id } = req.body;
+    const order = await Order.findByPk(order_id, {
+      include: [{ association: 'user', attributes: ['id', 'first_name', 'last_name'] }]
+    });
+    if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
+    const ticket = await require('../models').Ticket.create({
+      department_id: department_id || null,
+      admin_id: admin_id || null,
+      user_id: order.user_id,
+      order_id: order.id,
+      title: title || `Order #${order.invoice_number || order.id}`,
+      subject: subject || `Service ticket for Order #${order.invoice_number || order.id}`,
+      priority: priority || 'normal',
+      status: 'open',
+      via: 'admin',
+      description: description || `Ticket created from Order #${order.invoice_number || order.id}\nCustomer: ${order.user?.first_name || ''} ${order.user?.last_name || ''}\nTotal: ₹${order.total}`
+    });
+    if (description) {
+      await ChatMessage.create({ ticket_id: ticket.id, message: description, type: 'admin', notify: 'user' });
+    }
+    res.status(201).json({ success: true, data: ticket, message: 'Ticket created from order' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -1265,6 +1321,58 @@ router.delete('/areas/:id', authenticate, isAdmin, async (req, res) => {
   try {
     await Area.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Area deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ==================== Bulk Import Locations from API ====================
+router.post('/locations/import-states', authenticate, isAdmin, async (req, res) => {
+  try {
+    const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
+    const resp = await fetch('https://countriesnow.space/api/v0.1/countries/states', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ country: 'India' })
+    });
+    const json = await resp.json();
+    if (!json.data || !json.data.states) return res.status(400).json({ success: false, error: 'Could not fetch states' });
+    const states = json.data.states;
+    let added = 0;
+    for (const s of states) {
+      const exists = await State.findOne({ where: { state: s.name } });
+      if (!exists) {
+        await State.create({ state: s.name, state_code: s.state_code || '', status: 1 });
+        added++;
+      }
+    }
+    res.json({ success: true, message: `Imported ${added} new states (${states.length - added} already existed)`, data: { total: states.length, added } });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.post('/locations/import-cities', authenticate, isAdmin, async (req, res) => {
+  try {
+    const { state_id } = req.body;
+    if (!state_id) return res.status(400).json({ success: false, error: 'state_id is required' });
+    const stateRecord = await State.findByPk(state_id);
+    if (!stateRecord) return res.status(404).json({ success: false, error: 'State not found' });
+    const fetch = (...args) => import('node-fetch').then(({default: f}) => f(...args));
+    const resp = await fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ country: 'India', state: stateRecord.state })
+    });
+    const json = await resp.json();
+    if (!json.data || !Array.isArray(json.data)) return res.status(400).json({ success: false, error: 'Could not fetch cities' });
+    let added = 0;
+    for (const cityName of json.data) {
+      const exists = await City.findOne({ where: { city: cityName, state_id } });
+      if (!exists) {
+        await City.create({ city: cityName, state_id, status: 1 });
+        added++;
+      }
+    }
+    res.json({ success: true, message: `Imported ${added} new cities for ${stateRecord.state}`, data: { total: json.data.length, added } });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

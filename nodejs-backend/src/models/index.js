@@ -176,6 +176,9 @@ Ticket.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });
 Department.hasMany(Ticket, { foreignKey: 'department_id', as: 'tickets' });
 Ticket.belongsTo(Department, { foreignKey: 'department_id', as: 'department' });
 
+Order.hasMany(Ticket, { foreignKey: 'order_id', as: 'tickets' });
+Ticket.belongsTo(Order, { foreignKey: 'order_id', as: 'order' });
+
 Ticket.hasMany(ChatMessage, { foreignKey: 'ticket_id', as: 'messages' });
 ChatMessage.belongsTo(Ticket, { foreignKey: 'ticket_id', as: 'ticket' });
 

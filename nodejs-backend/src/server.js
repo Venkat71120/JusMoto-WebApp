@@ -11,13 +11,17 @@ const startServer = async () => {
     // Test database connection
     await testConnection();
 
-    // Sync database models (in development only)
-    if (process.env.NODE_ENV === 'development') {
-      // Use { alter: true } to update tables without dropping them
-      // Use { force: true } to drop and recreate tables (CAUTION: loses data)
-      // await sequelize.sync({ alter: true });
-      console.log('📦 Database models synchronized');
+    // Run safe migrations (adds missing columns only)
+    try {
+      const [cols] = await sequelize.query("SHOW COLUMNS FROM tickets LIKE 'order_id'");
+      if (cols.length === 0) {
+        await sequelize.query("ALTER TABLE tickets ADD COLUMN order_id BIGINT UNSIGNED NULL AFTER user_id");
+        console.log('Migration: Added order_id to tickets table');
+      }
+    } catch (e) {
+      console.log('Migration check skipped:', e.message);
     }
+    console.log('Database models synchronized');
 
     // Start server (use httpServer for Socket.io support)
     httpServer.listen(PORT, () => {

@@ -20,7 +20,7 @@ const authenticate = async (req, res, next) => {
       // Check if it's an admin or user token
       if (decoded.type === 'admin') {
         const admin = await Admin.findByPk(decoded.id);
-        if (!admin || admin.status !== 1) {
+        if (!admin || !admin.status) {
           return res.status(401).json({ error: 'Invalid token or account disabled.' });
         }
         req.admin = admin;
@@ -66,13 +66,13 @@ const optionalAuth = async (req, res, next) => {
 
       if (decoded.type === 'admin') {
         const admin = await Admin.findByPk(decoded.id);
-        if (admin && admin.status === 1) {
+        if (admin && admin.status) {
           req.admin = admin;
           req.userType = 'admin';
         }
       } else {
         const user = await User.findByPk(decoded.id);
-        if (user && user.status === 1) {
+        if (user && user.status) {
           req.user = user;
           req.userType = decoded.type || 'client';
         }

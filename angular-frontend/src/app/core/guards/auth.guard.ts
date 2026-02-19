@@ -55,13 +55,11 @@ export class AdminGuard implements CanActivate {
   ) {}
 
   canActivate(): boolean {
-    const user = this.authService.currentUser;
-    // Check if user is admin (you'll need to add role checking logic)
-    if (this.authService.isAuthenticated) {
+    if (this.authService.isAdminAuthenticated) {
       return true;
     }
 
-    this.router.navigate(['/']);
+    this.router.navigate(['/auth/admin-login']);
     return false;
   }
 }

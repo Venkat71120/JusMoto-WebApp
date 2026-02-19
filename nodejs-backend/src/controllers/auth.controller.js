@@ -155,14 +155,14 @@ const adminLogin = async (req, res) => {
 
     const admin = await Admin.findOne({
       where: { email },
-      attributes: ['id', 'name', 'email', 'username', 'password', 'role', 'status', 'is_franchise', 'image']
+      attributes: ['id', 'name', 'email', 'username', 'password', 'role', 'status', 'image']
     });
 
     if (!admin) {
       return response.notFound(res, 'Admin not found');
     }
 
-    if (admin.status !== 1) {
+    if (!admin.status) {
       return response.forbidden(res, 'Account is disabled');
     }
 
@@ -184,7 +184,6 @@ const adminLogin = async (req, res) => {
         email: admin.email,
         username: admin.username,
         role: admin.role,
-        is_franchise: admin.is_franchise,
         image: admin.image
       },
       token

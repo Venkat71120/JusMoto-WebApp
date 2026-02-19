@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const Admin = sequelize.define('Admin', {
   id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.BIGINT.UNSIGNED,
     autoIncrement: true,
     primaryKey: true
   },
@@ -17,83 +17,48 @@ const Admin = sequelize.define('Admin', {
     allowNull: true,
     unique: true
   },
+  phone: {
+    type: DataTypes.STRING(191),
+    allowNull: true
+  },
   email: {
     type: DataTypes.STRING(191),
     allowNull: false,
-    unique: true,
     validate: {
       isEmail: true
     }
   },
-  phone: {
-    type: DataTypes.STRING(20),
+  email_verified: {
+    type: DataTypes.INTEGER.UNSIGNED,
+    defaultValue: 0
+  },
+  image: {
+    type: DataTypes.STRING(255),
     allowNull: true
   },
   password: {
     type: DataTypes.STRING(255),
     allowNull: false
   },
-  image: {
-    type: DataTypes.STRING(255),
+  about: {
+    type: DataTypes.TEXT,
     allowNull: true
   },
   role: {
-    type: DataTypes.STRING(50),
-    defaultValue: 'admin'
+    type: DataTypes.STRING(191),
+    defaultValue: 'editor'
   },
   status: {
-    type: DataTypes.TINYINT,
-    defaultValue: 1
-  },
-  email_verified_at: {
-    type: DataTypes.DATE,
-    allowNull: true
-  },
-  firebase_token: {
-    type: DataTypes.TEXT,
-    allowNull: true
+    type: DataTypes.BOOLEAN,
+    defaultValue: 0
   },
   remember_token: {
     type: DataTypes.STRING(100),
-    allowNull: true
-  },
-  // Franchise specific fields
-  is_franchise: {
-    type: DataTypes.TINYINT,
-    defaultValue: 0
-  },
-  franchise_name: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  franchise_address: {
-    type: DataTypes.TEXT,
-    allowNull: true
-  },
-  franchise_logo: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  commission_rate: {
-    type: DataTypes.DECIMAL(5, 2),
-    defaultValue: 0.00
-  },
-  state_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true
-  },
-  city_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true
-  },
-  deleted_at: {
-    type: DataTypes.DATE,
     allowNull: true
   }
 }, {
   tableName: 'admins',
   timestamps: true,
-  paranoid: true,
   underscored: true,
   hooks: {
     beforeCreate: async (admin) => {
@@ -111,7 +76,9 @@ const Admin = sequelize.define('Admin', {
 
 // Instance methods
 Admin.prototype.validPassword = async function(password) {
-  return bcrypt.compare(password, this.password);
+  // Laravel uses $2y$ prefix, bcryptjs expects $2a$ or $2b$
+  const hash = this.password.replace(/^\$2y\$/, '$2a$');
+  return bcrypt.compare(password, hash);
 };
 
 Admin.prototype.toJSON = function() {

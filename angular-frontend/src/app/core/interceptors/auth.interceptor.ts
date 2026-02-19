@@ -19,7 +19,9 @@ export class AuthInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const token = this.authService.token;
+    // Use admin token for admin API requests, user token otherwise
+    const isAdminRequest = request.url.includes('/admin/');
+    const token = isAdminRequest ? this.authService.adminToken : this.authService.token;
 
     if (token) {
       request = request.clone({
@@ -32,8 +34,11 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          this.authService.logout();
-          this.router.navigate(['/auth/login']);
+          if (isAdminRequest) {
+            this.authService.adminLogout();
+          } else {
+            this.authService.logout();
+          }
         }
         return throwError(() => error);
       })

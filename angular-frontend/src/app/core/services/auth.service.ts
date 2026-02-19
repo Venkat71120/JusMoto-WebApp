@@ -25,6 +25,24 @@ export interface AuthResponse {
   message: string;
 }
 
+export interface Admin {
+  id: number;
+  name: string;
+  email: string;
+  username: string;
+  role: string;
+  image?: string;
+}
+
+export interface AdminAuthResponse {
+  success: boolean;
+  data: {
+    admin: Admin;
+    token: string;
+  };
+  message: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -32,6 +50,8 @@ export class AuthService {
   private apiUrl = environment.apiUrl;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   private tokenSubject = new BehaviorSubject<string | null>(null);
+  private currentAdminSubject = new BehaviorSubject<Admin | null>(null);
+  private adminTokenSubject = new BehaviorSubject<string | null>(null);
 
   currentUser$ = this.currentUserSubject.asObservable();
   token$ = this.tokenSubject.asObservable();
@@ -46,10 +66,16 @@ export class AuthService {
   private loadStoredAuth(): void {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
-
     if (token && user) {
       this.tokenSubject.next(token);
       this.currentUserSubject.next(JSON.parse(user));
+    }
+
+    const adminToken = localStorage.getItem('adminToken');
+    const admin = localStorage.getItem('admin');
+    if (adminToken && admin) {
+      this.adminTokenSubject.next(adminToken);
+      this.currentAdminSubject.next(JSON.parse(admin));
     }
   }
 
@@ -63,6 +89,18 @@ export class AuthService {
 
   get token(): string | null {
     return this.tokenSubject.value;
+  }
+
+  get isAdminAuthenticated(): boolean {
+    return !!this.adminTokenSubject.value;
+  }
+
+  get currentAdmin(): Admin | null {
+    return this.currentAdminSubject.value;
+  }
+
+  get adminToken(): string | null {
+    return this.adminTokenSubject.value;
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
@@ -147,6 +185,28 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(user));
     this.tokenSubject.next(token);
     this.currentUserSubject.next(user);
+  }
+
+  adminLogin(email: string, password: string): Observable<AdminAuthResponse> {
+    return this.http.post<AdminAuthResponse>(`${this.apiUrl}/auth/admin/login`, { email, password })
+      .pipe(
+        tap(response => {
+          if (response.success) {
+            localStorage.setItem('adminToken', response.data.token);
+            localStorage.setItem('admin', JSON.stringify(response.data.admin));
+            this.adminTokenSubject.next(response.data.token);
+            this.currentAdminSubject.next(response.data.admin);
+          }
+        })
+      );
+  }
+
+  adminLogout(): void {
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('admin');
+    this.adminTokenSubject.next(null);
+    this.currentAdminSubject.next(null);
+    this.router.navigate(['/auth/admin-login']);
   }
 
   updateFirebaseToken(firebase_token: string): Observable<any> {

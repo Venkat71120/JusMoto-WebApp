@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AuthGuard, GuestGuard } from './core/guards/auth.guard';
+import { AuthGuard, GuestGuard, AdminGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   // Public routes
@@ -40,8 +40,14 @@ export const routes: Routes = [
       {
         path: 'verify-email',
         loadComponent: () => import('./features/auth/verify-email/verify-email.component').then(m => m.VerifyEmailComponent)
-      }
+      },
     ]
+  },
+
+  // Admin login (outside GuestGuard so it's always accessible)
+  {
+    path: 'auth/admin-login',
+    loadComponent: () => import('./features/auth/admin-login/admin-login.component').then(m => m.AdminLoginComponent)
   },
 
   // Protected routes
@@ -140,7 +146,7 @@ export const routes: Routes = [
   // Admin routes
   {
     path: 'admin',
-    canActivate: [AuthGuard],
+    canActivate: [AdminGuard],
     loadChildren: () => import('./features/admin/admin.routes').then(m => m.adminRoutes)
   },
 

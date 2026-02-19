@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(node src/server.js:*)",
+      "Bash(npx ng build:*)",
+      "Bash(tasklist:*)",
+      "Bash(tasklist.exe:*)",
+      "Bash(powershell.exe -Command \"Get-Process -Name node -ErrorAction SilentlyContinue | Format-Table Id, ProcessName, Path -AutoSize\")",
+      "Bash(powershell.exe -Command \"Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | Select-Object OwningProcess | Format-Table -AutoSize\")",
+      "Bash(powershell.exe -Command \"Stop-Process -Id 10716 -Force\")",
+      "Bash(curl:*)",
+      "Bash(node -e:*)",
+      "Bash(powershell.exe -Command \"Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | Select-Object OwningProcess -Unique | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }\")"
+    ]
+  }
+}

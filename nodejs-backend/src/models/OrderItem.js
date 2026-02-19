@@ -23,46 +23,22 @@ const OrderItem = sequelize.define('OrderItem', {
       key: 'id'
     }
   },
-  car_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+  type: {
+    type: DataTypes.STRING(50),
     allowNull: true
   },
-  variant_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true
-  },
-  title: {
-    type: DataTypes.STRING(255),
-    allowNull: true
+  qty: {
+    type: DataTypes.INTEGER,
+    defaultValue: 1
   },
   price: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
     defaultValue: 0.00
   },
-  quantity: {
-    type: DataTypes.INTEGER,
-    defaultValue: 1
-  },
-  total: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: false,
-    defaultValue: 0.00
-  },
-  addons: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-    get() {
-      const value = this.getDataValue('addons');
-      return value ? JSON.parse(value) : [];
-    },
-    set(value) {
-      this.setDataValue('addons', JSON.stringify(value));
-    }
-  },
-  addon_total: {
-    type: DataTypes.DECIMAL(10, 2),
-    defaultValue: 0.00
+  image: {
+    type: DataTypes.STRING(255),
+    allowNull: true
   }
 }, {
   tableName: 'order_items',

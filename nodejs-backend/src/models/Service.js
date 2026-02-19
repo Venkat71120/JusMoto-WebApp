@@ -113,16 +113,8 @@ const Service = sequelize.define('Service', {
     type: DataTypes.INTEGER,
     defaultValue: 0
   },
-  state_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true
-  },
-  city_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true
-  },
-  area_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+  deleted_at: {
+    type: DataTypes.DATE,
     allowNull: true
   }
 }, {

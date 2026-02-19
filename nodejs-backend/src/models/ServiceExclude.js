@@ -15,9 +15,13 @@ const ServiceExclude = sequelize.define('ServiceExclude', {
       key: 'id'
     }
   },
-  exclude_text: {
+  title: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  description: {
     type: DataTypes.TEXT,
-    allowNull: false
+    allowNull: true
   }
 }, {
   tableName: 'service_excludes',

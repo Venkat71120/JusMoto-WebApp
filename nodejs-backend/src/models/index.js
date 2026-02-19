@@ -51,8 +51,9 @@ Service.belongsTo(SubCategory, { foreignKey: 'sub_category_id', as: 'subCategory
 Brand.hasMany(Car, { foreignKey: 'brand_id', as: 'cars' });
 Car.belongsTo(Brand, { foreignKey: 'brand_id', as: 'brand' });
 
-Car.hasMany(Variant, { foreignKey: 'car_id', as: 'variants' });
-Variant.belongsTo(Car, { foreignKey: 'car_id', as: 'car' });
+// Variant table does not exist in DB - associations disabled
+// Car.hasMany(Variant, { foreignKey: 'car_id', as: 'variants' });
+// Variant.belongsTo(Car, { foreignKey: 'car_id', as: 'car' });
 
 // Service associations
 Admin.hasMany(Service, { foreignKey: 'admin_id', as: 'services' });
@@ -69,8 +70,6 @@ ServiceAddon.belongsTo(Service, { foreignKey: 'service_id', as: 'service' });
 
 Service.hasMany(ServiceCar, { foreignKey: 'service_id', as: 'serviceCars' });
 ServiceCar.belongsTo(Service, { foreignKey: 'service_id', as: 'service' });
-ServiceCar.belongsTo(Car, { foreignKey: 'car_id', as: 'car' });
-ServiceCar.belongsTo(Variant, { foreignKey: 'varient_id', as: 'variant' });
 
 Service.hasMany(Review, { foreignKey: 'service_id', as: 'reviews' });
 Review.belongsTo(Service, { foreignKey: 'service_id', as: 'service' });
@@ -108,7 +107,7 @@ User.hasMany(UserSelectedCar, { foreignKey: 'user_id', as: 'selectedCars' });
 UserSelectedCar.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 UserSelectedCar.belongsTo(Brand, { foreignKey: 'brand_id', as: 'brand' });
 UserSelectedCar.belongsTo(Car, { foreignKey: 'car_id', as: 'car' });
-UserSelectedCar.belongsTo(Variant, { foreignKey: 'variant_id', as: 'variant' });
+// UserSelectedCar.belongsTo(Variant, { foreignKey: 'variant_id', as: 'variant' });
 
 User.hasMany(UserLocation, { foreignKey: 'user_id', as: 'locations' });
 UserLocation.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
@@ -125,10 +124,7 @@ RefundedOrder.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 User.hasMany(Ticket, { foreignKey: 'user_id', as: 'tickets' });
 Ticket.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
-// Location associations
-User.belongsTo(State, { foreignKey: 'state_id', as: 'state' });
-User.belongsTo(City, { foreignKey: 'city_id', as: 'city' });
-User.belongsTo(Area, { foreignKey: 'area_id', as: 'area' });
+// Location associations (User no longer has state_id/city_id/area_id columns)
 
 State.hasMany(City, { foreignKey: 'state_id', as: 'cities' });
 City.belongsTo(State, { foreignKey: 'state_id', as: 'state' });

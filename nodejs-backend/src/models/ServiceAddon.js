@@ -19,14 +19,14 @@ const ServiceAddon = sequelize.define('ServiceAddon', {
     type: DataTypes.STRING(255),
     allowNull: false
   },
-  price: {
+  additional_price: {
     type: DataTypes.DECIMAL(10, 2),
-    allowNull: false,
+    allowNull: true,
     defaultValue: 0.00
   },
-  status: {
-    type: DataTypes.TINYINT,
-    defaultValue: 1
+  image: {
+    type: DataTypes.STRING(255),
+    allowNull: true
   }
 }, {
   tableName: 'service_addons',

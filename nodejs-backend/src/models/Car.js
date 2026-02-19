@@ -19,22 +19,14 @@ const Car = sequelize.define('Car', {
     type: DataTypes.STRING(191),
     allowNull: false
   },
-  slug: {
-    type: DataTypes.STRING(191),
-    allowNull: true,
-    unique: true
-  },
-  year: {
-    type: DataTypes.STRING(10),
-    allowNull: true
-  },
   image: {
     type: DataTypes.STRING(255),
     allowNull: true
   },
-  status: {
-    type: DataTypes.TINYINT,
-    defaultValue: 1
+  Year: {
+    type: DataTypes.STRING(10),
+    allowNull: true,
+    field: 'Year'
   }
 }, {
   tableName: 'cars',

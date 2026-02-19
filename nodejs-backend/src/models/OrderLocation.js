@@ -15,36 +15,36 @@ const OrderLocation = sequelize.define('OrderLocation', {
       key: 'id'
     }
   },
-  name: {
+  state_id: {
+    type: DataTypes.INTEGER.UNSIGNED,
+    allowNull: true
+  },
+  city_id: {
+    type: DataTypes.INTEGER.UNSIGNED,
+    allowNull: true
+  },
+  area_id: {
+    type: DataTypes.INTEGER.UNSIGNED,
+    allowNull: true
+  },
+  title: {
     type: DataTypes.STRING(255),
     allowNull: true
   },
-  phone: {
+  post_code: {
     type: DataTypes.STRING(20),
-    allowNull: true
-  },
-  email: {
-    type: DataTypes.STRING(255),
     allowNull: true
   },
   address: {
     type: DataTypes.TEXT,
     allowNull: true
   },
-  city: {
-    type: DataTypes.STRING(100),
-    allowNull: true
-  },
-  state: {
-    type: DataTypes.STRING(100),
-    allowNull: true
-  },
-  zip_code: {
+  phone: {
     type: DataTypes.STRING(20),
     allowNull: true
   },
-  country: {
-    type: DataTypes.STRING(100),
+  emergency_phone: {
+    type: DataTypes.STRING(20),
     allowNull: true
   },
   latitude: {
@@ -53,6 +53,10 @@ const OrderLocation = sequelize.define('OrderLocation', {
   },
   longitude: {
     type: DataTypes.DECIMAL(11, 8),
+    allowNull: true
+  },
+  type: {
+    type: DataTypes.STRING(50),
     allowNull: true
   }
 }, {

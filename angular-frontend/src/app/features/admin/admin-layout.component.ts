@@ -26,21 +26,20 @@ import { AuthService } from '../../core/services/auth.service';
             <li>
               <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item" (click)="closeSidebar()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="3" y="3" width="7" height="7"/>
-                  <rect x="14" y="3" width="7" height="7"/>
-                  <rect x="14" y="14" width="7" height="7"/>
-                  <rect x="3" y="14" width="7" height="7"/>
+                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                  <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
                 </svg>
                 <span>Dashboard</span>
               </a>
             </li>
+
+            <li class="nav-section">MANAGEMENT</li>
+
             <li>
               <a routerLink="/admin/users" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                  <circle cx="9" cy="7" r="4"/>
-                  <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-                  <path d="M16 3.13a4 4 0 010 7.75"/>
+                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
                 </svg>
                 <span>Users</span>
               </a>
@@ -48,20 +47,59 @@ import { AuthService } from '../../core/services/auth.service';
             <li>
               <a routerLink="/admin/orders" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                  <line x1="3" y1="6" x2="21" y2="6"/>
-                  <path d="M16 10a4 4 0 01-8 0"/>
+                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+                  <rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h6"/>
                 </svg>
                 <span>Orders</span>
               </a>
             </li>
+
+            <li class="nav-section">CATALOG</li>
+
             <li>
               <a routerLink="/admin/services" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="3"/>
-                  <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+                  <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
                 </svg>
                 <span>Services</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/categories" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>
+                </svg>
+                <span>Categories</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/brands" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+                  <line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+                <span>Brands</span>
+              </a>
+            </li>
+            <li>
+              <a routerLink="/admin/cars" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 17h2m10 0h2M2 9l2-4h16l2 4M2 9h20M2 9v8a1 1 0 001 1h1m16 0h1a1 1 0 001-1V9"/>
+                  <circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>
+                </svg>
+                <span>Cars</span>
+              </a>
+            </li>
+
+            <li class="nav-section">MARKETING</li>
+
+            <li>
+              <a routerLink="/admin/coupons" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 8v4M12 16h.01"/>
+                  <path d="M3.27 11l7.97-7.97a1 1 0 011.32-.08l8.16 6.54a1 1 0 01.27 1.24l-4.15 8.3a1 1 0 01-1.15.52L3.4 16.08a1 1 0 01-.7-.86L2.6 12a1 1 0 01.67-1z"/>
+                </svg>
+                <span>Coupons</span>
               </a>
             </li>
           </ul>
@@ -108,7 +146,7 @@ import { AuthService } from '../../core/services/auth.service';
     .panel-container {
       display: flex;
       min-height: 100vh;
-      background: #f5f6fa;
+      background: #fff5f5;
     }
 
     .sidebar-overlay {
@@ -121,7 +159,7 @@ import { AuthService } from '../../core/services/auth.service';
 
     .sidebar {
       width: 260px;
-      background: #1e293b;
+      background: #0a0c0d;
       display: flex;
       flex-direction: column;
       position: fixed;
@@ -132,7 +170,7 @@ import { AuthService } from '../../core/services/auth.service';
 
     .sidebar-header {
       padding: 20px;
-      border-bottom: 1px solid #334155;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -173,7 +211,7 @@ import { AuthService } from '../../core/services/auth.service';
 
     .nav-bottom {
       margin-top: auto;
-      border-top: 1px solid #334155;
+      border-top: 1px solid rgba(255,255,255,0.08);
       padding-top: 15px;
     }
 
@@ -191,12 +229,12 @@ import { AuthService } from '../../core/services/auth.service';
     }
 
     .nav-item:hover {
-      background: #334155;
-      color: #e2e8f0;
+      background: rgba(227, 27, 35, 0.1);
+      color: #ff6b6b;
     }
 
     .nav-item.active {
-      background: #3b82f6;
+      background: #e31b23;
       color: #fff;
     }
 
@@ -204,6 +242,15 @@ import { AuthService } from '../../core/services/auth.service';
       width: 20px;
       height: 20px;
       flex-shrink: 0;
+    }
+
+    .nav-section {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+      letter-spacing: 0.05em;
+      padding: 20px 15px 8px;
+      text-transform: uppercase;
     }
 
     .logout-btn {

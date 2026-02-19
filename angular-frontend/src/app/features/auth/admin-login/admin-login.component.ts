@@ -34,14 +34,11 @@ import { AuthService } from '../../../core/services/auth.service';
         <mat-card-content>
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Email</mat-label>
-              <input matInput formControlName="email" placeholder="Enter admin email">
-              <mat-icon matSuffix>email</mat-icon>
+              <mat-label>Email or Username</mat-label>
+              <input matInput formControlName="email" placeholder="Enter email or username">
+              <mat-icon matSuffix>person</mat-icon>
               <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
-                Email is required
-              </mat-error>
-              <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
-                Enter a valid email
+                Email or username is required
               </mat-error>
             </mat-form-field>
 
@@ -75,7 +72,7 @@ import { AuthService } from '../../../core/services/auth.service';
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+      background: linear-gradient(135deg, #0a0c0d 0%, #17191a 100%);
       padding: 24px;
     }
 
@@ -118,7 +115,7 @@ export class AdminLoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', Validators.required],
       password: ['', Validators.required]
     });
   }

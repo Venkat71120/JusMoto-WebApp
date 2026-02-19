@@ -48,7 +48,7 @@ const register = async (req, res) => {
     // Create wallet for user
     await Wallet.create({
       user_id: user.id,
-      balance: 0.00
+      available_balance: 0.00
     });
 
     // Generate JWT token
@@ -154,7 +154,12 @@ const adminLogin = async (req, res) => {
     const { email, password } = req.body;
 
     const admin = await Admin.findOne({
-      where: { email },
+      where: {
+        [require('sequelize').Op.or]: [
+          { email },
+          { username: email }
+        ]
+      },
       attributes: ['id', 'name', 'email', 'username', 'password', 'role', 'status', 'image']
     });
 
@@ -359,8 +364,7 @@ const me = async (req, res) => {
     if (user) {
       const userData = await User.findByPk(user.id, {
         include: [
-          { association: 'wallet', attributes: ['balance'] },
-          { association: 'selectedCars', include: ['brand', 'car', 'variant'] }
+          { association: 'wallet', attributes: ['available_balance'] }
         ]
       });
 

@@ -93,26 +93,6 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING(10),
     defaultValue: 'en'
   },
-  state_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true
-  },
-  city_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true
-  },
-  area_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true
-  },
-  google_id: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  facebook_id: {
-    type: DataTypes.STRING(255),
-    allowNull: true
-  },
   remember_token: {
     type: DataTypes.STRING(100),
     allowNull: true

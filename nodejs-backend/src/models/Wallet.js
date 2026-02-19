@@ -16,13 +16,9 @@ const Wallet = sequelize.define('Wallet', {
       key: 'id'
     }
   },
-  balance: {
+  available_balance: {
     type: DataTypes.DECIMAL(12, 2),
     defaultValue: 0.00
-  },
-  status: {
-    type: DataTypes.TINYINT,
-    defaultValue: 1
   }
 }, {
   tableName: 'wallets',

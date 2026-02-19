@@ -15,9 +15,13 @@ const ServiceInclude = sequelize.define('ServiceInclude', {
       key: 'id'
     }
   },
-  include_text: {
+  title: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  description: {
     type: DataTypes.TEXT,
-    allowNull: false
+    allowNull: true
   }
 }, {
   tableName: 'service_includes',

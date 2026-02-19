@@ -11,7 +11,18 @@
       "Bash(powershell.exe -Command \"Stop-Process -Id 10716 -Force\")",
       "Bash(curl:*)",
       "Bash(node -e:*)",
-      "Bash(powershell.exe -Command \"Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | Select-Object OwningProcess -Unique | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }\")"
+      "Bash(powershell.exe -Command \"Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | Select-Object OwningProcess -Unique | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }\")",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidHlwZSI6ImFkbWluIiwicm9sZSI6InN1cGVyYWRtaW4iLCJlbWFpbCI6InNoYXJhbkBibGFja2l0ZWNocy5jb20iLCJpYXQiOjE3NzE0ODM0MTMsImV4cCI6MTc3MjA4ODIxM30.NTB5DKh7qA-fkQoAhuE0QX8otoShqD9OifQ_xnoDOFI\")",
+      "Bash(TK=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidHlwZSI6ImFkbWluIiwicm9sZSI6InN1cGVyYWRtaW4iLCJlbWFpbCI6InNoYXJhbkBibGFja2l0ZWNocy5jb20iLCJpYXQiOjE3NzE0ODQxNTgsImV4cCI6MTc3MjA4ODk1OH0.jAEsZGcbytWJtknMN40lNuYVU46BHVKjeJcrvnqtSqs\")",
+      "Bash(npx pm2 list:*)",
+      "Bash(npx pm2 logs:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(npx pm2 start:*)",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6ImFkbWluIiwicm9sZSI6InN1cGVyX2FkbWluIiwiZW1haWwiOiJhZG1pbkBnb2Nhci5jb20iLCJpYXQiOjE3NzE0ODQ3OTEsImV4cCI6MTc3MjA4OTU5MX0.GMAcYjNa8je7dAm9gMpBLmhGLSMF6mUHXtfwA7WJP-8\")",
+      "Bash(export:*)",
+      "Bash(npx pm2:*)"
     ]
   }
 }

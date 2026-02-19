@@ -40,8 +40,10 @@ const loginValidator = [
 
 const adminLoginValidator = [
   body('email')
-    .isEmail()
-    .withMessage('Please provide a valid email'),
+    .notEmpty()
+    .withMessage('Email or username is required')
+    .isLength({ max: 191 })
+    .withMessage('Email/username is too long'),
   body('password')
     .notEmpty()
     .withMessage('Password is required')

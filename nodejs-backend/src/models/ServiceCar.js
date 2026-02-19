@@ -15,21 +15,13 @@ const ServiceCar = sequelize.define('ServiceCar', {
       key: 'id'
     }
   },
-  car_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true,
-    references: {
-      model: 'cars',
-      key: 'id'
-    }
-  },
   varient_id: {
     type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true,
-    references: {
-      model: 'varients',
-      key: 'id'
-    }
+    allowNull: true
+  },
+  image: {
+    type: DataTypes.STRING(255),
+    allowNull: true
   },
   price: {
     type: DataTypes.DECIMAL(10, 2),
@@ -39,9 +31,25 @@ const ServiceCar = sequelize.define('ServiceCar', {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: true
   },
-  status: {
+  unit: {
+    type: DataTypes.STRING(50),
+    allowNull: true
+  },
+  sold_count: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  use_default: {
     type: DataTypes.TINYINT,
-    defaultValue: 1
+    defaultValue: 0
+  },
+  duration: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  deleted_at: {
+    type: DataTypes.DATE,
+    allowNull: true
   }
 }, {
   tableName: 'service__cars',

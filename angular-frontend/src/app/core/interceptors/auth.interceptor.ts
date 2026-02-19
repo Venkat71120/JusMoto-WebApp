@@ -18,18 +18,23 @@ export class AuthInterceptor implements HttpInterceptor {
     private router: Router
   ) {}
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // Use admin token for admin API requests, user token otherwise
-    const isAdminRequest = request.url.includes('/admin/');
-    const token = isAdminRequest ? this.authService.adminToken : this.authService.token;
+intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
-    if (token) {
-      request = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-    }
+  console.log('REQUEST URL:', request.url);
+
+  const isAdminRequest = request.url.includes('/admin/');
+  const token = isAdminRequest ? this.authService.adminToken : this.authService.token;
+
+  console.log('ADMIN TOKEN:', token);
+
+  if (token) {
+    request = request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {

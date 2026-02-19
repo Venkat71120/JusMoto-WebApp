@@ -16,29 +16,29 @@ const Category = sequelize.define('Category', {
     allowNull: true,
     unique: true
   },
-  description: {
-    type: DataTypes.TEXT,
+  icon: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  mobile_icon: {
+    type: DataTypes.STRING(255),
     allowNull: true
   },
   image: {
     type: DataTypes.STRING(255),
     allowNull: true
   },
-  icon: {
-    type: DataTypes.STRING(255),
+  description: {
+    type: DataTypes.TEXT,
     allowNull: true
   },
   status: {
     type: DataTypes.TINYINT,
     defaultValue: 1
   },
-  is_featured: {
-    type: DataTypes.TINYINT,
-    defaultValue: 0
-  },
-  order: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
+  type: {
+    type: DataTypes.STRING(50),
+    allowNull: true
   }
 }, {
   tableName: 'categories',

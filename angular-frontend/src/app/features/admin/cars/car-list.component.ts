@@ -45,7 +45,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         <tbody>
           <tr *ngFor="let car of cars(); let i = index">
             <td>{{ (pagination().page - 1) * pagination().limit + i + 1 }}</td>
-            <td><img *ngIf="car.image" [src]="car.image" class="thumb" alt=""><span *ngIf="!car.image" class="no-img">-</span></td>
+            <td><img *ngIf="car.image" [src]="getImageUrl(car.image)" class="thumb" alt=""><span *ngIf="!car.image" class="no-img">-</span></td>
             <td>{{ car.brand?.name || '-' }}</td>
             <td class="fw-600">{{ car.name }}</td>
             <td>{{ car.Year || '-' }}</td>
@@ -90,7 +90,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         </div>
         <div class="view-body">
           <div class="view-image" *ngIf="viewCar()?.image">
-            <img [src]="viewCar()?.image" alt="Car image">
+            <img [src]="getImageUrl(viewCar()?.image)" alt="Car image">
           </div>
           <div class="view-grid">
             <div class="view-item"><label>ID</label><span>{{ viewCar()?.id }}</span></div>
@@ -149,7 +149,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .data-table th { background: #f8f9fa; padding: 12px 16px; text-align: left; font-weight: 600; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
     .data-table td { padding: 12px 16px; border-top: 1px solid #f1f5f9; font-size: 14px; color: #334155; }
     .data-table tbody tr:hover { background: #fff5f5; }
-    .thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+    .thumb { width: 48px; height: 36px; border-radius: 8px; object-fit: contain; background: #f8f9fa; padding: 2px; }
     .no-img { color: #94a3b8; }
     .fw-600 { font-weight: 600; }
     .badge { display: inline-flex; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; border: none; }
@@ -176,7 +176,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .modal-close { background: none; border: none; font-size: 28px; cursor: pointer; color: #64748b; line-height: 1; }
     .view-body { padding: 24px; }
     .view-image { margin-bottom: 20px; text-align: center; }
-    .view-image img { max-width: 100%; max-height: 200px; border-radius: 12px; object-fit: cover; }
+    .view-image img { max-width: 100%; max-height: 220px; border-radius: 12px; object-fit: contain; background: #f8f9fa; }
     .view-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .view-item { display: flex; flex-direction: column; gap: 4px; }
     .view-item label { font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -197,9 +197,18 @@ export class CarListComponent implements OnInit {
   deletingCar = signal<any>(null);
   private searchTimeout: any;
 
+  private baseUrl = environment.apiUrl.replace('/api/v1', '');
+
   constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadBrands(); this.loadCars(); }
+
+  getImageUrl(image: string): string {
+    if (!image) return '';
+    if (image.startsWith('http')) return image;
+    const filename = image.replace('uploads/media/', '').replace('media/', '');
+    return `${this.baseUrl}/uploads/media/${filename}`;
+  }
 
   loadBrands() {
     this.http.get<any>(`${environment.apiUrl}/admin/brands`).subscribe({

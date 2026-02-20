@@ -67,8 +67,8 @@ import { environment } from '../../../../environments/environment';
     .media-card { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08); cursor:pointer; position:relative; transition:all 0.2s; }
     .media-card:hover { box-shadow:0 4px 12px rgba(0,0,0,0.15); transform:translateY(-2px); }
     .media-card.selected { outline:3px solid #e31b23; }
-    .media-thumb { width:100%; height:150px; overflow:hidden; background:#f8f9fa; display:flex; align-items:center; justify-content:center; }
-    .media-thumb img { width:100%; height:100%; object-fit:cover; }
+    .media-thumb { width:100%; height:150px; overflow:hidden; background:#f8f9fa; display:flex; align-items:center; justify-content:center; padding:8px; }
+    .media-thumb img { max-width:100%; max-height:100%; object-fit:contain; }
     .media-info { padding:10px 12px; }
     .media-title { display:block; font-size:13px; font-weight:500; color:#334155; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .media-size { font-size:11px; color:#94a3b8; }

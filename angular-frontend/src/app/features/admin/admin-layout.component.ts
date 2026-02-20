@@ -277,8 +277,8 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
             <!-- Profile section -->
             <div class="profile-section" (click)="toggleProfileDropdown($event)">
               <div class="profile-trigger">
-                @if (adminImage()) {
-                  <img [src]="adminImage()" alt="Admin avatar" class="profile-avatar" />
+                @if (adminImage() && !imageError()) {
+                  <img [src]="adminImage()" alt="Admin avatar" class="profile-avatar" (error)="imageError.set(true)" />
                 } @else {
                   <div class="profile-avatar-initials">{{ adminInitials() }}</div>
                 }
@@ -386,17 +386,44 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
     :host ::ng-deep select {
       appearance: none;
       -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: #fff;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 12px center;
-      padding-right: 36px !important;
+      padding: 9px 36px 9px 14px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1e293b;
       cursor: pointer;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      font-family: inherit;
+    }
+    :host ::ng-deep select:hover {
+      border-color: #a1a1aa;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     }
     :host ::ng-deep select:focus {
       border-color: #e31b23;
       box-shadow: 0 0 0 3px rgba(227,27,35,0.1);
       outline: none;
+    }
+    :host ::ng-deep select option {
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1e293b;
+      background: #fff;
+    }
+    :host ::ng-deep select option:checked {
+      background: #fee2e2;
+      color: #e31b23;
+    }
+    :host ::ng-deep select option:hover {
+      background: #f1f5f9;
     }
 
     @media (max-width: 991px) {
@@ -414,6 +441,7 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
 export class AdminLayoutComponent implements OnInit {
   adminName = signal('Admin');
   adminImage = signal<string | null>(null);
+  imageError = signal(false);
   adminInitials = signal('A');
   adminRoleDisplay = signal('Admin');
   isSuperAdmin = signal(false);

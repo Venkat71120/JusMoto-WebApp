@@ -36,8 +36,11 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           <div class="tab-content" [hidden]="activeTab() !== 'profile'">
             <h2>Profile Information</h2>
             <div class="avatar-section">
-              <div class="avatar">
-                <img [src]="avatarUrl()" alt="Profile">
+              <div class="avatar" *ngIf="avatarUrl() && !avatarError()">
+                <img [src]="avatarUrl()" alt="Profile" (error)="avatarError.set(true)">
+              </div>
+              <div class="avatar-initials" *ngIf="!avatarUrl() || avatarError()">
+                {{ userInitials() }}
               </div>
               <div class="avatar-actions">
                 <input type="file" id="avatar-upload" (change)="onAvatarSelect($event)" accept="image/*" hidden>
@@ -301,6 +304,21 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
       object-fit: cover;
     }
 
+    .avatar-initials {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #e31b23;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 700;
+      text-transform: uppercase;
+      border: 4px solid #fecdd3;
+    }
+
     .avatar-actions .btn-outline {
       display: inline-flex;
       align-items: center;
@@ -548,7 +566,9 @@ export class SettingsComponent implements OnInit {
   savingNotifications = signal(false);
   showDeleteModal = signal(false);
   deletingAccount = signal(false);
-  avatarUrl = signal<string>('/assets/images/avatar.png');
+  avatarUrl = signal<string>('');
+  avatarError = signal(false);
+  userInitials = signal('U');
 
   tabs = [
     { id: 'profile', label: 'Profile', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' },
@@ -578,6 +598,8 @@ export class SettingsComponent implements OnInit {
     push_promos: false
   };
 
+  private baseUrl = environment.apiUrl.replace('/api/v1', '');
+
   constructor(
     private authService: AuthService,
     private http: HttpClient,
@@ -594,7 +616,9 @@ export class SettingsComponent implements OnInit {
       this.profile.first_name = user.first_name || '';
       this.profile.last_name = user.last_name || '';
       this.profile.phone = user.phone || '';
-      this.avatarUrl.set(user.image || '/assets/images/avatar.png');
+      this.avatarUrl.set(this.resolveImageUrl(user.image));
+      this.avatarError.set(false);
+      this.updateInitials(user.first_name, user.last_name);
     }
 
     this.http.get<any>(`${environment.apiUrl}/user/profile`).subscribe({
@@ -605,13 +629,27 @@ export class SettingsComponent implements OnInit {
           this.profile.last_name = u.last_name || '';
           this.profile.phone = u.phone || '';
           this.profile.date_of_birth = u.date_of_birth || '';
+          this.updateInitials(u.first_name, u.last_name);
           if (u.image) {
-            this.avatarUrl.set(u.image);
+            this.avatarUrl.set(this.resolveImageUrl(u.image));
+            this.avatarError.set(false);
           }
         }
       },
       error: () => {}
     });
+  }
+
+  private updateInitials(firstName: string, lastName: string): void {
+    const f = (firstName || '').charAt(0);
+    const l = (lastName || '').charAt(0);
+    this.userInitials.set((f + l).toUpperCase() || 'U');
+  }
+
+  private resolveImageUrl(image: string | undefined | null): string {
+    if (!image) return '';
+    if (image.startsWith('http') || image.startsWith('data:')) return image;
+    return this.baseUrl + image;
   }
 
   onAvatarSelect(event: Event): void {
@@ -623,6 +661,7 @@ export class SettingsComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.avatarUrl.set(e.target?.result as string);
+        this.avatarError.set(false);
       };
       reader.readAsDataURL(file);
 
@@ -632,7 +671,9 @@ export class SettingsComponent implements OnInit {
       this.http.post<any>(`${environment.apiUrl}/upload/avatar`, formData).subscribe({
         next: (res) => {
           if (res.avatar_url) {
-            this.avatarUrl.set(res.avatar_url);
+            const fullUrl = this.resolveImageUrl(res.avatar_url);
+            this.avatarUrl.set(fullUrl);
+            this.avatarError.set(false);
             this.authService.updateCurrentUser({ image: res.avatar_url } as any);
           }
           this.toast.success('Avatar updated successfully');

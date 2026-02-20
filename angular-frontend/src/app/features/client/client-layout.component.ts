@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-client-layout',
@@ -182,7 +183,8 @@ import { AuthService } from '../../core/services/auth.service';
             </a>
             <div class="user-dropdown">
               <button class="user-btn" (click)="toggleDropdown()">
-                <img [src]="currentUser()?.image || '/assets/images/avatar.png'" alt="User" class="user-avatar" onerror="this.src='/assets/images/avatar.png'">
+                <img *ngIf="currentUser()?.image && !imageError()" [src]="getImageUrl(currentUser()?.image)" alt="User" class="user-avatar" (error)="imageError.set(true)">
+                <span *ngIf="!currentUser()?.image || imageError()" class="user-initials">{{ getUserInitials() }}</span>
                 <span class="user-name">{{ currentUser()?.first_name || 'User' }}</span>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M7 10l5 5 5-5z"/>
@@ -444,6 +446,21 @@ import { AuthService } from '../../core/services/auth.service';
       background: #e5e7eb;
     }
 
+    .user-initials {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e31b23;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
     .user-name {
       font-weight: 500;
       color: #333;
@@ -524,7 +541,9 @@ import { AuthService } from '../../core/services/auth.service';
   `]
 })
 export class ClientLayoutComponent implements OnInit {
+  private baseUrl = environment.apiUrl.replace('/api/v1', '');
   currentUser = signal<any>(null);
+  imageError = signal(false);
   cartCount = signal(0);
   showDropdown = signal(false);
   sidebarOpen = signal(false);
@@ -537,7 +556,22 @@ export class ClientLayoutComponent implements OnInit {
   ngOnInit(): void {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser.set(user);
+      this.imageError.set(false);
     });
+  }
+
+  getUserInitials(): string {
+    const user = this.currentUser();
+    if (!user) return 'U';
+    const f = (user.first_name || '').charAt(0);
+    const l = (user.last_name || '').charAt(0);
+    return (f + l).toUpperCase() || 'U';
+  }
+
+  getImageUrl(image: string): string {
+    if (!image) return '';
+    if (image.startsWith('http')) return image;
+    return this.baseUrl + image;
   }
 
   toggleDropdown(): void {

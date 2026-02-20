@@ -8,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -44,8 +45,9 @@ import { CartService } from '../../../core/services/cart.service';
           </button>
 
           <ng-container *ngIf="isLoggedIn; else loginBtn">
-            <button mat-icon-button [matMenuTriggerFor]="userMenu">
-              <mat-icon>account_circle</mat-icon>
+            <button mat-icon-button [matMenuTriggerFor]="userMenu" class="profile-btn">
+              <img *ngIf="userImage && !imageError" [src]="userImage" class="profile-avatar" (error)="imageError = true" alt="Profile">
+              <span *ngIf="!userImage || imageError" class="profile-initials">{{ userInitials }}</span>
             </button>
             <mat-menu #userMenu="matMenu">
               <a mat-menu-item routerLink="/dashboard">
@@ -156,6 +158,38 @@ import { CartService } from '../../../core/services/cart.service';
       border-color: rgba(255, 255, 255, 0.5);
     }
 
+    .profile-btn {
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .profile-initials {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #e31b23;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      text-transform: uppercase;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+    }
+
     @media (max-width: 768px) {
       .nav-links {
         display: none;
@@ -164,8 +198,12 @@ import { CartService } from '../../../core/services/cart.service';
   `]
 })
 export class HeaderComponent implements OnInit {
+  private baseUrl = environment.apiUrl.replace('/api/v1', '');
   isLoggedIn = false;
   cartCount = 0;
+  userImage = '';
+  userInitials = '';
+  imageError = false;
 
   constructor(
     private authService: AuthService,
@@ -173,8 +211,19 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.isLoggedIn$.subscribe(loggedIn => {
-      this.isLoggedIn = loggedIn;
+    this.authService.currentUser$.subscribe(user => {
+      this.isLoggedIn = !!user;
+      if (user) {
+        const img = user.image || '';
+        this.userImage = img && !img.startsWith('http') ? this.baseUrl + img : img;
+        this.imageError = false;
+        const first = (user.first_name || '').charAt(0);
+        const last = (user.last_name || '').charAt(0);
+        this.userInitials = (first + last).toUpperCase() || 'U';
+      } else {
+        this.userImage = '';
+        this.userInitials = '';
+      }
     });
 
     this.cartService.cartCount$.subscribe(count => {

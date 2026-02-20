@@ -59,7 +59,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         <tbody>
           <tr *ngFor="let brand of brands(); let i = index">
             <td>{{ i + 1 }}</td>
-            <td><img *ngIf="brand.image" [src]="brand.image" class="thumb" alt=""><span *ngIf="!brand.image" class="no-img">-</span></td>
+            <td><img *ngIf="brand.image" [src]="getImageUrl(brand.image)" class="thumb" alt=""><span *ngIf="!brand.image" class="no-img">-</span></td>
             <td class="fw-600">{{ brand.name }}</td>
             <td>
               <div class="action-btns">
@@ -116,7 +116,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .data-table th { background: #f8f9fa; padding: 12px 16px; text-align: left; font-weight: 600; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
     .data-table td { padding: 12px 16px; border-top: 1px solid #f1f5f9; font-size: 14px; color: #334155; }
     .data-table tbody tr:hover { background: #fff5f5; }
-    .thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+    .thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: contain; background: #f8f9fa; padding: 4px; }
     .no-img { color: #94a3b8; }
     .fw-600 { font-weight: 600; }
     .text-muted { color: #94a3b8; }
@@ -140,9 +140,18 @@ export class BrandListComponent implements OnInit {
   formError = '';
   private searchTimeout: any;
 
+  private baseUrl = environment.apiUrl.replace('/api/v1', '');
+
   constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() { this.loadBrands(); }
+
+  getImageUrl(image: string): string {
+    if (!image) return '';
+    if (image.startsWith('http')) return image;
+    const filename = image.replace('uploads/media/', '').replace('media/', '');
+    return `${this.baseUrl}/uploads/media/${filename}`;
+  }
 
   loadBrands() {
     this.loading.set(true);

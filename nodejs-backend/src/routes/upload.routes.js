@@ -12,7 +12,8 @@ router.post('/single', authenticate, uploadSingle('file'), async (req, res) => {
       return res.status(400).json({ success: false, error: 'No file uploaded' });
     }
 
-    const fileUrl = `/uploads/${req.file.filename}`;
+    const subDir = path.basename(req.file.destination);
+    const fileUrl = subDir === 'uploads' ? `/uploads/${req.file.filename}` : `/uploads/${subDir}/${req.file.filename}`;
 
     res.json({
       success: true,
@@ -41,7 +42,7 @@ router.post('/multiple', authenticate, uploadMultiple('files', 10), async (req, 
       original_name: file.originalname,
       mimetype: file.mimetype,
       size: file.size,
-      url: `/uploads/${file.filename}`
+      url: `/uploads/${file.destination ? path.basename(file.destination) + '/' : ''}${file.filename}`
     }));
 
     res.json({ success: true, data: files });
@@ -57,7 +58,7 @@ router.post('/avatar', authenticate, uploadSingle('avatar'), async (req, res) =>
       return res.status(400).json({ success: false, error: 'No file uploaded' });
     }
 
-    const avatarUrl = `/uploads/${req.file.filename}`;
+    const avatarUrl = `/uploads/images/${req.file.filename}`;
     const { User } = require('../models');
 
     await User.update({ image: avatarUrl }, { where: { id: req.user.id } });

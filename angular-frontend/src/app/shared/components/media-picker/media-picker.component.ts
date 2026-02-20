@@ -78,8 +78,8 @@ import { environment } from '../../../../environments/environment';
   styles: [`
     .picker-trigger { cursor:pointer; border:2px dashed #e5e7eb; border-radius:12px; overflow:hidden; transition:all 0.2s; display:inline-block; }
     .picker-trigger:hover { border-color:#e31b23; }
-    .preview { position:relative; width:160px; height:120px; }
-    .preview img { width:100%; height:100%; object-fit:cover; }
+    .preview { position:relative; width:160px; height:120px; display:flex; align-items:center; justify-content:center; background:#f8f9fa; }
+    .preview img { max-width:100%; max-height:100%; object-fit:contain; margin:auto; display:block; }
     .remove-btn { position:absolute; top:6px; right:6px; background:rgba(255,255,255,0.9); border:none; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#dc2626; }
     .placeholder { width:160px; height:120px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#94a3b8; }
     .placeholder span { font-size:13px; font-weight:500; }
@@ -107,7 +107,7 @@ import { environment } from '../../../../environments/environment';
     .lib-item { border-radius:8px; overflow:hidden; cursor:pointer; border:2px solid transparent; transition:all 0.2s; background:#f8f9fa; }
     .lib-item:hover { border-color:#fca5a5; }
     .lib-item.selected { border-color:#e31b23; box-shadow:0 0 0 2px rgba(227,27,35,0.2); }
-    .lib-item img { width:100%; height:90px; object-fit:cover; }
+    .lib-item img { width:100%; height:90px; object-fit:contain; padding:4px; background:#f8f9fa; }
     .lib-item-name { display:block; padding:4px 8px; font-size:11px; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .lib-loading { display:flex; justify-content:center; padding:40px; }
     .lib-empty { text-align:center; padding:40px; color:#94a3b8; }

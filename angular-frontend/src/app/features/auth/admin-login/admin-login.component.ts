@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
     <div class="login-wrapper">
       <div class="login-left">
@@ -85,6 +85,10 @@ import { AuthService } from '../../../core/services/auth.service';
               </span>
             </button>
           </form>
+
+          <div class="user-link">
+            <p>Not an admin? <a routerLink="/auth/login">Login as User</a></p>
+          </div>
         </div>
       </div>
     </div>
@@ -156,6 +160,11 @@ import { AuthService } from '../../../core/services/auth.service';
     .btn-loading { display:flex; align-items:center; gap:10px; }
     .spinner-btn { width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; }
     @keyframes spin { to { transform:rotate(360deg); } }
+
+    .user-link { text-align:center; margin-top:28px; }
+    .user-link p { color:#94a3b8; font-size:13px; margin:0; }
+    .user-link a { color:#e31b23; text-decoration:none; font-weight:500; transition:color 0.2s; }
+    .user-link a:hover { color:#c41219; text-decoration:underline; }
 
     @media (max-width: 900px) {
       .login-wrapper { flex-direction:column; }

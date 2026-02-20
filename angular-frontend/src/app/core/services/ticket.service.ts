@@ -45,7 +45,7 @@ export class TicketService {
   }
 
   replyToTicket(id: number, data: FormData | { message: string; attachment?: File }): Observable<any> {
-    return this.api.post<any>(`/tickets/${id}/reply`, data);
+    return this.api.post<any>(`/tickets/${id}/messages`, data);
   }
 
   closeTicket(id: number): Observable<any> {

@@ -294,11 +294,12 @@ export class TicketCreateComponent implements OnInit {
     this.submitting.set(true);
 
     const formData = new FormData();
-    Object.keys(this.ticketForm.value).forEach(key => {
-      if (this.ticketForm.value[key]) {
-        formData.append(key, this.ticketForm.value[key]);
-      }
-    });
+    const vals = this.ticketForm.value;
+    if (vals.subject) formData.append('subject', vals.subject);
+    if (vals.priority) formData.append('priority', vals.priority);
+    if (vals.message) formData.append('description', vals.message);
+    if (vals.order_id) formData.append('order_id', vals.order_id);
+    if (vals.category) formData.append('department', vals.category);
 
     if (this.selectedFile) {
       formData.append('attachment', this.selectedFile);

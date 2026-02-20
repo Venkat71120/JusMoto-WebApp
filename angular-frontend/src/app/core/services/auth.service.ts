@@ -87,6 +87,15 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  updateCurrentUser(updates: Partial<User>): void {
+    const user = this.currentUserSubject.value;
+    if (user) {
+      const updated = { ...user, ...updates };
+      this.currentUserSubject.next(updated);
+      localStorage.setItem('user', JSON.stringify(updated));
+    }
+  }
+
   get token(): string | null {
     return this.tokenSubject.value;
   }
@@ -185,6 +194,17 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(user));
     this.tokenSubject.next(token);
     this.currentUserSubject.next(user);
+  }
+
+  socialLogin(data: { provider: string; email: string; firstName?: string; lastName?: string; socialId?: string; image?: string }): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/social/login`, data)
+      .pipe(
+        tap(response => {
+          if (response.success) {
+            this.setAuth(response.data.token, response.data.user);
+          }
+        })
+      );
   }
 
   adminLogin(email: string, password: string): Observable<AdminAuthResponse> {

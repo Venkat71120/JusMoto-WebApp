@@ -19,13 +19,8 @@ export class AuthInterceptor implements HttpInterceptor {
   ) {}
 
 intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-
-  console.log('REQUEST URL:', request.url);
-
   const isAdminRequest = request.url.includes('/admin/');
   const token = isAdminRequest ? this.authService.adminToken : this.authService.token;
-
-  console.log('ADMIN TOKEN:', token);
 
   if (token) {
     request = request.clone({

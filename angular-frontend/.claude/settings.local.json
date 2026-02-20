@@ -38,7 +38,9 @@
       "Bash(echo:*)",
       "Bash(npx ng serve --open)",
       "Bash(python:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwidHlwZSI6ImNsaWVudCIsImVtYWlsIjoidGVzdEBqdXNtb3RvLmNvbSIsImlhdCI6MTc3MTUzMzkyMCwiZXhwIjoxNzcyMTM4NzIwfQ.ohnsyh7YYDE4slO3K6A05wHAIhdWbTvzvMYlEqVmOus\")",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwidHlwZSI6ImNsaWVudCIsImVtYWlsIjoidGVzdEBqdXNtb3RvLmNvbSIsImlhdCI6MTc3MTUzMzk3MywiZXhwIjoxNzcyMTM4NzczfQ.HYJ4s2-Yi3nZHoxWU65Nt3wRKcsoh9gjKAuBJdTJASQ\")"
     ]
   }
 }

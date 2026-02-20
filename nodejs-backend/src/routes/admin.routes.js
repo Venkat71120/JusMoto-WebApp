@@ -335,7 +335,8 @@ router.put('/orders/:id', authenticate, isAdmin, async (req, res) => {
           via: 'admin',
           description: desc
         });
-        await ChatMessage.create({ ticket_id: ticket.id, message: desc, type: 'admin', notify: 'user' });
+        const { TicketMessage } = require('../models');
+        await TicketMessage.create({ ticket_id: ticket.id, admin_id: req.admin.id, message: desc });
       }
     }
     res.json({ success: true, message: 'Order updated successfully' });
@@ -874,14 +875,16 @@ router.get('/tickets', authenticate, isAdmin, async (req, res) => {
 
 router.get('/tickets/:id', authenticate, isAdmin, async (req, res) => {
   try {
+    const { TicketMessage } = require('../models');
     const ticket = await Ticket.findByPk(req.params.id, {
       include: [
         { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'image', 'phone'] },
         { association: 'admin', attributes: ['id', 'name', 'email'] },
         { association: 'department' },
         { association: 'order', attributes: ['id', 'invoice_number', 'total', 'status', 'payment_status'] },
-        { association: 'messages', order: [['created_at', 'ASC']] }
-      ]
+        { association: 'ticketMessages', include: [{ association: 'user', attributes: ['id', 'first_name', 'last_name', 'image'] }, { association: 'admin', attributes: ['id', 'name', 'image'] }] }
+      ],
+      order: [[{ model: TicketMessage, as: 'ticketMessages' }, 'created_at', 'ASC']]
     });
     if (!ticket) return res.status(404).json({ success: false, error: 'Ticket not found' });
     res.json({ success: true, data: ticket });
@@ -913,14 +916,16 @@ router.post('/tickets/:id/reply', authenticate, isAdmin, ...uploadSingle('attach
       fs.renameSync(req.file.path, path.join(destDir, filename));
       attachment = `ticket/${filename}`;
     }
-    const chatMsg = await ChatMessage.create({
+    const { TicketMessage } = require('../models');
+    const ticketMsg = await TicketMessage.create({
       ticket_id: req.params.id,
+      admin_id: req.admin.id,
       message,
-      attachment,
-      type: type || 'admin',
-      notify: 'user'
+      attachment
     });
-    res.status(201).json({ success: true, data: chatMsg, message: 'Reply sent' });
+    // Update ticket status to answered
+    await Ticket.update({ status: 'answered' }, { where: { id: req.params.id } });
+    res.status(201).json({ success: true, data: ticketMsg, message: 'Reply sent' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -960,7 +965,8 @@ router.post('/tickets/create-from-order', authenticate, isAdmin, async (req, res
       description: description || `Ticket created from Order #${order.invoice_number || order.id}\nCustomer: ${order.user?.first_name || ''} ${order.user?.last_name || ''}\nTotal: ₹${order.total}`
     });
     if (description) {
-      await ChatMessage.create({ ticket_id: ticket.id, message: description, type: 'admin', notify: 'user' });
+      const { TicketMessage } = require('../models');
+      await TicketMessage.create({ ticket_id: ticket.id, admin_id: req.admin.id, message: description });
     }
     res.status(201).json({ success: true, data: ticket, message: 'Ticket created from order' });
   } catch (error) {

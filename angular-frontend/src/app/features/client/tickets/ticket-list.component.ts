@@ -52,7 +52,7 @@ import { TicketService } from '../../../core/services/ticket.service';
             </span>
           </div>
           <h3 class="ticket-subject">{{ ticket.subject }}</h3>
-          <p class="ticket-preview">{{ ticket.message | slice:0:100 }}...</p>
+          <p class="ticket-preview">{{ (ticket.description || ticket.message) | slice:0:100 }}...</p>
           <div class="ticket-meta">
             <span class="category" *ngIf="ticket.category">{{ ticket.category }}</span>
             <span class="date">{{ ticket.created_at | date:'mediumDate' }}</span>

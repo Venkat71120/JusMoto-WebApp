@@ -34,6 +34,42 @@ const startServer = async () => {
     } catch (e) {
       console.log('Migration check (varients):', e.message);
     }
+    // Ensure user_selected_cars has all required columns
+    try {
+      const colsToAdd = [
+        { name: 'variant_id', sql: "ADD COLUMN variant_id INT UNSIGNED NULL AFTER car_id" },
+        { name: 'registration_number', sql: "ADD COLUMN registration_number VARCHAR(50) NULL" },
+        { name: 'is_default', sql: "ADD COLUMN is_default TINYINT DEFAULT 0" },
+        { name: 'status', sql: "ADD COLUMN status TINYINT DEFAULT 1" }
+      ];
+      for (const col of colsToAdd) {
+        const [exists] = await sequelize.query(`SHOW COLUMNS FROM user_selected_cars LIKE '${col.name}'`);
+        if (exists.length === 0) {
+          await sequelize.query(`ALTER TABLE user_selected_cars ${col.sql}`);
+          console.log(`Migration: Added ${col.name} to user_selected_cars`);
+        }
+      }
+    } catch (e) {
+      console.log('Migration check (user_selected_cars):', e.message);
+    }
+
+    // Create ticket_messages table if not exists
+    try {
+      await sequelize.query(`CREATE TABLE IF NOT EXISTS ticket_messages (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        ticket_id INT UNSIGNED NOT NULL,
+        user_id INT UNSIGNED NULL,
+        admin_id INT UNSIGNED NULL,
+        message TEXT NOT NULL,
+        attachment VARCHAR(255) NULL,
+        is_read TINYINT DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )`);
+    } catch (e) {
+      console.log('Migration check (ticket_messages):', e.message);
+    }
+
     console.log('Database models synchronized');
 
     // Start server (use httpServer for Socket.io support)

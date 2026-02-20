@@ -9,5 +9,6 @@ export const environment = {
   currencySymbol: '₹',
   googleMapsApiKey: '',
   stripePublishableKey: '',
-  razorpayKeyId: ''
+  razorpayKeyId: '',
+  googleClientId: ''
 };

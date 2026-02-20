@@ -535,7 +535,9 @@ export class ClientLayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.currentUser.set(this.authService.currentUser);
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser.set(user);
+    });
   }
 
   toggleDropdown(): void {

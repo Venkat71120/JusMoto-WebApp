@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
+const fs = require('fs');
 const { authenticate, isClient, isAdmin, isFranchise } = require('../middleware/auth.middleware');
+const { uploadSingle } = require('../middleware/upload.middleware');
 const { Ticket, TicketMessage, User, Admin } = require('../models');
 const { Op } = require('sequelize');
 const { paginate, paginationResponse, generateRandomString } = require('../utils/helpers');
@@ -54,14 +57,14 @@ router.get('/:id', authenticate, async (req, res) => {
         { model: Admin, as: 'admin', attributes: ['id', 'name', 'email'] },
         {
           model: TicketMessage,
-          as: 'messages',
+          as: 'ticketMessages',
           include: [
             { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'image'] },
             { model: Admin, as: 'admin', attributes: ['id', 'name', 'image'] }
-          ],
-          order: [['created_at', 'ASC']]
+          ]
         }
-      ]
+      ],
+      order: [[{ model: TicketMessage, as: 'ticketMessages' }, 'created_at', 'ASC']]
     });
 
     if (!ticket) {
@@ -125,9 +128,9 @@ router.post('/', authenticate, async (req, res) => {
 });
 
 // Add message to ticket
-router.post('/:id/messages', authenticate, async (req, res) => {
+router.post('/:id/messages', authenticate, ...uploadSingle('attachment'), async (req, res) => {
   try {
-    const { message, attachment } = req.body;
+    const { message } = req.body;
 
     const where = { id: req.params.id };
     if (req.user) where.user_id = req.user.id;
@@ -142,6 +145,15 @@ router.post('/:id/messages', authenticate, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Cannot reply to closed ticket' });
     }
 
+    let attachment = null;
+    if (req.file) {
+      const filename = req.file.filename;
+      const destDir = path.join(__dirname, '../../uploads/ticket');
+      if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+      fs.renameSync(req.file.path, path.join(destDir, filename));
+      attachment = `ticket/${filename}`;
+    }
+
     const ticketMessage = await TicketMessage.create({
       ticket_id: ticket.id,
       user_id: req.user ? req.user.id : null,
@@ -150,7 +162,7 @@ router.post('/:id/messages', authenticate, async (req, res) => {
       attachment
     });
 
-    // Reopen ticket if closed
+    // Reopen ticket if resolved
     if (ticket.status === 'resolved') {
       await ticket.update({ status: 'open' });
     }

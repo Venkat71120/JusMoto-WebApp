@@ -633,6 +633,7 @@ export class SettingsComponent implements OnInit {
         next: (res) => {
           if (res.avatar_url) {
             this.avatarUrl.set(res.avatar_url);
+            this.authService.updateCurrentUser({ image: res.avatar_url } as any);
           }
           this.toast.success('Avatar updated successfully');
         },
@@ -648,6 +649,11 @@ export class SettingsComponent implements OnInit {
     this.http.put<any>(`${environment.apiUrl}/user/profile`, this.profile).subscribe({
       next: () => {
         this.savingProfile.set(false);
+        this.authService.updateCurrentUser({
+          first_name: this.profile.first_name,
+          last_name: this.profile.last_name,
+          phone: this.profile.phone
+        } as any);
         this.toast.success('Profile updated successfully');
       },
       error: () => {

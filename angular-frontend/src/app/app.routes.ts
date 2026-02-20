@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard, GuestGuard, AdminGuard } from './core/guards/auth.guard';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 export const routes: Routes = [
   // Public routes
@@ -50,11 +52,12 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/admin-login/admin-login.component').then(m => m.AdminLoginComponent)
   },
 
-  // Protected routes
+  // Redirect legacy /dashboard to /client/dashboard
   {
     path: 'dashboard',
     canActivate: [AuthGuard],
-    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+    children: [],
+    canMatch: [() => { inject(Router).navigate(['/client/dashboard']); return false; }]
   },
   {
     path: 'profile',

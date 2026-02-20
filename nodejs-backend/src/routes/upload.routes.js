@@ -50,6 +50,28 @@ router.post('/multiple', authenticate, uploadMultiple('files', 10), async (req, 
   }
 });
 
+// Upload avatar
+router.post('/avatar', authenticate, uploadSingle('avatar'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No file uploaded' });
+    }
+
+    const avatarUrl = `/uploads/${req.file.filename}`;
+    const { User } = require('../models');
+
+    await User.update({ image: avatarUrl }, { where: { id: req.user.id } });
+
+    res.json({
+      success: true,
+      avatar_url: avatarUrl,
+      message: 'Avatar updated successfully'
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Delete file
 router.delete('/:filename', authenticate, async (req, res) => {
   try {

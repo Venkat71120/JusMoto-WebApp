@@ -88,9 +88,9 @@ import { ToastService } from '../../../core/services/toast.service';
         <div class="messages-area" #messagesArea>
           <div *ngFor="let msg of messages()"
                class="message-bubble"
-               [class.admin-msg]="msg.type === 'admin'"
-               [class.user-msg]="msg.type !== 'admin'">
-            <div class="msg-sender">{{ msg.type === 'admin' ? 'Admin' : (ticket().user?.first_name || 'Customer') }}</div>
+               [class.admin-msg]="msg.admin_id"
+               [class.user-msg]="!msg.admin_id">
+            <div class="msg-sender">{{ msg.admin_id ? (msg.admin?.name || 'Admin') : (msg.user?.first_name || ticket().user?.first_name || 'Customer') }}</div>
             <div class="msg-text" *ngIf="msg.message">{{ msg.message }}</div>
             <div class="msg-attachment" *ngIf="msg.attachment">
               <a [href]="getAttachmentUrl(msg.attachment)" target="_blank" class="attachment-link">
@@ -234,7 +234,7 @@ export class TicketDetailComponent implements OnInit {
         this.ticket.set(t);
         this.selectedStatus = t.status || 'open';
         this.selectedAdminId = t.admin_id ? String(t.admin_id) : '';
-        this.messages.set(t.messages || []);
+        this.messages.set(t.ticketMessages || t.messages || []);
         setTimeout(() => this.scrollToBottom(), 100);
       },
       error: () => this.router.navigate(['/admin/support-ticket/tickets']),

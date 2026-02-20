@@ -123,6 +123,7 @@ User.hasMany(UserSelectedCar, { foreignKey: 'user_id', as: 'selectedCars' });
 UserSelectedCar.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 UserSelectedCar.belongsTo(Brand, { foreignKey: 'brand_id', as: 'brand' });
 UserSelectedCar.belongsTo(Car, { foreignKey: 'car_id', as: 'car' });
+UserSelectedCar.belongsTo(Variant, { foreignKey: 'variant_id', as: 'variant' });
 
 User.hasMany(UserLocation, { foreignKey: 'user_id', as: 'locations' });
 UserLocation.belongsTo(User, { foreignKey: 'user_id', as: 'user' });

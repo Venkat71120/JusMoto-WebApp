@@ -9,7 +9,7 @@ router.get('/profile', authenticate, isClient, async (req, res) => {
 
     const user = await User.findByPk(req.user.id, {
       include: [
-        { model: Wallet, as: 'wallet', attributes: ['balance'] },
+        { model: Wallet, as: 'wallet', attributes: ['available_balance'] },
         {
           model: UserSelectedCar,
           as: 'selectedCars',
@@ -293,7 +293,7 @@ router.get('/dashboard', authenticate, isClient, async (req, res) => {
     const orders = await Order.findAll({
       where: { user_id: userId },
       include: [
-        { model: OrderLocation, as: 'orderLocation' },
+        { model: OrderLocation, as: 'location' },
         { model: OrderItem, as: 'items', include: [{ model: Service, as: 'service', attributes: ['id', 'title'] }] }
       ],
       order: [['created_at', 'DESC']],

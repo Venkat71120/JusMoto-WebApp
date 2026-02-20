@@ -199,6 +199,7 @@ Review.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });
 // Outlet location associations
 Admin.hasMany(AdminOutletLocation, { foreignKey: 'admin_id', as: 'outletLocations' });
 AdminOutletLocation.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });
+Admin.belongsTo(AdminOutletLocation, { foreignKey: 'outlet_location_id', as: 'outletLocation' });
 
 // Export all models
 module.exports = {

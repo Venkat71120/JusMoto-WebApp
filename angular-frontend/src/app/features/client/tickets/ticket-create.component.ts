@@ -13,11 +13,11 @@ import { ToastService } from '../../../core/services/toast.service';
   template: `
     <div class="create-ticket-container">
       <div class="back-link">
-        <a routerLink="/client/tickets">&larr; Back to Tickets</a>
+        <a routerLink="/client/tickets">&larr; Back to Service Requests</a>
       </div>
 
       <div class="form-card">
-        <h1>Create Support Ticket</h1>
+        <h1>Create Service Request</h1>
         <p class="subtitle">Describe your issue and we'll get back to you as soon as possible.</p>
 
         <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
@@ -94,7 +94,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <div class="form-actions">
             <button type="button" routerLink="/client/tickets" class="btn-outline">Cancel</button>
             <button type="submit" class="btn-primary" [disabled]="submitting() || ticketForm.invalid">
-              {{ submitting() ? 'Submitting...' : 'Submit Ticket' }}
+              {{ submitting() ? 'Submitting...' : 'Submit Request' }}
             </button>
           </div>
         </form>
@@ -313,7 +313,7 @@ export class TicketCreateComponent implements OnInit {
       },
       error: () => {
         this.submitting.set(false);
-        this.toast.error('Failed to create ticket. Please try again.');
+        this.toast.error('Failed to create service request. Please try again.');
       }
     });
   }

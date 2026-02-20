@@ -11,13 +11,13 @@ import { environment } from '../../../../environments/environment';
   imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <div class="page-header">
-      <h1 class="page-title">Tickets</h1>
+      <h1 class="page-title">Service Requests</h1>
     </div>
 
     <div class="filters-bar">
       <div class="search-box-wrap">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" class="search-box" placeholder="Search tickets..." [(ngModel)]="search" (input)="onSearch()">
+        <input type="text" class="search-box" placeholder="Search service requests..." [(ngModel)]="search" (input)="onSearch()">
       </div>
       <select class="filter-select" [(ngModel)]="statusFilter" (change)="loadTickets()">
         <option value="">All Statuses</option>
@@ -76,7 +76,7 @@ import { environment } from '../../../../environments/environment';
             </td>
           </tr>
           <tr *ngIf="tickets().length === 0 && !loading()">
-            <td colspan="9" class="empty-state">No tickets found</td>
+            <td colspan="9" class="empty-state">No service requests found</td>
           </tr>
         </tbody>
       </table>

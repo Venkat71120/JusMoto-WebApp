@@ -12,10 +12,10 @@ import { TicketService } from '../../../core/services/ticket.service';
       <div class="page-header">
         <div class="header-content">
           <h1>Service Requests</h1>
-          <p>View and manage your support tickets</p>
+          <p>View and manage your service requests</p>
         </div>
         <a routerLink="/client/tickets/new" class="btn-primary">
-          + New Ticket
+          + New Request
         </a>
       </div>
 
@@ -33,14 +33,14 @@ import { TicketService } from '../../../core/services/ticket.service';
 
       <div *ngIf="loading()" class="loading">
         <div class="spinner"></div>
-        <p>Loading tickets...</p>
+        <p>Loading service requests...</p>
       </div>
 
       <div *ngIf="!loading() && tickets().length === 0" class="empty-state">
         <div class="empty-icon">🎫</div>
-        <h3>No tickets found</h3>
-        <p>You haven't created any support tickets yet.</p>
-        <a routerLink="/client/tickets/new" class="btn-primary">Create a Ticket</a>
+        <h3>No service requests found</h3>
+        <p>You haven't created any service requests yet.</p>
+        <a routerLink="/client/tickets/new" class="btn-primary">Create a Request</a>
       </div>
 
       <div class="tickets-list" *ngIf="!loading() && tickets().length > 0">

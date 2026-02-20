@@ -130,7 +130,7 @@ import { ToastService } from '../../../core/services/toast.service';
               <button *ngIf="order().status === 'completed'" class="btn-primary full-width" (click)="reorder()">
                 Reorder
               </button>
-              <a routerLink="/client/tickets/new" [queryParams]="{order_id: order().id}" class="btn-outline full-width">
+              <a *ngIf="isServiceOrder()" routerLink="/client/tickets/new" [queryParams]="{order_id: order().id}" class="btn-outline full-width">
                 Need Help?
               </a>
             </div>
@@ -503,6 +503,11 @@ export class ClientOrderDetailComponent implements OnInit {
         }
       });
     }
+  }
+
+  isServiceOrder(): boolean {
+    const items = this.order()?.items || [];
+    return items.every((i: any) => !i.service?.type || i.service?.type === 0);
   }
 
   reorder(): void {

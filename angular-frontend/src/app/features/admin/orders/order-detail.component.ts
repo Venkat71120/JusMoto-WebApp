@@ -26,7 +26,12 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
       <div class="order-header">
         <div>
           <h1 class="order-title">Order {{ order().invoice_number || '#' + order().id }}</h1>
-          <p class="order-date">{{ order().created_at | date:'medium' }}</p>
+          <div class="order-meta-row">
+            <span class="type-badge" [class.type-service]="getOrderType() === 'service'" [class.type-product]="getOrderType() === 'product'">
+              {{ getOrderType() === 'service' ? 'Service Order' : 'Product Order' }}
+            </span>
+            <span class="order-date">{{ order().created_at | date:'medium' }}</span>
+          </div>
         </div>
         <div class="order-controls">
           <button class="btn-status" (click)="openStatusModal()">
@@ -179,7 +184,11 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     @keyframes spin { to { transform: rotate(360deg); } }
     .order-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
     .order-title { font-size: 24px; font-weight: 700; color: #1a1a2e; margin: 0; }
-    .order-date { color: #64748b; margin: 4px 0 0; }
+    .order-meta-row { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+    .order-date { color: #64748b; }
+    .type-badge { display: inline-flex; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .type-service { background: #dbeafe; color: #2563eb; }
+    .type-product { background: #f3e8ff; color: #7c3aed; }
     .order-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     .btn-status { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; cursor: pointer; font-weight: 600; font-size: 14px; }
     .btn-status:hover { border-color: #e31b23; }
@@ -345,11 +354,17 @@ export class OrderDetailComponent implements OnInit {
       next: () => {
         const admin = this.franchiseAdmins().find(f => f.id == this.selectedFranchiseId);
         this.order.set({ ...o, franchise_admin_id: +this.selectedFranchiseId, franchiseAdmin: admin });
-        this.toast.success('Franchise admin assigned & ticket created automatically');
+        this.toast.success('Franchise admin assigned & service request created automatically');
         this.franchiseModalOpen.set(false);
       },
       error: () => this.toast.error('Failed to assign franchise admin')
     });
+  }
+
+  getOrderType(): string {
+    const items = this.order()?.items || [];
+    const hasProduct = items.some((i: any) => i.service?.type === 1);
+    return hasProduct ? 'product' : 'service';
   }
 
   downloadInvoice() {

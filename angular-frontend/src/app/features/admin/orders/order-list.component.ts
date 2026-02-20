@@ -45,6 +45,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             <th>#</th>
             <th>Invoice</th>
             <th>Customer</th>
+            <th>Type</th>
             <th>Total</th>
             <th>Payment</th>
             <th>Status</th>
@@ -62,6 +63,11 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
                 <small>{{ order.user.email }}</small>
               </div>
               <span *ngIf="!order.user" class="text-muted">N/A</span>
+            </td>
+            <td>
+              <span class="badge" [class.badge-service]="getOrderType(order) === 'service'" [class.badge-product]="getOrderType(order) === 'product'">
+                {{ getOrderType(order) === 'service' ? 'Service' : 'Product' }}
+              </span>
             </td>
             <td class="amount-cell">&#8377;{{ order.total | number:'1.2-2' }}</td>
             <td>
@@ -86,7 +92,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             </td>
           </tr>
           <tr *ngIf="orders().length === 0 && !loading()">
-            <td colspan="8" class="empty-state">No orders found</td>
+            <td colspan="9" class="empty-state">No orders found</td>
           </tr>
         </tbody>
       </table>
@@ -138,6 +144,8 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .badge-clickable:hover { opacity: 0.8; }
     .badge-active { background: #dcfce7; color: #16a34a; }
     .badge-warning { background: #fef3c7; color: #d97706; }
+    .badge-service { background: #dbeafe; color: #2563eb; }
+    .badge-product { background: #f3e8ff; color: #7c3aed; }
     .status-select { padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; background: #fff; }
     .status-select.status-0 { color: #d97706; }
     .status-select.status-1 { color: #2563eb; }
@@ -217,5 +225,11 @@ export class OrderListComponent implements OnInit {
 
   getStatusClass(status: number): string {
     return 'status-' + status;
+  }
+
+  getOrderType(order: any): string {
+    const items = order.items || [];
+    const hasProduct = items.some((i: any) => i.service?.type === 1);
+    return hasProduct ? 'product' : 'service';
   }
 }

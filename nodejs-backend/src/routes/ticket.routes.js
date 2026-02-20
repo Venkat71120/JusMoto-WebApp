@@ -68,7 +68,7 @@ router.get('/:id', authenticate, async (req, res) => {
     });
 
     if (!ticket) {
-      return res.status(404).json({ success: false, error: 'Ticket not found' });
+      return res.status(404).json({ success: false, error: 'Service request not found' });
     }
 
     // Mark messages as read
@@ -121,7 +121,7 @@ router.post('/', authenticate, async (req, res) => {
       });
     }
 
-    res.status(201).json({ success: true, data: ticket, message: 'Ticket created successfully' });
+    res.status(201).json({ success: true, data: ticket, message: 'Service request created successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -138,11 +138,11 @@ router.post('/:id/messages', authenticate, ...uploadSingle('attachment'), async 
     const ticket = await Ticket.findOne({ where });
 
     if (!ticket) {
-      return res.status(404).json({ success: false, error: 'Ticket not found' });
+      return res.status(404).json({ success: false, error: 'Service request not found' });
     }
 
     if (ticket.status === 'closed') {
-      return res.status(400).json({ success: false, error: 'Cannot reply to closed ticket' });
+      return res.status(400).json({ success: false, error: 'Cannot reply to closed service request' });
     }
 
     let attachment = null;
@@ -182,12 +182,12 @@ router.post('/:id/close', authenticate, async (req, res) => {
     const ticket = await Ticket.findOne({ where });
 
     if (!ticket) {
-      return res.status(404).json({ success: false, error: 'Ticket not found' });
+      return res.status(404).json({ success: false, error: 'Service request not found' });
     }
 
     await ticket.update({ status: 'closed', closed_at: new Date() });
 
-    res.json({ success: true, message: 'Ticket closed' });
+    res.json({ success: true, message: 'Service request closed' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -236,7 +236,7 @@ router.put('/admin/:id/status', authenticate, isAdmin, async (req, res) => {
     const ticket = await Ticket.findByPk(req.params.id);
 
     if (!ticket) {
-      return res.status(404).json({ success: false, error: 'Ticket not found' });
+      return res.status(404).json({ success: false, error: 'Service request not found' });
     }
 
     const updateData = { status };
@@ -247,7 +247,7 @@ router.put('/admin/:id/status', authenticate, isAdmin, async (req, res) => {
 
     await ticket.update(updateData);
 
-    res.json({ success: true, data: ticket, message: 'Ticket updated' });
+    res.json({ success: true, data: ticket, message: 'Service request updated' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

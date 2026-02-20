@@ -91,10 +91,6 @@ export const adminRoutes: Routes = [
       { path: 'manage/permission/role/add', loadComponent: () => import('./roles/role-form.component').then(m => m.RoleFormComponent) },
       { path: 'manage/permission/role/edit/:id', loadComponent: () => import('./roles/role-form.component').then(m => m.RoleFormComponent) },
 
-      // Franchises
-      { path: 'franchise/list', loadComponent: () => import('./franchises/franchise-list.component').then(m => m.FranchiseListComponent) },
-      { path: 'franchise/add', loadComponent: () => import('./franchises/franchise-form.component').then(m => m.FranchiseFormComponent) },
-
       // Reports
       { path: 'reports/revenue', loadComponent: () => import('./reports/revenue-report.component').then(m => m.RevenueReportComponent) },
       { path: 'reports/orders', loadComponent: () => import('./reports/order-report.component').then(m => m.OrderReportComponent) },

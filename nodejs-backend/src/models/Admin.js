@@ -48,9 +48,21 @@ const Admin = sequelize.define('Admin', {
     type: DataTypes.STRING(191),
     defaultValue: 'editor'
   },
+  franchise_code: {
+    type: DataTypes.STRING(50),
+    allowNull: true
+  },
+  franchise_location: {
+    type: DataTypes.STRING(191),
+    allowNull: true
+  },
   is_franchise: {
     type: DataTypes.BOOLEAN,
     defaultValue: 0
+  },
+  outlet_location_id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    allowNull: true
   },
   status: {
     type: DataTypes.BOOLEAN,

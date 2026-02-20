@@ -12,14 +12,14 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
   imports: [CommonModule, FormsModule, ConfirmModalComponent],
   template: `
     <div class="page-header">
-      <h1 class="page-title">Staff Members</h1>
-      <button class="btn-primary" (click)="openAddModal()">+ Add Staff</button>
+      <h1 class="page-title">Franchise Admins</h1>
+      <button class="btn-primary" (click)="openAddModal()">+ Add Franchise Admin</button>
     </div>
 
     <div class="filters-bar">
       <div class="search-box-wrap">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" class="search-box" placeholder="Search staff..." [(ngModel)]="search" (input)="onSearch()">
+        <input type="text" class="search-box" placeholder="Search franchise admins..." [(ngModel)]="search" (input)="onSearch()">
       </div>
     </div>
 
@@ -30,7 +30,9 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           <tr>
             <th>#</th>
             <th>Name</th>
+            <th>Username</th>
             <th>Email</th>
+            <th>Outlet Location</th>
             <th>Role</th>
             <th>Status</th>
             <th>Actions</th>
@@ -40,7 +42,15 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           <tr *ngFor="let s of staff(); let i = index">
             <td>{{ i + 1 }}</td>
             <td class="fw-600">{{ s.name }}</td>
+            <td>{{ s.username || '-' }}</td>
             <td>{{ s.email }}</td>
+            <td>
+              <span *ngIf="s.outletLocation" class="location-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                {{ s.outletLocation.name }}
+              </span>
+              <span *ngIf="!s.outletLocation" class="text-muted">-</span>
+            </td>
             <td><span class="role-badge">{{ s.role || '-' }}</span></td>
             <td>
               <button class="badge badge-clickable" [class.badge-green]="s.status" [class.badge-red]="!s.status" (click)="statusItem.set(s)">
@@ -59,46 +69,61 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             </td>
           </tr>
           <tr *ngIf="staff().length === 0 && !loading()">
-            <td colspan="6" class="empty-state">No staff members found</td>
+            <td colspan="8" class="empty-state">No franchise admins found</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Edit/Add Staff Modal -->
+    <!-- Edit/Add Modal -->
     <div class="modal-backdrop" *ngIf="showModal()" (click)="closeModal()">
       <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <h3>{{ editingStaff() ? 'Edit Staff' : 'Add Staff' }}</h3>
+          <h3>{{ editingStaff() ? 'Edit Franchise Admin' : 'Add Franchise Admin' }}</h3>
           <button class="modal-close" (click)="closeModal()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group">
-            <label>Name <span class="required">*</span></label>
-            <input type="text" [(ngModel)]="formData.name" placeholder="Full name" class="form-input">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Name <span class="required">*</span></label>
+              <input type="text" [(ngModel)]="formData.name" placeholder="Full name" class="form-input">
+            </div>
+            <div class="form-group">
+              <label>Username <span class="required">*</span></label>
+              <input type="text" [(ngModel)]="formData.username" placeholder="Username" class="form-input">
+            </div>
           </div>
           <div class="form-group">
             <label>Email <span class="required">*</span></label>
             <input type="email" [(ngModel)]="formData.email" placeholder="Email address" class="form-input">
           </div>
           <div class="form-group">
-            <label>Password {{ editingStaff() ? '(leave blank to keep)' : '' }} <span *ngIf="!editingStaff()" class="required">*</span></label>
-            <input type="password" [(ngModel)]="formData.password" placeholder="{{ editingStaff() ? 'Leave blank to keep current' : 'Password' }}" class="form-input">
-          </div>
-          <div class="form-group">
-            <label>Role <span class="required">*</span></label>
-            <select [(ngModel)]="formData.role" class="form-input">
-              <option value="">Select Role</option>
-              <option *ngFor="let r of roles()" [value]="r.name">{{ r.name }}</option>
+            <label>Franchise Location (Outlet) <span class="required">*</span></label>
+            <select [(ngModel)]="formData.outlet_location_id" class="form-input">
+              <option value="">Select Outlet Location</option>
+              <option *ngFor="let loc of outletLocations()" [value]="loc.id">{{ loc.name }} - {{ loc.address }}</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Status</label>
-            <div class="status-toggle">
-              <button class="toggle-btn" [class.active]="formData.status === 1" (click)="formData.status = 1">Active</button>
-              <button class="toggle-btn" [class.active]="formData.status === 0" (click)="formData.status = 0">Inactive</button>
+            <label>Password {{ editingStaff() ? '(leave blank to keep)' : '' }} <span *ngIf="!editingStaff()" class="required">*</span></label>
+            <input type="password" [(ngModel)]="formData.password" [placeholder]="editingStaff() ? 'Leave blank to keep current' : 'Password'" class="form-input">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Role <span class="required">*</span></label>
+              <select [(ngModel)]="formData.role" class="form-input">
+                <option value="">Select Role</option>
+                <option *ngFor="let r of roles()" [value]="r.name">{{ r.name }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <div class="status-toggle">
+                <button class="toggle-btn" [class.active]="formData.status === 1" (click)="formData.status = 1">Active</button>
+                <button class="toggle-btn" [class.active]="formData.status === 0" (click)="formData.status = 0">Inactive</button>
+              </div>
             </div>
           </div>
         </div>
@@ -113,7 +138,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
 
     <app-confirm-modal
       [open]="!!deletingItem()"
-      title="Delete Staff Member"
+      title="Delete Franchise Admin"
       [message]="'Delete &quot;' + (deletingItem()?.name || '') + '&quot;? This cannot be undone.'"
       confirmText="Delete"
       type="danger"
@@ -144,11 +169,13 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .spinner { width:36px; height:36px; border:3px solid #f3f4f6; border-top-color:#e31b23; border-radius:50%; animation:spin 0.8s linear infinite; }
     @keyframes spin { to { transform:rotate(360deg); } }
     .data-table { width:100%; border-collapse:collapse; }
-    .data-table th { padding:12px 16px; text-align:left; font-weight:600; color:#64748b; font-size:12px; text-transform:uppercase; background:#f8f9fa; border-bottom:1px solid #e5e7eb; }
+    .data-table th { padding:12px 16px; text-align:left; font-weight:600; color:#64748b; font-size:12px; text-transform:uppercase; background:#f8f9fa; border-bottom:1px solid #e5e7eb; white-space:nowrap; }
     .data-table td { padding:12px 16px; font-size:14px; color:#334155; border-bottom:1px solid #f1f5f9; }
     .data-table tr:hover { background:#fff5f5; }
     .fw-600 { font-weight:600; }
+    .text-muted { color:#94a3b8; }
     .role-badge { background:#ede9fe; color:#7c3aed; padding:3px 10px; border-radius:6px; font-size:12px; font-weight:600; text-transform:capitalize; }
+    .location-badge { display:inline-flex; align-items:center; gap:4px; background:#e0f2fe; color:#0284c7; padding:3px 10px; border-radius:6px; font-size:12px; font-weight:600; }
     .badge { padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
     .badge-clickable { cursor:pointer; transition:opacity 0.2s; border:none; }
     .badge-clickable:hover { opacity:0.8; }
@@ -161,13 +188,14 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
 
     /* Modal */
     .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000; animation:fadeIn 0.2s ease; }
-    .modal-content { background:#fff; border-radius:14px; width:100%; max-width:480px; box-shadow:0 20px 60px rgba(0,0,0,0.15); animation:slideUp 0.25s ease; }
+    .modal-content { background:#fff; border-radius:14px; width:100%; max-width:540px; box-shadow:0 20px 60px rgba(0,0,0,0.15); animation:slideUp 0.25s ease; }
     .modal-header { display:flex; justify-content:space-between; align-items:center; padding:20px 24px; border-bottom:1px solid #f1f5f9; }
     .modal-header h3 { margin:0; font-size:18px; font-weight:700; color:#1a1a2e; }
     .modal-close { background:none; border:none; cursor:pointer; color:#94a3b8; padding:4px; border-radius:6px; display:flex; }
     .modal-close:hover { background:#f1f5f9; color:#334155; }
     .modal-body { padding:24px; display:flex; flex-direction:column; gap:18px; }
     .modal-footer { display:flex; justify-content:flex-end; gap:12px; padding:16px 24px; border-top:1px solid #f1f5f9; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
     .form-group { display:flex; flex-direction:column; gap:6px; }
     .form-group label { font-size:13px; font-weight:600; color:#475569; }
     .required { color:#e31b23; }
@@ -185,11 +213,17 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
 
     @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
     @keyframes slideUp { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+
+    @media (max-width: 768px) {
+      .table-container { overflow-x:auto; }
+      .form-row { grid-template-columns:1fr; }
+    }
   `]
 })
 export class StaffListComponent implements OnInit {
   staff = signal<any[]>([]);
   roles = signal<any[]>([]);
+  outletLocations = signal<any[]>([]);
   loading = signal(false);
   saving = signal(false);
   showModal = signal(false);
@@ -199,13 +233,14 @@ export class StaffListComponent implements OnInit {
   search = '';
   private searchTimeout: any;
 
-  formData = { name: '', email: '', password: '', role: '', status: 1 };
+  formData: any = { name: '', username: '', email: '', password: '', role: '', outlet_location_id: '', status: 1 };
 
   constructor(private http: HttpClient, private toast: ToastService) {}
 
   ngOnInit() {
     this.loadStaff();
     this.loadRoles();
+    this.loadOutletLocations();
   }
 
   loadStaff() {
@@ -226,6 +261,13 @@ export class StaffListComponent implements OnInit {
     });
   }
 
+  loadOutletLocations() {
+    this.http.get<any>(`${environment.apiUrl}/admin/outlet-locations`).subscribe({
+      next: (res) => this.outletLocations.set(res.data || []),
+      error: () => {}
+    });
+  }
+
   onSearch() {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => this.loadStaff(), 400);
@@ -233,13 +275,21 @@ export class StaffListComponent implements OnInit {
 
   openAddModal() {
     this.editingStaff.set(null);
-    this.formData = { name: '', email: '', password: '', role: '', status: 1 };
+    this.formData = { name: '', username: '', email: '', password: '', role: '', outlet_location_id: '', status: 1 };
     this.showModal.set(true);
   }
 
   openEditModal(s: any) {
     this.editingStaff.set(s);
-    this.formData = { name: s.name || '', email: s.email || '', password: '', role: s.role || '', status: s.status ? 1 : 0 };
+    this.formData = {
+      name: s.name || '',
+      username: s.username || '',
+      email: s.email || '',
+      password: '',
+      role: s.role || '',
+      outlet_location_id: s.outlet_location_id ? String(s.outlet_location_id) : '',
+      status: s.status ? 1 : 0
+    };
     this.showModal.set(true);
   }
 
@@ -249,20 +299,22 @@ export class StaffListComponent implements OnInit {
   }
 
   saveStaff() {
-    if (!this.formData.name || !this.formData.email || !this.formData.role) {
-      this.toast.error('Name, email and role are required');
+    if (!this.formData.name || !this.formData.username || !this.formData.email || !this.formData.role) {
+      this.toast.error('Name, username, email and role are required');
       return;
     }
     if (!this.editingStaff() && !this.formData.password) {
-      this.toast.error('Password is required for new staff');
+      this.toast.error('Password is required for new franchise admin');
       return;
     }
 
     this.saving.set(true);
     const payload: any = {
       name: this.formData.name,
+      username: this.formData.username,
       email: this.formData.email,
       role: this.formData.role,
+      outlet_location_id: this.formData.outlet_location_id || null,
       status: this.formData.status
     };
     if (this.formData.password) payload.password = this.formData.password;
@@ -273,14 +325,14 @@ export class StaffListComponent implements OnInit {
       : this.http.post<any>(`${environment.apiUrl}/admin/staff`, payload);
 
     req.subscribe({
-      next: (res) => {
-        this.toast.success(editing ? 'Staff updated successfully' : 'Staff created successfully');
+      next: () => {
+        this.toast.success(editing ? 'Franchise admin updated' : 'Franchise admin created');
         this.closeModal();
         this.loadStaff();
         this.saving.set(false);
       },
       error: (err) => {
-        this.toast.error(err.error?.error || 'Failed to save staff');
+        this.toast.error(err.error?.error || 'Failed to save franchise admin');
         this.saving.set(false);
       }
     });
@@ -294,8 +346,8 @@ export class StaffListComponent implements OnInit {
     const s = this.deletingItem();
     if (!s) return;
     this.http.delete<any>(`${environment.apiUrl}/admin/staff/${s.id}`).subscribe({
-      next: () => { this.toast.success('Staff member deleted successfully'); this.deletingItem.set(null); this.loadStaff(); },
-      error: () => { this.toast.error('Failed to delete staff member'); this.deletingItem.set(null); }
+      next: () => { this.toast.success('Franchise admin deleted'); this.deletingItem.set(null); this.loadStaff(); },
+      error: () => { this.toast.error('Failed to delete franchise admin'); this.deletingItem.set(null); }
     });
   }
 
@@ -304,7 +356,7 @@ export class StaffListComponent implements OnInit {
     if (!s) return;
     const newStatus = s.status ? 0 : 1;
     this.http.put<any>(`${environment.apiUrl}/admin/staff/${s.id}`, { status: newStatus }).subscribe({
-      next: () => { s.status = newStatus; this.toast.success('Staff status updated'); this.statusItem.set(null); },
+      next: () => { s.status = newStatus; this.toast.success('Status updated'); this.statusItem.set(null); },
       error: () => { this.toast.error('Failed to update status'); this.statusItem.set(null); }
     });
   }

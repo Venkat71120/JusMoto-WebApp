@@ -200,7 +200,7 @@ import { environment } from '../../../../environments/environment';
                   </svg>
                 </div>
                 <div class="action-text">
-                  <span class="action-title">Create Ticket</span>
+                  <span class="action-title">Service Request</span>
                   <span class="action-desc">Get support help</span>
                 </div>
                 <svg class="action-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

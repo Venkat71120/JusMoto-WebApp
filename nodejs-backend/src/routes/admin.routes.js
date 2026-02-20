@@ -226,7 +226,10 @@ router.get('/orders', authenticate, isAdmin, async (req, res) => {
     }
     const { rows, count } = await Order.findAndCountAll({
       where,
-      include: [{ association: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'phone', 'image'] }],
+      include: [
+        { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'phone', 'image'] },
+        { association: 'items', attributes: ['id'], include: [{ association: 'service', attributes: ['id', 'type'] }] }
+      ],
       ...pagination, order: [['created_at', 'DESC']], subQuery: false
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
@@ -246,7 +249,7 @@ router.get('/orders/:id', authenticate, isAdmin, async (req, res) => {
       where,
       include: [
         { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'phone', 'image'] },
-        { association: 'items', include: [{ association: 'service', attributes: ['id', 'title', 'image', 'price'] }] },
+        { association: 'items', include: [{ association: 'service', attributes: ['id', 'title', 'image', 'price', 'type'] }] },
         { association: 'location' }
       ]
     });
@@ -343,7 +346,7 @@ router.put('/orders/:id', authenticate, isAdmin, async (req, res) => {
     if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
     await order.update(updateData);
 
-    // Auto-create ticket when franchise admin is assigned
+    // Auto-create service request when franchise admin is assigned
     if (req.body.franchise_admin_id) {
       const existingTicket = await Ticket.findOne({ where: { order_id: order.id, admin_id: req.body.franchise_admin_id } });
       if (!existingTicket) {
@@ -354,7 +357,7 @@ router.put('/orders/:id', authenticate, isAdmin, async (req, res) => {
           user_id: order.user_id,
           order_id: order.id,
           title: `Order #${order.invoice_number || order.id} - Service Assignment`,
-          subject: `Franchise service ticket for Order #${order.invoice_number || order.id}`,
+          subject: `Franchise service request for Order #${order.invoice_number || order.id}`,
           priority: 'normal',
           status: 'open',
           via: 'admin',
@@ -865,7 +868,7 @@ router.delete('/coupons/:id', authenticate, isAdmin, async (req, res) => {
   }
 });
 
-// ==================== Tickets Management ====================
+// ==================== Service Requests (Tickets) Management ====================
 router.get('/tickets', authenticate, isAdmin, async (req, res) => {
   try {
     const { status, priority, search, page = 1, limit = 15 } = req.query;
@@ -911,7 +914,7 @@ router.get('/tickets/:id', authenticate, isAdmin, async (req, res) => {
       ],
       order: [[{ model: TicketMessage, as: 'ticketMessages' }, 'created_at', 'ASC']]
     });
-    if (!ticket) return res.status(404).json({ success: false, error: 'Ticket not found' });
+    if (!ticket) return res.status(404).json({ success: false, error: 'Service request not found' });
     res.json({ success: true, data: ticket });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -924,7 +927,7 @@ router.put('/tickets/:id/status', authenticate, isAdmin, async (req, res) => {
     if (req.body.status) updateData.status = req.body.status;
     if (req.body.admin_id !== undefined) updateData.admin_id = req.body.admin_id || null;
     await Ticket.update(updateData, { where: { id: req.params.id } });
-    res.json({ success: true, message: 'Ticket updated' });
+    res.json({ success: true, message: 'Service request updated' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -956,20 +959,20 @@ router.post('/tickets/:id/reply', authenticate, isAdmin, ...uploadSingle('attach
   }
 });
 
-// Assign ticket to franchise admin
+// Assign service request to franchise admin
 router.put('/tickets/:id/assign', authenticate, isAdmin, async (req, res) => {
   try {
     const { admin_id } = req.body;
     const ticket = await require('../models').Ticket.findByPk(req.params.id);
-    if (!ticket) return res.status(404).json({ success: false, error: 'Ticket not found' });
+    if (!ticket) return res.status(404).json({ success: false, error: 'Service request not found' });
     await ticket.update({ admin_id: admin_id || null });
-    res.json({ success: true, data: ticket, message: 'Ticket assigned' });
+    res.json({ success: true, data: ticket, message: 'Service request assigned' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// Create ticket from order (admin)
+// Create service request from order (admin)
 router.post('/tickets/create-from-order', authenticate, isAdmin, async (req, res) => {
   try {
     const { order_id, admin_id, title, subject, priority, description, department_id } = req.body;
@@ -983,17 +986,17 @@ router.post('/tickets/create-from-order', authenticate, isAdmin, async (req, res
       user_id: order.user_id,
       order_id: order.id,
       title: title || `Order #${order.invoice_number || order.id}`,
-      subject: subject || `Service ticket for Order #${order.invoice_number || order.id}`,
+      subject: subject || `Service request for Order #${order.invoice_number || order.id}`,
       priority: priority || 'normal',
       status: 'open',
       via: 'admin',
-      description: description || `Ticket created from Order #${order.invoice_number || order.id}\nCustomer: ${order.user?.first_name || ''} ${order.user?.last_name || ''}\nTotal: ₹${order.total}`
+      description: description || `Service request created from Order #${order.invoice_number || order.id}\nCustomer: ${order.user?.first_name || ''} ${order.user?.last_name || ''}\nTotal: ₹${order.total}`
     });
     if (description) {
       const { TicketMessage } = require('../models');
       await TicketMessage.create({ ticket_id: ticket.id, admin_id: req.admin.id, message: description });
     }
-    res.status(201).json({ success: true, data: ticket, message: 'Ticket created from order' });
+    res.status(201).json({ success: true, data: ticket, message: 'Service request created from order' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -1192,6 +1195,7 @@ router.get('/staff', authenticate, isAdmin, async (req, res) => {
     }
     const { rows, count } = await Admin.findAndCountAll({
       where, attributes: { exclude: ['password'] },
+      include: [{ model: AdminOutletLocation, as: 'outletLocation', attributes: ['id', 'name', 'address'], required: false }],
       ...pagination, order: [['created_at', 'DESC']]
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
@@ -1202,7 +1206,10 @@ router.get('/staff', authenticate, isAdmin, async (req, res) => {
 
 router.get('/staff/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const admin = await Admin.findByPk(req.params.id, { attributes: { exclude: ['password'] } });
+    const admin = await Admin.findByPk(req.params.id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: AdminOutletLocation, as: 'outletLocation', attributes: ['id', 'name', 'address'], required: false }]
+    });
     if (!admin) return res.status(404).json({ success: false, error: 'Staff not found' });
     res.json({ success: true, data: admin });
   } catch (error) {
@@ -1212,9 +1219,15 @@ router.get('/staff/:id', authenticate, isAdmin, async (req, res) => {
 
 router.post('/staff', authenticate, isAdmin, async (req, res) => {
   try {
-    const { name, email, password, role, status } = req.body;
-    const admin = await Admin.create({ name, email, password, role: role || 'staff', status: status !== undefined ? status : 1 });
-    res.status(201).json({ success: true, data: { id: admin.id, name: admin.name, email: admin.email, role: admin.role }, message: 'Staff created' });
+    const { name, username, email, password, role, status, outlet_location_id } = req.body;
+    const admin = await Admin.create({
+      name, username, email, password,
+      role: role || 'staff',
+      is_franchise: 1,
+      outlet_location_id: outlet_location_id || null,
+      status: status !== undefined ? status : 1
+    });
+    res.status(201).json({ success: true, data: { id: admin.id, name: admin.name, email: admin.email, role: admin.role }, message: 'Franchise admin created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -1222,12 +1235,15 @@ router.post('/staff', authenticate, isAdmin, async (req, res) => {
 
 router.put('/staff/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const { name, email, role, status } = req.body;
-    const updateData = { name, email, role, status };
+    const { name, username, email, role, status, outlet_location_id } = req.body;
+    const updateData = { name, username, email, role, status, outlet_location_id: outlet_location_id || null };
     if (req.body.password) updateData.password = req.body.password;
     await Admin.update(updateData, { where: { id: req.params.id } });
-    const admin = await Admin.findByPk(req.params.id, { attributes: { exclude: ['password'] } });
-    res.json({ success: true, data: admin, message: 'Staff updated' });
+    const admin = await Admin.findByPk(req.params.id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: AdminOutletLocation, as: 'outletLocation', attributes: ['id', 'name', 'address'], required: false }]
+    });
+    res.json({ success: true, data: admin, message: 'Franchise admin updated' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

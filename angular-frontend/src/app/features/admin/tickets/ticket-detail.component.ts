@@ -14,7 +14,7 @@ import { AuthService } from '../../../core/services/auth.service';
   template: `
     <a routerLink="/admin/support-ticket/tickets" class="back-link">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
-      Back to Tickets
+      Back to Service Requests
     </a>
 
     <div class="loading-center" *ngIf="loading()"><div class="spinner"></div></div>
@@ -74,8 +74,8 @@ import { AuthService } from '../../../core/services/auth.service';
         <div class="payment-card">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           <div class="payment-info">
-            <h4>Ticket Closed - Payment Required</h4>
-            <p>This ticket has been closed. Click to process payment for the service.</p>
+            <h4>Service Request Closed - Payment Required</h4>
+            <p>This service request has been closed. Click to process payment for the service.</p>
           </div>
           <button class="btn-payment" (click)="processPayment()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
@@ -129,7 +129,7 @@ import { AuthService } from '../../../core/services/auth.service';
 
         <div class="closed-notice" *ngIf="ticket().status === 'close' || ticket().status === 'closed'">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-          <span>This ticket is closed. Reopen to reply.</span>
+          <span>This service request is closed. Reopen to reply.</span>
         </div>
       </div>
     </div>
@@ -276,8 +276,8 @@ export class TicketDetailComponent implements OnInit {
     this.http.put<any>(`${environment.apiUrl}/admin/tickets/${this.ticketId}/assign`, {
       admin_id: this.selectedAdminId ? Number(this.selectedAdminId) : null
     }).subscribe({
-      next: () => this.toast.success('Ticket assigned'),
-      error: () => this.toast.error('Failed to assign ticket')
+      next: () => this.toast.success('Service request assigned'),
+      error: () => this.toast.error('Failed to assign service request')
     });
   }
 
@@ -319,7 +319,7 @@ export class TicketDetailComponent implements OnInit {
     if (this.ticket()?.order) {
       this.router.navigate(['/admin/orders/details', this.ticket().order.id]);
     } else {
-      this.toast.info('No order linked to this ticket. Link an order first.');
+      this.toast.info('No order linked to this service request. Link an order first.');
     }
   }
 

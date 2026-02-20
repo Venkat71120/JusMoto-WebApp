@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
@@ -35,7 +36,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           <button class="btn-payment" [class.paid]="order().payment_status" (click)="openPaymentModal()">
             {{ order().payment_status ? 'Paid' : 'Mark as Paid' }}
           </button>
-          <button class="btn-franchise" (click)="openFranchiseModal()">
+          <button class="btn-franchise" *ngIf="isSuperAdmin" (click)="openFranchiseModal()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
             {{ order().franchise_admin_id ? 'Reassign Franchise' : 'Assign Franchise' }}
           </button>
@@ -267,7 +268,12 @@ export class OrderDetailComponent implements OnInit {
     { value: 4, label: 'Cancelled' }
   ];
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
+  isSuperAdmin = false;
+
+  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService, private authService: AuthService) {
+    const admin = this.authService.currentAdmin;
+    this.isSuperAdmin = admin ? !admin.is_franchise : false;
+  }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');

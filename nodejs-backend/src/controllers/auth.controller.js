@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { User, Admin, Wallet } = require('../models');
+const { User, Admin, Wallet, sequelize } = require('../models');
 const { generateOTP, generateRandomString } = require('../utils/helpers');
 const response = require('../utils/response');
 
@@ -160,7 +160,7 @@ const adminLogin = async (req, res) => {
           { username: email }
         ]
       },
-      attributes: ['id', 'name', 'email', 'username', 'password', 'role', 'status', 'image']
+      attributes: ['id', 'name', 'email', 'username', 'password', 'role', 'is_franchise', 'status', 'image']
     });
 
     if (!admin) {
@@ -182,6 +182,22 @@ const adminLogin = async (req, res) => {
       { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
 
+    // Fetch permissions for this admin's role
+    let permissions = [];
+    try {
+      const [perms] = await sequelize.query(
+        `SELECT DISTINCT p.name FROM permissions p
+         INNER JOIN role_has_permissions rhp ON p.id = rhp.permission_id
+         INNER JOIN roles r ON rhp.role_id = r.id
+         WHERE r.name = ?`,
+        { replacements: [admin.role] }
+      );
+      permissions = perms.map(p => p.name);
+    } catch (e) {
+      // If permissions query fails, continue with empty permissions
+      console.error('Permission fetch error:', e.message);
+    }
+
     return response.success(res, {
       admin: {
         id: admin.id,
@@ -189,7 +205,9 @@ const adminLogin = async (req, res) => {
         email: admin.email,
         username: admin.username,
         role: admin.role,
-        image: admin.image
+        is_franchise: admin.is_franchise ? 1 : 0,
+        image: admin.image,
+        permissions
       },
       token
     }, 'Login successful');

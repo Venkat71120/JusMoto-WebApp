@@ -4,22 +4,11 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 export const routes: Routes = [
-  // Public routes
+  // Root redirects to login
   {
     path: '',
-    loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
-  },
-  {
-    path: 'services',
-    loadComponent: () => import('./features/services/service-list/service-list.component').then(m => m.ServiceListComponent)
-  },
-  {
-    path: 'services/:slug',
-    loadComponent: () => import('./features/services/service-detail/service-detail.component').then(m => m.ServiceDetailComponent)
-  },
-  {
-    path: 'categories/:slug',
-    loadComponent: () => import('./features/services/category-services/category-services.component').then(m => m.CategoryServicesComponent)
+    redirectTo: 'auth/login',
+    pathMatch: 'full'
   },
 
   // Auth routes (guest only)

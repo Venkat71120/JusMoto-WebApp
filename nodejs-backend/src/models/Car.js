@@ -27,6 +27,10 @@ const Car = sequelize.define('Car', {
     type: DataTypes.STRING(10),
     allowNull: true,
     field: 'Year'
+  },
+  status: {
+    type: DataTypes.INTEGER,
+    defaultValue: 1
   }
 }, {
   tableName: 'cars',

@@ -40,7 +40,22 @@ router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
       SELECT id, first_name, last_name, email, image, created_at
       FROM users WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT 5
     `);
-    res.json({ success: true, data: { ...stats[0], recent_orders: recentOrders, recent_users: recentUsers } });
+    // Monthly revenue & orders for last 6 months (for charts)
+    const [monthlyStats] = await require('../models').sequelize.query(`
+      SELECT DATE_FORMAT(created_at, '%Y-%m') as month,
+             DATE_FORMAT(created_at, '%b') as label,
+             COUNT(*) as order_count,
+             COALESCE(SUM(total), 0) as revenue,
+             COALESCE(SUM(CASE WHEN payment_status = 1 THEN total ELSE 0 END), 0) as paid_revenue
+      FROM orders
+      WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+      GROUP BY month, label ORDER BY month ASC
+    `);
+    // Order status breakdown
+    const [ordersByStatus] = await require('../models').sequelize.query(`
+      SELECT status, COUNT(*) as count FROM orders GROUP BY status
+    `);
+    res.json({ success: true, data: { ...stats[0], recent_orders: recentOrders, recent_users: recentUsers, monthly_stats: monthlyStats, orders_by_status: ordersByStatus } });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -195,6 +210,10 @@ router.get('/orders', authenticate, isAdmin, async (req, res) => {
     const { status, payment_status, search, page = 1, limit = 15 } = req.query;
     const pagination = paginate(page, limit);
     const where = {};
+    // Franchise admins only see orders allocated to them
+    if (req.admin.is_franchise) {
+      where.franchise_admin_id = req.admin.id;
+    }
     if (status !== undefined && status !== '') where.status = status;
     if (payment_status !== undefined && payment_status !== '') where.payment_status = payment_status;
     if (search) {
@@ -218,7 +237,13 @@ router.get('/orders', authenticate, isAdmin, async (req, res) => {
 
 router.get('/orders/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const order = await Order.findByPk(req.params.id, {
+    const where = { id: req.params.id };
+    // Franchise admins can only view their allocated orders
+    if (req.admin.is_franchise) {
+      where.franchise_admin_id = req.admin.id;
+    }
+    const order = await Order.findOne({
+      where,
       include: [
         { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'phone', 'image'] },
         { association: 'items', include: [{ association: 'service', attributes: ['id', 'title', 'image', 'price'] }] },
@@ -1175,6 +1200,16 @@ router.get('/staff', authenticate, isAdmin, async (req, res) => {
   }
 });
 
+router.get('/staff/:id', authenticate, isAdmin, async (req, res) => {
+  try {
+    const admin = await Admin.findByPk(req.params.id, { attributes: { exclude: ['password'] } });
+    if (!admin) return res.status(404).json({ success: false, error: 'Staff not found' });
+    res.json({ success: true, data: admin });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 router.post('/staff', authenticate, isAdmin, async (req, res) => {
   try {
     const { name, email, password, role, status } = req.body;
@@ -1609,6 +1644,38 @@ router.get('/reports/orders', authenticate, isAdmin, async (req, res) => {
       SELECT status, COUNT(*) as count, SUM(total) as total_amount FROM orders GROUP BY status
     `);
     res.json({ success: true, data: report });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ==================== Seed Permissions ====================
+router.post('/seed-permissions', authenticate, isAdmin, async (req, res) => {
+  try {
+    const sidebarPermissions = [
+      { name: 'dashboard.view', menu_name: 'Dashboard', guard_name: 'admin' },
+      { name: 'orders.view', menu_name: 'Orders', guard_name: 'admin' },
+      { name: 'users.view', menu_name: 'Users', guard_name: 'admin' },
+      { name: 'catalog.view', menu_name: 'Catalog', guard_name: 'admin' },
+      { name: 'vehicle.view', menu_name: 'Vehicle', guard_name: 'admin' },
+      { name: 'franchise.view', menu_name: 'Franchise', guard_name: 'admin' },
+      { name: 'marketing.view', menu_name: 'Marketing', guard_name: 'admin' },
+      { name: 'support.view', menu_name: 'Support', guard_name: 'admin' },
+      { name: 'locations.view', menu_name: 'Locations', guard_name: 'admin' },
+      { name: 'reports.view', menu_name: 'Reports', guard_name: 'admin' },
+      { name: 'finance.view', menu_name: 'Finance', guard_name: 'admin' },
+      { name: 'content.view', menu_name: 'Content', guard_name: 'admin' },
+      { name: 'settings.view', menu_name: 'Settings', guard_name: 'admin' }
+    ];
+    let added = 0;
+    for (const perm of sidebarPermissions) {
+      const [, created] = await Permission.findOrCreate({
+        where: { name: perm.name },
+        defaults: perm
+      });
+      if (created) added++;
+    }
+    res.json({ success: true, message: `Seeded ${added} new permissions (${sidebarPermissions.length - added} already existed)`, data: { total: sidebarPermissions.length, added } });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

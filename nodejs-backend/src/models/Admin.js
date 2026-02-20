@@ -48,6 +48,10 @@ const Admin = sequelize.define('Admin', {
     type: DataTypes.STRING(191),
     defaultValue: 'editor'
   },
+  is_franchise: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: 0
+  },
   status: {
     type: DataTypes.BOOLEAN,
     defaultValue: 0

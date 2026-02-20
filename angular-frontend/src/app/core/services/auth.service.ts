@@ -31,7 +31,9 @@ export interface Admin {
   email: string;
   username: string;
   role: string;
+  is_franchise: number;
   image?: string;
+  permissions?: string[];
 }
 
 export interface AdminAuthResponse {

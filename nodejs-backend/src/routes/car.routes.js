@@ -57,7 +57,7 @@ router.post('/fetch-models', authenticate, async (req, res) => {
       if (!name) continue;
       const [car, created] = await Car.findOrCreate({
         where: { brand_id, name },
-        defaults: { brand_id, name }
+        defaults: { brand_id, name, status: 1 }
       });
       if (created) imported++;
     }

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -45,7 +46,7 @@ import { ToastService } from '../../../core/services/toast.service';
               <option value="close">Closed</option>
             </select>
           </div>
-          <div class="control-group">
+          <div class="control-group" *ngIf="isSuperAdmin">
             <label>Assign to:</label>
             <select [(ngModel)]="selectedAdminId" (change)="assignFranchise()">
               <option value="">Unassigned</option>
@@ -213,12 +214,18 @@ export class TicketDetailComponent implements OnInit {
   private ticketId = '';
   private uploadsBase = environment.apiUrl.replace('/api/v1', '') + '/uploads/';
 
+  isSuperAdmin = false;
+
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private toast: ToastService
-  ) {}
+    private toast: ToastService,
+    private authService: AuthService
+  ) {
+    const admin = this.authService.currentAdmin;
+    this.isSuperAdmin = admin ? !admin.is_franchise : false;
+  }
 
   ngOnInit() {
     this.ticketId = this.route.snapshot.paramMap.get('id') || '';

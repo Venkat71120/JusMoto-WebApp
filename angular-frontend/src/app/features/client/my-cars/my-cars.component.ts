@@ -82,6 +82,24 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           </div>
 
           <div class="modal-body">
+            <!-- Car Image Preview -->
+            <div class="car-image-section">
+              <div class="car-image-preview" *ngIf="form.image">
+                <img [src]="form.image" alt="Car preview" (error)="form.image = ''">
+              </div>
+              <div class="car-image-placeholder" *ngIf="!form.image">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                  <path d="M7 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/><path d="M17 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/>
+                  <path d="M5 17H3v-6l2-5h9l4 5h1a2 2 0 012 2v4h-2"/><path d="M9 17h6"/>
+                </svg>
+                <span>Image will appear when you select a model</span>
+              </div>
+              <div class="form-group" style="margin-top:12px">
+                <label>Image URL (optional)</label>
+                <input type="text" class="form-control" [(ngModel)]="form.image" placeholder="https://... or auto-filled from selection">
+              </div>
+            </div>
+
             <!-- Brand -->
             <div class="form-group">
               <div class="label-row">
@@ -243,6 +261,13 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .dropdown-item:last-child { border-bottom:none; }
     .selected-tag { display:inline-flex; align-items:center; gap:6px; margin-top:8px; padding:4px 12px; background:#fee2e2; color:#e31b23; border-radius:20px; font-size:13px; font-weight:600; }
     .selected-tag button { background:none; border:none; cursor:pointer; font-size:16px; color:#e31b23; line-height:1; padding:0 2px; }
+
+    /* Car Image Preview */
+    .car-image-section { margin-bottom:20px; text-align:center; }
+    .car-image-preview { display:flex; justify-content:center; margin-bottom:8px; }
+    .car-image-preview img { max-width:200px; max-height:120px; border-radius:12px; object-fit:contain; background:#f8f9fa; padding:8px; border:1px solid #e5e7eb; }
+    .car-image-placeholder { display:flex; flex-direction:column; align-items:center; gap:8px; padding:20px; background:#f8f9fa; border-radius:12px; border:2px dashed #e5e7eb; }
+    .car-image-placeholder span { font-size:12px; color:#94a3b8; }
   `]
 })
 export class MyCarsComponent implements OnInit {
@@ -266,7 +291,7 @@ export class MyCarsComponent implements OnInit {
   editingId: number | null = null;
   brandSearch = '';
   modelSearch = '';
-  form: any = { brand_id: null, brand_name: '', car_id: null, car_name: '', variant_id: '', variant_name: '', registration_number: '', is_default: false };
+  form: any = { brand_id: null, brand_name: '', car_id: null, car_name: '', variant_id: '', variant_name: '', registration_number: '', is_default: false, image: '' };
 
   constructor(private http: HttpClient, private toast: ToastService) {}
 
@@ -353,6 +378,7 @@ export class MyCarsComponent implements OnInit {
   selectModel(model: any) {
     this.form.car_id = model.id;
     this.form.car_name = model.name;
+    this.form.image = model.image || '';
     this.modelSearch = '';
     this.showModelDropdown.set(false);
     this.form.variant_id = '';
@@ -409,7 +435,7 @@ export class MyCarsComponent implements OnInit {
 
   openAddModal() {
     this.editingId = null;
-    this.form = { brand_id: null, brand_name: '', car_id: null, car_name: '', variant_id: '', variant_name: '', registration_number: '', is_default: false };
+    this.form = { brand_id: null, brand_name: '', car_id: null, car_name: '', variant_id: '', variant_name: '', registration_number: '', is_default: false, image: '' };
     this.brandSearch = '';
     this.modelSearch = '';
     this.models.set([]);
@@ -425,7 +451,8 @@ export class MyCarsComponent implements OnInit {
       car_id: car.car_id, car_name: car.car?.name || '',
       variant_id: car.variant_id || '', variant_name: '',
       registration_number: car.registration_number || '',
-      is_default: !!car.is_default
+      is_default: !!car.is_default,
+      image: car.car?.image || ''
     };
     this.brandSearch = '';
     this.modelSearch = '';
@@ -454,6 +481,10 @@ export class MyCarsComponent implements OnInit {
       registration_number: this.form.registration_number,
       is_default: this.form.is_default
     };
+
+    if (this.form.image) {
+      body.image = this.form.image;
+    }
 
     if (this.form.variant_id) {
       body.variant_id = this.form.variant_id;

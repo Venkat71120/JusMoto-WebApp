@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
@@ -14,15 +14,15 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
   template: `
     <div class="page-header">
       <div>
-        <h1 class="page-title">Services Management</h1>
+        <h1 class="page-title">{{ isProduct ? 'Products' : 'Services' }} Management</h1>
       </div>
-      <a routerLink="/admin/services/add" class="btn-primary">+ Add Service</a>
+      <a [routerLink]="isProduct ? '/admin/products/add' : '/admin/services/add'" class="btn-primary">+ Add {{ isProduct ? 'Product' : 'Service' }}</a>
     </div>
 
     <div class="filters-bar">
       <div class="search-box">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Search services..." [(ngModel)]="search" (input)="onSearch()">
+        <input type="text" [placeholder]="'Search ' + (isProduct ? 'products' : 'services') + '...'" [(ngModel)]="search" (input)="onSearch()">
       </div>
       <select [(ngModel)]="statusFilter" (change)="loadServices()">
         <option value="">All Status</option>
@@ -42,7 +42,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         <thead>
           <tr>
             <th>#</th>
-            <th>Service</th>
+            <th>{{ isProduct ? 'Product' : 'Service' }}</th>
             <th>Category</th>
             <th>Price</th>
             <th>Discount</th>
@@ -81,7 +81,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             </td>
             <td>
               <div class="action-btns">
-                <a [routerLink]="['/admin/services/edit-service', svc.id]" class="btn-action btn-edit" title="Edit">
+                <a [routerLink]="isProduct ? ['/admin/products/edit', svc.id] : ['/admin/services/edit-service', svc.id]" class="btn-action btn-edit" title="Edit">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </a>
                 <button class="btn-action btn-delete" (click)="deleteService(svc)" title="Delete">
@@ -91,7 +91,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             </td>
           </tr>
           <tr *ngIf="services().length === 0 && !loading()">
-            <td colspan="8" class="empty-state">No services found</td>
+            <td colspan="8" class="empty-state">No {{ isProduct ? 'products' : 'services' }} found</td>
           </tr>
         </tbody>
       </table>
@@ -181,19 +181,25 @@ export class ServiceListComponent implements OnInit {
   search = '';
   statusFilter = '';
   featuredFilter = '';
+  isProduct = false;
+  itemType = 0;
   pagination = signal<any>({ page: 1, limit: 15, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false });
   deletingService = signal<any>(null);
   statusService = signal<any>(null);
   featuredService = signal<any>(null);
   private searchTimeout: any;
 
-  constructor(private http: HttpClient, private toast: ToastService) {}
+  constructor(private http: HttpClient, private toast: ToastService, private route: ActivatedRoute) {}
 
-  ngOnInit() { this.loadServices(); }
+  ngOnInit() {
+    this.itemType = this.route.snapshot.data['type'] ?? 0;
+    this.isProduct = this.itemType === 1;
+    this.loadServices();
+  }
 
   loadServices(page = 1) {
     this.loading.set(true);
-    const params: any = { page, limit: 15 };
+    const params: any = { page, limit: 15, type: this.itemType };
     if (this.search) params.search = this.search;
     if (this.statusFilter) params.status = this.statusFilter;
     if (this.featuredFilter) params.is_featured = this.featuredFilter;

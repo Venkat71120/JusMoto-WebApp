@@ -14,11 +14,11 @@ import { ToastService } from '../../../core/services/toast.service';
   template: `
     <!-- Page Header -->
     <div class="page-header">
-      <a routerLink="/admin/services/all" class="back-btn">
+      <a [routerLink]="isProduct ? '/admin/products/all' : '/admin/services/all'" class="back-btn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
-        Back to Services
+        Back to {{ isProduct ? 'Products' : 'Services' }}
       </a>
-      <h1 class="page-title">{{ isEdit ? 'Edit Service' : 'Create Service' }}</h1>
+      <h1 class="page-title">{{ isEdit ? 'Edit' : 'Create' }} {{ isProduct ? 'Product' : 'Service' }}</h1>
     </div>
 
     <!-- Loading -->
@@ -612,6 +612,9 @@ export class ServiceFormComponent implements OnInit {
   selectedVariantId = '';
   carCustomPrice: number | null = null;
 
+  // Type from route
+  isProduct = false;
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -632,6 +635,8 @@ export class ServiceFormComponent implements OnInit {
   ngOnInit() {
     this.serviceId = this.route.snapshot.paramMap.get('id');
     this.isEdit = !!this.serviceId;
+    const routeType = this.route.snapshot.data['type'];
+    this.isProduct = routeType === 1;
 
     this.form = this.fb.group({
       title: ['', Validators.required],
@@ -646,7 +651,7 @@ export class ServiceFormComponent implements OnInit {
       duration: [''],
       max_qty: [null],
       image: [null],
-      type: [0],
+      type: [routeType ?? 0],
       status: [true],
       // FormArrays for Step 2
       includes: this.fb.array([]),
@@ -852,7 +857,7 @@ export class ServiceFormComponent implements OnInit {
       },
       error: () => {
         this.toast.error('Failed to load service data.');
-        this.router.navigate(['/admin/services/all']);
+        this.router.navigate([this.isProduct ? '/admin/products/all' : '/admin/services/all']);
       }
     });
   }
@@ -998,7 +1003,7 @@ export class ServiceFormComponent implements OnInit {
     req.subscribe({
       next: () => {
         this.toast.success(this.isEdit ? 'Service updated successfully!' : 'Service created successfully!');
-        this.router.navigate(['/admin/services/all']);
+        this.router.navigate([this.isProduct ? '/admin/products/all' : '/admin/services/all']);
       },
       error: (err) => {
         const msg = err.error?.error || err.error?.message || 'Something went wrong';

@@ -50,9 +50,9 @@ router.get('/:id', async (req, res) => {
 router.get('/:id/cars', async (req, res) => {
   try {
     const cars = await Car.findAll({
-      where: { brand_id: req.params.id, status: 1 },
+      where: { brand_id: req.params.id },
       include: [
-        { model: Variant, as: 'variants', where: { status: 1 }, required: false }
+        { model: Variant, as: 'variants', required: false }
       ],
       order: [['name', 'ASC']]
     });

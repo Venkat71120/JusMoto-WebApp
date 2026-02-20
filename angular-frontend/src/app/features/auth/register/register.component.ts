@@ -79,10 +79,11 @@ import { AuthService } from '../../../core/services/auth.service';
 
             <div class="input-group">
               <label for="phone">Phone</label>
-              <div class="input-wrap">
+              <div class="input-wrap" [class.input-error]="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
-                <input id="phone" type="tel" formControlName="phone" placeholder="Enter your phone number">
+                <input id="phone" type="tel" formControlName="phone" placeholder="Enter 10-digit phone number" maxlength="10">
               </div>
+              <span class="field-error" *ngIf="registerForm.get('phone')?.touched && registerForm.get('phone')?.hasError('pattern')">Phone number must be exactly 10 digits</span>
             </div>
 
             <div class="input-group">
@@ -245,7 +246,7 @@ export class RegisterComponent {
       first_name: [''],
       last_name: [''],
       email: ['', [Validators.required, Validators.email]],
-      phone: [''],
+      phone: ['', [Validators.pattern(/^\d{10}$/)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       terms_conditions: [false, Validators.requiredTrue]
     });

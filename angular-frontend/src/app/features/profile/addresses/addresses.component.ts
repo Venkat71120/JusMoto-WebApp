@@ -74,7 +74,8 @@ import { FormsModule } from '@angular/forms';
               </div>
               <div>
                 <label class="block text-sm font-medium mb-1">Phone</label>
-                <input type="tel" [(ngModel)]="newAddress.phone" class="w-full p-2 border rounded">
+                <input type="tel" [(ngModel)]="newAddress.phone" class="w-full p-2 border rounded" maxlength="10" placeholder="10-digit phone number" pattern="\\d{10}" #addrPhone="ngModel">
+                <span class="text-red-500 text-xs mt-1 block" *ngIf="addrPhone.touched && addrPhone.invalid">Phone number must be exactly 10 digits</span>
               </div>
               <label class="flex items-center gap-2">
                 <input type="checkbox" [(ngModel)]="newAddress.is_default">

@@ -41,9 +41,13 @@ import { ToastService } from '../../../core/services/toast.service';
                 id="phone"
                 formControlName="phone"
                 class="form-control"
-                placeholder="10-digit phone number">
+                placeholder="10-digit phone number"
+                maxlength="10">
               <div class="error" *ngIf="addressForm.get('phone')?.touched && addressForm.get('phone')?.errors?.['required']">
                 Phone is required
+              </div>
+              <div class="error" *ngIf="addressForm.get('phone')?.touched && addressForm.get('phone')?.errors?.['pattern']">
+                Phone number must be exactly 10 digits
               </div>
             </div>
           </div>
@@ -305,7 +309,7 @@ export class AddressFormComponent implements OnInit {
   ) {
     this.addressForm = this.fb.group({
       name: ['', Validators.required],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       address_line1: ['', Validators.required],
       address_line2: [''],
       city: ['', Validators.required],

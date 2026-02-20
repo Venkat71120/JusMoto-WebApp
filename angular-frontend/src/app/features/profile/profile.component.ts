@@ -28,7 +28,8 @@ import { AuthService } from '../../core/services/auth.service';
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
-                  <input type="tel" formControlName="phone" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                  <input type="tel" formControlName="phone" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" maxlength="10" placeholder="10-digit phone number">
+                  <span class="text-red-500 text-xs mt-1 block" *ngIf="profileForm.get('phone')?.touched && profileForm.get('phone')?.hasError('pattern')">Phone number must be exactly 10 digits</span>
                 </div>
               </div>
               <button type="submit" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" [disabled]="isSaving()">
@@ -72,7 +73,7 @@ export class ProfileComponent implements OnInit {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['']
+      phone: ['', [Validators.pattern(/^\d{10}$/)]]
     });
   }
 

@@ -65,7 +65,8 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             <div class="form-row">
               <div class="form-group">
                 <label for="phone">Phone</label>
-                <input type="tel" id="phone" [(ngModel)]="profile.phone" class="form-control" placeholder="Enter phone number">
+                <input type="tel" id="phone" [(ngModel)]="profile.phone" class="form-control" placeholder="Enter 10-digit phone number" maxlength="10" pattern="\\d{10}" #phoneInput="ngModel">
+                <span class="field-error" *ngIf="phoneInput.touched && phoneInput.invalid">Phone number must be exactly 10 digits</span>
               </div>
               <div class="form-group">
                 <label for="date_of_birth">Date of Birth</label>
@@ -367,6 +368,18 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
 
     .form-control[readonly] {
       background: #f5f5f5;
+    }
+
+    .form-control.ng-invalid.ng-touched {
+      border-color: #dc2626;
+    }
+
+    .field-error {
+      display: block;
+      margin-top: 4px;
+      color: #dc2626;
+      font-size: 12px;
+      font-weight: 500;
     }
 
     .help-text {
@@ -686,6 +699,10 @@ export class SettingsComponent implements OnInit {
   }
 
   updateProfile(): void {
+    if (this.profile.phone && !/^\d{10}$/.test(this.profile.phone)) {
+      this.toast.error('Phone number must be exactly 10 digits');
+      return;
+    }
     this.savingProfile.set(true);
     this.http.put<any>(`${environment.apiUrl}/user/profile`, this.profile).subscribe({
       next: () => {

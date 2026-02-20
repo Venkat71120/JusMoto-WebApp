@@ -66,18 +66,31 @@ export class AuthService {
   }
 
   private loadStoredAuth(): void {
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
+    // Migrate any old localStorage auth to sessionStorage, then clear it
+    this.migrateStorage('token');
+    this.migrateStorage('user');
+    this.migrateStorage('adminToken');
+    this.migrateStorage('admin');
+
+    const token = sessionStorage.getItem('token');
+    const user = sessionStorage.getItem('user');
     if (token && user) {
       this.tokenSubject.next(token);
       this.currentUserSubject.next(JSON.parse(user));
     }
 
-    const adminToken = localStorage.getItem('adminToken');
-    const admin = localStorage.getItem('admin');
+    const adminToken = sessionStorage.getItem('adminToken');
+    const admin = sessionStorage.getItem('admin');
     if (adminToken && admin) {
       this.adminTokenSubject.next(adminToken);
       this.currentAdminSubject.next(JSON.parse(admin));
+    }
+  }
+
+  private migrateStorage(key: string): void {
+    const val = localStorage.getItem(key);
+    if (val) {
+      localStorage.removeItem(key);
     }
   }
 
@@ -94,7 +107,7 @@ export class AuthService {
     if (user) {
       const updated = { ...user, ...updates };
       this.currentUserSubject.next(updated);
-      localStorage.setItem('user', JSON.stringify(updated));
+      sessionStorage.setItem('user', JSON.stringify(updated));
     }
   }
 
@@ -164,7 +177,7 @@ export class AuthService {
       .pipe(
         tap((response: any) => {
           if (response.success && response.data.token) {
-            localStorage.setItem('token', response.data.token);
+            sessionStorage.setItem('token', response.data.token);
             this.tokenSubject.next(response.data.token);
           }
         })
@@ -177,23 +190,23 @@ export class AuthService {
         tap((response: any) => {
           if (response.success) {
             this.currentUserSubject.next(response.data.user);
-            localStorage.setItem('user', JSON.stringify(response.data.user));
+            sessionStorage.setItem('user', JSON.stringify(response.data.user));
           }
         })
       );
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
     this.tokenSubject.next(null);
     this.currentUserSubject.next(null);
     this.router.navigate(['/auth/login']);
   }
 
   private setAuth(token: string, user: User): void {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
+    sessionStorage.setItem('token', token);
+    sessionStorage.setItem('user', JSON.stringify(user));
     this.tokenSubject.next(token);
     this.currentUserSubject.next(user);
   }
@@ -214,8 +227,8 @@ export class AuthService {
       .pipe(
         tap(response => {
           if (response.success) {
-            localStorage.setItem('adminToken', response.data.token);
-            localStorage.setItem('admin', JSON.stringify(response.data.admin));
+            sessionStorage.setItem('adminToken', response.data.token);
+            sessionStorage.setItem('admin', JSON.stringify(response.data.admin));
             this.adminTokenSubject.next(response.data.token);
             this.currentAdminSubject.next(response.data.admin);
           }
@@ -224,8 +237,8 @@ export class AuthService {
   }
 
   adminLogout(): void {
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('admin');
+    sessionStorage.removeItem('adminToken');
+    sessionStorage.removeItem('admin');
     this.adminTokenSubject.next(null);
     this.currentAdminSubject.next(null);
     this.router.navigate(['/auth/admin-login']);

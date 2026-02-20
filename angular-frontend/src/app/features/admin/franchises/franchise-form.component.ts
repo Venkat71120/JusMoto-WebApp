@@ -34,7 +34,8 @@ import { ToastService } from '../../../core/services/toast.service';
         </div>
         <div class="form-group">
           <label>Phone</label>
-          <input type="text" [(ngModel)]="form.phone" placeholder="Phone number" class="form-input">
+          <input type="tel" [(ngModel)]="form.phone" placeholder="10-digit phone number" class="form-input" maxlength="10" pattern="\\d{10}" #phoneInput="ngModel">
+          <span class="field-error" *ngIf="phoneInput.touched && phoneInput.invalid">Phone number must be exactly 10 digits</span>
         </div>
       </div>
 
@@ -64,6 +65,8 @@ import { ToastService } from '../../../core/services/toast.service';
     .btn-primary { background:#e31b23; color:#fff; border:none; padding:10px 24px; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; }
     .btn-primary:hover { background:#b11218; }
     .btn-primary:disabled { opacity:0.6; cursor:not-allowed; }
+    .field-error { display:block; margin-top:4px; color:#dc2626; font-size:12px; font-weight:500; }
+    .form-input.ng-invalid.ng-touched { border-color:#dc2626; }
     @media (max-width:768px) { .form-row { grid-template-columns:1fr; } }
   `]
 })
@@ -77,6 +80,10 @@ export class FranchiseFormComponent {
   save() {
     if (!this.form.name.trim() || !this.form.email.trim() || !this.form.password.trim()) {
       this.formError = 'Name, email and password are required';
+      return;
+    }
+    if (this.form.phone && !/^\d{10}$/.test(this.form.phone)) {
+      this.formError = 'Phone number must be exactly 10 digits';
       return;
     }
     this.saving.set(true);

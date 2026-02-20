@@ -6,11 +6,12 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-ticket-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmModalComponent],
   template: `
     <a routerLink="/admin/support-ticket/tickets" class="back-link">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
@@ -41,17 +42,25 @@ import { AuthService } from '../../../core/services/auth.service';
         <div class="header-controls">
           <div class="control-group">
             <label>Status:</label>
-            <select [(ngModel)]="selectedStatus" (change)="changeStatus()">
-              <option value="open">Open</option>
-              <option value="close">Closed</option>
-            </select>
+            <div class="custom-select-wrap">
+              <select class="custom-select" [(ngModel)]="pendingStatus">
+                <option value="open">Open</option>
+                <option value="close">Closed</option>
+              </select>
+              <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <button class="btn-action" [disabled]="pendingStatus === selectedStatus" (click)="statusConfirmOpen.set(true)">Update</button>
           </div>
           <div class="control-group" *ngIf="isSuperAdmin">
             <label>Assign to:</label>
-            <select [(ngModel)]="selectedAdminId" (change)="assignFranchise()">
-              <option value="">Unassigned</option>
-              <option *ngFor="let f of franchiseAdmins()" [value]="f.id">{{ f.name }} ({{ f.email }})</option>
-            </select>
+            <div class="custom-select-wrap wide">
+              <select class="custom-select" [(ngModel)]="pendingAdminId">
+                <option value="">Unassigned</option>
+                <option *ngFor="let f of franchiseAdmins()" [value]="f.id">{{ f.name }} ({{ f.email }})</option>
+              </select>
+              <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+            <button class="btn-action" [disabled]="pendingAdminId === selectedAdminId" (click)="assignConfirmOpen.set(true)">Assign</button>
           </div>
         </div>
       </div>
@@ -133,6 +142,30 @@ import { AuthService } from '../../../core/services/auth.service';
         </div>
       </div>
     </div>
+
+    <!-- Status Change Confirm -->
+    <app-confirm-modal
+      [open]="statusConfirmOpen()"
+      title="Confirm Status Change"
+      [message]="'Are you sure you want to change status to &quot;' + (pendingStatus === 'close' ? 'Closed' : 'Open') + '&quot;?'"
+      confirmText="Yes, Change"
+      type="warning"
+      [loading]="statusUpdating()"
+      (confirmed)="confirmStatusChange()"
+      (cancelled)="statusConfirmOpen.set(false)">
+    </app-confirm-modal>
+
+    <!-- Assign Confirm -->
+    <app-confirm-modal
+      [open]="assignConfirmOpen()"
+      title="Confirm Assignment"
+      [message]="'Are you sure you want to assign this service request to &quot;' + getPendingAdminName() + '&quot;?'"
+      confirmText="Yes, Assign"
+      type="info"
+      [loading]="assignUpdating()"
+      (confirmed)="confirmAssign()"
+      (cancelled)="assignConfirmOpen.set(false)">
+    </app-confirm-modal>
   `,
   styles: [`
     .back-link { color:#64748b; text-decoration:none; font-weight:500; display:inline-flex; align-items:center; gap:6px; margin-bottom:20px; }
@@ -147,8 +180,16 @@ import { AuthService } from '../../../core/services/auth.service';
     .header-controls { display:flex; flex-direction:column; gap:10px; }
     .control-group { display:flex; align-items:center; gap:8px; }
     .control-group label { font-weight:600; color:#334155; font-size:13px; white-space:nowrap; }
-    .control-group select { padding:7px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; min-width:180px; }
-    .control-group select:focus { outline:none; border-color:#e31b23; }
+    .custom-select-wrap { position:relative; min-width:150px; }
+    .custom-select-wrap.wide { min-width:240px; }
+    .custom-select { width:100%; padding:9px 36px 9px 14px; border:1.5px solid #d1d5db; border-radius:10px; font-size:13px; font-weight:500; color:#1e293b; background:linear-gradient(to bottom, #fff 0%, #f9fafb 100%); appearance:none; -webkit-appearance:none; -moz-appearance:none; cursor:pointer; transition:all 0.2s ease; box-shadow:0 1px 2px rgba(0,0,0,0.05); }
+    .custom-select:hover { border-color:#a1a1aa; box-shadow:0 1px 4px rgba(0,0,0,0.08); }
+    .custom-select:focus { outline:none; border-color:#e31b23; box-shadow:0 0 0 3px rgba(227,27,35,0.12); }
+    .select-arrow { position:absolute; right:11px; top:50%; transform:translateY(-50%); pointer-events:none; opacity:0.5; transition:opacity 0.2s; }
+    .custom-select-wrap:hover .select-arrow { opacity:0.8; }
+    .btn-action { padding:9px 18px; border:none; border-radius:10px; background:#e31b23; color:#fff; font-weight:600; font-size:13px; cursor:pointer; white-space:nowrap; transition:all 0.2s; box-shadow:0 1px 3px rgba(227,27,35,0.3); }
+    .btn-action:hover { background:#c8151c; box-shadow:0 2px 6px rgba(227,27,35,0.35); transform:translateY(-1px); }
+    .btn-action:disabled { opacity:0.4; cursor:not-allowed; background:#94a3b8; box-shadow:none; transform:none; }
     .badge { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; text-transform:capitalize; }
     .badge-green { background:#dcfce7; color:#16a34a; }
     .badge-red { background:#fee2e2; color:#dc2626; }
@@ -207,8 +248,14 @@ export class TicketDetailComponent implements OnInit {
   franchiseAdmins = signal<any[]>([]);
   loading = signal(false);
   sending = signal(false);
+  statusConfirmOpen = signal(false);
+  statusUpdating = signal(false);
+  assignConfirmOpen = signal(false);
+  assignUpdating = signal(false);
   selectedStatus = '';
   selectedAdminId = '';
+  pendingStatus = '';
+  pendingAdminId = '';
   replyText = '';
   attachmentFile: File | null = null;
   private ticketId = '';
@@ -240,7 +287,9 @@ export class TicketDetailComponent implements OnInit {
         const t = res.data;
         this.ticket.set(t);
         this.selectedStatus = t.status || 'open';
+        this.pendingStatus = t.status || 'open';
         this.selectedAdminId = t.admin_id ? String(t.admin_id) : '';
+        this.pendingAdminId = t.admin_id ? String(t.admin_id) : '';
         this.messages.set(t.ticketMessages || t.messages || []);
         setTimeout(() => this.scrollToBottom(), 100);
       },
@@ -265,19 +314,38 @@ export class TicketDetailComponent implements OnInit {
     });
   }
 
-  changeStatus() {
-    this.http.put<any>(`${environment.apiUrl}/admin/tickets/${this.ticketId}/status`, { status: this.selectedStatus }).subscribe({
-      next: () => { this.toast.success('Status updated'); this.loadTicket(); },
-      error: () => this.toast.error('Failed to update status')
+  confirmStatusChange() {
+    this.statusUpdating.set(true);
+    this.http.put<any>(`${environment.apiUrl}/admin/tickets/${this.ticketId}/status`, { status: this.pendingStatus }).subscribe({
+      next: () => {
+        this.selectedStatus = this.pendingStatus;
+        this.toast.success('Status updated to ' + (this.pendingStatus === 'close' ? 'Closed' : 'Open'));
+        this.statusConfirmOpen.set(false);
+        this.statusUpdating.set(false);
+        this.loadTicket();
+      },
+      error: () => { this.toast.error('Failed to update status'); this.statusUpdating.set(false); }
     });
   }
 
-  assignFranchise() {
+  getPendingAdminName(): string {
+    if (!this.pendingAdminId) return 'Unassigned';
+    const admin = this.franchiseAdmins().find(f => f.id == this.pendingAdminId);
+    return admin?.name || 'Selected Admin';
+  }
+
+  confirmAssign() {
+    this.assignUpdating.set(true);
     this.http.put<any>(`${environment.apiUrl}/admin/tickets/${this.ticketId}/assign`, {
-      admin_id: this.selectedAdminId ? Number(this.selectedAdminId) : null
+      admin_id: this.pendingAdminId ? Number(this.pendingAdminId) : null
     }).subscribe({
-      next: () => this.toast.success('Service request assigned'),
-      error: () => this.toast.error('Failed to assign service request')
+      next: () => {
+        this.selectedAdminId = this.pendingAdminId;
+        this.toast.success('Service request assigned to ' + this.getPendingAdminName());
+        this.assignConfirmOpen.set(false);
+        this.assignUpdating.set(false);
+      },
+      error: () => { this.toast.error('Failed to assign service request'); this.assignUpdating.set(false); }
     });
   }
 

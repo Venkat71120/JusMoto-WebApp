@@ -132,10 +132,22 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         </div>
         <div class="modal-footer">
           <button class="btn-cancel" (click)="statusModalOpen.set(false)">Cancel</button>
-          <button class="btn-save" [disabled]="pendingStatus() === order()?.status" (click)="confirmStatusChange()">Update Status</button>
+          <button class="btn-save" [disabled]="pendingStatus() === order()?.status" (click)="showStatusConfirm()">Update Status</button>
         </div>
       </div>
     </div>
+
+    <!-- Status Confirm Modal -->
+    <app-confirm-modal
+      [open]="statusConfirmOpen()"
+      title="Confirm Status Change"
+      [message]="'Change order status from &quot;' + statusLabel(order()?.status) + '&quot; to &quot;' + statusLabel(pendingStatus()) + '&quot;?'"
+      confirmText="Yes, Update"
+      type="warning"
+      [loading]="statusUpdating()"
+      (confirmed)="confirmStatusChange()"
+      (cancelled)="statusConfirmOpen.set(false)">
+    </app-confirm-modal>
 
     <!-- Payment Confirmation Modal -->
     <app-confirm-modal
@@ -158,10 +170,13 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         <div class="modal-body">
           <div class="form-group">
             <label>Select Franchise Admin</label>
-            <select class="form-control" [(ngModel)]="selectedFranchiseId">
-              <option value="">-- Select Franchise --</option>
-              <option *ngFor="let f of franchiseAdmins()" [value]="f.id">{{ f.name }} ({{ f.email }})</option>
-            </select>
+            <div class="custom-select-wrap">
+              <select class="custom-select" [(ngModel)]="selectedFranchiseId">
+                <option value="">-- Select Franchise Admin --</option>
+                <option *ngFor="let f of franchiseAdmins()" [value]="f.id">{{ f.name }} ({{ f.email }})</option>
+              </select>
+              <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
           </div>
           <div class="franchise-empty" *ngIf="franchiseAdmins().length === 0 && !franchiseLoading()">
             <p>No franchise admins found.</p>
@@ -170,10 +185,22 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         </div>
         <div class="modal-footer">
           <button class="btn-cancel" (click)="franchiseModalOpen.set(false)">Cancel</button>
-          <button class="btn-save" [disabled]="!selectedFranchiseId" (click)="assignFranchise()">Assign</button>
+          <button class="btn-save" [disabled]="!selectedFranchiseId" (click)="showAssignConfirm()">Assign</button>
         </div>
       </div>
     </div>
+
+    <!-- Assign Confirm Modal -->
+    <app-confirm-modal
+      [open]="assignConfirmOpen()"
+      title="Confirm Assignment"
+      [message]="'Assign this order to &quot;' + getSelectedFranchiseName() + '&quot;?' + (getOrderType() === 'service' ? ' A service request will be created automatically.' : '')"
+      confirmText="Yes, Assign"
+      type="info"
+      [loading]="assignUpdating()"
+      (confirmed)="confirmAssignFranchise()"
+      (cancelled)="assignConfirmOpen.set(false)">
+    </app-confirm-modal>
   `,
   styles: [`
     .page-header { margin-bottom: 24px; }
@@ -251,6 +278,10 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #334155; font-size: 14px; }
     .form-control { width: 100%; padding: 10px 14px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
     .form-control:focus { outline: none; border-color: #e31b23; }
+    .custom-select-wrap { position: relative; }
+    .custom-select { width: 100%; padding: 10px 40px 10px 14px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; color: #334155; background: #fff; appearance: none; -webkit-appearance: none; -moz-appearance: none; cursor: pointer; box-sizing: border-box; transition: border-color 0.2s; }
+    .custom-select:focus { outline: none; border-color: #e31b23; box-shadow: 0 0 0 3px rgba(227,27,35,0.1); }
+    .select-arrow { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; }
     .franchise-empty { text-align: center; padding: 16px; color: #94a3b8; }
     .loading-small { display: flex; align-items: center; gap: 8px; padding: 12px; color: #64748b; font-size: 14px; }
     .spinner-sm { width: 20px; height: 20px; border: 2px solid #f3f4f6; border-top-color: #e31b23; border-radius: 50%; animation: spin 0.8s linear infinite; }
@@ -262,8 +293,12 @@ export class OrderDetailComponent implements OnInit {
   order = signal<any>(null);
   loading = signal(true);
   statusModalOpen = signal(false);
+  statusConfirmOpen = signal(false);
+  statusUpdating = signal(false);
   paymentModalOpen = signal(false);
   franchiseModalOpen = signal(false);
+  assignConfirmOpen = signal(false);
+  assignUpdating = signal(false);
   pendingStatus = signal(0);
   franchiseAdmins = signal<any[]>([]);
   franchiseLoading = signal(false);
@@ -302,16 +337,23 @@ export class OrderDetailComponent implements OnInit {
     this.statusModalOpen.set(true);
   }
 
+  showStatusConfirm() {
+    this.statusModalOpen.set(false);
+    this.statusConfirmOpen.set(true);
+  }
+
   confirmStatusChange() {
     const o = this.order();
     const newStatus = this.pendingStatus();
+    this.statusUpdating.set(true);
     this.http.put<any>(`${environment.apiUrl}/admin/orders/${o.id}/status`, { status: newStatus }).subscribe({
       next: () => {
         this.order.set({ ...o, status: newStatus });
         this.toast.success(`Order status changed to ${this.statusLabel(newStatus)}`);
-        this.statusModalOpen.set(false);
+        this.statusConfirmOpen.set(false);
+        this.statusUpdating.set(false);
       },
-      error: () => this.toast.error('Failed to update order status')
+      error: () => { this.toast.error('Failed to update order status'); this.statusUpdating.set(false); }
     });
   }
 
@@ -347,17 +389,30 @@ export class OrderDetailComponent implements OnInit {
     });
   }
 
-  assignFranchise() {
+  showAssignConfirm() {
+    this.franchiseModalOpen.set(false);
+    this.assignConfirmOpen.set(true);
+  }
+
+  getSelectedFranchiseName(): string {
+    const admin = this.franchiseAdmins().find(f => f.id == this.selectedFranchiseId);
+    return admin?.name || 'Selected Admin';
+  }
+
+  confirmAssignFranchise() {
     if (!this.selectedFranchiseId) return;
     const o = this.order();
+    this.assignUpdating.set(true);
     this.http.put<any>(`${environment.apiUrl}/admin/orders/${o.id}`, { franchise_admin_id: +this.selectedFranchiseId }).subscribe({
       next: () => {
         const admin = this.franchiseAdmins().find(f => f.id == this.selectedFranchiseId);
         this.order.set({ ...o, franchise_admin_id: +this.selectedFranchiseId, franchiseAdmin: admin });
-        this.toast.success('Franchise admin assigned & service request created automatically');
-        this.franchiseModalOpen.set(false);
+        const msg = this.getOrderType() === 'service' ? 'Franchise admin assigned & service request created' : 'Franchise admin assigned';
+        this.toast.success(msg);
+        this.assignConfirmOpen.set(false);
+        this.assignUpdating.set(false);
       },
-      error: () => this.toast.error('Failed to assign franchise admin')
+      error: () => { this.toast.error('Failed to assign franchise admin'); this.assignUpdating.set(false); }
     });
   }
 

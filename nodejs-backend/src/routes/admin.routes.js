@@ -340,31 +340,34 @@ router.put('/orders/:id', authenticate, isAdmin, async (req, res) => {
     const order = await Order.findByPk(req.params.id, {
       include: [
         { association: 'user', attributes: ['id', 'first_name', 'last_name'] },
-        { association: 'items', include: [{ association: 'service', attributes: ['id', 'title'] }] }
+        { association: 'items', include: [{ association: 'service', attributes: ['id', 'title', 'type'] }] }
       ]
     });
     if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
     await order.update(updateData);
 
-    // Auto-create service request when franchise admin is assigned
+    // Auto-create service request when franchise admin is assigned (service orders only, not products)
     if (req.body.franchise_admin_id) {
-      const existingTicket = await Ticket.findOne({ where: { order_id: order.id, admin_id: req.body.franchise_admin_id } });
-      if (!existingTicket) {
-        const itemsList = (order.items || []).map(i => `- ${i.service?.title || 'Service #' + i.service_id} (Qty: ${i.qty}, Price: ₹${i.price})`).join('\n');
-        const desc = `ORDER DETAILS\nOrder ID: #${order.invoice_number || order.id}\nCustomer: ${order.user?.first_name || ''} ${order.user?.last_name || ''}\nTotal: ₹${order.total}\n\nItems:\n${itemsList}`;
-        const ticket = await Ticket.create({
-          admin_id: req.body.franchise_admin_id,
-          user_id: order.user_id,
-          order_id: order.id,
-          title: `Order #${order.invoice_number || order.id} - Service Assignment`,
-          subject: `Franchise service request for Order #${order.invoice_number || order.id}`,
-          priority: 'normal',
-          status: 'open',
-          via: 'admin',
-          description: desc
-        });
-        const { TicketMessage } = require('../models');
-        await TicketMessage.create({ ticket_id: ticket.id, admin_id: req.admin.id, message: desc });
+      const hasServiceItem = (order.items || []).some(i => !i.service?.type || i.service.type === 0);
+      if (hasServiceItem) {
+        const existingTicket = await Ticket.findOne({ where: { order_id: order.id, admin_id: req.body.franchise_admin_id } });
+        if (!existingTicket) {
+          const itemsList = (order.items || []).map(i => `- ${i.service?.title || 'Service #' + i.service_id} (Qty: ${i.qty}, Price: ₹${i.price})`).join('\n');
+          const desc = `ORDER DETAILS\nOrder ID: #${order.invoice_number || order.id}\nCustomer: ${order.user?.first_name || ''} ${order.user?.last_name || ''}\nTotal: ₹${order.total}\n\nItems:\n${itemsList}`;
+          const ticket = await Ticket.create({
+            admin_id: req.body.franchise_admin_id,
+            user_id: order.user_id,
+            order_id: order.id,
+            title: `Order #${order.invoice_number || order.id} - Service Assignment`,
+            subject: `Franchise service request for Order #${order.invoice_number || order.id}`,
+            priority: 'normal',
+            status: 'open',
+            via: 'admin',
+            description: desc
+          });
+          const { TicketMessage } = require('../models');
+          await TicketMessage.create({ ticket_id: ticket.id, admin_id: req.admin.id, message: desc });
+        }
       }
     }
     res.json({ success: true, message: 'Order updated successfully' });
@@ -972,14 +975,19 @@ router.put('/tickets/:id/assign', authenticate, isAdmin, async (req, res) => {
   }
 });
 
-// Create service request from order (admin)
+// Create service request from order (admin) - only for service orders
 router.post('/tickets/create-from-order', authenticate, isAdmin, async (req, res) => {
   try {
     const { order_id, admin_id, title, subject, priority, description, department_id } = req.body;
     const order = await Order.findByPk(order_id, {
-      include: [{ association: 'user', attributes: ['id', 'first_name', 'last_name'] }]
+      include: [
+        { association: 'user', attributes: ['id', 'first_name', 'last_name'] },
+        { association: 'items', include: [{ association: 'service', attributes: ['id', 'type'] }] }
+      ]
     });
     if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
+    const hasServiceItem = (order.items || []).some(i => !i.service?.type || i.service.type === 0);
+    if (!hasServiceItem) return res.status(400).json({ success: false, error: 'Service requests can only be created for service orders, not product orders' });
     const ticket = await require('../models').Ticket.create({
       department_id: department_id || null,
       admin_id: admin_id || null,

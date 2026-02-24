@@ -91,7 +91,10 @@ router.get('/', async (req, res) => {
       where,
       include: [
         { model: Brand, as: 'brand' },
-        { model: Variant, as: 'variants', where: { status: 1 }, required: false }
+        { model: Variant, as: 'variants', where: { status: 1 }, required: false, include: [
+          { model: EngineType, as: 'engineType' },
+          { model: FuelType, as: 'fuelType' }
+        ]}
       ],
       order: [['name', 'ASC']]
     });
@@ -108,7 +111,10 @@ router.get('/:id', async (req, res) => {
     const car = await Car.findByPk(req.params.id, {
       include: [
         { model: Brand, as: 'brand' },
-        { model: Variant, as: 'variants', where: { status: 1 }, required: false }
+        { model: Variant, as: 'variants', where: { status: 1 }, required: false, include: [
+          { model: EngineType, as: 'engineType' },
+          { model: FuelType, as: 'fuelType' }
+        ]}
       ]
     });
 

@@ -43,7 +43,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         <div class="car-card" *ngFor="let car of cars()" [class.is-default]="car.is_default">
           <div class="car-card-top">
             <div class="car-img-wrap">
-              <img *ngIf="car.car?.image" [src]="car.car.image" [alt]="car.car?.name" class="car-img" (error)="$any($event.target).style.display='none'">
+              <img *ngIf="car.car?.image" [src]="getImageUrl(car.car.image)" [alt]="car.car?.name" class="car-img" (error)="$any($event.target).style.display='none'">
               <svg *ngIf="!car.car?.image" class="car-placeholder" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
                 <path d="M7 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/><path d="M17 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/>
                 <path d="M5 17H3v-6l2-5h9l4 5h1a2 2 0 012 2v4h-2"/><path d="M9 17h6"/>
@@ -82,73 +82,110 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           </div>
 
           <div class="modal-body">
+            <!-- Mode Toggle -->
+            <div class="mode-toggle">
+              <button class="mode-btn" [class.active]="!manualMode()" (click)="manualMode.set(false)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Search Database
+              </button>
+              <button class="mode-btn" [class.active]="manualMode()" (click)="manualMode.set(true)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                Add Manually
+              </button>
+            </div>
+
             <!-- Car Image Preview -->
             <div class="car-image-section">
-              <div class="car-image-preview" *ngIf="form.image">
-                <img [src]="form.image" alt="Car preview" (error)="form.image = ''">
+              <div class="car-image-preview" *ngIf="form.image || imagePreview()">
+                <img [src]="imagePreview() || getImageUrl(form.image)" alt="Car preview" (error)="form.image = ''">
               </div>
-              <div class="car-image-placeholder" *ngIf="!form.image">
+              <div class="car-image-placeholder" *ngIf="!form.image && !imagePreview()">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
                   <path d="M7 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/><path d="M17 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/>
                   <path d="M5 17H3v-6l2-5h9l4 5h1a2 2 0 012 2v4h-2"/><path d="M9 17h6"/>
                 </svg>
-                <span>Image will appear when you select a model</span>
+                <span>{{ manualMode() ? 'Upload a car image' : 'Image will appear when you select a model' }}</span>
               </div>
-              <div class="form-group" style="margin-top:12px">
+              <!-- File upload for manual mode -->
+              <div class="file-upload-area" *ngIf="manualMode()">
+                <label class="file-upload-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  {{ imageFile ? 'Change Image' : 'Upload Image' }}
+                  <input type="file" accept="image/*" (change)="onFileSelected($event)" style="display:none">
+                </label>
+                <span class="file-name" *ngIf="imageFile">{{ imageFile.name }}</span>
+              </div>
+              <!-- URL field only for database mode -->
+              <div class="form-group" style="margin-top:12px" *ngIf="!manualMode()">
                 <label>Image URL (optional)</label>
                 <input type="text" class="form-control" [(ngModel)]="form.image" placeholder="https://... or auto-filled from selection">
               </div>
             </div>
 
-            <!-- Brand -->
-            <div class="form-group">
-              <div class="label-row">
-                <label>Brand *</label>
-                <button *ngIf="brands().length === 0" class="fetch-link" (click)="fetchBrandsFromApi()" [disabled]="fetchingBrands()">
-                  {{ fetchingBrands() ? 'Fetching...' : 'Fetch All Brands' }}
-                </button>
-              </div>
-              <div class="search-select">
-                <input type="text" class="form-control" [(ngModel)]="brandSearch" (input)="filterBrands()" (focus)="showBrandDropdown.set(true)" placeholder="Search brand...">
-                <div class="dropdown-list" *ngIf="showBrandDropdown() && filteredBrands().length > 0">
-                  <div class="dropdown-item" *ngFor="let b of filteredBrands()" (click)="selectBrand(b)">
-                    {{ b.name }}
+            <!-- DATABASE MODE: Brand/Model dropdowns -->
+            <ng-container *ngIf="!manualMode()">
+              <!-- Brand -->
+              <div class="form-group">
+                <div class="label-row">
+                  <label>Brand *</label>
+                  <button *ngIf="brands().length === 0" class="fetch-link" (click)="fetchBrandsFromApi()" [disabled]="fetchingBrands()">
+                    {{ fetchingBrands() ? 'Fetching...' : 'Fetch All Brands' }}
+                  </button>
+                </div>
+                <div class="search-select">
+                  <input type="text" class="form-control" [(ngModel)]="brandSearch" (input)="filterBrands()" (focus)="showBrandDropdown.set(true)" placeholder="Search brand...">
+                  <div class="dropdown-list" *ngIf="showBrandDropdown() && filteredBrands().length > 0">
+                    <div class="dropdown-item" *ngFor="let b of filteredBrands()" (click)="selectBrand(b)">
+                      {{ b.name }}
+                    </div>
                   </div>
                 </div>
+                <div class="selected-tag" *ngIf="form.brand_id && form.brand_name">
+                  <span>{{ form.brand_name }}</span>
+                  <button (click)="clearBrand()">&times;</button>
+                </div>
               </div>
-              <div class="selected-tag" *ngIf="form.brand_id && form.brand_name">
-                <span>{{ form.brand_name }}</span>
-                <button (click)="clearBrand()">&times;</button>
-              </div>
-            </div>
 
-            <!-- Car Model -->
-            <div class="form-group">
-              <div class="label-row">
-                <label>Car Model *</label>
-                <button *ngIf="form.brand_id && models().length === 0 && !loadingModels()" class="fetch-link" (click)="fetchModelsFromApi()" [disabled]="fetchingModels()">
-                  {{ fetchingModels() ? 'Fetching...' : 'Fetch Models' }}
-                </button>
-              </div>
-              <div class="search-select">
-                <input type="text" class="form-control" [(ngModel)]="modelSearch" (input)="filterModels()" (focus)="showModelDropdown.set(true)" [disabled]="!form.brand_id" placeholder="{{ form.brand_id ? 'Search model...' : 'Select brand first' }}">
-                <div class="dropdown-list" *ngIf="showModelDropdown() && filteredModels().length > 0">
-                  <div class="dropdown-item" *ngFor="let m of filteredModels()" (click)="selectModel(m)">
-                    {{ m.name }}
+              <!-- Car Model -->
+              <div class="form-group">
+                <div class="label-row">
+                  <label>Car Model *</label>
+                  <button *ngIf="form.brand_id && models().length === 0 && !loadingModels()" class="fetch-link" (click)="fetchModelsFromApi()" [disabled]="fetchingModels()">
+                    {{ fetchingModels() ? 'Fetching...' : 'Fetch Models' }}
+                  </button>
+                </div>
+                <div class="search-select">
+                  <input type="text" class="form-control" [(ngModel)]="modelSearch" (input)="filterModels()" (focus)="showModelDropdown.set(true)" [disabled]="!form.brand_id" placeholder="{{ form.brand_id ? 'Search model...' : 'Select brand first' }}">
+                  <div class="dropdown-list" *ngIf="showModelDropdown() && filteredModels().length > 0">
+                    <div class="dropdown-item" *ngFor="let m of filteredModels()" (click)="selectModel(m)">
+                      {{ m.name }}
+                    </div>
                   </div>
                 </div>
+                <div class="selected-tag" *ngIf="form.car_id && form.car_name">
+                  <span>{{ form.car_name }}</span>
+                  <button (click)="clearModel()">&times;</button>
+                </div>
+                <div class="fetch-hint" *ngIf="loadingModels()">Loading models...</div>
               </div>
-              <div class="selected-tag" *ngIf="form.car_id && form.car_name">
-                <span>{{ form.car_name }}</span>
-                <button (click)="clearModel()">&times;</button>
+            </ng-container>
+
+            <!-- MANUAL MODE: Text inputs -->
+            <ng-container *ngIf="manualMode()">
+              <div class="form-group">
+                <label>Brand Name *</label>
+                <input type="text" class="form-control" [(ngModel)]="form.brand_name" placeholder="e.g. Toyota, Honda, BMW">
               </div>
-              <div class="fetch-hint" *ngIf="loadingModels()">Loading models...</div>
-            </div>
+              <div class="form-group">
+                <label>Car Model *</label>
+                <input type="text" class="form-control" [(ngModel)]="form.car_name" placeholder="e.g. Camry, Civic, 3 Series">
+              </div>
+            </ng-container>
 
             <!-- Variant -->
             <div class="form-group">
               <label>Variant / Trim</label>
-              <div *ngIf="variants().length > 0">
+              <div *ngIf="!manualMode() && variants().length > 0">
                 <select class="form-control" [(ngModel)]="form.variant_id">
                   <option value="">Select variant (optional)</option>
                   <option *ngFor="let v of variants()" [value]="v.id">{{ v.name || ((v.engineType?.name || '') + (v.fuelType?.name ? ' - ' + v.fuelType.name : '')) || 'Variant #' + v.id }}</option>
@@ -268,6 +305,19 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .car-image-preview img { max-width:200px; max-height:120px; border-radius:12px; object-fit:contain; background:#f8f9fa; padding:8px; border:1px solid #e5e7eb; }
     .car-image-placeholder { display:flex; flex-direction:column; align-items:center; gap:8px; padding:20px; background:#f8f9fa; border-radius:12px; border:2px dashed #e5e7eb; }
     .car-image-placeholder span { font-size:12px; color:#94a3b8; }
+
+    /* Mode toggle */
+    .mode-toggle { display:flex; gap:0; margin-bottom:20px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; }
+    .mode-btn { flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:10px 16px; border:none; background:#fff; color:#64748b; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .mode-btn:first-child { border-right:1px solid #e5e7eb; }
+    .mode-btn.active { background:#e31b23; color:#fff; }
+    .mode-btn:hover:not(.active) { background:#fff5f5; color:#e31b23; }
+
+    /* File upload */
+    .file-upload-area { display:flex; align-items:center; gap:12px; margin-top:10px; }
+    .file-upload-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; background:#f8f9fa; border:1px dashed #d1d5db; border-radius:8px; color:#475569; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .file-upload-btn:hover { border-color:#e31b23; color:#e31b23; background:#fff5f5; }
+    .file-name { font-size:12px; color:#64748b; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   `]
 })
 export class MyCarsComponent implements OnInit {
@@ -287,13 +337,25 @@ export class MyCarsComponent implements OnInit {
   deletingCar = signal<any>(null);
   showBrandDropdown = signal(false);
   showModelDropdown = signal(false);
+  manualMode = signal(false);
+  imagePreview = signal('');
+
+  private baseUrl = environment.apiUrl.replace('/api/v1', '');
 
   editingId: number | null = null;
   brandSearch = '';
   modelSearch = '';
+  imageFile: File | null = null;
   form: any = { brand_id: null, brand_name: '', car_id: null, car_name: '', variant_id: '', variant_name: '', registration_number: '', is_default: false, image: '' };
 
   constructor(private http: HttpClient, private toast: ToastService) {}
+
+  getImageUrl(image: string): string {
+    if (!image) return '';
+    if (image.startsWith('http')) return image;
+    const filename = image.replace('uploads/media/', '').replace('media/', '');
+    return `${this.baseUrl}/uploads/media/${filename}`;
+  }
 
   ngOnInit() {
     this.loadCars();
@@ -429,7 +491,20 @@ export class MyCarsComponent implements OnInit {
     this.form.registration_number = input.value;
   }
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.imageFile = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => this.imagePreview.set(e.target?.result as string);
+      reader.readAsDataURL(this.imageFile);
+    }
+  }
+
   isFormValid(): boolean {
+    if (this.manualMode()) {
+      return !!this.form.brand_name?.trim() && !!this.form.car_name?.trim() && !!this.form.registration_number?.trim();
+    }
     return this.form.brand_id && this.form.car_id && this.form.registration_number?.trim();
   }
 
@@ -438,6 +513,9 @@ export class MyCarsComponent implements OnInit {
     this.form = { brand_id: null, brand_name: '', car_id: null, car_name: '', variant_id: '', variant_name: '', registration_number: '', is_default: false, image: '' };
     this.brandSearch = '';
     this.modelSearch = '';
+    this.imageFile = null;
+    this.imagePreview.set('');
+    this.manualMode.set(false);
     this.models.set([]);
     this.filteredModels.set([]);
     this.variants.set([]);
@@ -456,6 +534,9 @@ export class MyCarsComponent implements OnInit {
     };
     this.brandSearch = '';
     this.modelSearch = '';
+    this.imageFile = null;
+    this.imagePreview.set('');
+    this.manualMode.set(false);
     // Load models and variants for the existing car
     if (car.brand_id) this.loadModelsForBrand(car.brand_id);
     if (car.car_id) {
@@ -475,12 +556,38 @@ export class MyCarsComponent implements OnInit {
     if (!this.isFormValid()) return;
     this.saving.set(true);
 
+    // If there's a file to upload, do that first
+    if (this.imageFile) {
+      const formData = new FormData();
+      formData.append('file', this.imageFile);
+      this.http.post<any>(`${environment.apiUrl}/upload/single`, formData).subscribe({
+        next: (res) => {
+          this.form.image = res.data?.url || '';
+          this.submitCarData();
+        },
+        error: (err) => {
+          this.toast.error('Image upload failed: ' + (err.error?.error || 'Unknown error'));
+          this.saving.set(false);
+        }
+      });
+    } else {
+      this.submitCarData();
+    }
+  }
+
+  private submitCarData() {
     const body: any = {
-      brand_id: this.form.brand_id,
-      car_id: this.form.car_id,
       registration_number: this.form.registration_number,
       is_default: this.form.is_default
     };
+
+    if (this.manualMode()) {
+      body.brand_name = this.form.brand_name?.trim();
+      body.car_name = this.form.car_name?.trim();
+    } else {
+      body.brand_id = this.form.brand_id;
+      body.car_id = this.form.car_id;
+    }
 
     if (this.form.image) {
       body.image = this.form.image;

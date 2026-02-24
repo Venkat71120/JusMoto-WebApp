@@ -60,6 +60,15 @@ import { environment } from '../../../environments/environment';
               </a>
             </li>
             <li>
+              <a routerLink="/client/cart" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+                </svg>
+                <span>Cart</span>
+              </a>
+            </li>
+            <li>
               <a routerLink="/client/favourites" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                   <path d="M21 8.25c0-2.485-2.014-4.5-4.5-4.5-1.74 0-3.222.993-4 2.475A4.502 4.502 0 008.5 3.75C6.014 3.75 4 5.765 4 8.25c0 6.42 8 10.5 8 10.5s8-4.08 8-10.5z"/>

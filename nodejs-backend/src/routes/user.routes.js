@@ -91,8 +91,36 @@ router.get('/cars', authenticate, isClient, async (req, res) => {
 
 router.post('/cars', authenticate, isClient, async (req, res) => {
   try {
-    const { brand_id, car_id, variant_id, variant_name, registration_number, is_default } = req.body;
-    const { UserSelectedCar, Variant } = require('../models');
+    const { brand_id, car_id, brand_name, car_name, variant_id, variant_name, registration_number, is_default, image } = req.body;
+    const { UserSelectedCar, Variant, Brand, Car } = require('../models');
+
+    // Resolve brand: use brand_id if provided, otherwise findOrCreate from brand_name
+    let resolvedBrandId = brand_id || null;
+    if (!resolvedBrandId && brand_name) {
+      const [brand] = await Brand.findOrCreate({
+        where: { name: brand_name },
+        defaults: { name: brand_name, image: 0 }
+      });
+      resolvedBrandId = brand.id;
+    }
+
+    // Resolve car: use car_id if provided, otherwise findOrCreate from car_name
+    let resolvedCarId = car_id || null;
+    if (!resolvedCarId && car_name && resolvedBrandId) {
+      const [carRecord] = await Car.findOrCreate({
+        where: { brand_id: resolvedBrandId, name: car_name },
+        defaults: { brand_id: resolvedBrandId, name: car_name, status: 1 }
+      });
+      resolvedCarId = carRecord.id;
+      // Update car image if provided
+      if (image) {
+        await carRecord.update({ image });
+      }
+    } else if (image && resolvedCarId) {
+      // Update existing car's image if provided
+      const carRecord = await Car.findByPk(resolvedCarId);
+      if (carRecord) await carRecord.update({ image });
+    }
 
     // If setting as default, unset other defaults
     if (is_default) {
@@ -104,18 +132,18 @@ router.post('/cars', authenticate, isClient, async (req, res) => {
 
     // Auto-create variant if variant_name is provided and no variant_id
     let resolvedVariantId = variant_id || null;
-    if (variant_name && !variant_id && car_id) {
+    if (variant_name && !variant_id && resolvedCarId) {
       const [variant] = await Variant.findOrCreate({
-        where: { car_id, name: variant_name },
-        defaults: { car_id, name: variant_name, status: 1 }
+        where: { car_id: resolvedCarId, name: variant_name },
+        defaults: { car_id: resolvedCarId, name: variant_name, status: 1 }
       });
       resolvedVariantId = variant.id;
     }
 
     const car = await UserSelectedCar.create({
       user_id: req.user.id,
-      brand_id,
-      car_id,
+      brand_id: resolvedBrandId,
+      car_id: resolvedCarId,
       variant_id: resolvedVariantId,
       registration_number,
       is_default: is_default ? 1 : 0
@@ -129,8 +157,8 @@ router.post('/cars', authenticate, isClient, async (req, res) => {
 
 router.put('/cars/:id', authenticate, isClient, async (req, res) => {
   try {
-    const { brand_id, car_id, variant_id, variant_name, registration_number, is_default } = req.body;
-    const { UserSelectedCar, Variant } = require('../models');
+    const { brand_id, car_id, brand_name, car_name, variant_id, variant_name, registration_number, is_default, image } = req.body;
+    const { UserSelectedCar, Variant, Brand, Car } = require('../models');
 
     const car = await UserSelectedCar.findOne({
       where: { id: req.params.id, user_id: req.user.id }
@@ -138,6 +166,30 @@ router.put('/cars/:id', authenticate, isClient, async (req, res) => {
 
     if (!car) {
       return res.status(404).json({ success: false, error: 'Car not found' });
+    }
+
+    // Resolve brand
+    let resolvedBrandId = brand_id || null;
+    if (!resolvedBrandId && brand_name) {
+      const [brand] = await Brand.findOrCreate({
+        where: { name: brand_name },
+        defaults: { name: brand_name, image: 0 }
+      });
+      resolvedBrandId = brand.id;
+    }
+
+    // Resolve car
+    let resolvedCarId = car_id || null;
+    if (!resolvedCarId && car_name && resolvedBrandId) {
+      const [carRecord] = await Car.findOrCreate({
+        where: { brand_id: resolvedBrandId, name: car_name },
+        defaults: { brand_id: resolvedBrandId, name: car_name, status: 1 }
+      });
+      resolvedCarId = carRecord.id;
+      if (image) await carRecord.update({ image });
+    } else if (image && resolvedCarId) {
+      const carRecord = await Car.findByPk(resolvedCarId);
+      if (carRecord) await carRecord.update({ image });
     }
 
     if (is_default) {
@@ -149,15 +201,21 @@ router.put('/cars/:id', authenticate, isClient, async (req, res) => {
 
     // Auto-create variant if variant_name is provided and no variant_id
     let resolvedVariantId = variant_id || null;
-    if (variant_name && !variant_id && car_id) {
+    if (variant_name && !variant_id && resolvedCarId) {
       const [variant] = await Variant.findOrCreate({
-        where: { car_id, name: variant_name },
-        defaults: { car_id, name: variant_name, status: 1 }
+        where: { car_id: resolvedCarId, name: variant_name },
+        defaults: { car_id: resolvedCarId, name: variant_name, status: 1 }
       });
       resolvedVariantId = variant.id;
     }
 
-    await car.update({ brand_id, car_id, variant_id: resolvedVariantId, registration_number, is_default: is_default ? 1 : 0 });
+    await car.update({
+      brand_id: resolvedBrandId,
+      car_id: resolvedCarId,
+      variant_id: resolvedVariantId,
+      registration_number,
+      is_default: is_default ? 1 : 0
+    });
 
     res.json({ success: true, data: car, message: 'Car updated successfully' });
   } catch (error) {

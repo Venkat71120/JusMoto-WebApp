@@ -20,17 +20,28 @@ router.post('/initiate', authenticate, isClient, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Order already paid' });
     }
 
+    // Handle Cash on Delivery
+    if (payment_method === 'cod') {
+      await order.update({
+        payment_status: 0,
+        payment_gateway: 'cod',
+        transaction_id: `COD${Date.now()}`
+      });
+
+      return res.json({ success: true, message: 'Order placed with Cash on Delivery', data: { order_id: order.id } });
+    }
+
     // Handle wallet payment
     if (payment_method === 'wallet') {
       const wallet = await Wallet.findOne({ where: { user_id: req.user.id } });
 
-      if (!wallet || parseFloat(wallet.balance) < parseFloat(order.total)) {
+      if (!wallet || parseFloat(wallet.available_balance) < parseFloat(order.total)) {
         return res.status(400).json({ success: false, error: 'Insufficient wallet balance' });
       }
 
       // Deduct from wallet
-      const newBalance = parseFloat(wallet.balance) - parseFloat(order.total);
-      await wallet.update({ balance: newBalance });
+      const newBalance = parseFloat(wallet.available_balance) - parseFloat(order.total);
+      await wallet.update({ available_balance: newBalance });
 
       // Create transaction
       await WalletTransaction.create({

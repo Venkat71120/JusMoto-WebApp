@@ -76,6 +76,14 @@ export const clientRoutes: Routes = [
         loadComponent: () => import('./my-cars/my-cars.component').then(m => m.MyCarsComponent)
       },
       {
+        path: 'cart',
+        loadComponent: () => import('./cart/cart.component').then(m => m.CartComponent)
+      },
+      {
+        path: 'checkout',
+        loadComponent: () => import('./checkout/checkout.component').then(m => m.CheckoutComponent)
+      },
+      {
         path: 'wallet',
         loadComponent: () => import('./wallet/wallet.component').then(m => m.ClientWalletComponent)
       },

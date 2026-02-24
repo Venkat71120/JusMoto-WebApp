@@ -13,7 +13,7 @@ import { environment } from '../../../../environments/environment';
     <div class="picker-trigger" (click)="openModal()">
       <div class="preview" *ngIf="previewUrl()">
         <img [src]="previewUrl()" alt="Selected image" (error)="onImageError()">
-        <button class="remove-btn" (click)="removeImage($event)" title="Remove">
+        <button type="button" class="remove-btn" (click)="removeImage($event)" title="Remove">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
@@ -28,7 +28,7 @@ import { environment } from '../../../../environments/environment';
       <div class="modal" (click)="$event.stopPropagation()">
         <div class="modal-header">
           <h3>Media Library</h3>
-          <button class="modal-close" (click)="closeModal()">&times;</button>
+          <button type="button" class="modal-close" (click)="closeModal()">&times;</button>
         </div>
 
         <div class="modal-tabs">
@@ -38,16 +38,21 @@ import { environment } from '../../../../environments/environment';
 
         <!-- Upload Tab -->
         <div class="upload-tab" *ngIf="tab() === 'upload'">
-          <label class="drop-zone" [class.dragging]="dragging()">
-            <input type="file" accept="image/*" (change)="handleUpload($event)" style="display:none">
+          <div class="drop-zone" [class.dragging]="dragging()"
+               (click)="fileInput.click()"
+               (dragover)="onDragOver($event)"
+               (dragleave)="dragging.set(false)"
+               (drop)="onDrop($event)">
+            <input #fileInput type="file" accept="image/*" (change)="handleUpload($event)" style="display:none">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             <p>Click or drag image to upload</p>
             <span class="hint">Max 10MB, JPEG/PNG/WebP</span>
-          </label>
+          </div>
           <div class="upload-progress" *ngIf="uploading()">
             <div class="spinner-small"></div>
             <span>Uploading...</span>
           </div>
+          <div class="upload-error" *ngIf="uploadError()">{{ uploadError() }}</div>
         </div>
 
         <!-- Library Tab -->
@@ -64,13 +69,13 @@ import { environment } from '../../../../environments/environment';
             <p>No images found. Upload one first.</p>
           </div>
           <div class="lib-pagination" *ngIf="libTotalPages() > 1">
-            <button *ngFor="let p of libPages()" [class.active]="p === libPage()" (click)="libPage.set(p); loadLibrary()">{{ p }}</button>
+            <button type="button" *ngFor="let p of libPages()" [class.active]="p === libPage()" (click)="libPage.set(p); loadLibrary()">{{ p }}</button>
           </div>
         </div>
 
         <div class="modal-footer" *ngIf="tab() === 'library'">
-          <button class="btn-cancel" (click)="closeModal()">Cancel</button>
-          <button class="btn-select" [disabled]="!selectedLibItem()" (click)="confirmSelection()">Select Image</button>
+          <button type="button" class="btn-cancel" (click)="closeModal()">Cancel</button>
+          <button type="button" class="btn-select" [disabled]="!selectedLibItem()" (click)="confirmSelection()">Select Image</button>
         </div>
       </div>
     </div>
@@ -99,6 +104,7 @@ import { environment } from '../../../../environments/environment';
     .drop-zone p { margin:0; font-weight:600; }
     .hint { font-size:12px; color:#94a3b8; }
     .upload-progress { display:flex; align-items:center; gap:10px; margin-top:16px; }
+    .upload-error { margin-top:12px; color:#dc2626; font-size:13px; font-weight:500; background:#fef2f2; padding:8px 14px; border-radius:8px; border:1px solid #fecaca; }
 
     .library-tab { padding:16px 24px; flex:1; overflow-y:auto; max-height:50vh; }
     .lib-search { width:100%; padding:10px 14px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; margin-bottom:16px; }
@@ -136,6 +142,7 @@ export class MediaPickerComponent implements OnInit, OnChanges {
   previewUrl = signal<string>('');
   uploading = signal(false);
   dragging = signal(false);
+  uploadError = signal('');
 
   libraryItems = signal<any[]>([]);
   libLoading = signal(false);
@@ -242,10 +249,32 @@ export class MediaPickerComponent implements OnInit, OnChanges {
     this.closeModal();
   }
 
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragging.set(true);
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.dragging.set(false);
+    const file = event.dataTransfer?.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      this.uploadFile(file);
+    }
+  }
+
   handleUpload(event: any) {
     const file = event.target.files?.[0];
     if (!file) return;
+    this.uploadFile(file);
+    event.target.value = '';
+  }
+
+  private uploadFile(file: File) {
     this.uploading.set(true);
+    this.uploadError.set('');
     const fd = new FormData();
     fd.append('file', file);
     this.http.post<any>(`${this.apiUrl}/admin/media/upload`, fd).subscribe({
@@ -259,9 +288,12 @@ export class MediaPickerComponent implements OnInit, OnChanges {
         this.uploading.set(false);
         this.closeModal();
       },
-      error: () => this.uploading.set(false)
+      error: (err) => {
+        this.uploading.set(false);
+        const msg = err.error?.error || err.error?.message || err.message || 'Upload failed';
+        this.uploadError.set(msg);
+      }
     });
-    event.target.value = '';
   }
 
   removeImage(event: Event) {

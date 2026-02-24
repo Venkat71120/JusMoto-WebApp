@@ -59,7 +59,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         <tbody>
           <tr *ngFor="let brand of brands(); let i = index">
             <td>{{ i + 1 }}</td>
-            <td><img *ngIf="brand.image" [src]="getImageUrl(brand.image)" class="thumb" alt=""><span *ngIf="!brand.image" class="no-img">-</span></td>
+            <td><img *ngIf="getImageUrl(brand.image)" [src]="getImageUrl(brand.image)" class="thumb" alt=""><span *ngIf="!getImageUrl(brand.image)" class="no-img">-</span></td>
             <td class="fw-600">{{ brand.name }}</td>
             <td>
               <div class="action-btns">

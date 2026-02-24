@@ -33,24 +33,15 @@ import { ToastService } from '../../../core/services/toast.service';
             <svg *ngIf="currentStep() > 1" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
             <span *ngIf="currentStep() <= 1">1</span>
           </div>
-          <span class="step-label">Service Details</span>
+          <span class="step-label">{{ isProduct ? 'Product' : 'Service' }} Details</span>
         </div>
         <div class="step-line" [class.completed]="currentStep() > 1"></div>
         <!-- Step 2 -->
-        <div class="step-item" [class.active]="currentStep() === 2" [class.completed]="currentStep() > 2" (click)="goToStep(2)">
+        <div class="step-item" [class.active]="currentStep() === 2" [class.completed]="false" (click)="goToStep(2)">
           <div class="step-circle">
-            <svg *ngIf="currentStep() > 2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-            <span *ngIf="currentStep() <= 2">2</span>
+            <span>2</span>
           </div>
           <span class="step-label">Attributes</span>
-        </div>
-        <div class="step-line" [class.completed]="currentStep() > 2"></div>
-        <!-- Step 3 -->
-        <div class="step-item" [class.active]="currentStep() === 3" [class.completed]="false" (click)="goToStep(3)">
-          <div class="step-circle">
-            <span>3</span>
-          </div>
-          <span class="step-label">Select Cars</span>
         </div>
       </div>
     </div>
@@ -60,7 +51,7 @@ import { ToastService } from '../../../core/services/toast.service';
 
       <!-- ============ STEP 1: Service Details ============ -->
       <div class="form-card" *ngIf="currentStep() === 1">
-        <h2 class="section-title">Service Details</h2>
+        <h2 class="section-title">{{ isProduct ? 'Product' : 'Service' }} Details</h2>
 
         <div class="form-grid">
           <!-- Title -->
@@ -162,7 +153,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <div class="form-group">
             <label class="checkbox-label">
               <input type="checkbox" formControlName="is_featured">
-              Featured Service
+              Featured {{ isProduct ? 'Product' : 'Service' }}
             </label>
           </div>
 
@@ -177,12 +168,12 @@ import { ToastService } from '../../../core/services/toast.service';
 
       <!-- ============ STEP 2: Service Attributes ============ -->
       <div class="form-card" *ngIf="currentStep() === 2">
-        <h2 class="section-title">Service Attributes</h2>
+        <h2 class="section-title">{{ isProduct ? 'Product' : 'Service' }} Attributes</h2>
 
         <!-- Service Includes -->
         <div class="repeater-section">
           <div class="repeater-header">
-            <h3>Service Includes</h3>
+            <h3>{{ isProduct ? 'Product' : 'Service' }} Includes</h3>
             <button type="button" class="btn-add" (click)="addInclude()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Add
@@ -288,104 +279,25 @@ import { ToastService } from '../../../core/services/toast.service';
         </div>
       </div>
 
-      <!-- ============ STEP 3: Select Cars ============ -->
-      <div class="form-card" *ngIf="currentStep() === 3">
-        <h2 class="section-title">Select Cars</h2>
-
-        <!-- Cascade Selectors -->
-        <div class="car-selector">
-          <div class="car-selector-row">
-            <div class="form-group">
-              <label>Brand</label>
-              <select [(ngModel)]="selectedBrandId" [ngModelOptions]="{standalone: true}" (change)="onBrandChange()">
-                <option value="">Select Brand</option>
-                <option *ngFor="let brand of brands()" [value]="brand.id">{{ brand.name }}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Car</label>
-              <select [(ngModel)]="selectedCarId" [ngModelOptions]="{standalone: true}" (change)="onCarChange()" [disabled]="!selectedBrandId">
-                <option value="">Select Car</option>
-                <option *ngFor="let car of filteredCars()" [value]="car.id">{{ car.name }}</option>
-              </select>
-              <span class="field-hint" *ngIf="loadingCars()">Loading...</span>
-            </div>
-            <div class="form-group">
-              <label>Variant</label>
-              <select [(ngModel)]="selectedVariantId" [ngModelOptions]="{standalone: true}" [disabled]="!selectedCarId">
-                <option value="">Select Variant</option>
-                <option *ngFor="let v of filteredVariants()" [value]="v.id">{{ v.name }}</option>
-              </select>
-              <span class="field-hint" *ngIf="loadingVariants()">Loading...</span>
-            </div>
-            <div class="form-group">
-              <label>Custom Price</label>
-              <input type="number" [(ngModel)]="carCustomPrice" [ngModelOptions]="{standalone: true}" placeholder="Price for this car">
-            </div>
-            <div class="form-group car-add-col">
-              <button type="button" class="btn-add-car" (click)="addCarRow()" [disabled]="!selectedCarId">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Add Car
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Selected Cars Table -->
-        <div class="cars-table-wrap" *ngIf="selectedCars().length > 0">
-          <table class="cars-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Brand</th>
-                <th>Car</th>
-                <th>Variant</th>
-                <th>Price</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let row of selectedCars(); let i = index">
-                <td>{{ i + 1 }}</td>
-                <td>{{ row.brand_name }}</td>
-                <td>{{ row.car_name }}</td>
-                <td>{{ row.variant_name || '-' }}</td>
-                <td>
-                  <input type="number" class="table-price-input" [value]="row.price" (input)="updateCarPrice(i, $event)">
-                </td>
-                <td>
-                  <button type="button" class="btn-remove-row" (click)="removeCarRow(i)">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="repeater-empty" *ngIf="selectedCars().length === 0">
-          No cars selected. Use the dropdowns above to add cars to this service.
-        </div>
-      </div>
-
       <!-- Error -->
       <div *ngIf="error()" class="error-msg">{{ error() }}</div>
 
       <!-- Navigation Buttons -->
       <div class="form-nav" *ngIf="!loadingData()">
         <div class="nav-left">
-          <a routerLink="/admin/services/all" class="btn-cancel">Cancel</a>
+          <a [routerLink]="isProduct ? '/admin/products/all' : '/admin/services/all'" class="btn-cancel">Cancel</a>
         </div>
         <div class="nav-right">
           <button type="button" class="btn-back" *ngIf="currentStep() > 1" (click)="prevStep()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
             Back
           </button>
-          <button type="button" class="btn-next" *ngIf="currentStep() < 3" (click)="nextStep()">
+          <button type="button" class="btn-next" *ngIf="currentStep() < 2" (click)="nextStep()">
             Next
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
           <button type="submit" class="btn-primary" [disabled]="saving()">
-            {{ saving() ? 'Saving...' : (isEdit ? 'Update Service' : 'Create Service') }}
+            {{ saving() ? 'Saving...' : (isEdit ? ('Update ' + (isProduct ? 'Product' : 'Service')) : ('Create ' + (isProduct ? 'Product' : 'Service'))) }}
           </button>
         </div>
       </div>
@@ -444,7 +356,6 @@ import { ToastService } from '../../../core/services/toast.service';
     .form-group textarea { resize: vertical; }
     .form-group select:disabled { background: #f3f4f6; cursor: not-allowed; }
     .field-error { font-size: 12px; color: #dc2626; margin-top: 2px; }
-    .field-hint { font-size: 12px; color: #94a3b8; }
 
     /* Checkbox */
     .checkbox-label { display: flex; align-items: center; gap: 8px; cursor: pointer; padding-top: 20px; font-size: 14px; font-weight: 500; color: #374151; }
@@ -485,40 +396,6 @@ import { ToastService } from '../../../core/services/toast.service';
       cursor: pointer; color: #dc2626; transition: all 0.2s;
     }
     .btn-remove:hover { background: #fee2e2; border-color: #dc2626; }
-
-    /* Car Selector */
-    .car-selector { background: #f8f9fb; border-radius: 12px; padding: 20px; margin-bottom: 24px; border: 1px solid #f1f5f9; }
-    .car-selector-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto; gap: 16px; align-items: flex-end; }
-    .car-add-col { display: flex; align-items: flex-end; padding-bottom: 2px; }
-    .btn-add-car {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 10px 20px; border: none; border-radius: 8px;
-      background: #e31b23; color: #fff; font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: background 0.2s; white-space: nowrap;
-    }
-    .btn-add-car:hover { background: #b11218; }
-    .btn-add-car:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* Cars Table */
-    .cars-table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid #e5e7eb; }
-    .cars-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    .cars-table th {
-      background: #f8f9fb; padding: 12px 16px; text-align: left;
-      font-weight: 600; color: #374151; font-size: 13px; border-bottom: 1px solid #e5e7eb;
-    }
-    .cars-table td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; color: #374151; }
-    .cars-table tbody tr:last-child td { border-bottom: none; }
-    .cars-table tbody tr:hover { background: #fafafa; }
-    .table-price-input {
-      width: 100px; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 6px;
-      font-size: 13px; text-align: right;
-    }
-    .table-price-input:focus { outline: none; border-color: #e31b23; }
-    .btn-remove-row {
-      background: none; border: none; cursor: pointer; color: #dc2626; padding: 4px;
-      display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: background 0.2s;
-    }
-    .btn-remove-row:hover { background: #fee2e2; }
 
     /* Error */
     .error-msg { color: #dc2626; background: #fee2e2; padding: 12px 16px; border-radius: 8px; margin-top: 16px; font-size: 14px; }
@@ -562,7 +439,6 @@ import { ToastService } from '../../../core/services/toast.service';
     @media (max-width: 768px) {
       .form-grid { grid-template-columns: 1fr; }
       .repeater-grid { grid-template-columns: 1fr; }
-      .car-selector-row { grid-template-columns: 1fr; }
       .step-track { flex-wrap: wrap; gap: 8px; padding: 16px; }
       .step-line { min-width: 30px; }
     }
@@ -585,20 +461,6 @@ export class ServiceFormComponent implements OnInit {
   // Signals - Media
   imageValue = signal<any>(null);
   galleryValues = signal<any[]>([]);
-
-  // Signals - Cars (Step 3)
-  brands = signal<any[]>([]);
-  filteredCars = signal<any[]>([]);
-  filteredVariants = signal<any[]>([]);
-  loadingCars = signal(false);
-  loadingVariants = signal(false);
-  selectedCars = signal<any[]>([]);
-
-  // Car selector bound values
-  selectedBrandId = '';
-  selectedCarId = '';
-  selectedVariantId = '';
-  carCustomPrice: number | null = null;
 
   // Type from route
   isProduct = false;
@@ -648,7 +510,6 @@ export class ServiceFormComponent implements OnInit {
     });
 
     this.loadCategories();
-    this.loadBrands();
 
     if (this.isEdit) {
       this.loadService();
@@ -669,13 +530,13 @@ export class ServiceFormComponent implements OnInit {
 
   // ---- Step Navigation ----
   goToStep(step: number) {
-    if (step < 1 || step > 3) return;
+    if (step < 1 || step > 2) return;
     // Validate step 1 before leaving
     if (this.currentStep() === 1 && step > 1) {
       this.form.get('title')?.markAsTouched();
       this.form.get('price')?.markAsTouched();
       if (this.form.get('title')?.invalid || this.form.get('price')?.invalid) {
-        this.toast.error('Please fill in the required fields in Service Details.');
+        this.toast.error('Please fill in the required fields.');
         return;
       }
     }
@@ -696,40 +557,6 @@ export class ServiceFormComponent implements OnInit {
     this.http.get<any>(`${environment.apiUrl}/admin/categories`, { params: { limit: '100' } }).subscribe({
       next: (res) => this.categories.set(res.data || [])
     });
-  }
-
-  loadBrands() {
-    this.http.get<any>(`${environment.apiUrl}/admin/brands`, { params: { limit: '100' } }).subscribe({
-      next: (res) => this.brands.set(res.data || [])
-    });
-  }
-
-  onBrandChange() {
-    this.selectedCarId = '';
-    this.selectedVariantId = '';
-    this.filteredCars.set([]);
-    this.filteredVariants.set([]);
-    if (this.selectedBrandId) {
-      this.loadingCars.set(true);
-      this.http.get<any>(`${environment.apiUrl}/admin/cars`, { params: { brand_id: this.selectedBrandId, limit: '100' } }).subscribe({
-        next: (res) => this.filteredCars.set(res.data || []),
-        error: () => this.filteredCars.set([]),
-        complete: () => this.loadingCars.set(false)
-      });
-    }
-  }
-
-  onCarChange() {
-    this.selectedVariantId = '';
-    this.filteredVariants.set([]);
-    if (this.selectedCarId) {
-      this.loadingVariants.set(true);
-      this.http.get<any>(`${environment.apiUrl}/admin/variants`, { params: { car_id: this.selectedCarId, limit: '100' } }).subscribe({
-        next: (res) => this.filteredVariants.set(res.data || []),
-        error: () => this.filteredVariants.set([]),
-        complete: () => this.loadingVariants.set(false)
-      });
-    }
   }
 
   // ---- Load existing service (edit mode) ----
@@ -756,12 +583,34 @@ export class ServiceFormComponent implements OnInit {
           status: s.status !== undefined ? !!s.status : true
         });
 
-        // Image
-        this.imageValue.set(s.image || null);
+        // Image — resolve the path for media picker display
+        if (s.image) {
+          const imgVal = String(s.image);
+          if (imgVal.startsWith('http') || imgVal.startsWith('media/') || imgVal.startsWith('uploads/')) {
+            this.imageValue.set(imgVal);
+          } else if (/^\d+$/.test(imgVal)) {
+            // Numeric media ID — resolve to full URL via media library
+            this.http.get<any>(`${environment.apiUrl}/admin/media/${imgVal}`).subscribe({
+              next: (mediaRes) => {
+                if (mediaRes.data?.path) {
+                  const baseUrl = environment.apiUrl.replace('/api/v1', '');
+                  const filename = mediaRes.data.path.replace('media/', '');
+                  this.imageValue.set(`${baseUrl}/uploads/media/${filename}`);
+                } else {
+                  this.imageValue.set(imgVal);
+                }
+              },
+              error: () => this.imageValue.set(imgVal)
+            });
+          } else {
+            this.imageValue.set(imgVal);
+          }
+        }
 
         // Gallery
-        if (s.gallery && Array.isArray(s.gallery)) {
-          this.galleryValues.set(s.gallery);
+        const gallery = s.gallery_images || s.gallery;
+        if (gallery && Array.isArray(gallery)) {
+          this.galleryValues.set(gallery);
         }
 
         // Populate includes
@@ -804,18 +653,6 @@ export class ServiceFormComponent implements OnInit {
           });
         }
 
-        // Populate cars
-        if (s.cars && Array.isArray(s.cars)) {
-          this.selectedCars.set(s.cars.map((c: any) => ({
-            car_id: c.car_id || c.id,
-            variant_id: c.variant_id || null,
-            price: c.price ?? c.pivot?.price ?? 0,
-            brand_name: c.brand?.name || c.brand_name || '-',
-            car_name: c.name || c.car_name || '-',
-            variant_name: c.variant?.name || c.variant_name || '-'
-          })));
-        }
-
         this.loadingData.set(false);
       },
       error: () => {
@@ -839,7 +676,6 @@ export class ServiceFormComponent implements OnInit {
     this.galleryValues.update(arr => {
       const copy = [...arr];
       if (mediaId === null) {
-        // Remove slot when image removed
         copy.splice(index, 1);
       } else {
         copy[index] = mediaId;
@@ -865,56 +701,8 @@ export class ServiceFormComponent implements OnInit {
     this.specifications.push(this.fb.group({ title: [''], value: [''] }));
   }
 
-  // ---- Car selection ----
-  addCarRow() {
-    if (!this.selectedCarId) return;
-
-    const brand = this.brands().find(b => String(b.id) === String(this.selectedBrandId));
-    const car = this.filteredCars().find(c => String(c.id) === String(this.selectedCarId));
-    const variant = this.filteredVariants().find(v => String(v.id) === String(this.selectedVariantId));
-
-    // Prevent duplicate car+variant
-    const exists = this.selectedCars().some(
-      r => String(r.car_id) === String(this.selectedCarId) && String(r.variant_id || '') === String(this.selectedVariantId || '')
-    );
-    if (exists) {
-      this.toast.warning('This car/variant combination is already added.');
-      return;
-    }
-
-    const row = {
-      car_id: Number(this.selectedCarId),
-      variant_id: this.selectedVariantId ? Number(this.selectedVariantId) : null,
-      price: this.carCustomPrice ?? this.form.get('price')?.value ?? 0,
-      brand_name: brand?.name || '-',
-      car_name: car?.name || '-',
-      variant_name: variant?.name || '-'
-    };
-
-    this.selectedCars.update(arr => [...arr, row]);
-
-    // Reset selectors
-    this.selectedVariantId = '';
-    this.carCustomPrice = null;
-  }
-
-  removeCarRow(index: number) {
-    this.selectedCars.update(arr => arr.filter((_, i) => i !== index));
-  }
-
-  updateCarPrice(index: number, event: Event) {
-    const input = event.target as HTMLInputElement;
-    const newPrice = Number(input.value);
-    this.selectedCars.update(arr => {
-      const copy = [...arr];
-      copy[index] = { ...copy[index], price: newPrice };
-      return copy;
-    });
-  }
-
   // ---- Submit ----
   onSubmit() {
-    // Mark required fields as touched for validation display
     this.form.get('title')?.markAsTouched();
     this.form.get('price')?.markAsTouched();
 
@@ -948,12 +736,6 @@ export class ServiceFormComponent implements OnInit {
       faqs: formVal.faqs || [],
       additional_info: formVal.additional_info || [],
       specifications: formVal.specifications || [],
-      // Cars
-      cars: this.selectedCars().map(c => ({
-        car_id: c.car_id,
-        variant_id: c.variant_id,
-        price: c.price
-      })),
       // Gallery
       gallery: this.galleryValues().filter(v => v !== null)
     };
@@ -964,7 +746,8 @@ export class ServiceFormComponent implements OnInit {
 
     req.subscribe({
       next: () => {
-        this.toast.success(this.isEdit ? 'Service updated successfully!' : 'Service created successfully!');
+        const label = this.isProduct ? 'Product' : 'Service';
+        this.toast.success(this.isEdit ? `${label} updated successfully!` : `${label} created successfully!`);
         this.router.navigate([this.isProduct ? '/admin/products/all' : '/admin/services/all']);
       },
       error: (err) => {

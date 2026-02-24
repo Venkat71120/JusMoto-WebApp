@@ -104,21 +104,16 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
                   <path d="M7 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/><path d="M17 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/>
                   <path d="M5 17H3v-6l2-5h9l4 5h1a2 2 0 012 2v4h-2"/><path d="M9 17h6"/>
                 </svg>
-                <span>{{ manualMode() ? 'Upload a car image' : 'Image will appear when you select a model' }}</span>
+                <span>Upload a car image</span>
               </div>
-              <!-- File upload for manual mode -->
-              <div class="file-upload-area" *ngIf="manualMode()">
+              <!-- File upload -->
+              <div class="file-upload-area">
                 <input #carFileInput type="file" accept="image/*" (change)="onFileSelected($event)" style="display:none">
                 <button type="button" class="file-upload-btn" (click)="carFileInput.click()">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                   {{ imageFile ? 'Change Image' : 'Upload Image' }}
                 </button>
                 <span class="file-name" *ngIf="imageFile">{{ imageFile.name }}</span>
-              </div>
-              <!-- URL field only for database mode -->
-              <div class="form-group" style="margin-top:12px" *ngIf="!manualMode()">
-                <label>Image URL (optional)</label>
-                <input type="text" class="form-control" [(ngModel)]="form.image" placeholder="https://... or auto-filled from selection">
               </div>
             </div>
 

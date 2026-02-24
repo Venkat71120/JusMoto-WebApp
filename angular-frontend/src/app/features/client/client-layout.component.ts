@@ -17,8 +17,7 @@ import { environment } from '../../../environments/environment';
       <aside class="sidebar" [class.open]="sidebarOpen()">
         <div class="sidebar-header">
           <a routerLink="/" class="logo">
-            <span class="logo-icon">🚗</span>
-            <span class="logo-text">JusMoto</span>
+            <img src="assets/images/logo_redefening.png" alt="JusMoto" class="logo-img">
           </a>
           <button class="close-btn" (click)="closeSidebar()">✕</button>
         </div>
@@ -280,15 +279,13 @@ import { environment } from '../../../environments/environment';
     .logo {
       display: flex;
       align-items: center;
-      gap: 10px;
       text-decoration: none;
-      color: #1a1a1a;
-      font-weight: 700;
-      font-size: 20px;
     }
 
-    .logo-icon {
-      font-size: 28px;
+    .logo-img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
     }
 
     .sidebar-nav {

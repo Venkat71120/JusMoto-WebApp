@@ -53,7 +53,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           </div>
           <div class="car-card-body">
             <h3 class="car-name">{{ car.brand?.name || '' }} {{ car.car?.name || '' }}</h3>
-            <p class="car-variant" *ngIf="car.variant?.name">{{ car.variant.name }}</p>
+            <p class="car-variant" *ngIf="car.variant">{{ car.variant.name || ((car.variant.engineType?.name || '') + (car.variant.fuelType?.name ? ' - ' + car.variant.fuelType.name : '')) }}</p>
             <div class="car-reg">{{ car.registration_number || '-' }}</div>
           </div>
           <div class="car-card-actions">
@@ -151,7 +151,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
               <div *ngIf="variants().length > 0">
                 <select class="form-control" [(ngModel)]="form.variant_id">
                   <option value="">Select variant (optional)</option>
-                  <option *ngFor="let v of variants()" [value]="v.id">{{ v.name }}</option>
+                  <option *ngFor="let v of variants()" [value]="v.id">{{ v.name || ((v.engineType?.name || '') + (v.fuelType?.name ? ' - ' + v.fuelType.name : '')) || 'Variant #' + v.id }}</option>
                 </select>
                 <div class="or-divider">or type a new one</div>
               </div>

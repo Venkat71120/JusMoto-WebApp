@@ -15,7 +15,7 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
       <aside class="sidebar" [class.open]="sidebarOpen()">
         <div class="sidebar-header">
           <a routerLink="/admin/dashboard" class="logo">
-            <span class="logo-text">Admin Panel</span>
+            <img src="assets/images/logo_redefening.png" alt="JusMoto" class="logo-img">
           </a>
           <button class="close-btn" (click)="closeSidebar()">&#10005;</button>
         </div>
@@ -317,7 +317,8 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
     .sidebar { width: 260px; background: #0a0c0d; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100; transition: transform 0.3s ease; }
     .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; }
     .close-btn { display: none; background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8; }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 700; font-size: 20px; }
+    .logo { display: flex; align-items: center; text-decoration: none; }
+    .logo-img { height: 32px; width: auto; object-fit: contain; filter: brightness(0) invert(1); }
     .sidebar-nav { flex: 1; overflow-y: auto; padding: 15px 0; display: flex; flex-direction: column; }
     .sidebar-nav::-webkit-scrollbar { width: 4px; }
     .sidebar-nav::-webkit-scrollbar-track { background: transparent; }

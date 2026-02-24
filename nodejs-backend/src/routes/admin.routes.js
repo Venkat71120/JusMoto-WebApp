@@ -806,8 +806,8 @@ router.get('/variants', authenticate, isAdmin, async (req, res) => {
 
 router.post('/variants', authenticate, isAdmin, async (req, res) => {
   try {
-    const { car_id, engine_type_id, fual_type_id } = req.body;
-    const variant = await Variant.create({ car_id, engine_type_id, fual_type_id });
+    const { name, car_id, engine_type_id, fual_type_id } = req.body;
+    const variant = await Variant.create({ name: name || null, car_id, engine_type_id, fual_type_id });
     res.status(201).json({ success: true, data: variant, message: 'Variant created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });

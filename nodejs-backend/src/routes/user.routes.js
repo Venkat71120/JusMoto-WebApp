@@ -69,14 +69,17 @@ router.put('/change-password', authenticate, isClient, async (req, res) => {
 // User cars routes
 router.get('/cars', authenticate, isClient, async (req, res) => {
   try {
-    const { UserSelectedCar, Brand, Car, Variant } = require('../models');
+    const { UserSelectedCar, Brand, Car, Variant, EngineType, FuelType } = require('../models');
 
     const cars = await UserSelectedCar.findAll({
       where: { user_id: req.user.id },
       include: [
         { model: Brand, as: 'brand' },
         { model: Car, as: 'car' },
-        { model: Variant, as: 'variant' }
+        { model: Variant, as: 'variant', include: [
+          { model: EngineType, as: 'engineType', attributes: ['id', 'name'] },
+          { model: FuelType, as: 'fuelType', attributes: ['id', 'name'] }
+        ]}
       ]
     });
 

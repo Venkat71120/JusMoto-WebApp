@@ -14,15 +14,8 @@ import { environment } from '../../../../environments/environment';
       <div class="login-left">
         <div class="brand-content">
           <div class="brand-logo">
-            <div class="logo-icon">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5">
-                <path d="M7 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/><path d="M17 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/>
-                <path d="M5 17H3v-6l2-5h9l4 5h1a2 2 0 012 2v4h-2"/><path d="M9 17h6"/><path d="M14 7l4 4"/>
-              </svg>
-            </div>
-            <h1 class="brand-name">JusMoto</h1>
+            <img src="assets/images/logo_redefening.png" alt="JusMoto - Redefining Vehicle Care" class="brand-logo-img">
           </div>
-          <p class="brand-tagline">Your Car, Our Care</p>
           <div class="brand-features">
             <div class="feature-item">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
@@ -148,15 +141,9 @@ import { environment } from '../../../../environments/environment';
       background:radial-gradient(circle, rgba(227,27,35,0.15) 0%, transparent 60%);
     }
     .brand-content { position:relative; z-index:1; }
-    .brand-logo { display:flex; align-items:center; gap:16px; margin-bottom:12px; }
-    .logo-icon {
-      width:64px; height:64px; border-radius:16px; background:rgba(227,27,35,0.9);
-      display:flex; align-items:center; justify-content:center;
-      box-shadow:0 8px 32px rgba(227,27,35,0.4);
-    }
-    .brand-name { font-size:36px; font-weight:800; color:#fff; margin:0; letter-spacing:-0.5px; }
-    .brand-tagline { font-size:18px; color:rgba(255,255,255,0.6); margin:0 0 48px; padding-left:80px; }
-    .brand-features { display:flex; flex-direction:column; gap:16px; padding-left:80px; }
+    .brand-logo { display:flex; align-items:center; margin-bottom:48px; }
+    .brand-logo-img { max-width:280px; height:auto; filter:brightness(0) invert(1); }
+    .brand-features { display:flex; flex-direction:column; gap:16px; }
     .feature-item { display:flex; align-items:center; gap:12px; color:rgba(255,255,255,0.7); font-size:15px; }
     .brand-footer { position:absolute; bottom:32px; left:60px; color:rgba(255,255,255,0.3); font-size:13px; }
 

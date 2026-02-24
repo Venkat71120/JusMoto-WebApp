@@ -21,6 +21,10 @@ import { ToastService } from '../../../core/services/toast.service';
 
     <div class="form-card" *ngIf="!loadingData()">
       <div class="form-group">
+        <label>Variant Name</label>
+        <input type="text" class="form-control" [(ngModel)]="form.name" placeholder="e.g. VXI, ZXI+, LXI Diesel">
+      </div>
+      <div class="form-group">
         <label>Brand *</label>
         <select class="form-control" [(ngModel)]="selectedBrandId" (change)="onBrandChange()">
           <option value="">Select Brand</option>
@@ -91,7 +95,7 @@ export class VariantFormComponent implements OnInit {
   saving = signal(false);
   error = signal('');
   selectedBrandId = '';
-  form: any = { car_id: '', engine_type_id: '', fuel_type_id: '' };
+  form: any = { name: '', car_id: '', engine_type_id: '', fuel_type_id: '' };
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
 
@@ -122,7 +126,7 @@ export class VariantFormComponent implements OnInit {
     this.http.get<any>(`${environment.apiUrl}/admin/variants/${this.variantId}`).subscribe({
       next: (res) => {
         const v = res.data;
-        this.form = { car_id: v.car_id || '', engine_type_id: v.engine_type_id || '', fuel_type_id: v.fuel_type_id || '' };
+        this.form = { name: v.name || '', car_id: v.car_id || '', engine_type_id: v.engine_type_id || '', fuel_type_id: v.fuel_type_id || '' };
         this.selectedBrandId = v.car?.brand_id || '';
         this.filterCars();
       },

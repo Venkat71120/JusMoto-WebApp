@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate, isAdmin } = require('../middleware/auth.middleware');
-const { Car, Brand, Variant } = require('../models');
+const { Car, Brand, Variant, EngineType, FuelType } = require('../models');
 const { Op } = require('sequelize');
 const { createSlug } = require('../utils/helpers');
 
@@ -127,6 +127,10 @@ router.get('/:id/variants', async (req, res) => {
   try {
     const variants = await Variant.findAll({
       where: { car_id: req.params.id, status: 1 },
+      include: [
+        { model: EngineType, as: 'engineType', attributes: ['id', 'name'] },
+        { model: FuelType, as: 'fuelType', attributes: ['id', 'name'] }
+      ],
       order: [['name', 'ASC']]
     });
 

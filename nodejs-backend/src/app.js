@@ -39,7 +39,11 @@ const httpServer = createServer(app);
 // Socket.io setup for real-time features
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+    origin: [
+    "http://localhost:4200",
+    "http://127.0.0.1:5500",
+    "http://localhost:5500"
+  ],
     methods: ['GET', 'POST']
   }
 });
@@ -57,7 +61,11 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+  origin: [
+    'http://localhost:4200',
+    'http://127.0.0.1:5500',
+    'http://localhost:5500'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']

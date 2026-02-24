@@ -412,8 +412,23 @@ router.post('/services', authenticate, isAdmin, async (req, res) => {
   try {
     const { title, category_id, sub_category_id, price, discount_price, description, image, duration, max_qty, type, is_featured, status } = req.body;
     const service = await Service.create({
-      admin_id: req.admin.id, title, slug: createSlug(title), category_id, sub_category_id, price, discount_price, description, image, duration, max_qty, type: type || 0, is_featured: is_featured || 0, status: status !== undefined ? status : 1
-    });
+  admin_id: req.admin.id,
+  title,
+  slug: createSlug(title),
+  category_id,
+  sub_category_id,
+  price,
+  discount_price,
+  description,
+  image,
+  duration,
+  max_qty,
+  type: type || 0,
+  is_featured: is_featured || 0,
+  status: status !== undefined ? status : 1,
+  is_published: 1,
+  published_at: new Date()
+});
     res.status(201).json({ success: true, data: service, message: 'Service created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });

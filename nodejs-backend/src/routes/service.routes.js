@@ -79,7 +79,7 @@ router.get('/featured', async (req, res) => {
     const { limit = 10 } = req.query;
 
     const services = await Service.findAll({
-      where: { status: 1, is_published: 1, is_featured: 1 },
+      where: { status: 1,is_featured: 1 },
       include: [
         { model: Category, as: 'category', attributes: ['id', 'name', 'slug'] }
       ],

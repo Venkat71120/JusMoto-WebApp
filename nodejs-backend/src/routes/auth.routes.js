@@ -27,13 +27,24 @@ router.post('/social/login', async (req, res) => {
 
     let user = await User.findOne({ where: { email } });
     if (!user) {
+      // Generate unique username from email
+      const emailParts = email.split('@');
+      let username = emailParts[0].replace(/[^a-zA-Z0-9_]/g, '');
+      const originalUsername = username;
+      let counter = 1;
+      while (await User.findOne({ where: { username } })) {
+        username = `${originalUsername}_${counter}`;
+        counter++;
+      }
+
       user = await User.create({
         email,
-        first_name: firstName || '',
-        last_name: lastName || '',
+        username,
+        first_name: firstName || null,
+        last_name: lastName || null,
         image: image || null,
         email_verified: 1,
-        password: await authService.hashPassword(require('crypto').randomBytes(16).toString('hex')),
+        password: require('crypto').randomBytes(16).toString('hex'),
         terms_condition: true
       });
     }

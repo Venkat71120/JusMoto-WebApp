@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-register',
@@ -120,6 +121,12 @@ import { AuthService } from '../../../core/services/auth.service';
             </button>
           </form>
 
+          <div class="divider"><span>or</span></div>
+
+          <div class="google-btn-wrap">
+            <div #googleBtn></div>
+          </div>
+
           <div class="login-link">
             <p>Already have an account? <a routerLink="/auth/login">Sign In</a></p>
           </div>
@@ -216,6 +223,17 @@ import { AuthService } from '../../../core/services/auth.service';
     }
     @keyframes spin { to { transform:rotate(360deg); } }
 
+    .divider {
+      display:flex; align-items:center; margin:24px 0;
+    }
+    .divider::before, .divider::after {
+      content:''; flex:1; height:1px; background:#e5e7eb;
+    }
+    .divider span {
+      padding:0 14px; color:#94a3b8; font-size:13px; font-weight:500; text-transform:uppercase;
+    }
+    .google-btn-wrap { display:flex; justify-content:center; }
+
     .login-link { text-align:center; margin-top:24px; }
     .login-link p { color:#64748b; font-size:14px; margin:0; }
     .login-link a { color:#e31b23; text-decoration:none; font-weight:600; transition:color 0.2s; }
@@ -231,7 +249,9 @@ import { AuthService } from '../../../core/services/auth.service';
     }
   `]
 })
-export class RegisterComponent {
+export class RegisterComponent implements AfterViewInit {
+  @ViewChild('googleBtn') googleBtn!: ElementRef;
+
   registerForm: FormGroup;
   hidePassword = true;
   loading = false;
@@ -240,7 +260,8 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private ngZone: NgZone
   ) {
     this.registerForm = this.fb.group({
       first_name: [''],
@@ -249,6 +270,60 @@ export class RegisterComponent {
       phone: ['', [Validators.pattern(/^\d{10}$/)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       terms_conditions: [false, Validators.requiredTrue]
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.renderGoogleButton();
+  }
+
+  private renderGoogleButton(): void {
+    const clientId = environment.googleClientId;
+    if (!clientId) return;
+
+    const google = (window as any).google;
+    if (!google?.accounts?.id) {
+      setTimeout(() => this.renderGoogleButton(), 300);
+      return;
+    }
+
+    google.accounts.id.initialize({
+      client_id: clientId,
+      callback: (response: any) => this.ngZone.run(() => this.handleGoogleCredential(response))
+    });
+
+    google.accounts.id.renderButton(this.googleBtn.nativeElement, {
+      type: 'standard',
+      theme: 'outline',
+      size: 'large',
+      text: 'continue_with',
+      width: 380
+    });
+  }
+
+  private handleGoogleCredential(response: any): void {
+    const token = response.credential;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    this.loading = true;
+    this.error = '';
+    this.authService.socialLogin({
+      provider: 'google',
+      email: payload.email,
+      firstName: payload.given_name,
+      lastName: payload.family_name,
+      socialId: payload.sub,
+      image: payload.picture
+    }).subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.router.navigate(['/client/dashboard']);
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = err.error?.error || 'Google sign-up failed. Please try again.';
+      },
+      complete: () => { this.loading = false; }
     });
   }
 

@@ -37,11 +37,6 @@ export const adminRoutes: Routes = [
       { path: 'category/add-new-category', loadComponent: () => import('./categories/category-form.component').then(m => m.CategoryFormComponent) },
       { path: 'category/edit-category/:id', loadComponent: () => import('./categories/category-form.component').then(m => m.CategoryFormComponent) },
 
-      // Sub-Categories
-      { path: 'subcategory/index', loadComponent: () => import('./sub-categories/sub-category-list.component').then(m => m.SubCategoryListComponent) },
-      { path: 'subcategory/add-new-subcategory', loadComponent: () => import('./sub-categories/sub-category-form.component').then(m => m.SubCategoryFormComponent) },
-      { path: 'subcategory/edit-subcategory/:id', loadComponent: () => import('./sub-categories/sub-category-form.component').then(m => m.SubCategoryFormComponent) },
-
       // Brands
       { path: 'brand/list', loadComponent: () => import('./brands/brand-list.component').then(m => m.BrandListComponent) },
 

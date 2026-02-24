@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate, isAdmin } = require('../middleware/auth.middleware');
-const { Brand, Car, Variant } = require('../models');
+const { Brand, Car, Variant, MediaUpload } = require('../models');
 const { Op } = require('sequelize');
 const { createSlug } = require('../utils/helpers');
 
@@ -21,7 +21,19 @@ router.get('/', async (req, res) => {
       order: [['name', 'ASC']]
     });
 
-    res.json({ success: true, data: brands });
+    // Resolve numeric image IDs (legacy Laravel media) to actual file paths
+    const brandsData = await Promise.all(brands.map(async (b) => {
+      const brand = b.toJSON();
+      if (brand.image && !isNaN(brand.image) && Number(brand.image) > 0) {
+        const media = await MediaUpload.findByPk(Number(brand.image));
+        brand.image = media ? media.path : null;
+      } else if (brand.image === 0 || brand.image === '0') {
+        brand.image = null;
+      }
+      return brand;
+    }));
+
+    res.json({ success: true, data: brandsData });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

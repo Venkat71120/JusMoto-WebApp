@@ -599,7 +599,20 @@ router.get('/brands', authenticate, isAdmin, async (req, res) => {
     const where = {};
     if (search) where.name = { [Op.like]: `%${search}%` };
     const brands = await Brand.findAll({ where, order: [['name', 'ASC']] });
-    res.json({ success: true, data: brands });
+
+    // Resolve numeric image IDs (legacy Laravel media) to actual file paths
+    const brandsData = await Promise.all(brands.map(async (b) => {
+      const brand = b.toJSON();
+      if (brand.image && !isNaN(brand.image) && Number(brand.image) > 0) {
+        const media = await MediaUpload.findByPk(Number(brand.image));
+        brand.image = media ? media.path : null;
+      } else if (brand.image === 0 || brand.image === '0') {
+        brand.image = null;
+      }
+      return brand;
+    }));
+
+    res.json({ success: true, data: brandsData });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

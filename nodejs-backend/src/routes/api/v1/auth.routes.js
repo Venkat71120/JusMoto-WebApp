@@ -406,7 +406,7 @@ router.post('/reset-password', async (req, res) => {
  */
 router.post('/social/login', async (req, res) => {
   try {
-    const { provider, token, email, firstName, lastName, socialId, image } = req.body;
+    const { provider, email, firstName, lastName, socialId, image } = req.body;
 
     if (!provider || !email) {
       return res.status(400).json({
@@ -419,28 +419,46 @@ router.post('/social/login', async (req, res) => {
     let user = await User.findOne({ where: { email } });
 
     if (!user) {
-      // Create new user
+      // Generate unique username from email (same as register)
+      const emailParts = email.split('@');
+      let username = emailParts[0].replace(/[^a-zA-Z0-9_]/g, '');
+      const originalUsername = username;
+      let counter = 1;
+      while (await User.findOne({ where: { username } })) {
+        username = `${originalUsername}_${counter}`;
+        counter++;
+      }
+
+      // Create new user — password is raw, beforeCreate hook will hash it
       user = await User.create({
         email,
-        first_name: firstName,
-        last_name: lastName,
-        image,
-        email_verified: true, // Social login users are verified
-        password: await authService.hashPassword(Math.random().toString(36)), // Random password
+        username,
+        first_name: firstName || null,
+        last_name: lastName || null,
+        image: image || null,
+        email_verified: 1,
+        password: require('crypto').randomBytes(16).toString('hex'),
         terms_condition: true
       });
     }
 
-    const accessToken = authService.generateAccessToken(user, 'user');
-    const refreshToken = authService.generateRefreshToken(user);
+    const token = authService.generateAccessToken(user, 'user');
 
     res.json({
       success: true,
       message: 'Login successful',
       data: {
-        user: authService.sanitizeUser(user),
-        accessToken,
-        refreshToken
+        user: {
+          id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          phone: user.phone,
+          username: user.username,
+          email_verified: user.email_verified,
+          image: user.image
+        },
+        token
       }
     });
   } catch (error) {

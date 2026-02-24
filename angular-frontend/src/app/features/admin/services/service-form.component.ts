@@ -79,20 +79,10 @@ import { ToastService } from '../../../core/services/toast.service';
           <!-- Category -->
           <div class="form-group">
             <label>Category</label>
-            <select formControlName="category_id" (change)="onCategoryChange()">
+            <select formControlName="category_id">
               <option value="">Select Category</option>
               <option *ngFor="let cat of categories()" [value]="cat.id">{{ cat.name }}</option>
             </select>
-          </div>
-
-          <!-- Sub Category -->
-          <div class="form-group">
-            <label>Sub Category</label>
-            <select formControlName="sub_category_id">
-              <option value="">Select Sub Category</option>
-              <option *ngFor="let sub of subCategories()" [value]="sub.id">{{ sub.name }}</option>
-            </select>
-            <span class="field-hint" *ngIf="loadingSubCategories()">Loading...</span>
           </div>
 
           <!-- Type -->
@@ -591,8 +581,6 @@ export class ServiceFormComponent implements OnInit {
 
   // Signals - Dropdowns
   categories = signal<any[]>([]);
-  subCategories = signal<any[]>([]);
-  loadingSubCategories = signal(false);
 
   // Signals - Media
   imageValue = signal<any>(null);
@@ -642,7 +630,6 @@ export class ServiceFormComponent implements OnInit {
       title: ['', Validators.required],
       slug: [''],
       category_id: [''],
-      sub_category_id: [''],
       description: [''],
       video_url: [''],
       is_featured: [false],
@@ -711,24 +698,6 @@ export class ServiceFormComponent implements OnInit {
     });
   }
 
-  onCategoryChange() {
-    const catId = this.form.get('category_id')?.value;
-    this.form.patchValue({ sub_category_id: '' });
-    this.subCategories.set([]);
-    if (catId) {
-      this.loadSubCategories(catId);
-    }
-  }
-
-  loadSubCategories(categoryId: string | number) {
-    this.loadingSubCategories.set(true);
-    this.http.get<any>(`${environment.apiUrl}/admin/sub-categories`, { params: { category_id: String(categoryId), limit: '100' } }).subscribe({
-      next: (res) => this.subCategories.set(res.data || []),
-      error: () => this.subCategories.set([]),
-      complete: () => this.loadingSubCategories.set(false)
-    });
-  }
-
   loadBrands() {
     this.http.get<any>(`${environment.apiUrl}/admin/brands`, { params: { limit: '100' } }).subscribe({
       next: (res) => this.brands.set(res.data || [])
@@ -775,7 +744,6 @@ export class ServiceFormComponent implements OnInit {
           title: s.title || '',
           slug: s.slug || '',
           category_id: s.category_id || '',
-          sub_category_id: s.sub_category_id || '',
           description: s.description || '',
           video_url: s.video_url || '',
           is_featured: !!s.is_featured,
@@ -794,11 +762,6 @@ export class ServiceFormComponent implements OnInit {
         // Gallery
         if (s.gallery && Array.isArray(s.gallery)) {
           this.galleryValues.set(s.gallery);
-        }
-
-        // Load sub-categories if category set
-        if (s.category_id) {
-          this.loadSubCategories(s.category_id);
         }
 
         // Populate includes
@@ -970,7 +933,6 @@ export class ServiceFormComponent implements OnInit {
       title: formVal.title,
       slug: formVal.slug || undefined,
       category_id: formVal.category_id || null,
-      sub_category_id: formVal.sub_category_id || null,
       description: formVal.description || '',
       video_url: formVal.video_url || '',
       is_featured: formVal.is_featured ? 1 : 0,

@@ -146,10 +146,12 @@ export class BrandListComponent implements OnInit {
 
   ngOnInit() { this.loadBrands(); }
 
-  getImageUrl(image: string): string {
+  getImageUrl(image: any): string {
     if (!image) return '';
-    if (image.startsWith('http')) return image;
-    const filename = image.replace('uploads/media/', '').replace('media/', '');
+    const img = String(image);
+    if (/^\d+$/.test(img)) return '';
+    if (img.startsWith('http')) return img;
+    const filename = img.replace('uploads/media/', '').replace('media/', '');
     return `${this.baseUrl}/uploads/media/${filename}`;
   }
 
@@ -158,9 +160,8 @@ export class BrandListComponent implements OnInit {
     const params: any = {};
     if (this.search) params.search = this.search;
     this.http.get<any>(`${environment.apiUrl}/admin/brands`, { params }).subscribe({
-      next: (res) => this.brands.set(res.data || []),
-      error: () => {},
-      complete: () => this.loading.set(false)
+      next: (res) => { this.brands.set(res.data || []); this.loading.set(false); },
+      error: (err) => { this.toast.error('Failed to load brands'); this.loading.set(false); }
     });
   }
 

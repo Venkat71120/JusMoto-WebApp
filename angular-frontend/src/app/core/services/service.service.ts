@@ -12,7 +12,6 @@ export interface Service {
   discount_price?: number;
   final_price?: number;
   category?: any;
-  subCategory?: any;
   includes?: any[];
   excludes?: any[];
   addons?: any[];
@@ -26,7 +25,7 @@ export interface Service {
 
 export interface ServiceListParams {
   category_id?: number;
-  sub_category_id?: number;
+
   type?: number;
   is_featured?: number;
   min_price?: number;

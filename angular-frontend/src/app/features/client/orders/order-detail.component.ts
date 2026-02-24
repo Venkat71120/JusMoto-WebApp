@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../../../core/services/order.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-client-order-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ConfirmModalComponent],
   template: `
     <div class="order-detail-container">
       <div class="back-link">
@@ -152,6 +153,16 @@ import { environment } from '../../../../environments/environment';
         <p>Order not found.</p>
         <a routerLink="/client/orders" class="btn-primary">Back to Orders</a>
       </div>
+
+      <app-confirm-modal
+        [open]="cancelModalOpen()"
+        title="Cancel Order"
+        message="Are you sure you want to cancel this order? This action cannot be undone."
+        confirmText="Yes, Cancel"
+        type="danger"
+        (confirmed)="doCancel()"
+        (cancelled)="cancelModalOpen.set(false)">
+      </app-confirm-modal>
     </div>
   `,
   styles: [`
@@ -221,6 +232,7 @@ import { environment } from '../../../../environments/environment';
 export class ClientOrderDetailComponent implements OnInit {
   order = signal<any>(null);
   loading = signal(true);
+  cancelModalOpen = signal(false);
   private baseUrl = environment.apiUrl.replace('/api/v1', '');
 
   constructor(
@@ -282,17 +294,20 @@ export class ClientOrderDetailComponent implements OnInit {
   }
 
   cancelOrder(): void {
-    if (confirm('Are you sure you want to cancel this order?')) {
-      this.orderService.cancelOrder(this.order().id).subscribe({
-        next: () => {
-          this.toast.success('Order cancelled successfully');
-          this.loadOrder(this.order().id);
-        },
-        error: () => {
-          this.toast.error('Failed to cancel order. Please try again.');
-        }
-      });
-    }
+    this.cancelModalOpen.set(true);
+  }
+
+  doCancel(): void {
+    this.cancelModalOpen.set(false);
+    this.orderService.cancelOrder(this.order().id).subscribe({
+      next: () => {
+        this.toast.success('Order cancelled successfully');
+        this.loadOrder(this.order().id);
+      },
+      error: () => {
+        this.toast.error('Failed to cancel order. Please try again.');
+      }
+    });
   }
 
   isServiceOrder(): boolean {

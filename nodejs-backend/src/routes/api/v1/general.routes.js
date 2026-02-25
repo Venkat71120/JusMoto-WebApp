@@ -4,10 +4,7 @@ const {
   Offer,
   OfferService,
   Service,
-  OutletLocation,
-  PaymentGateway,
-  Language,
-  StaticOption,
+  AdminOutletLocation,
   State,
   City,
   Area
@@ -22,7 +19,7 @@ router.get('/sliders', async (req, res) => {
   try {
     const sliders = await Slider.findAll({
       where: { status: 1 },
-      order: [['order', 'ASC']]
+      order: [['id', 'ASC']]
     });
 
     res.json({
@@ -118,13 +115,8 @@ router.get('/outlets', async (req, res) => {
     if (state_id) where.state_id = state_id;
     if (city_id) where.city_id = city_id;
 
-    const outlets = await OutletLocation.findAll({
-      where,
-      include: [
-        { model: State, as: 'state', attributes: ['id', 'name'] },
-        { model: City, as: 'city', attributes: ['id', 'name'] },
-        { model: Area, as: 'area', attributes: ['id', 'name'] }
-      ]
+    const outlets = await AdminOutletLocation.findAll({
+      where
     });
 
     res.json({
@@ -147,13 +139,7 @@ router.get('/outlets', async (req, res) => {
  */
 router.get('/outlets/:id', async (req, res) => {
   try {
-    const outlet = await OutletLocation.findByPk(req.params.id, {
-      include: [
-        { model: State, as: 'state', attributes: ['id', 'name'] },
-        { model: City, as: 'city', attributes: ['id', 'name'] },
-        { model: Area, as: 'area', attributes: ['id', 'name'] }
-      ]
-    });
+    const outlet = await AdminOutletLocation.findByPk(req.params.id);
 
     if (!outlet) {
       return res.status(404).json({
@@ -177,53 +163,26 @@ router.get('/outlets/:id', async (req, res) => {
 
 /**
  * @route   GET /api/v1/general/payment-gateways
- * @desc    Get active payment gateways
+ * @desc    Get available payment methods
  * @access  Public
  */
 router.get('/payment-gateways', async (req, res) => {
-  try {
-    const gateways = await PaymentGateway.findAll({
-      where: { status: 1 },
-      attributes: ['id', 'name', 'slug', 'image'],
-      order: [['order', 'ASC']]
-    });
-
-    res.json({
-      success: true,
-      data: gateways
-    });
-  } catch (error) {
-    console.error('Get payment gateways error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get payment gateways'
-    });
-  }
+  res.json({
+    success: true,
+    data: [{ id: 1, name: 'PayZapp', slug: 'payzapp', image: null }]
+  });
 });
 
 /**
  * @route   GET /api/v1/general/languages
- * @desc    Get all active languages
+ * @desc    Get available languages
  * @access  Public
  */
 router.get('/languages', async (req, res) => {
-  try {
-    const languages = await Language.findAll({
-      where: { status: 1 },
-      attributes: ['id', 'name', 'code', 'direction', 'is_default']
-    });
-
-    res.json({
-      success: true,
-      data: languages
-    });
-  } catch (error) {
-    console.error('Get languages error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get languages'
-    });
-  }
+  res.json({
+    success: true,
+    data: [{ id: 1, name: 'English', code: 'en', direction: 'ltr', is_default: 1 }]
+  });
 });
 
 /**
@@ -232,44 +191,16 @@ router.get('/languages', async (req, res) => {
  * @access  Public
  */
 router.get('/settings', async (req, res) => {
-  try {
-    const options = await StaticOption.findAll({
-      where: {
-        option_name: [
-          'site_name',
-          'site_logo',
-          'site_favicon',
-          'site_tagline',
-          'contact_email',
-          'contact_phone',
-          'contact_address',
-          'currency_symbol',
-          'currency_code',
-          'default_language',
-          'social_facebook',
-          'social_twitter',
-          'social_instagram',
-          'social_youtube'
-        ]
-      }
-    });
-
-    const settings = {};
-    options.forEach(opt => {
-      settings[opt.option_name] = opt.option_value;
-    });
-
-    res.json({
-      success: true,
-      data: settings
-    });
-  } catch (error) {
-    console.error('Get settings error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get settings'
-    });
-  }
+  res.json({
+    success: true,
+    data: {
+      site_name: 'JusMoto',
+      currency_symbol: '₹',
+      currency_code: 'INR',
+      default_language: 'en',
+      contact_email: 'support@jusmoto.com'
+    }
+  });
 });
 
 /**
@@ -281,8 +212,8 @@ router.get('/states', async (req, res) => {
   try {
     const states = await State.findAll({
       where: { status: 1 },
-      attributes: ['id', 'name', 'code'],
-      order: [['name', 'ASC']]
+      attributes: ['id', 'state'],
+      order: [['state', 'ASC']]
     });
 
     res.json({
@@ -307,8 +238,8 @@ router.get('/cities/:stateId', async (req, res) => {
   try {
     const cities = await City.findAll({
       where: { state_id: req.params.stateId, status: 1 },
-      attributes: ['id', 'name'],
-      order: [['name', 'ASC']]
+      attributes: ['id', 'city'],
+      order: [['city', 'ASC']]
     });
 
     res.json({
@@ -333,8 +264,8 @@ router.get('/areas/:cityId', async (req, res) => {
   try {
     const areas = await Area.findAll({
       where: { city_id: req.params.cityId, status: 1 },
-      attributes: ['id', 'name'],
-      order: [['name', 'ASC']]
+      attributes: ['id', 'area'],
+      order: [['area', 'ASC']]
     });
 
     res.json({

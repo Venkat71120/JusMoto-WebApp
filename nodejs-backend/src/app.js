@@ -32,6 +32,7 @@ const uploadRoutes = require('./routes/upload.routes');
 const locationRoutes = require('./routes/location.routes');
 const reviewRoutes = require('./routes/review.routes');
 const offerRoutes = require('./routes/offer.routes');
+const generalRoutes = require('./routes/api/v1/general.routes');
 
 const app = express();
 const httpServer = createServer(app);
@@ -114,6 +115,7 @@ app.use(`${apiV1}/upload`, uploadRoutes);
 app.use(`${apiV1}/locations`, locationRoutes);
 app.use(`${apiV1}/reviews`, reviewRoutes);
 app.use(`${apiV1}/offers`, offerRoutes);
+app.use(`${apiV1}/general`, generalRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

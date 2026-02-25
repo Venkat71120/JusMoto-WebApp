@@ -158,17 +158,6 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
               </a>
             </li>
 
-            <!-- WALLET - permission based -->
-            @if (hasPermission('wallet.view')) {
-              <li class="nav-section">WALLET</li>
-              <li>
-                <a routerLink="/admin/wallet/manage" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/><path d="M6 16h.01M10 16h.01"/></svg>
-                  <span>Wallet Management</span>
-                </a>
-              </li>
-            }
-
             <!-- LOCATIONS - permission based -->
             @if (hasPermission('locations.view')) {
               <li class="nav-section">LOCATIONS</li>

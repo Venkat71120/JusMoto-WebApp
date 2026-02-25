@@ -64,6 +64,17 @@ const startServer = async () => {
       console.log('Migration check (service_additionals):', e.message);
     }
 
+    // Add password_reset columns to users table if missing
+    try {
+      const [prCols] = await sequelize.query("SHOW COLUMNS FROM users LIKE 'password_reset_token'");
+      if (prCols.length === 0) {
+        await sequelize.query("ALTER TABLE users ADD COLUMN password_reset_token VARCHAR(255) NULL, ADD COLUMN password_reset_expires DATETIME NULL");
+        console.log('Migration: Added password_reset_token, password_reset_expires to users table');
+      }
+    } catch (e) {
+      console.log('Migration check (users password_reset):', e.message);
+    }
+
     // Create ticket_messages table if not exists
     try {
       await sequelize.query(`CREATE TABLE IF NOT EXISTS ticket_messages (

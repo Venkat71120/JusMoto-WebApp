@@ -185,8 +185,14 @@ export class MediaPickerComponent implements OnInit, OnChanges {
         }
       });
     } else {
-      this.previewUrl.set(`${this.baseUrl}/uploads/media/${val}`);
+      this.previewUrl.set(this.resolveImageUrl(val));
     }
+  }
+
+  private resolveImageUrl(val: string): string {
+    if (!val) return '';
+    if (val.startsWith('http')) return val;
+    return `${this.baseUrl}/uploads/media/${val}`;
   }
 
   onImageError() {

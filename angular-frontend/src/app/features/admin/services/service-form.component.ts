@@ -590,9 +590,14 @@ export class ServiceFormComponent implements OnInit {
             this.http.get<any>(`${environment.apiUrl}/admin/media/${imgVal}`).subscribe({
               next: (mediaRes) => {
                 if (mediaRes.data?.path) {
-                  const baseUrl = environment.apiUrl.replace('/api/v1', '');
-                  const filename = mediaRes.data.path.replace('media/', '');
-                  this.imageValue.set(`${baseUrl}/uploads/media/${filename}`);
+                  const p = mediaRes.data.path;
+                  if (p.startsWith('http')) {
+                    this.imageValue.set(p);
+                  } else {
+                    const baseUrl = environment.apiUrl.replace('/api/v1', '');
+                    const filename = p.replace('media/', '');
+                    this.imageValue.set(`${baseUrl}/uploads/media/${filename}`);
+                  }
                 } else {
                   this.imageValue.set(imgVal);
                 }

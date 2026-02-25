@@ -8,7 +8,15 @@
       "Bash(npm install:*)",
       "Bash(npx kill-port:*)",
       "Bash(node -pe:*)",
-      "Bash(npx ng build:*)"
+      "Bash(npx ng build:*)",
+      "Bash(ssh:*)",
+      "Bash(aws:*)",
+      "Bash(rsync:*)",
+      "Bash(scp:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(nslookup:*)"
     ]
   }
 }

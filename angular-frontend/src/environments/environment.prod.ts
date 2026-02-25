@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.jusmoto.com/api/v1',
-  socketUrl: 'https://api.jusmoto.com',
+  apiUrl: 'https://jusmoto.blackitechs.in/api/v1',
+  socketUrl: 'https://jusmoto.blackitechs.in',
   appName: 'JusMoto',
   defaultLanguage: 'en',
   supportedLanguages: ['en', 'hi'],

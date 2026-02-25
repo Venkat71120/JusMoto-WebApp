@@ -135,6 +135,9 @@ export class MediaLibraryComponent implements OnInit {
 
   getThumbUrl(item: any): string {
     if (!item.path) return '';
+    if (item.path.startsWith('http')) {
+      return item.path.replace('/media/', '/media/thumb/');
+    }
     const filename = item.path.replace('media/', '');
     return `${environment.apiUrl.replace('/api/v1', '')}/uploads/media/thumb/${filename}`;
   }

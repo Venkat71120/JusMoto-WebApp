@@ -1,7 +1,10 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const { User, Admin, Wallet, sequelize } = require('../models');
 const { generateOTP, generateRandomString } = require('../utils/helpers');
 const response = require('../utils/response');
+const emailService = require('../services/email.service');
+const notificationService = require('../services/notification.service');
 
 /**
  * User Registration
@@ -58,7 +61,15 @@ const register = async (req, res) => {
       { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
     );
 
-    // TODO: Send OTP email if email verification is enabled
+    // Send OTP email for email verification + welcome email
+    try {
+      await emailService.sendOTP(user, emailVerifyToken);
+      await emailService.sendAccountCreated(user);
+    } catch (emailErr) {
+      console.error('Failed to send registration emails:', emailErr.message);
+    }
+
+    notificationService.welcomeUser(user.id).catch(() => {});
 
     return response.created(res, {
       user: {
@@ -273,7 +284,12 @@ const resendOtp = async (req, res) => {
     const newOtp = generateOTP(6);
     await user.update({ email_verify_token: newOtp });
 
-    // TODO: Send OTP email
+    // Send OTP email
+    try {
+      await emailService.sendOTP(user, newOtp);
+    } catch (emailErr) {
+      console.error('Failed to send OTP email:', emailErr.message);
+    }
 
     return response.success(res, null, 'OTP sent successfully');
 
@@ -298,7 +314,22 @@ const forgotPassword = async (req, res) => {
     }
 
     const resetToken = generateRandomString(64);
-    // TODO: Store reset token with expiry and send email
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    // Store hashed reset token with expiry
+    await user.update({
+      password_reset_token: hashedToken,
+      password_reset_expires: expiresAt
+    });
+
+    // Send password reset email
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:4200'}/auth/reset-password?token=${resetToken}`;
+    try {
+      await emailService.sendPasswordReset(user, resetUrl);
+    } catch (emailErr) {
+      console.error('Failed to send reset email:', emailErr.message);
+    }
 
     return response.success(res, null, 'If the email exists, a reset link will be sent');
 
@@ -315,7 +346,27 @@ const resetPassword = async (req, res) => {
   try {
     const { token, password } = req.body;
 
-    // TODO: Verify reset token and update password
+    // Hash the token to compare with stored hash
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    // Find user with matching token that hasn't expired
+    const user = await User.findOne({
+      where: {
+        password_reset_token: hashedToken,
+        password_reset_expires: { [require('sequelize').Op.gt]: new Date() }
+      }
+    });
+
+    if (!user) {
+      return response.error(res, 'Invalid or expired reset token', 400);
+    }
+
+    // Update password and clear reset token
+    await user.update({
+      password,
+      password_reset_token: null,
+      password_reset_expires: null
+    });
 
     return response.success(res, null, 'Password reset successfully');
 

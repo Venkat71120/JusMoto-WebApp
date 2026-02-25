@@ -84,10 +84,6 @@ export const clientRoutes: Routes = [
         loadComponent: () => import('./checkout/checkout.component').then(m => m.CheckoutComponent)
       },
       {
-        path: 'wallet',
-        loadComponent: () => import('./wallet/wallet.component').then(m => m.ClientWalletComponent)
-      },
-      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

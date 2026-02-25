@@ -157,14 +157,6 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
                 <span>Service Requests</span>
               </a>
             </li>
-            @if (hasPermission('support.view')) {
-              <li>
-                <a routerLink="/admin/support-ticket/department" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                  <span>Departments</span>
-                </a>
-              </li>
-            }
 
             <!-- LOCATIONS - permission based -->
             @if (hasPermission('locations.view')) {
@@ -194,26 +186,9 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
               </li>
             }
 
-            <!-- FINANCE - permission based -->
-            @if (hasPermission('finance.view')) {
-              <li class="nav-section">FINANCE</li>
-              <li>
-                <a routerLink="/admin/wallet/manage" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                  <span>Wallet Management</span>
-                </a>
-              </li>
-            }
-
             <!-- CONTENT - permission based -->
             @if (hasPermission('content.view')) {
               <li class="nav-section">CONTENT</li>
-              <li>
-                <a routerLink="/admin/review/all" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                  <span>Reviews</span>
-                </a>
-              </li>
               <li>
                 <a routerLink="/admin/notification/all" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
@@ -228,16 +203,6 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
               </li>
             }
 
-            <!-- SETTINGS - permission based -->
-            @if (hasPermission('settings.view')) {
-              <li class="nav-section">SETTINGS</li>
-              <li>
-                <a routerLink="/admin/settings/general" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-                  <span>Settings</span>
-                </a>
-              </li>
-            }
           </ul>
 
           <ul class="nav-list nav-bottom">

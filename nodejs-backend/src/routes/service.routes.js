@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate, isAdmin, optionalAuth } = require('../middleware/auth.middleware');
-const { Service, Category, SubCategory, ServiceInclude, ServiceExclude, ServiceAddon, ServiceCar, Review, User, Offer, OfferService, Car, Variant } = require('../models');
+const { Service, Category, SubCategory, ServiceInclude, ServiceExclude, ServiceAddon, ServiceCar, ServiceFaq, ServiceAdditional, Review, User, Offer, OfferService, Car, Variant } = require('../models');
 const { Op } = require('sequelize');
 const { paginate, paginationResponse, createSlug } = require('../utils/helpers');
 
@@ -106,19 +106,20 @@ router.get('/:id', optionalAuth, async (req, res) => {
         { model: SubCategory, as: 'subCategory' },
         { model: ServiceInclude, as: 'includes' },
         { model: ServiceExclude, as: 'excludes' },
-        { model: ServiceAddon, as: 'addons', where: { status: 1 }, required: false },
+        { model: ServiceFaq, as: 'faqs' },
+        { model: ServiceAdditional, as: 'additionals' },
+        { model: ServiceAddon, as: 'addons', required: false },
         {
           model: ServiceCar,
           as: 'serviceCars',
           include: [
-            { model: Car, as: 'car' },
-            { model: Variant, as: 'variant' }
+            { model: Variant, as: 'variant', include: [{ model: Car, as: 'car' }] }
           ]
         },
         {
           model: Review,
           as: 'reviews',
-          include: [{ model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'image'] }],
+          include: [{ model: User, as: 'reviewer', attributes: ['id', 'first_name', 'last_name', 'image'] }],
           limit: 10,
           order: [['created_at', 'DESC']]
         },
@@ -142,6 +143,26 @@ router.get('/:id', optionalAuth, async (req, res) => {
       ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1)
       : 0;
     serviceData.review_count = ratings.length;
+
+    // Transform includes: DB {title, description} → {title}
+    if (serviceData.includes) {
+      serviceData.includes = serviceData.includes.map(i => ({ id: i.id, title: i.title }));
+    }
+
+    // Transform faqs: DB {title, description} → {question, answer}
+    if (serviceData.faqs) {
+      serviceData.faqs = serviceData.faqs.map(f => ({ id: f.id, question: f.title, answer: f.description || '' }));
+    }
+
+    // Split additionals into additional_info and specifications
+    const additionals = serviceData.additionals || [];
+    serviceData.additional_info = additionals
+      .filter(a => a.type === 'info')
+      .map(a => ({ id: a.id, title: a.title, description: a.description || '' }));
+    serviceData.specifications = additionals
+      .filter(a => a.type === 'specification')
+      .map(a => ({ id: a.id, title: a.title, value: a.description || '' }));
+    delete serviceData.additionals;
 
     // Calculate price with active offer
     let finalPrice = parseFloat(serviceData.price);
@@ -220,7 +241,7 @@ router.get('/:id/reviews', async (req, res) => {
     const { rows, count } = await Review.findAndCountAll({
       where: { service_id: req.params.id, status: 1 },
       include: [
-        { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'image'] }
+        { model: User, as: 'reviewer', attributes: ['id', 'first_name', 'last_name', 'image'] }
       ],
       ...pagination,
       order: [['created_at', 'DESC']]

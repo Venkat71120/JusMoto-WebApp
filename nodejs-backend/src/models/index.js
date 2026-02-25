@@ -95,6 +95,9 @@ ServiceAdditional.belongsTo(Service, { foreignKey: 'service_id', as: 'service' }
 Service.hasMany(ServiceCar, { foreignKey: 'service_id', as: 'serviceCars' });
 ServiceCar.belongsTo(Service, { foreignKey: 'service_id', as: 'service' });
 
+ServiceCar.belongsTo(Variant, { foreignKey: 'varient_id', as: 'variant' });
+Variant.hasMany(ServiceCar, { foreignKey: 'varient_id', as: 'serviceCars' });
+
 Service.hasMany(Review, { foreignKey: 'service_id', as: 'reviews' });
 Review.belongsTo(Service, { foreignKey: 'service_id', as: 'service' });
 
@@ -135,6 +138,8 @@ UserSelectedCar.belongsTo(Variant, { foreignKey: 'variant_id', as: 'variant' });
 
 User.hasMany(UserLocation, { foreignKey: 'user_id', as: 'locations' });
 UserLocation.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+UserLocation.belongsTo(State, { foreignKey: 'state_id', as: 'stateInfo' });
+UserLocation.belongsTo(City, { foreignKey: 'city_id', as: 'cityInfo' });
 
 User.hasMany(FavoriteItem, { foreignKey: 'user_id', as: 'favorites' });
 FavoriteItem.belongsTo(User, { foreignKey: 'user_id', as: 'user' });

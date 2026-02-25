@@ -92,9 +92,6 @@ export const adminRoutes: Routes = [
       { path: 'reports/revenue', loadComponent: () => import('./reports/revenue-report.component').then(m => m.RevenueReportComponent) },
       { path: 'reports/orders', loadComponent: () => import('./reports/order-report.component').then(m => m.OrderReportComponent) },
 
-      // Wallet Management
-      { path: 'wallet/manage', loadComponent: () => import('./wallet/wallet-management.component').then(m => m.WalletManagementComponent) },
-
       // Profile (redirect to settings)
       { path: 'profile', redirectTo: 'settings/general', pathMatch: 'full' },
 

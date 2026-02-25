@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
+import { environment } from '../../../environments/environment';
 
 export interface OrderItem {
   service_id: number;
@@ -37,7 +39,7 @@ export interface CreateOrderData {
   providedIn: 'root'
 })
 export class OrderService {
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private http: HttpClient) {}
 
   getOrders(params?: { status?: string | number; payment_status?: number; page?: number; limit?: number }): Observable<any> {
     return this.api.get<any>('/orders', params);
@@ -83,5 +85,10 @@ export class OrderService {
 
   getRefund(id: number): Observable<any> {
     return this.api.get<any>(`/refunds/${id}`);
+  }
+
+  // Invoice
+  getInvoice(orderId: number): Observable<string> {
+    return this.http.get(`${environment.apiUrl}/orders/${orderId}/invoice`, { responseType: 'text' });
   }
 }

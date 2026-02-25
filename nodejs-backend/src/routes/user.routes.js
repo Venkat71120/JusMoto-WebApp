@@ -241,16 +241,69 @@ router.delete('/cars/:id', authenticate, isClient, async (req, res) => {
   }
 });
 
+// Helper: look up state_id and city_id from text names
+async function resolveLocationIds(stateName, cityName) {
+  const { State, City } = require('../models');
+  let state_id = null, city_id = null;
+  if (stateName) {
+    const stateRow = await State.findOne({ where: { state: stateName } });
+    if (stateRow) {
+      state_id = stateRow.id;
+      if (cityName) {
+        const cityRow = await City.findOne({ where: { city: cityName, state_id: stateRow.id } });
+        if (cityRow) city_id = cityRow.id;
+      }
+    }
+  }
+  return { state_id, city_id };
+}
+
+// Map frontend fields to DB columns
+function mapAddressFields(body) {
+  return {
+    title: body.name || body.title || null,
+    address: body.address || [body.address_line1, body.address_line2].filter(Boolean).join(', ') || null,
+    post_code: body.zip_code || body.pincode || body.post_code || null,
+    phone: body.phone || null,
+    latitude: body.latitude || null,
+    longitude: body.longitude || null,
+    type: body.type === 'work' || body.type === 1 ? 1 : 0,
+    is_default: body.is_default ? 1 : 0
+  };
+}
+
+// Format DB row for frontend response (add friendly fields)
+function formatAddress(loc) {
+  const plain = loc.toJSON ? loc.toJSON() : loc;
+  plain.name = plain.title;
+  plain.zip_code = plain.post_code;
+  return plain;
+}
+
 // User addresses
 router.get('/addresses', authenticate, isClient, async (req, res) => {
   try {
-    const { UserLocation } = require('../models');
+    const { UserLocation, State, City } = require('../models');
 
     const addresses = await UserLocation.findAll({
-      where: { user_id: req.user.id }
+      where: { user_id: req.user.id },
+      include: [
+        { model: State, as: 'stateInfo', attributes: ['id', 'state'] },
+        { model: City, as: 'cityInfo', attributes: ['id', 'city'] }
+      ],
+      order: [['is_default', 'DESC'], ['created_at', 'DESC']]
     });
 
-    res.json({ success: true, data: addresses });
+    const data = addresses.map(loc => {
+      const plain = formatAddress(loc);
+      plain.state = plain.stateInfo?.state || '';
+      plain.city = plain.cityInfo?.city || '';
+      delete plain.stateInfo;
+      delete plain.cityInfo;
+      return plain;
+    });
+
+    res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -258,31 +311,22 @@ router.get('/addresses', authenticate, isClient, async (req, res) => {
 
 router.post('/addresses', authenticate, isClient, async (req, res) => {
   try {
-    const { name, address, city, state, zip_code, country, latitude, longitude, is_default, phone } = req.body;
     const { UserLocation } = require('../models');
+    const mapped = mapAddressFields(req.body);
+    const { state_id, city_id } = await resolveLocationIds(req.body.state, req.body.city);
 
-    if (is_default) {
-      await UserLocation.update(
-        { is_default: 0 },
-        { where: { user_id: req.user.id } }
-      );
+    if (mapped.is_default) {
+      await UserLocation.update({ is_default: 0 }, { where: { user_id: req.user.id } });
     }
 
     const location = await UserLocation.create({
       user_id: req.user.id,
-      name,
-      address,
-      city,
-      state,
-      zip_code,
-      country,
-      latitude,
-      longitude,
-      is_default: is_default ? 1 : 0,
-      phone
+      state_id,
+      city_id,
+      ...mapped
     });
 
-    res.status(201).json({ success: true, data: location, message: 'Address added successfully' });
+    res.status(201).json({ success: true, data: formatAddress(location), message: 'Address added successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -300,16 +344,16 @@ router.put('/addresses/:id', authenticate, isClient, async (req, res) => {
       return res.status(404).json({ success: false, error: 'Address not found' });
     }
 
-    if (req.body.is_default) {
-      await UserLocation.update(
-        { is_default: 0 },
-        { where: { user_id: req.user.id } }
-      );
+    const mapped = mapAddressFields(req.body);
+    const { state_id, city_id } = await resolveLocationIds(req.body.state, req.body.city);
+
+    if (mapped.is_default) {
+      await UserLocation.update({ is_default: 0 }, { where: { user_id: req.user.id } });
     }
 
-    await location.update(req.body);
+    await location.update({ state_id, city_id, ...mapped });
 
-    res.json({ success: true, data: location, message: 'Address updated successfully' });
+    res.json({ success: true, data: formatAddress(location), message: 'Address updated successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

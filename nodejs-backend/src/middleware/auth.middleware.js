@@ -162,6 +162,7 @@ const emailVerified = (req, res, next) => {
 
 module.exports = {
   authenticate,
+  authenticateUser: authenticate,
   optionalAuth,
   isAdmin,
   isFranchise,

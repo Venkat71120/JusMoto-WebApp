@@ -41,10 +41,10 @@ import { ToastService } from '../../../core/services/toast.service';
         <tbody>
           <tr *ngFor="let r of refunds(); let i = index">
             <td>{{ (pagination().page - 1) * pagination().limit + i + 1 }}</td>
-            <td class="fw-600">{{ r.order?.order_number || r.order_id || '-' }}</td>
-            <td>{{ r.user?.name || r.customer_name || '-' }}</td>
+            <td class="fw-600">{{ r.order?.invoice_number || '#' + r.order_id || '-' }}</td>
+            <td>{{ (r.user?.first_name || '') + ' ' + (r.user?.last_name || '') }}</td>
             <td class="fw-600">{{ r.amount | currency:'INR':'symbol':'1.0-2' }}</td>
-            <td class="reason-cell">{{ r.reason?.length > 50 ? (r.reason | slice:0:50) + '...' : r.reason }}</td>
+            <td class="reason-cell">{{ r.cancel_reason?.length > 50 ? (r.cancel_reason | slice:0:50) + '...' : (r.cancel_reason || '-') }}</td>
             <td>
               <span class="badge"
                 [class.badge-yellow]="r.status === 0 || r.status === 'pending'"
@@ -133,7 +133,7 @@ export class RefundListComponent implements OnInit {
   }
 
   changeStatus(refund: any, newStatus: any) {
-    this.http.put<any>(`${environment.apiUrl}/admin/refunded-orders/${refund.id}`, { status: Number(newStatus) }).subscribe({
+    this.http.put<any>(`${environment.apiUrl}/admin/refunded-orders/${refund.id}/status`, { status: Number(newStatus) }).subscribe({
       next: () => { this.toast.success('Refund status updated'); this.loadRefunds(this.pagination().page); },
       error: () => this.toast.error('Failed to update refund status')
     });

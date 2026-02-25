@@ -47,4 +47,21 @@ const Coupon = sequelize.define('Coupon', {
   underscored: true
 });
 
+// Instance methods
+Coupon.prototype.isValid = function () {
+  if (this.status !== 1) return false;
+  if (this.expire_date && new Date(this.expire_date) < new Date()) return false;
+  return true;
+};
+
+Coupon.prototype.calculateDiscount = function (amount) {
+  const amt = parseFloat(amount) || 0;
+  const disc = parseFloat(this.discount) || 0;
+  if (this.discount_type === 'percentage') {
+    return Math.round((amt * disc / 100) * 100) / 100;
+  }
+  // flat amount
+  return Math.min(disc, amt);
+};
+
 module.exports = Coupon;

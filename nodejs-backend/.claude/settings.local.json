@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__getDiagnostics",
+      "Bash(node -e:*)",
+      "Bash(npx pm2:*)",
+      "Bash(curl:*)",
+      "Bash(npm install:*)",
+      "Bash(npx kill-port:*)",
+      "Bash(node -pe:*)",
+      "Bash(npx ng build:*)"
+    ]
+  }
+}

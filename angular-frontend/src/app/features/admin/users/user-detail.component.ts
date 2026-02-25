@@ -53,11 +53,6 @@ import { environment } from '../../../../environments/environment';
           <div class="detail-row"><span class="label">Last Seen</span><span>{{ user().last_seen ? (user().last_seen | date:'medium') : 'Never' }}</span></div>
         </div>
 
-        <div class="detail-card">
-          <h3>Wallet</h3>
-          <div class="wallet-balance">&#8377;{{ user().wallet?.available_balance || '0.00' }}</div>
-          <p class="wallet-label">Current Balance</p>
-        </div>
       </div>
 
       <div class="detail-card" *ngIf="user().orders?.length">
@@ -99,8 +94,6 @@ import { environment } from '../../../../environments/environment';
     .detail-card h3 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0 0 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; }
     .detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f8f9fa; }
     .detail-row .label { color: #64748b; font-weight: 500; }
-    .wallet-balance { font-size: 32px; font-weight: 700; color: #e31b23; }
-    .wallet-label { color: #64748b; margin: 4px 0 0; }
     .badge { display: inline-flex; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
     .badge-active { background: #dcfce7; color: #16a34a; }
     .badge-inactive { background: #fee2e2; color: #dc2626; }

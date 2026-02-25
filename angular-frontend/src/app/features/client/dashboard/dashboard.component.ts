@@ -84,18 +84,6 @@ import { environment } from '../../../../environments/environment';
           </div>
         </div>
 
-        <div class="stats-card">
-          <div class="card-content">
-            <span class="card-label">Wallet Balance</span>
-            <h6 class="card-value wallet-value">{{ stats().walletBalance | currency:'INR':'symbol':'1.2-2' }}</h6>
-          </div>
-          <div class="card-icon purple">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-              <line x1="1" y1="10" x2="23" y2="10"/>
-            </svg>
-          </div>
-        </div>
       </div>
 
       <!-- Two Column Layout -->
@@ -208,21 +196,6 @@ import { environment } from '../../../../environments/environment';
                 </svg>
               </a>
 
-              <a routerLink="/client/wallet" class="action-btn">
-                <div class="action-icon purple-bg">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                    <line x1="1" y1="10" x2="23" y2="10"/>
-                  </svg>
-                </div>
-                <div class="action-text">
-                  <span class="action-title">My Wallet</span>
-                  <span class="action-desc">Manage your balance</span>
-                </div>
-                <svg class="action-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="9 18 15 12 9 6"/>
-                </svg>
-              </a>
             </div>
           </div>
         </div>
@@ -361,9 +334,7 @@ import { environment } from '../../../../environments/environment';
       color: #1a1a1a;
     }
 
-    .card-value.wallet-value {
-      font-size: 22px;
-    }
+
 
     .card-icon {
       width: 50px;
@@ -801,7 +772,6 @@ export class ClientDashboardComponent implements OnInit {
     inProgressOrders: 0,
     completedOrders: 0,
     cancelledOrders: 0,
-    walletBalance: 0
   });
   cars = signal<any[]>([]);
   orders = signal<any[]>([]);
@@ -838,8 +808,7 @@ export class ClientDashboardComponent implements OnInit {
             pendingOrders: data.pendingOrders || 0,
             inProgressOrders: data.inProgressOrders || 0,
             completedOrders: data.completedOrders || 0,
-            cancelledOrders: data.cancelledOrders || 0,
-            walletBalance: data.walletBalance || 0
+            cancelledOrders: data.cancelledOrders || 0
           });
           this.cars.set(data.cars || []);
           this.orders.set(data.orders || []);
@@ -852,8 +821,7 @@ export class ClientDashboardComponent implements OnInit {
           inProgressOrders: 0,
           completedOrders: 0,
           cancelledOrders: 0,
-          walletBalance: 0
-        });
+              });
       }
     });
   }

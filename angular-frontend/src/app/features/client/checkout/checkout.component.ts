@@ -106,72 +106,15 @@ import { environment } from '../../../../environments/environment';
               Payment Method
             </h3>
             <div class="payment-methods">
-              <!-- Wallet -->
-              <div class="payment-option" [class.selected]="selectedPayment === 'wallet'"
-                   [class.disabled]="walletBalance() < finalTotal()"
-                   (click)="walletBalance() >= finalTotal() && selectPayment('wallet')">
-                <div class="radio-dot" [class.checked]="selectedPayment === 'wallet'"></div>
-                <div class="pm-icon wallet-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12a2 2 0 100 4h4v-4h-4z"/></svg>
+              <!-- PayZapp -->
+              <div class="payment-option selected">
+                <div class="radio-dot checked"></div>
+                <div class="pm-icon payzapp-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 5H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2z"/><path d="M3 10h18"/><path d="M7 15h2"/><path d="M12 15h5"/></svg>
                 </div>
                 <div class="pm-details">
-                  <strong>Wallet</strong>
-                  <span class="pm-balance" [class.insufficient]="walletBalance() < finalTotal()">
-                    Balance: {{ walletBalance() | currency:'INR':'symbol':'1.0-0' }}
-                    <span *ngIf="walletBalance() < finalTotal()" class="insuf-label">(Insufficient)</span>
-                  </span>
-                </div>
-              </div>
-
-              <!-- Cash on Delivery -->
-              <div class="payment-option" [class.selected]="selectedPayment === 'cod'"
-                   (click)="selectPayment('cod')">
-                <div class="radio-dot" [class.checked]="selectedPayment === 'cod'"></div>
-                <div class="pm-icon cod-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-                </div>
-                <div class="pm-details">
-                  <strong>Cash on Delivery</strong>
-                  <span>Pay when service is delivered</span>
-                </div>
-              </div>
-
-              <!-- Razorpay -->
-              <div class="payment-option" [class.selected]="selectedPayment === 'razorpay'"
-                   (click)="selectPayment('razorpay')">
-                <div class="radio-dot" [class.checked]="selectedPayment === 'razorpay'"></div>
-                <div class="pm-icon razorpay-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                </div>
-                <div class="pm-details">
-                  <strong>Razorpay</strong>
-                  <span>UPI, Cards, Net Banking</span>
-                </div>
-              </div>
-
-              <!-- Stripe -->
-              <div class="payment-option" [class.selected]="selectedPayment === 'stripe'"
-                   (click)="selectPayment('stripe')">
-                <div class="radio-dot" [class.checked]="selectedPayment === 'stripe'"></div>
-                <div class="pm-icon stripe-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/><line x1="7" y1="15" x2="7.01" y2="15"/><line x1="11" y1="15" x2="13" y2="15"/></svg>
-                </div>
-                <div class="pm-details">
-                  <strong>Credit / Debit Card</strong>
-                  <span>Visa, Mastercard, etc.</span>
-                </div>
-              </div>
-
-              <!-- Cashfree -->
-              <div class="payment-option" [class.selected]="selectedPayment === 'cashfree'"
-                   (click)="selectPayment('cashfree')">
-                <div class="radio-dot" [class.checked]="selectedPayment === 'cashfree'"></div>
-                <div class="pm-icon cashfree-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-                </div>
-                <div class="pm-details">
-                  <strong>Cashfree</strong>
-                  <span>UPI, Cards, Wallets</span>
+                  <strong>PayZapp</strong>
+                  <span>UPI, Cards, Net Banking & Wallets</span>
                 </div>
               </div>
             </div>
@@ -259,7 +202,7 @@ import { environment } from '../../../../environments/environment';
 
           <button class="btn-place-order" (click)="placeOrder()" [disabled]="placingOrder() || !isFormValid()">
             <svg *ngIf="!placingOrder()" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            {{ placingOrder() ? 'Placing Order...' : (selectedPayment === 'cod' ? 'Place Order (COD)' : 'Place Order & Pay') }}
+            {{ placingOrder() ? 'Placing Order...' : 'Place Order & Pay' }}
           </button>
           <p class="secure-note">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
@@ -329,22 +272,11 @@ import { environment } from '../../../../environments/environment';
     .payment-option.selected { border-color:#e31b23; background:#fff5f5; }
     .payment-option.disabled { opacity:0.55; cursor:not-allowed; background:#f9fafb; }
     .pm-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-    .wallet-icon { background:#eef2ff; color:#4f46e5; }
-    .wallet-icon svg { stroke:#4f46e5; }
-    .cod-icon { background:#ecfdf5; color:#059669; }
-    .cod-icon svg { stroke:#059669; }
-    .razorpay-icon { background:#eff6ff; color:#2563eb; }
-    .razorpay-icon svg { stroke:#2563eb; }
-    .stripe-icon { background:#f5f3ff; color:#7c3aed; }
-    .stripe-icon svg { stroke:#7c3aed; }
-    .cashfree-icon { background:#fef3c7; color:#d97706; }
-    .cashfree-icon svg { stroke:#d97706; }
+    .payzapp-icon { background:#fff1f2; color:#e31b23; }
+    .payzapp-icon svg { stroke:#e31b23; }
     .pm-details { display:flex; flex-direction:column; gap:1px; }
     .pm-details strong { font-size:14px; color:#1a1a2e; }
     .pm-details span { font-size:12px; color:#64748b; }
-    .pm-balance { font-size:13px !important; font-weight:600; color:#059669 !important; }
-    .pm-balance.insufficient { color:#ef4444 !important; }
-    .insuf-label { font-weight:400; font-size:11px; }
 
     /* Summary */
     .order-summary { background:#fff; border-radius:14px; border:1px solid #e5e7eb; padding:24px; position:sticky; top:20px; }
@@ -396,10 +328,8 @@ export class CheckoutComponent implements OnInit {
   couponDiscount = signal(0);
   couponError = signal('');
   finalTotal = signal(0);
-  walletBalance = signal(0);
-
   selectedAddressId: number | null = null;
-  selectedPayment = 'cod';
+  selectedPayment = 'payzapp';
   couponCode = '';
   scheduleDate = '';
   scheduleTime = '';
@@ -437,7 +367,7 @@ export class CheckoutComponent implements OnInit {
       }
     });
 
-    // Load user profile to auto-fill info and get wallet balance
+    // Load user profile to auto-fill info
     this.http.get<any>(`${environment.apiUrl}/user/profile`).subscribe({
       next: (res) => {
         const user = res.data || res.user || res;
@@ -448,9 +378,6 @@ export class CheckoutComponent implements OnInit {
           this.addressForm.phone = user.phone || this.addressForm.phone;
           this.addressForm.email = user.email || this.addressForm.email;
         }
-        // Set wallet balance
-        const wallet = user?.wallet;
-        this.walletBalance.set(wallet ? parseFloat(wallet.available_balance) || 0 : 0);
       }
     });
 
@@ -488,11 +415,7 @@ export class CheckoutComponent implements OnInit {
 
   getPaymentLabel(method: string): string {
     const labels: Record<string, string> = {
-      wallet: 'Wallet',
-      cod: 'Cash on Delivery',
-      razorpay: 'Razorpay',
-      stripe: 'Credit / Debit Card',
-      cashfree: 'Cashfree'
+      payzapp: 'PayZapp'
     };
     return labels[method] || method;
   }
@@ -532,11 +455,6 @@ export class CheckoutComponent implements OnInit {
   placeOrder() {
     if (!this.isFormValid()) {
       this.toast.error('Please fill in all required fields and select a payment method');
-      return;
-    }
-
-    if (this.selectedPayment === 'wallet' && this.walletBalance() < this.finalTotal()) {
-      this.toast.error('Insufficient wallet balance');
       return;
     }
 
@@ -580,23 +498,8 @@ export class CheckoutComponent implements OnInit {
         }).subscribe({
           next: (payRes) => {
             this.cartService.loadCart().subscribe();
-            if (this.selectedPayment === 'cod') {
-              this.toast.success('Order placed with Cash on Delivery!');
-              this.router.navigate(['/client/orders', orderId]);
-            } else if (this.selectedPayment === 'wallet') {
-              this.toast.success('Payment successful via Wallet!');
-              this.router.navigate(['/client/orders', orderId]);
-            } else {
-              // For external gateways (razorpay, stripe, cashfree) — redirect or show info
-              if (payRes.data?.payment_url) {
-                this.toast.success('Redirecting to payment gateway...');
-                // In production, redirect: window.location.href = payRes.data.payment_url;
-                this.router.navigate(['/client/orders', orderId]);
-              } else {
-                this.toast.success('Order placed! Payment will be processed shortly.');
-                this.router.navigate(['/client/orders', orderId]);
-              }
-            }
+            this.toast.success('Order placed successfully via PayZapp!');
+            this.router.navigate(['/client/orders', orderId]);
           },
           error: (payErr) => {
             // Order was created but payment failed

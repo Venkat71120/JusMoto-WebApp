@@ -3,58 +3,69 @@ const { sequelize } = require('../config/database');
 
 const UserLocation = sequelize.define('UserLocation', {
   id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.BIGINT.UNSIGNED,
     autoIncrement: true,
     primaryKey: true
   },
   user_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.BIGINT.UNSIGNED,
     allowNull: false,
     references: {
       model: 'users',
       key: 'id'
     }
   },
-  name: {
-    type: DataTypes.STRING(100),
+  state_id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    allowNull: true
+  },
+  city_id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    allowNull: true
+  },
+  area_id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    allowNull: true
+  },
+  title: {
+    type: DataTypes.STRING(191),
     allowNull: true,
-    comment: 'Home, Office, etc.'
+    comment: 'Address label: Home, Office, etc.'
+  },
+  post_code: {
+    type: DataTypes.STRING(191),
+    allowNull: true
   },
   address: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING(191),
     allowNull: true
   },
-  city: {
-    type: DataTypes.STRING(100),
+  phone: {
+    type: DataTypes.STRING(191),
     allowNull: true
   },
-  state: {
-    type: DataTypes.STRING(100),
-    allowNull: true
-  },
-  zip_code: {
-    type: DataTypes.STRING(20),
-    allowNull: true
-  },
-  country: {
-    type: DataTypes.STRING(100),
+  emergency_phone: {
+    type: DataTypes.STRING(191),
     allowNull: true
   },
   latitude: {
-    type: DataTypes.DECIMAL(10, 8),
+    type: DataTypes.DECIMAL(10, 7),
     allowNull: true
   },
   longitude: {
-    type: DataTypes.DECIMAL(11, 8),
+    type: DataTypes.DECIMAL(10, 7),
     allowNull: true
+  },
+  type: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+    comment: '0=Home, 1=Office'
   },
   is_default: {
     type: DataTypes.TINYINT,
+    allowNull: false,
     defaultValue: 0
-  },
-  phone: {
-    type: DataTypes.STRING(20),
-    allowNull: true
   }
 }, {
   tableName: 'user_locations',

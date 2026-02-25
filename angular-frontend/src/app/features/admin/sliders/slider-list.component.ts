@@ -21,8 +21,8 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     <div class="grid" *ngIf="!loading()">
       <div class="card" *ngFor="let slider of sliders()">
         <div class="card-img">
-          <img *ngIf="slider.image" [src]="slider.image" alt="Slider">
-          <div *ngIf="!slider.image" class="no-image">No Image</div>
+          <img *ngIf="slider.image_url" [src]="slider.image_url" alt="Slider">
+          <div *ngIf="!slider.image_url" class="no-image">No Image</div>
           <span class="card-badge" [class.badge-green]="slider.status" [class.badge-red]="!slider.status">
             {{ slider.status ? 'Active' : 'Inactive' }}
           </span>

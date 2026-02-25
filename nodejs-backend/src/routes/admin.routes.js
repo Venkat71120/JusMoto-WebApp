@@ -1259,7 +1259,28 @@ router.delete('/reviews/:id', authenticate, isAdmin, async (req, res) => {
 router.get('/sliders', authenticate, isAdmin, async (req, res) => {
   try {
     const sliders = await Slider.findAll({ order: [['id', 'ASC']] });
-    res.json({ success: true, data: sliders });
+    const data = [];
+    for (const s of sliders) {
+      const slider = s.toJSON();
+      if (slider.image && !isNaN(slider.image) && Number(slider.image) > 0) {
+        const media = await MediaUpload.findByPk(Number(slider.image));
+        slider.image_url = media ? media.path : null;
+      } else {
+        slider.image_url = slider.image || null;
+      }
+      data.push(slider);
+    }
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.get('/sliders/:id', authenticate, isAdmin, async (req, res) => {
+  try {
+    const slider = await Slider.findByPk(req.params.id);
+    if (!slider) return res.status(404).json({ success: false, error: 'Slider not found' });
+    res.json({ success: true, data: slider });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

@@ -280,6 +280,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .form-control { width:100%; padding:10px 14px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box; }
     .form-control:focus { outline:none; border-color:#e31b23; box-shadow:0 0 0 3px rgba(227,27,35,0.1); }
     .form-control:disabled { background:#f8f9fa; color:#94a3b8; }
+    select.form-control { appearance:none; -webkit-appearance:none; -moz-appearance:none; background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position:right 12px center; background-repeat:no-repeat; background-size:20px; padding-right:40px; cursor:pointer; background-color:#fff; }
     .reg-input { text-transform:uppercase; letter-spacing:1px; font-weight:600; }
     .toggle-label { display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:500; }
     .toggle-label input { accent-color:#e31b23; width:16px; height:16px; }

@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
 const fs = require('fs');
 const { authenticate, isClient, isAdmin, isFranchise } = require('../middleware/auth.middleware');
-const { uploadSingle } = require('../middleware/upload.middleware');
+const { uploadSingle, cleanTemp } = require('../middleware/upload.middleware');
+const { uploadToS3, generateS3Key } = require('../config/s3');
 const { Ticket, TicketMessage, User, Admin } = require('../models');
 const { Op } = require('sequelize');
 const { paginate, paginationResponse, generateRandomString } = require('../utils/helpers');
@@ -147,11 +147,10 @@ router.post('/:id/messages', authenticate, ...uploadSingle('attachment'), async 
 
     let attachment = null;
     if (req.file) {
-      const filename = req.file.filename;
-      const destDir = path.join(__dirname, '../../uploads/ticket');
-      if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
-      fs.renameSync(req.file.path, path.join(destDir, filename));
-      attachment = `ticket/${filename}`;
+      const s3Key = generateS3Key('tickets', req.file.originalname);
+      const buffer = fs.readFileSync(req.file.path);
+      attachment = await uploadToS3(buffer, s3Key, req.file.mimetype);
+      cleanTemp(req.file.path);
     }
 
     const ticketMessage = await TicketMessage.create({

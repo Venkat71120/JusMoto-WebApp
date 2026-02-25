@@ -63,11 +63,8 @@ router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
 });
 
 // ==================== Media Upload ====================
-const mediaUploadDir = path.join(__dirname, '../../uploads/media');
-['', '/thumb', '/grid', '/large'].forEach(sub => {
-  const dir = mediaUploadDir + sub;
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-});
+const { uploadToS3, deleteFromS3, generateS3Key } = require('../config/s3');
+const { cleanTemp } = require('../middleware/upload.middleware');
 
 router.get('/media', authenticate, isAdmin, async (req, res) => {
   try {
@@ -91,33 +88,43 @@ router.post('/media/upload', authenticate, isAdmin, ...uploadSingle('file'), asy
     const file = req.file;
     const ext = path.extname(file.originalname);
     const baseName = path.basename(file.filename, path.extname(file.filename));
+    const s3Folder = 'media';
+    const s3FileName = file.filename;
 
-    // Move to media dir
-    const destPath = path.join(mediaUploadDir, file.filename);
-    fs.renameSync(file.path, destPath);
+    // Upload original to S3
+    const originalBuffer = fs.readFileSync(file.path);
+    const originalUrl = await uploadToS3(originalBuffer, `${s3Folder}/${s3FileName}`, file.mimetype);
 
     let dimensions = null;
-    // Generate thumbnails for images
+    // Generate and upload thumbnails for images
     if (file.mimetype.startsWith('image/')) {
       try {
-        const img = sharp(destPath);
+        const img = sharp(file.path);
         const meta = await img.metadata();
         dimensions = `${meta.width}x${meta.height}`;
 
         // Thumb 150x150
-        await sharp(destPath).resize(150, 150, { fit: 'cover' }).toFile(path.join(mediaUploadDir, 'thumb', file.filename));
+        const thumbBuffer = await sharp(file.path).resize(150, 150, { fit: 'cover' }).toBuffer();
+        await uploadToS3(thumbBuffer, `${s3Folder}/thumb/${s3FileName}`, file.mimetype);
+
         // Grid 350px wide
-        await sharp(destPath).resize(350, null).toFile(path.join(mediaUploadDir, 'grid', file.filename));
+        const gridBuffer = await sharp(file.path).resize(350, null).toBuffer();
+        await uploadToS3(gridBuffer, `${s3Folder}/grid/${s3FileName}`, file.mimetype);
+
         // Large 740px wide
-        await sharp(destPath).resize(740, null).toFile(path.join(mediaUploadDir, 'large', file.filename));
+        const largeBuffer = await sharp(file.path).resize(740, null).toBuffer();
+        await uploadToS3(largeBuffer, `${s3Folder}/large/${s3FileName}`, file.mimetype);
       } catch (e) {
         console.error('Image processing error:', e.message);
       }
     }
 
+    // Clean up temp file
+    cleanTemp(file.path);
+
     const media = await MediaUpload.create({
       title: path.basename(file.originalname, ext),
-      path: `media/${file.filename}`,
+      path: originalUrl,
       alt: path.basename(file.originalname, ext),
       size: String(file.size),
       dimensions,
@@ -127,6 +134,7 @@ router.post('/media/upload', authenticate, isAdmin, ...uploadSingle('file'), asy
 
     res.status(201).json({ success: true, data: media, message: 'File uploaded' });
   } catch (error) {
+    if (req.file) cleanTemp(req.file.path);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -136,12 +144,18 @@ router.delete('/media/:id', authenticate, isAdmin, async (req, res) => {
     const media = await MediaUpload.findByPk(req.params.id);
     if (!media) return res.status(404).json({ success: false, error: 'Media not found' });
 
-    // Delete physical files
-    const filename = path.basename(media.path);
-    [mediaUploadDir, path.join(mediaUploadDir, 'thumb'), path.join(mediaUploadDir, 'grid'), path.join(mediaUploadDir, 'large')].forEach(dir => {
-      const fp = path.join(dir, filename);
-      if (fs.existsSync(fp)) fs.unlinkSync(fp);
-    });
+    // Delete from S3
+    if (media.path && media.path.includes('.amazonaws.com/')) {
+      const s3Key = media.path.split('.amazonaws.com/')[1];
+      if (s3Key) {
+        const filename = path.basename(s3Key);
+        const folder = path.dirname(s3Key);
+        await deleteFromS3(s3Key);
+        await deleteFromS3(`${folder}/thumb/${filename}`);
+        await deleteFromS3(`${folder}/grid/${filename}`);
+        await deleteFromS3(`${folder}/large/${filename}`);
+      }
+    }
 
     await media.destroy();
     res.json({ success: true, message: 'Media deleted' });
@@ -1109,11 +1123,10 @@ router.post('/tickets/:id/reply', authenticate, isAdmin, ...uploadSingle('attach
     const { message, type } = req.body;
     let attachment = null;
     if (req.file) {
-      const filename = req.file.filename;
-      const destDir = path.join(__dirname, '../../uploads/ticket');
-      if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
-      fs.renameSync(req.file.path, path.join(destDir, filename));
-      attachment = `ticket/${filename}`;
+      const s3Key = generateS3Key('tickets', req.file.originalname);
+      const buffer = fs.readFileSync(req.file.path);
+      attachment = await uploadToS3(buffer, s3Key, req.file.mimetype);
+      cleanTemp(req.file.path);
     }
     const { TicketMessage } = require('../models');
     const ticketMsg = await TicketMessage.create({
@@ -1905,9 +1918,8 @@ router.post('/seed-archive-cars', authenticate, isAdmin, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Archive folder not found at expected path. Ensure archive/car_data/car_data/train/ exists.' });
     }
 
-    // Create cars image directory
-    const carImgDir = path.join(__dirname, '../../uploads/media/cars');
-    if (!fs.existsSync(carImgDir)) fs.mkdirSync(carImgDir, { recursive: true });
+    // S3 folder for car images
+    const carS3Folder = 'media/cars';
 
     // ---- Seed Engine Types ----
     const engineTypeNames = ['Inline-4', 'Inline-5', 'Inline-6', 'V6', 'V8', 'V10', 'V12', 'W12', 'W16', 'Flat-4', 'Flat-6', 'Electric Motor'];
@@ -2112,26 +2124,21 @@ router.post('/seed-archive-cars', authenticate, isAdmin, async (req, res) => {
         });
         if (brandCreated) results.brands++;
 
-        // Copy first image from archive
+        // Upload first image from archive to S3
         const carDir = path.join(archivePath, dirName);
         const images = fs.readdirSync(carDir).filter(f => /\.(jpg|jpeg|png)$/i.test(f)).sort();
         let imagePath = null;
 
         if (images.length > 0) {
           const slug = dirName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '').replace(/^-+/, '');
-          const destFile = `${slug}.jpg`;
-          const destPath = path.join(carImgDir, destFile);
-
-          if (!fs.existsSync(destPath)) {
-            fs.copyFileSync(path.join(carDir, images[0]), destPath);
-            // Generate thumbnail
-            const thumbDir = path.join(__dirname, '../../uploads/media/thumb');
-            if (!fs.existsSync(thumbDir)) fs.mkdirSync(thumbDir, { recursive: true });
-            try {
-              await sharp(destPath).resize(150, 150, { fit: 'cover' }).toFile(path.join(thumbDir, destFile));
-            } catch (e) { /* thumbnail generation is optional */ }
-          }
-          imagePath = `cars/${destFile}`;
+          const s3FileName = `${slug}.jpg`;
+          try {
+            const imgBuffer = fs.readFileSync(path.join(carDir, images[0]));
+            imagePath = await uploadToS3(imgBuffer, `${carS3Folder}/${s3FileName}`, 'image/jpeg');
+            // Generate and upload thumbnail
+            const thumbBuffer = await sharp(imgBuffer).resize(150, 150, { fit: 'cover' }).jpeg().toBuffer();
+            await uploadToS3(thumbBuffer, `${carS3Folder}/thumb/${s3FileName}`, 'image/jpeg');
+          } catch (e) { /* image upload is optional for seed */ }
         }
 
         // Create car

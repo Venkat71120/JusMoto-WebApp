@@ -3,28 +3,13 @@ const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 
-// Ensure upload directories exist
-const uploadDirs = ['uploads', 'uploads/images', 'uploads/documents', 'uploads/temp'];
-uploadDirs.forEach(dir => {
-  const fullPath = path.join(__dirname, '../../', dir);
-  if (!fs.existsSync(fullPath)) {
-    fs.mkdirSync(fullPath, { recursive: true });
-  }
-});
+// Temp directory for processing before S3 upload
+const tempDir = path.join(__dirname, '../../uploads/temp');
+if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
 
-// Storage configuration
+// Temp disk storage (files processed then uploaded to S3)
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    let uploadPath = 'uploads/temp';
-
-    if (file.mimetype.startsWith('image/')) {
-      uploadPath = 'uploads/images';
-    } else if (file.mimetype.startsWith('application/')) {
-      uploadPath = 'uploads/documents';
-    }
-
-    cb(null, path.join(__dirname, '../../', uploadPath));
-  },
+  destination: (req, file, cb) => cb(null, tempDir),
   filename: (req, file, cb) => {
     const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`;
     cb(null, uniqueName);
@@ -47,9 +32,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB
-  }
+  limits: { fileSize: 10 * 1024 * 1024 }
 });
 
 // Upload error handler
@@ -60,17 +43,19 @@ const handleUploadError = (err, req, res, next) => {
     }
     return res.status(400).json({ error: err.message });
   }
-
-  if (err) {
-    return res.status(400).json({ error: err.message });
-  }
-
+  if (err) return res.status(400).json({ error: err.message });
   next();
 };
+
+// Helper to clean up temp file
+function cleanTemp(filePath) {
+  try { if (filePath && fs.existsSync(filePath)) fs.unlinkSync(filePath); } catch (e) { /* ignore */ }
+}
 
 module.exports = {
   upload,
   handleUploadError,
+  cleanTemp,
   uploadSingle: (fieldName) => [upload.single(fieldName), handleUploadError],
   uploadMultiple: (fieldName, maxCount = 10) => [upload.array(fieldName, maxCount), handleUploadError],
   uploadFields: (fields) => [upload.fields(fields), handleUploadError]

@@ -8,7 +8,7 @@ const Slider = sequelize.define('Slider', {
     primaryKey: true
   },
   identity: {
-    type: DataTypes.BIGINT.UNSIGNED,
+    type: DataTypes.STRING(191),
     allowNull: true
   },
   type: {

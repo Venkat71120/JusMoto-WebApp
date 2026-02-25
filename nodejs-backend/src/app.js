@@ -91,6 +91,8 @@ if (process.env.NODE_ENV === 'development') {
 
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Serve legacy Laravel media-uploader files at /uploads/media/
+app.use('/uploads/media', express.static(path.join(__dirname, '../../core/public/assets/uploads/media-uploader')));
 
 // API Routes - v1
 const apiV1 = '/api/v1';

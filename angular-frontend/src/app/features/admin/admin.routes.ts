@@ -110,7 +110,10 @@ export const adminRoutes: Routes = [
       { path: 'notification/all', loadComponent: () => import('./notifications/notification-list.component').then(m => m.NotificationListComponent) },
 
       // Media Library
-      { path: 'media/all', loadComponent: () => import('./media/media-library.component').then(m => m.MediaLibraryComponent) }
+      { path: 'media/all', loadComponent: () => import('./media/media-library.component').then(m => m.MediaLibraryComponent) },
+
+      // Catch-all: redirect unknown admin routes to dashboard
+      { path: '**', redirectTo: 'dashboard' }
     ]
   }
 ];

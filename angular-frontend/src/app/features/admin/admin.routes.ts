@@ -26,11 +26,13 @@ export const adminRoutes: Routes = [
       { path: 'services/all', loadComponent: () => import('./services/service-list.component').then(m => m.ServiceListComponent), data: { type: 0 } },
       { path: 'services/add', loadComponent: () => import('./services/service-form.component').then(m => m.ServiceFormComponent), data: { type: 0 } },
       { path: 'services/edit-service/:id', loadComponent: () => import('./services/service-form.component').then(m => m.ServiceFormComponent), data: { type: 0 } },
+      { path: 'services/view/:id', loadComponent: () => import('./services/service-view.component').then(m => m.ServiceViewComponent), data: { type: 0 } },
 
       // Products (type=1)
       { path: 'products/all', loadComponent: () => import('./services/service-list.component').then(m => m.ServiceListComponent), data: { type: 1 } },
       { path: 'products/add', loadComponent: () => import('./services/service-form.component').then(m => m.ServiceFormComponent), data: { type: 1 } },
       { path: 'products/edit/:id', loadComponent: () => import('./services/service-form.component').then(m => m.ServiceFormComponent), data: { type: 1 } },
+      { path: 'products/view/:id', loadComponent: () => import('./services/service-view.component').then(m => m.ServiceViewComponent), data: { type: 1 } },
 
       // Categories
       { path: 'category/index', loadComponent: () => import('./categories/category-list.component').then(m => m.CategoryListComponent) },

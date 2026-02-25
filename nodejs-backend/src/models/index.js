@@ -13,6 +13,8 @@ const ServiceCar = require('./ServiceCar');
 const ServiceInclude = require('./ServiceInclude');
 const ServiceExclude = require('./ServiceExclude');
 const ServiceAddon = require('./ServiceAddon');
+const ServiceFaq = require('./ServiceFaq');
+const ServiceAdditional = require('./ServiceAdditional');
 const Order = require('./Order');
 const OrderItem = require('./OrderItem');
 const OrderLocation = require('./OrderLocation');
@@ -83,6 +85,12 @@ ServiceExclude.belongsTo(Service, { foreignKey: 'service_id', as: 'service' });
 
 Service.hasMany(ServiceAddon, { foreignKey: 'service_id', as: 'addons' });
 ServiceAddon.belongsTo(Service, { foreignKey: 'service_id', as: 'service' });
+
+Service.hasMany(ServiceFaq, { foreignKey: 'service_id', as: 'faqs' });
+ServiceFaq.belongsTo(Service, { foreignKey: 'service_id', as: 'service' });
+
+Service.hasMany(ServiceAdditional, { foreignKey: 'service_id', as: 'additionals' });
+ServiceAdditional.belongsTo(Service, { foreignKey: 'service_id', as: 'service' });
 
 Service.hasMany(ServiceCar, { foreignKey: 'service_id', as: 'serviceCars' });
 ServiceCar.belongsTo(Service, { foreignKey: 'service_id', as: 'service' });
@@ -216,6 +224,8 @@ module.exports = {
   ServiceInclude,
   ServiceExclude,
   ServiceAddon,
+  ServiceFaq,
+  ServiceAdditional,
   Order,
   OrderItem,
   OrderLocation,

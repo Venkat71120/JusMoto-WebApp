@@ -81,6 +81,9 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             </td>
             <td>
               <div class="action-btns">
+                <a [routerLink]="isProduct ? ['/admin/products/view', svc.id] : ['/admin/services/view', svc.id]" class="btn-action btn-view" title="View">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </a>
                 <a [routerLink]="isProduct ? ['/admin/products/edit', svc.id] : ['/admin/services/edit-service', svc.id]" class="btn-action btn-edit" title="Edit">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 </a>
@@ -164,6 +167,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .badge-dim { background: #f1f5f9; color: #94a3b8; }
     .action-btns { display: flex; gap: 6px; }
     .btn-action { padding: 6px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fff; cursor: pointer; color: #64748b; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+    .btn-view:hover { color: #8b5cf6; border-color: #8b5cf6; }
     .btn-edit:hover { color: #3b82f6; border-color: #3b82f6; }
     .btn-delete:hover { color: #ef4444; border-color: #ef4444; }
     .empty-state { text-align: center; padding: 40px !important; color: #94a3b8; }

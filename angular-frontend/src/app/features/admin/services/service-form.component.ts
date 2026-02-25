@@ -181,11 +181,7 @@ import { ToastService } from '../../../core/services/toast.service';
           </div>
           <div class="repeater-empty" *ngIf="includes.length === 0">No includes added yet. Click "Add" to create one.</div>
           <div class="repeater-item" *ngFor="let ctrl of includes.controls; let i = index" [formGroup]="asFormGroup(ctrl)">
-            <div class="repeater-grid">
-              <div class="form-group">
-                <label>Icon</label>
-                <input type="text" formControlName="icon" placeholder="Icon class or URL">
-              </div>
+            <div class="repeater-grid single-col">
               <div class="form-group">
                 <label>Title</label>
                 <input type="text" formControlName="title" placeholder="Include title">
@@ -389,6 +385,7 @@ import { ToastService } from '../../../core/services/toast.service';
     }
     .repeater-item:hover { border-color: #cbd5e1; }
     .repeater-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .repeater-grid.single-col { grid-template-columns: 1fr; }
     .btn-remove {
       position: absolute; top: 12px; right: 12px;
       background: #fff; border: 1px solid #fca5a5; border-radius: 8px;
@@ -617,7 +614,6 @@ export class ServiceFormComponent implements OnInit {
         if (s.includes && Array.isArray(s.includes)) {
           s.includes.forEach((item: any) => {
             this.includes.push(this.fb.group({
-              icon: [item.icon || ''],
               title: [item.title || '']
             }));
           });
@@ -686,7 +682,7 @@ export class ServiceFormComponent implements OnInit {
 
   // ---- Repeater add methods ----
   addInclude() {
-    this.includes.push(this.fb.group({ icon: [''], title: [''] }));
+    this.includes.push(this.fb.group({ title: [''] }));
   }
 
   addFaq() {

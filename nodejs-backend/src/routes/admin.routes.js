@@ -5,7 +5,7 @@ const { uploadSingle } = require('../middleware/upload.middleware');
 const { User, Admin, Order, Service, Category, SubCategory, Brand, Car, Coupon, Offer, OfferService,
         Variant, Review, Ticket, ChatMessage, Department, RefundedOrder, State, City, Area,
         Slider, AdminOutletLocation, AdminNotification, MediaUpload, EngineType, FuelType,
-        Role, Permission } = require('../models');
+        Role, Permission, ServiceInclude, ServiceFaq, ServiceAdditional } = require('../models');
 const { Op } = require('sequelize');
 const { paginate, paginationResponse, createSlug } = require('../utils/helpers');
 const path = require('path');
@@ -400,9 +400,34 @@ router.get('/services', authenticate, isAdmin, async (req, res) => {
 
 router.get('/services/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const service = await Service.findByPk(req.params.id, { include: ['category', 'includes', 'excludes', 'addons'] });
+    const service = await Service.findByPk(req.params.id, {
+      include: ['category', 'includes', 'excludes', 'addons', 'faqs', 'additionals']
+    });
     if (!service) return res.status(404).json({ success: false, error: 'Service not found' });
-    res.json({ success: true, data: service });
+
+    const data = service.toJSON();
+
+    // Transform includes: DB {title, description} → Frontend {title, icon}
+    if (data.includes) {
+      data.includes = data.includes.map(i => ({ id: i.id, title: i.title, icon: i.description || '' }));
+    }
+
+    // Transform faqs: DB {title, description} → Frontend {question, answer}
+    if (data.faqs) {
+      data.faqs = data.faqs.map(f => ({ id: f.id, question: f.title, answer: f.description || '' }));
+    }
+
+    // Split additionals into additional_info and specifications
+    const additionals = data.additionals || [];
+    data.additional_info = additionals
+      .filter(a => a.type === 'info')
+      .map(a => ({ id: a.id, title: a.title, description: a.description || '' }));
+    data.specifications = additionals
+      .filter(a => a.type === 'specification')
+      .map(a => ({ id: a.id, title: a.title, value: a.description || '' }));
+    delete data.additionals;
+
+    res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -410,25 +435,61 @@ router.get('/services/:id', authenticate, isAdmin, async (req, res) => {
 
 router.post('/services', authenticate, isAdmin, async (req, res) => {
   try {
-    const { title, category_id, sub_category_id, price, discount_price, description, image, duration, max_qty, type, is_featured, status } = req.body;
+    const { title, category_id, sub_category_id, price, discount_price, description, image,
+            duration, max_qty, type, is_featured, status, video_url, gallery,
+            includes, faqs, additional_info, specifications } = req.body;
+
     const service = await Service.create({
-  admin_id: req.admin.id,
-  title,
-  slug: createSlug(title),
-  category_id,
-  sub_category_id,
-  price,
-  discount_price,
-  description,
-  image,
-  duration,
-  max_qty,
-  type: type || 0,
-  is_featured: is_featured || 0,
-  status: status !== undefined ? status : 1,
-  is_published: 1,
-  published_at: new Date()
-});
+      admin_id: req.admin.id,
+      title,
+      slug: createSlug(title),
+      category_id,
+      sub_category_id,
+      price,
+      discount_price,
+      description,
+      image,
+      video_url,
+      gallery_images: gallery || [],
+      duration,
+      max_qty,
+      type: type || 0,
+      is_featured: is_featured || 0,
+      status: status !== undefined ? status : 1,
+      is_published: 1,
+      published_at: new Date()
+    });
+
+    const serviceId = service.id;
+
+    // Save includes: Frontend {icon, title} → DB {title, description: icon}
+    if (includes && Array.isArray(includes)) {
+      await ServiceInclude.bulkCreate(includes.map(i => ({
+        service_id: serviceId, title: i.title || '', description: i.icon || ''
+      })));
+    }
+
+    // Save FAQs: Frontend {question, answer} → DB {title: question, description: answer}
+    if (faqs && Array.isArray(faqs)) {
+      await ServiceFaq.bulkCreate(faqs.map(f => ({
+        service_id: serviceId, title: f.question || '', description: f.answer || ''
+      })));
+    }
+
+    // Save additional info → DB type='info'
+    if (additional_info && Array.isArray(additional_info)) {
+      await ServiceAdditional.bulkCreate(additional_info.map(a => ({
+        service_id: serviceId, title: a.title || '', description: a.description || '', type: 'info'
+      })));
+    }
+
+    // Save specifications → DB type='specification'
+    if (specifications && Array.isArray(specifications)) {
+      await ServiceAdditional.bulkCreate(specifications.map(s => ({
+        service_id: serviceId, title: s.title || '', description: s.value || '', type: 'specification'
+      })));
+    }
+
     res.status(201).json({ success: true, data: service, message: 'Service created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -437,11 +498,63 @@ router.post('/services', authenticate, isAdmin, async (req, res) => {
 
 router.put('/services/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const { title, category_id, sub_category_id, price, discount_price, description, image, duration, max_qty, type, is_featured, status } = req.body;
-    const updateData = { title, category_id, sub_category_id, price, discount_price, description, image, duration, max_qty, type, is_featured, status };
+    const serviceId = req.params.id;
+    const { title, category_id, sub_category_id, price, discount_price, description, image,
+            duration, max_qty, type, is_featured, status, video_url, gallery,
+            includes, faqs, additional_info, specifications } = req.body;
+
+    const updateData = { title, category_id, sub_category_id, price, discount_price, description,
+                         image, duration, max_qty, type, is_featured, status, video_url };
     if (title) updateData.slug = createSlug(title);
-    await Service.update(updateData, { where: { id: req.params.id } });
-    const service = await Service.findByPk(req.params.id, { include: ['category'] });
+    if (gallery !== undefined) updateData.gallery_images = gallery || [];
+
+    await Service.update(updateData, { where: { id: serviceId } });
+
+    // Replace includes: delete old, insert new
+    if (includes && Array.isArray(includes)) {
+      await ServiceInclude.destroy({ where: { service_id: serviceId } });
+      if (includes.length > 0) {
+        await ServiceInclude.bulkCreate(includes.map(i => ({
+          service_id: serviceId, title: i.title || '', description: i.icon || ''
+        })));
+      }
+    }
+
+    // Replace FAQs: delete old, insert new
+    if (faqs && Array.isArray(faqs)) {
+      await ServiceFaq.destroy({ where: { service_id: serviceId } });
+      if (faqs.length > 0) {
+        await ServiceFaq.bulkCreate(faqs.map(f => ({
+          service_id: serviceId, title: f.question || '', description: f.answer || ''
+        })));
+      }
+    }
+
+    // Replace additional info & specifications
+    if (additional_info !== undefined || specifications !== undefined) {
+      await ServiceAdditional.destroy({ where: { service_id: serviceId } });
+
+      const additionalRows = [];
+      if (additional_info && Array.isArray(additional_info)) {
+        additional_info.forEach(a => {
+          additionalRows.push({
+            service_id: serviceId, title: a.title || '', description: a.description || '', type: 'info'
+          });
+        });
+      }
+      if (specifications && Array.isArray(specifications)) {
+        specifications.forEach(s => {
+          additionalRows.push({
+            service_id: serviceId, title: s.title || '', description: s.value || '', type: 'specification'
+          });
+        });
+      }
+      if (additionalRows.length > 0) {
+        await ServiceAdditional.bulkCreate(additionalRows);
+      }
+    }
+
+    const service = await Service.findByPk(serviceId, { include: ['category'] });
     res.json({ success: true, data: service, message: 'Service updated' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });

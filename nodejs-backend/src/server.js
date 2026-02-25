@@ -53,6 +53,17 @@ const startServer = async () => {
       console.log('Migration check (user_selected_cars):', e.message);
     }
 
+    // Add description column to service_additionals if missing
+    try {
+      const [saCols] = await sequelize.query("SHOW COLUMNS FROM service_additionals LIKE 'description'");
+      if (saCols.length === 0) {
+        await sequelize.query("ALTER TABLE service_additionals ADD COLUMN description TEXT NULL AFTER title");
+        console.log('Migration: Added description to service_additionals table');
+      }
+    } catch (e) {
+      console.log('Migration check (service_additionals):', e.message);
+    }
+
     // Create ticket_messages table if not exists
     try {
       await sequelize.query(`CREATE TABLE IF NOT EXISTS ticket_messages (

@@ -1,20 +1,7 @@
 const multer = require('multer');
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs');
 
-// Temp directory for processing before S3 upload
-const tempDir = path.join(__dirname, '../../uploads/temp');
-if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
-
-// Temp disk storage (files processed then uploaded to S3)
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, tempDir),
-  filename: (req, file, cb) => {
-    const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`;
-    cb(null, uniqueName);
-  }
-});
+// Memory storage — files held in buffer, uploaded directly to S3
+const storage = multer.memoryStorage();
 
 // File filter
 const fileFilter = (req, file, cb) => {
@@ -47,15 +34,9 @@ const handleUploadError = (err, req, res, next) => {
   next();
 };
 
-// Helper to clean up temp file
-function cleanTemp(filePath) {
-  try { if (filePath && fs.existsSync(filePath)) fs.unlinkSync(filePath); } catch (e) { /* ignore */ }
-}
-
 module.exports = {
   upload,
   handleUploadError,
-  cleanTemp,
   uploadSingle: (fieldName) => [upload.single(fieldName), handleUploadError],
   uploadMultiple: (fieldName, maxCount = 10) => [upload.array(fieldName, maxCount), handleUploadError],
   uploadFields: (fields) => [upload.fields(fields), handleUploadError]

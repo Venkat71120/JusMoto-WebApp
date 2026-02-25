@@ -64,7 +64,6 @@ router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
 
 // ==================== Media Upload ====================
 const { uploadToS3, deleteFromS3, generateS3Key } = require('../config/s3');
-const { cleanTemp } = require('../middleware/upload.middleware');
 
 router.get('/media', authenticate, isAdmin, async (req, res) => {
   try {
@@ -87,40 +86,34 @@ router.post('/media/upload', authenticate, isAdmin, ...uploadSingle('file'), asy
 
     const file = req.file;
     const ext = path.extname(file.originalname);
-    const baseName = path.basename(file.filename, path.extname(file.filename));
     const s3Folder = 'media';
-    const s3FileName = file.filename;
+    const s3FileName = generateS3Key(s3Folder, file.originalname).replace(`${s3Folder}/`, '');
 
     // Upload original to S3
-    const originalBuffer = fs.readFileSync(file.path);
-    const originalUrl = await uploadToS3(originalBuffer, `${s3Folder}/${s3FileName}`, file.mimetype);
+    const originalUrl = await uploadToS3(file.buffer, `${s3Folder}/${s3FileName}`, file.mimetype);
 
     let dimensions = null;
     // Generate and upload thumbnails for images
     if (file.mimetype.startsWith('image/')) {
       try {
-        const img = sharp(file.path);
-        const meta = await img.metadata();
+        const meta = await sharp(file.buffer).metadata();
         dimensions = `${meta.width}x${meta.height}`;
 
         // Thumb 150x150
-        const thumbBuffer = await sharp(file.path).resize(150, 150, { fit: 'cover' }).toBuffer();
+        const thumbBuffer = await sharp(file.buffer).resize(150, 150, { fit: 'cover' }).toBuffer();
         await uploadToS3(thumbBuffer, `${s3Folder}/thumb/${s3FileName}`, file.mimetype);
 
         // Grid 350px wide
-        const gridBuffer = await sharp(file.path).resize(350, null).toBuffer();
+        const gridBuffer = await sharp(file.buffer).resize(350, null).toBuffer();
         await uploadToS3(gridBuffer, `${s3Folder}/grid/${s3FileName}`, file.mimetype);
 
         // Large 740px wide
-        const largeBuffer = await sharp(file.path).resize(740, null).toBuffer();
+        const largeBuffer = await sharp(file.buffer).resize(740, null).toBuffer();
         await uploadToS3(largeBuffer, `${s3Folder}/large/${s3FileName}`, file.mimetype);
       } catch (e) {
         console.error('Image processing error:', e.message);
       }
     }
-
-    // Clean up temp file
-    cleanTemp(file.path);
 
     const media = await MediaUpload.create({
       title: path.basename(file.originalname, ext),
@@ -134,7 +127,6 @@ router.post('/media/upload', authenticate, isAdmin, ...uploadSingle('file'), asy
 
     res.status(201).json({ success: true, data: media, message: 'File uploaded' });
   } catch (error) {
-    if (req.file) cleanTemp(req.file.path);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -1124,9 +1116,7 @@ router.post('/tickets/:id/reply', authenticate, isAdmin, ...uploadSingle('attach
     let attachment = null;
     if (req.file) {
       const s3Key = generateS3Key('tickets', req.file.originalname);
-      const buffer = fs.readFileSync(req.file.path);
-      attachment = await uploadToS3(buffer, s3Key, req.file.mimetype);
-      cleanTemp(req.file.path);
+      attachment = await uploadToS3(req.file.buffer, s3Key, req.file.mimetype);
     }
     const { TicketMessage } = require('../models');
     const ticketMsg = await TicketMessage.create({

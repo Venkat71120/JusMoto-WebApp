@@ -224,12 +224,17 @@ export class MediaPickerComponent implements OnInit, OnChanges {
 
   getThumbUrl(item: any): string {
     if (!item.path) return '';
+    if (item.path.startsWith('http')) {
+      // S3 URL: insert /thumb/ before filename
+      return item.path.replace('/media/', '/media/thumb/');
+    }
     const filename = item.path.replace('media/', '');
     return `${this.baseUrl}/uploads/media/thumb/${filename}`;
   }
 
   getFullUrl(item: any): string {
     if (!item.path) return '';
+    if (item.path.startsWith('http')) return item.path;
     const filename = item.path.replace('media/', '');
     return `${this.baseUrl}/uploads/media/${filename}`;
   }

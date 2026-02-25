@@ -109,6 +109,9 @@ export const adminRoutes: Routes = [
       // Notifications
       { path: 'notification/all', loadComponent: () => import('./notifications/notification-list.component').then(m => m.NotificationListComponent) },
 
+      // Wallet
+      { path: 'wallet/manage', loadComponent: () => import('./wallet/wallet-management.component').then(m => m.WalletManagementComponent) },
+
       // Media Library
       { path: 'media/all', loadComponent: () => import('./media/media-library.component').then(m => m.MediaLibraryComponent) },
 

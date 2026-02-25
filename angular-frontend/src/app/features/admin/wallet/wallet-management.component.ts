@@ -94,7 +94,7 @@ export class WalletManagementComponent implements OnInit {
     if (!this.validate()) return;
     this.processing.set(true);
     this.http.post<any>(`${environment.apiUrl}/wallet/admin/add`, {
-      user_id: this.selectedUserId, amount: this.amount, reason: this.reason
+      user_id: this.selectedUserId, amount: this.amount, description: this.reason
     }).subscribe({
       next: () => { this.toast.success('Balance added successfully'); this.resetForm(); },
       error: (err) => { this.toast.error(err.error?.error || 'Failed to add balance'); this.processing.set(false); },
@@ -106,7 +106,7 @@ export class WalletManagementComponent implements OnInit {
     if (!this.validate()) return;
     this.processing.set(true);
     this.http.post<any>(`${environment.apiUrl}/wallet/admin/deduct`, {
-      user_id: this.selectedUserId, amount: this.amount, reason: this.reason
+      user_id: this.selectedUserId, amount: this.amount, description: this.reason
     }).subscribe({
       next: () => { this.toast.success('Balance deducted successfully'); this.resetForm(); },
       error: (err) => { this.toast.error(err.error?.error || 'Failed to deduct balance'); this.processing.set(false); },

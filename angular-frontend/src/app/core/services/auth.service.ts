@@ -66,31 +66,44 @@ export class AuthService {
   }
 
   private loadStoredAuth(): void {
-    // Migrate any old localStorage auth to sessionStorage, then clear it
-    this.migrateStorage('token');
-    this.migrateStorage('user');
-    this.migrateStorage('adminToken');
-    this.migrateStorage('admin');
+    // 1. Check for session data in URL fragment (from cross-port transition)
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    let token = params.get('token');
+    let user = params.get('user');
 
-    const token = sessionStorage.getItem('token');
-    const user = sessionStorage.getItem('user');
+    if (token && user) {
+      // Clear hash to prevent accidental re-use and keep URL clean
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    } else {
+      // 2. Otherwise check sessionStorage and localStorage
+      token = sessionStorage.getItem('token') || localStorage.getItem('token');
+      user = sessionStorage.getItem('user') || localStorage.getItem('user');
+    }
+
     if (token && user) {
       this.tokenSubject.next(token);
       this.currentUserSubject.next(JSON.parse(user));
+
+      // Sync all storage to maintain session consistency
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('user', typeof user === 'string' ? user : JSON.stringify(user));
+
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', typeof user === 'string' ? user : JSON.stringify(user));
     }
 
-    const adminToken = sessionStorage.getItem('adminToken');
-    const admin = sessionStorage.getItem('admin');
+    const adminToken = sessionStorage.getItem('adminToken') || localStorage.getItem('adminToken');
+    const admin = sessionStorage.getItem('admin') || localStorage.getItem('admin');
+
     if (adminToken && admin) {
       this.adminTokenSubject.next(adminToken);
       this.currentAdminSubject.next(JSON.parse(admin));
-    }
-  }
 
-  private migrateStorage(key: string): void {
-    const val = localStorage.getItem(key);
-    if (val) {
-      localStorage.removeItem(key);
+      if (!sessionStorage.getItem('adminToken')) {
+        sessionStorage.setItem('adminToken', adminToken);
+        sessionStorage.setItem('admin', admin);
+      }
     }
   }
 

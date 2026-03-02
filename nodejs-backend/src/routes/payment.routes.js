@@ -12,8 +12,7 @@ router.get('/methods', async (req, res) => {
     // Fetch active gateways from DB
     const dbGateways = await PaymentGateway.findAll({
       where: { status: 1 },
-      attributes: ['id', 'name', 'slug', 'image', 'test_mode'],
-      order: [['order', 'ASC']]
+      attributes: ['id', 'name', 'slug', 'image', 'test_mode']
     });
 
     const methods = dbGateways.map(g => ({

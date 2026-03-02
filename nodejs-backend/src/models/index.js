@@ -47,6 +47,9 @@ const AdminNotification = require('./AdminNotification');
 const Role = require('./Role');
 const Permission = require('./Permission');
 const PaymentGateway = require('./PaymentGateway');
+const Tax = require('./Tax');
+const DeliveryCharge = require('./DeliveryCharge');
+const StaticOption = require('./StaticOption');
 
 // ==================== Define Associations ====================
 
@@ -263,5 +266,8 @@ module.exports = {
   AdminNotification,
   Role,
   Permission,
-  PaymentGateway
+  PaymentGateway,
+  Tax,
+  DeliveryCharge,
+  StaticOption
 };

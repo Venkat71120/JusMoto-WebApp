@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate, isClient } = require('../middleware/auth.middleware');
+const { uploadSingle } = require('../middleware/upload.middleware');
+const { uploadToS3, generateS3Key } = require('../config/s3');
 
 // User profile routes
 router.get('/profile', authenticate, isClient, async (req, res) => {
@@ -42,6 +44,59 @@ router.put('/profile', authenticate, isClient, async (req, res) => {
     res.json({ success: true, data: user, message: 'Profile updated successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Mobile app compatible: POST /profile/update (with image upload)
+router.post('/profile/update', authenticate, isClient, ...uploadSingle('file'), async (req, res) => {
+  try {
+    const { first_name, last_name, phone, date_of_birth, update_type } = req.body;
+    const { User } = require('../models');
+
+    if (!first_name || !last_name) {
+      return res.status(422).json({
+        message: 'Validation failed',
+        errors: {
+          ...(!first_name ? { first_name: ['The first name field is required.'] } : {}),
+          ...(!last_name ? { last_name: ['The last name field is required.'] } : {})
+        }
+      });
+    }
+
+    const updateData = { first_name, last_name };
+    if (phone) updateData.phone = phone;
+    if (date_of_birth) updateData.date_of_birth = date_of_birth;
+
+    // Handle profile image upload
+    if (req.file) {
+      const s3Key = generateS3Key('avatars', req.file.originalname);
+      const imageUrl = await uploadToS3(req.file.buffer, s3Key, req.file.mimetype);
+      updateData.image = imageUrl;
+    }
+
+    await User.update(updateData, { where: { id: req.user.id } });
+
+    res.status(201).json({ message: 'Profile Updated Successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+// Mobile app compatible: POST /profile/firebase-token
+router.post('/profile/firebase-token', authenticate, isClient, async (req, res) => {
+  try {
+    const { firebase_token } = req.body;
+    const { User } = require('../models');
+
+    if (!firebase_token) {
+      return res.status(422).json({ message: 'The firebase_token field is required.' });
+    }
+
+    await User.update({ firebase_token }, { where: { id: req.user.id } });
+
+    res.json({ message: 'Token Updated Successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

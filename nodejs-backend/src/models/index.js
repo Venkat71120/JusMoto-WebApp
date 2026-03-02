@@ -46,6 +46,7 @@ const AdminOutletLocation = require('./AdminOutletLocation');
 const AdminNotification = require('./AdminNotification');
 const Role = require('./Role');
 const Permission = require('./Permission');
+const PaymentGateway = require('./PaymentGateway');
 
 // ==================== Define Associations ====================
 
@@ -261,5 +262,6 @@ module.exports = {
   AdminOutletLocation,
   AdminNotification,
   Role,
-  Permission
+  Permission,
+  PaymentGateway
 };

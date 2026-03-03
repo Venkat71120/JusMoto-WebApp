@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate, isClient } = require('../middleware/auth.middleware');
-const { PaymentGateway, Tax, DeliveryCharge, StaticOption, Order, OrderItem, OrderLocation, Service, ServiceCar, ServiceAddon, Coupon, UserCartItem, User, Review, RefundedOrder } = require('../models');
+const { PaymentGateway, StateTax, CityTax, StateDeliveryCharge, CityDeliveryCharge, StaticOption, Order, OrderItem, OrderLocation, Service, ServiceCar, ServiceAddon, Coupon, UserCartItem, User, Review, RefundedOrder } = require('../models');
 const { paginate, paginationResponse, generateOrderNumber, generateInvoiceNumber } = require('../utils/helpers');
 const emailService = require('../services/email.service');
 const notificationService = require('../services/notification.service');
@@ -76,15 +76,15 @@ router.get('/payment-gateway-list', async (req, res) => {
 
 // ─── Helper: get tax rate based on location ─────────────────────────
 async function getTaxRate(outlet_id, state_id, city_id) {
-  // Try city-level tax first
+  // Try city-level tax first (city_taxes table)
   if (city_id) {
-    const cityTax = await Tax.findOne({ where: { city_id, status: 1 } });
-    if (cityTax) return parseFloat(cityTax.tax_percentage);
+    const cityTax = await CityTax.findOne({ where: { city_id } });
+    if (cityTax) return parseFloat(cityTax.tax_rate);
   }
-  // Then state-level
+  // Then state-level (state_taxes table)
   if (state_id) {
-    const stateTax = await Tax.findOne({ where: { state_id, status: 1, city_id: null } });
-    if (stateTax) return parseFloat(stateTax.tax_percentage);
+    const stateTax = await StateTax.findOne({ where: { state_id } });
+    if (stateTax) return parseFloat(stateTax.tax_rate);
   }
   // Fallback to global setting
   const globalTax = await StaticOption.findOne({ where: { option_name: 'tax_rate_by_country' } });
@@ -93,15 +93,15 @@ async function getTaxRate(outlet_id, state_id, city_id) {
 
 // ─── Helper: get delivery charge based on location ──────────────────
 async function getDeliveryCharge(outlet_id, state_id, city_id) {
-  // Try city-level first
+  // Try city-level first (city_delivery_charges table)
   if (city_id) {
-    const cityCharge = await DeliveryCharge.findOne({ where: { city_id, status: 1 } });
-    if (cityCharge) return parseFloat(cityCharge.charge);
+    const cityCharge = await CityDeliveryCharge.findOne({ where: { city_id } });
+    if (cityCharge) return parseFloat(cityCharge.delivery_charge);
   }
-  // Then state-level
+  // Then state-level (state_delivery_charges table)
   if (state_id) {
-    const stateCharge = await DeliveryCharge.findOne({ where: { state_id, status: 1, city_id: null } });
-    if (stateCharge) return parseFloat(stateCharge.charge);
+    const stateCharge = await StateDeliveryCharge.findOne({ where: { state_id } });
+    if (stateCharge) return parseFloat(stateCharge.delivery_charge);
   }
   // Fallback to global
   const globalCharge = await StaticOption.findOne({ where: { option_name: 'delivery_charge' } });

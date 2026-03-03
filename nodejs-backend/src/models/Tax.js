@@ -1,20 +1,34 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
-const Tax = sequelize.define('Tax', {
+// State-level tax (table: state_taxes)
+const StateTax = sequelize.define('StateTax', {
   id: {
     type: DataTypes.BIGINT.UNSIGNED,
     primaryKey: true,
     autoIncrement: true
   },
-  name: {
-    type: DataTypes.STRING(100),
-    allowNull: false
+  state_id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    allowNull: true
   },
-  tax_percentage: {
+  tax_rate: {
     type: DataTypes.DECIMAL(5, 2),
     allowNull: false,
     defaultValue: 0
+  }
+}, {
+  tableName: 'state_taxes',
+  timestamps: true,
+  underscored: true
+});
+
+// City-level tax (table: city_taxes)
+const CityTax = sequelize.define('CityTax', {
+  id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    primaryKey: true,
+    autoIncrement: true
   },
   state_id: {
     type: DataTypes.BIGINT.UNSIGNED,
@@ -24,14 +38,15 @@ const Tax = sequelize.define('Tax', {
     type: DataTypes.BIGINT.UNSIGNED,
     allowNull: true
   },
-  status: {
-    type: DataTypes.TINYINT,
-    defaultValue: 1
+  tax_rate: {
+    type: DataTypes.DECIMAL(5, 2),
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
-  tableName: 'taxes',
+  tableName: 'city_taxes',
   timestamps: true,
   underscored: true
 });
 
-module.exports = Tax;
+module.exports = { StateTax, CityTax };

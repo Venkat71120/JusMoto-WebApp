@@ -47,8 +47,8 @@ const AdminNotification = require('./AdminNotification');
 const Role = require('./Role');
 const Permission = require('./Permission');
 const PaymentGateway = require('./PaymentGateway');
-const Tax = require('./Tax');
-const DeliveryCharge = require('./DeliveryCharge');
+const { StateTax, CityTax } = require('./Tax');
+const { StateDeliveryCharge, CityDeliveryCharge } = require('./DeliveryCharge');
 const StaticOption = require('./StaticOption');
 
 // ==================== Define Associations ====================
@@ -267,7 +267,9 @@ module.exports = {
   Role,
   Permission,
   PaymentGateway,
-  Tax,
-  DeliveryCharge,
+  StateTax,
+  CityTax,
+  StateDeliveryCharge,
+  CityDeliveryCharge,
   StaticOption
 };

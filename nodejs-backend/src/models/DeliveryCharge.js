@@ -1,7 +1,30 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
 
-const DeliveryCharge = sequelize.define('DeliveryCharge', {
+// State-level delivery charge (table: state_delivery_charges)
+const StateDeliveryCharge = sequelize.define('StateDeliveryCharge', {
+  id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  state_id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    allowNull: true
+  },
+  delivery_charge: {
+    type: DataTypes.DECIMAL(5, 2),
+    allowNull: false,
+    defaultValue: 0
+  }
+}, {
+  tableName: 'state_delivery_charges',
+  timestamps: true,
+  underscored: true
+});
+
+// City-level delivery charge (table: city_delivery_charges)
+const CityDeliveryCharge = sequelize.define('CityDeliveryCharge', {
   id: {
     type: DataTypes.BIGINT.UNSIGNED,
     primaryKey: true,
@@ -15,28 +38,15 @@ const DeliveryCharge = sequelize.define('DeliveryCharge', {
     type: DataTypes.BIGINT.UNSIGNED,
     allowNull: true
   },
-  area_id: {
-    type: DataTypes.BIGINT.UNSIGNED,
-    allowNull: true
-  },
-  charge: {
-    type: DataTypes.DECIMAL(10, 2),
+  delivery_charge: {
+    type: DataTypes.DECIMAL(5, 2),
     allowNull: false,
     defaultValue: 0
-  },
-  min_order_amount: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: true,
-    comment: 'Minimum order amount for free delivery'
-  },
-  status: {
-    type: DataTypes.TINYINT,
-    defaultValue: 1
   }
 }, {
-  tableName: 'delivery_charges',
+  tableName: 'city_delivery_charges',
   timestamps: true,
   underscored: true
 });
 
-module.exports = DeliveryCharge;
+module.exports = { StateDeliveryCharge, CityDeliveryCharge };

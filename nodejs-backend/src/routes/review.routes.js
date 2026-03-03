@@ -11,9 +11,9 @@ router.get('/service/:serviceId', async (req, res) => {
     const pagination = paginate(page, limit);
 
     const { rows, count } = await Review.findAndCountAll({
-      where: { service_id: req.params.serviceId, status: 1 },
+      where: { service_id: req.params.serviceId, status: 'published' },
       include: [
-        { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'image'] }
+        { model: User, as: 'reviewer', attributes: ['id', 'first_name', 'last_name', 'image'] }
       ],
       ...pagination,
       order: [['created_at', 'DESC']]
@@ -21,7 +21,7 @@ router.get('/service/:serviceId', async (req, res) => {
 
     // Calculate stats
     const allReviews = await Review.findAll({
-      where: { service_id: req.params.serviceId, status: 1 },
+      where: { service_id: req.params.serviceId, status: 'published' },
       attributes: ['rating']
     });
 
@@ -56,7 +56,7 @@ router.get('/my', authenticate, isClient, async (req, res) => {
     const pagination = paginate(page, limit);
 
     const { rows, count } = await Review.findAndCountAll({
-      where: { user_id: req.user.id },
+      where: { reviewer_id: req.user.id },
       include: [
         { model: Service, as: 'service', attributes: ['id', 'title', 'image'] }
       ],
@@ -76,7 +76,8 @@ router.get('/my', authenticate, isClient, async (req, res) => {
 // Create review
 router.post('/', authenticate, isClient, async (req, res) => {
   try {
-    const { service_id, order_id, rating, review } = req.body;
+    const { service_id, order_id, rating, review, message: msg } = req.body;
+    const reviewMessage = msg || review || null;
 
     // Verify order belongs to user and is completed
     if (order_id) {
@@ -91,20 +92,25 @@ router.post('/', authenticate, isClient, async (req, res) => {
 
     // Check existing review
     const existing = await Review.findOne({
-      where: { user_id: req.user.id, service_id, order_id }
+      where: { reviewer_id: req.user.id, service_id, order_id }
     });
 
     if (existing) {
       return res.status(400).json({ success: false, error: 'Already reviewed' });
     }
 
+    // Get admin_id and type from service
+    const service = await Service.findByPk(service_id);
+
     const newReview = await Review.create({
-      user_id: req.user.id,
+      reviewer_id: req.user.id,
+      admin_id: service ? service.admin_id : null,
+      type: service ? service.type : null,
       service_id,
       order_id,
       rating,
-      review,
-      status: 1
+      message: reviewMessage,
+      status: 'published'
     });
 
     res.status(201).json({ success: true, data: newReview, message: 'Review submitted' });
@@ -116,17 +122,17 @@ router.post('/', authenticate, isClient, async (req, res) => {
 // Update review
 router.put('/:id', authenticate, isClient, async (req, res) => {
   try {
-    const { rating, review } = req.body;
+    const { rating, review, message: msg } = req.body;
 
     const existingReview = await Review.findOne({
-      where: { id: req.params.id, user_id: req.user.id }
+      where: { id: req.params.id, reviewer_id: req.user.id }
     });
 
     if (!existingReview) {
       return res.status(404).json({ success: false, error: 'Review not found' });
     }
 
-    await existingReview.update({ rating, review });
+    await existingReview.update({ rating, message: msg || review });
 
     res.json({ success: true, data: existingReview, message: 'Review updated' });
   } catch (error) {
@@ -138,7 +144,7 @@ router.put('/:id', authenticate, isClient, async (req, res) => {
 router.delete('/:id', authenticate, isClient, async (req, res) => {
   try {
     const deleted = await Review.destroy({
-      where: { id: req.params.id, user_id: req.user.id }
+      where: { id: req.params.id, reviewer_id: req.user.id }
     });
 
     if (!deleted) {
@@ -164,7 +170,7 @@ router.get('/admin/all', authenticate, isAdmin, async (req, res) => {
     const { rows, count } = await Review.findAndCountAll({
       where,
       include: [
-        { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'email'] },
+        { model: User, as: 'reviewer', attributes: ['id', 'first_name', 'last_name', 'email'] },
         { model: Service, as: 'service', attributes: ['id', 'title'] }
       ],
       ...pagination,

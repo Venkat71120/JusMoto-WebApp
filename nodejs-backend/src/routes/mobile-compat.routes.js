@@ -739,4 +739,162 @@ router.get('/client/location/all', authenticate, isClient, async (req, res) => {
   }
 });
 
+// ═══════════════════════════════════════════════════════════════════
+// REVIEW ROUTES (Laravel-compatible for mobile app)
+// ═══════════════════════════════════════════════════════════════════
+
+// ─── GET /client/reviews/all (Laravel-compatible) ────────────────
+router.get('/client/reviews/all', authenticate, isClient, async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const pagination = paginate(page, limit);
+
+    const { rows, count } = await Review.findAndCountAll({
+      where: { reviewer_id: req.user.id },
+      include: [
+        { model: User, as: 'reviewer', attributes: ['id', 'first_name', 'last_name', 'email', 'image'] },
+        { model: Service, as: 'service', attributes: ['id', 'title', 'image', 'type'] },
+        { model: require('../models').Order, as: 'order', attributes: ['id', 'invoice_number', 'status'] }
+      ],
+      ...pagination,
+      order: [['created_at', 'DESC']]
+    });
+
+    if (count === 0) {
+      return res.json({ message: 'No reviews found', data: [], current_page: 1, total: 0, last_page: 1 });
+    }
+
+    // Format response like Laravel ReviewResource
+    const data = rows.map(r => {
+      const plain = r.toJSON();
+      return {
+        id: plain.id,
+        admin_id: plain.admin_id,
+        order_id: plain.order_id,
+        reviewer_id: plain.reviewer_id,
+        service_id: plain.service_id,
+        service_title: plain.service?.title || null,
+        type: plain.type,
+        rating: plain.rating,
+        message: plain.message,
+        status: plain.status,
+        created_at: plain.created_at,
+        reviewer: plain.reviewer || null
+      };
+    });
+
+    res.json({
+      data,
+      ...paginationResponse(data, count, pagination.page, pagination.limit)
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch reviews', error: error.message });
+  }
+});
+
+// ─── POST /service/review (Laravel-compatible) ──────────────────
+// Get reviews for a service (public, filtered by service_id/rating)
+router.post('/service/review', async (req, res) => {
+  try {
+    const { service_id, rating, page = 1, limit = 10 } = req.body;
+
+    if (!service_id && !rating) {
+      return res.status(422).json({ message: 'At least service_id or rating is required' });
+    }
+
+    const where = { status: 'published' };
+    if (service_id) where.service_id = service_id;
+    if (rating) where.rating = rating;
+
+    const pagination = paginate(page, limit);
+
+    const { rows, count } = await Review.findAndCountAll({
+      where,
+      include: [
+        { model: User, as: 'reviewer', attributes: ['id', 'first_name', 'last_name', 'email', 'image'] },
+        { model: Service, as: 'service', attributes: ['id', 'title', 'image'] }
+      ],
+      ...pagination,
+      order: [['created_at', 'DESC']]
+    });
+
+    const data = rows.map(r => {
+      const plain = r.toJSON();
+      return {
+        id: plain.id,
+        admin_id: plain.admin_id,
+        order_id: plain.order_id,
+        reviewer_id: plain.reviewer_id,
+        service_id: plain.service_id,
+        service_title: plain.service?.title || null,
+        type: plain.type,
+        rating: plain.rating,
+        message: plain.message,
+        status: plain.status,
+        created_at: plain.created_at,
+        reviewer: plain.reviewer || null
+      };
+    });
+
+    res.json({
+      data,
+      ...paginationResponse(data, count, pagination.page, pagination.limit)
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch reviews', error: error.message });
+  }
+});
+
+// ─── POST /user/review-add (Laravel-compatible) ─────────────────
+router.post('/user/review-add', authenticate, isClient, async (req, res) => {
+  try {
+    const { service_id, order_id, rating, message: msg } = req.body;
+
+    // Validation
+    const errors = {};
+    if (!rating || rating < 1 || rating > 5) errors.rating = ['Rating must be between 1 and 5'];
+    if (!service_id) errors.service_id = ['Service ID is required'];
+    if (!order_id) errors.order_id = ['Order ID is required'];
+    if (Object.keys(errors).length > 0) {
+      return res.status(422).json({ message: 'Validation failed', errors });
+    }
+
+    // Check service exists
+    const service = await Service.findByPk(service_id);
+    if (!service) {
+      return res.status(422).json({ message: 'Service not found', errors: { service_id: ['Service does not exist'] } });
+    }
+
+    // Check order exists and belongs to user
+    const { Order } = require('../models');
+    const order = await Order.findOne({ where: { id: order_id, user_id: req.user.id } });
+    if (!order) {
+      return res.status(422).json({ message: 'Order not found', errors: { order_id: ['Order does not exist'] } });
+    }
+
+    // Check duplicate review
+    const existing = await Review.findOne({
+      where: { reviewer_id: req.user.id, service_id, order_id }
+    });
+    if (existing) {
+      return res.status(400).json({ message: 'You have already reviewed this service for this order' });
+    }
+
+    const newReview = await Review.create({
+      reviewer_id: req.user.id,
+      admin_id: service.admin_id || null,
+      type: service.type || null,
+      service_id,
+      order_id,
+      rating,
+      message: msg || null,
+      status: 'published'
+    });
+
+    res.status(201).json({ message: 'Review added successfully', status: 'add_success', data: newReview });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to add review', error: error.message });
+  }
+});
+
 module.exports = router;

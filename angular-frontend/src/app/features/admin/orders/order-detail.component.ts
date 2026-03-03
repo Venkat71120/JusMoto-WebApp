@@ -111,6 +111,38 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         <h3>Order Note</h3>
         <p class="note-text">{{ order().order_note }}</p>
       </div>
+
+      <!-- Refund Section -->
+      <div class="refund-card" *ngIf="order().refund">
+        <div class="refund-header">
+          <div class="refund-title-row">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h10a8 8 0 018 8v2M3 10l6 6M3 10l6-6"/></svg>
+            <h3>Refund Request</h3>
+            <span class="refund-status-badge" [ngClass]="'refund-' + refundStatusLabel(order().refund.status)">{{ refundStatusLabel(order().refund.status) }}</span>
+          </div>
+          <span class="refund-date">{{ order().refund.created_at | date:'medium' }}</span>
+        </div>
+        <div class="refund-body">
+          <div class="detail-row" *ngIf="order().refund.cancel_reason">
+            <span class="label">Reason</span>
+            <span>{{ order().refund.cancel_reason }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Order Total</span>
+            <span class="fw-600">&#8377;{{ order().total | number:'1.2-2' }}</span>
+          </div>
+        </div>
+        <div class="refund-actions" *ngIf="order().refund.status === 0">
+          <button class="btn-refund-approve" (click)="updateRefundStatus(1)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve Refund
+          </button>
+          <button class="btn-refund-reject" (click)="updateRefundStatus(2)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Reject Refund
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Status Change Modal -->
@@ -286,6 +318,22 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .loading-small { display: flex; align-items: center; gap: 8px; padding: 12px; color: #64748b; font-size: 14px; }
     .spinner-sm { width: 20px; height: 20px; border: 2px solid #f3f4f6; border-top-color: #e31b23; border-radius: 50%; animation: spin 0.8s linear infinite; }
 
+    .refund-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; border-left: 4px solid #f59e0b; }
+    .refund-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; }
+    .refund-title-row { display: flex; align-items: center; gap: 10px; }
+    .refund-title-row h3 { font-size: 16px; font-weight: 700; color: #1a1a2e; margin: 0; }
+    .refund-date { color: #94a3b8; font-size: 13px; }
+    .refund-status-badge { padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .refund-pending { background: #fef3c7; color: #d97706; }
+    .refund-approved { background: #dcfce7; color: #16a34a; }
+    .refund-rejected { background: #fee2e2; color: #dc2626; }
+    .refund-body { margin-bottom: 16px; }
+    .refund-actions { display: flex; gap: 12px; padding-top: 16px; border-top: 1px solid #f1f5f9; }
+    .btn-refund-approve { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border: none; border-radius: 8px; background: #16a34a; color: #fff; font-weight: 600; cursor: pointer; font-size: 14px; transition: background 0.2s; }
+    .btn-refund-approve:hover { background: #15803d; }
+    .btn-refund-reject { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border: none; border-radius: 8px; background: #dc2626; color: #fff; font-weight: 600; cursor: pointer; font-size: 14px; transition: background 0.2s; }
+    .btn-refund-reject:hover { background: #b91c1c; }
+
     @media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } .order-controls { flex-direction: column; align-items: stretch; } }
   `]
 })
@@ -422,14 +470,41 @@ export class OrderDetailComponent implements OnInit {
     return hasProduct ? 'product' : 'service';
   }
 
+  refundStatusLabel(status: number): string {
+    const map: Record<number, string> = { 0: 'pending', 1: 'approved', 2: 'rejected' };
+    return map[status] || 'pending';
+  }
+
+  updateRefundStatus(status: number) {
+    const o = this.order();
+    if (!o?.refund) return;
+    const label = status === 1 ? 'approve' : 'reject';
+    if (!confirm(`Are you sure you want to ${label} this refund request?`)) return;
+    this.http.put<any>(`${environment.apiUrl}/admin/refunded-orders/${o.refund.id}/status`, { status }).subscribe({
+      next: () => {
+        this.order.set({ ...o, refund: { ...o.refund, status } });
+        this.toast.success(`Refund ${label === 'approve' ? 'approved' : 'rejected'} successfully`);
+      },
+      error: () => this.toast.error(`Failed to ${label} refund`)
+    });
+  }
+
   downloadInvoice() {
     const o = this.order();
     if (!o) return;
     this.http.get(`${environment.apiUrl}/admin/orders/${o.id}/invoice`, { responseType: 'text' }).subscribe({
       next: (html) => {
-        const blob = new Blob([html], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) { this.toast.error('Pop-up blocked. Please allow pop-ups.'); return; }
+        const printHtml = html.replace('</body>', `
+          <script>
+            window.onload = function() {
+              setTimeout(function() { window.print(); }, 300);
+              window.onafterprint = function() { window.close(); };
+            };
+          </script></body>`);
+        printWindow.document.write(printHtml);
+        printWindow.document.close();
       },
       error: () => this.toast.error('Failed to generate invoice')
     });

@@ -279,7 +279,8 @@ router.get('/orders/:id', authenticate, isAdmin, async (req, res) => {
       include: [
         { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'phone', 'image'] },
         { association: 'items', include: [{ association: 'service', attributes: ['id', 'title', 'image', 'price', 'type'] }] },
-        { association: 'location' }
+        { association: 'location' },
+        { association: 'refund' }
       ]
     });
     if (!order) return res.status(404).json({ success: false, error: 'Order not found' });

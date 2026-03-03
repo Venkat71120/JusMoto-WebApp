@@ -34,6 +34,7 @@ const reviewRoutes = require('./routes/review.routes');
 const offerRoutes = require('./routes/offer.routes');
 const generalRoutes = require('./routes/api/v1/general.routes');
 const externalRoutes = require('./routes/external.routes');
+const refundRoutes = require('./routes/refund.routes');
 const mobileCompatRoutes = require('./routes/mobile-compat.routes');
 
 const app = express();
@@ -119,6 +120,7 @@ app.use(`${apiV1}/upload`, uploadRoutes);
 app.use(`${apiV1}/locations`, locationRoutes);
 app.use(`${apiV1}/reviews`, reviewRoutes);
 app.use(`${apiV1}/offers`, offerRoutes);
+app.use(`${apiV1}/refunds`, refundRoutes);
 app.use(`${apiV1}/external`, externalRoutes);
 app.use(`${apiV1}/general`, generalRoutes);
 app.use(apiV1, mobileCompatRoutes); // Laravel-compatible routes for mobile app

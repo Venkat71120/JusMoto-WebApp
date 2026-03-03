@@ -429,10 +429,15 @@ router.post('/client/service/order-cancel', authenticate, isClient, async (req, 
 // ─── POST /client/service/order-payment-status-update (Laravel-compatible) ──
 router.post('/client/service/order-payment-status-update', authenticate, isClient, async (req, res) => {
   try {
-    const { order_id, payment_status, transaction_id, payment_gateway } = req.body;
+    const { order_id, id, payment_status, transaction_id, payment_gateway } = req.body;
+    const orderId = order_id || id;
+
+    if (!orderId) {
+      return res.status(422).json({ message: 'order_id is required' });
+    }
 
     const order = await Order.findOne({
-      where: { id: order_id, user_id: req.user.id }
+      where: { id: orderId, user_id: req.user.id }
     });
 
     if (!order) {

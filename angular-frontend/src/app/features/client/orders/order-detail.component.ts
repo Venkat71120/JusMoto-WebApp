@@ -4,13 +4,12 @@ import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { OrderService } from '../../../core/services/order.service';
 import { ToastService } from '../../../core/services/toast.service';
-import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-client-order-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ConfirmModalComponent],
+  imports: [CommonModule, RouterModule, FormsModule],
   template: `
     <div class="order-detail-container">
       <div class="back-link">
@@ -150,7 +149,7 @@ import { environment } from '../../../../environments/environment';
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download Invoice
               </button>
-              <button *ngIf="order().status == 0" class="btn-danger full-width" (click)="cancelOrder()">
+              <button *ngIf="order().status < 2" class="btn-danger full-width" (click)="cancelOrder()">
                 Cancel Order
               </button>
               <button *ngIf="canRequestRefund()" class="btn-refund full-width" (click)="refundModalOpen.set(true)">
@@ -172,15 +171,25 @@ import { environment } from '../../../../environments/environment';
         <a routerLink="/client/orders" class="btn-primary">Back to Orders</a>
       </div>
 
-      <app-confirm-modal
-        [open]="cancelModalOpen()"
-        title="Cancel Order"
-        message="Are you sure you want to cancel this order? This action cannot be undone."
-        confirmText="Yes, Cancel"
-        type="danger"
-        (confirmed)="doCancel()"
-        (cancelled)="cancelModalOpen.set(false)">
-      </app-confirm-modal>
+      <!-- Cancel Order Modal -->
+      <div class="modal-overlay" *ngIf="cancelModalOpen()" (click)="cancelModalOpen.set(false)">
+        <div class="refund-modal" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>Cancel Order</h3>
+            <button class="modal-close" (click)="cancelModalOpen.set(false)">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p>Please provide a reason for cancelling this order. This action cannot be undone.</p>
+            <textarea class="refund-textarea cancel-textarea" [(ngModel)]="cancelReason" placeholder="Why are you cancelling this order?" rows="4"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-cancel-modal" (click)="cancelModalOpen.set(false)">Go Back</button>
+            <button class="btn-submit-cancel" [disabled]="!cancelReason.trim() || cancellingOrder()" (click)="doCancel()">
+              {{ cancellingOrder() ? 'Cancelling...' : 'Yes, Cancel Order' }}
+            </button>
+          </div>
+        </div>
+      </div>
 
       <!-- Refund Modal -->
       <div class="modal-overlay" *ngIf="refundModalOpen()" (click)="refundModalOpen.set(false)">
@@ -289,6 +298,11 @@ import { environment } from '../../../../environments/environment';
     .btn-submit-refund { padding:10px 20px; border:none; border-radius:8px; background:#7c3aed; color:#fff; font-weight:600; cursor:pointer; font-size:14px; }
     .btn-submit-refund:hover { background:#6d28d9; }
     .btn-submit-refund:disabled { opacity:0.5; cursor:not-allowed; }
+
+    .btn-submit-cancel { padding:10px 20px; border:none; border-radius:8px; background:#dc3545; color:#fff; font-weight:600; cursor:pointer; font-size:14px; }
+    .btn-submit-cancel:hover { background:#b02a37; }
+    .btn-submit-cancel:disabled { opacity:0.5; cursor:not-allowed; }
+    .cancel-textarea:focus { outline:none; border-color:#dc3545; }
   `]
 })
 export class ClientOrderDetailComponent implements OnInit {
@@ -297,7 +311,9 @@ export class ClientOrderDetailComponent implements OnInit {
   cancelModalOpen = signal(false);
   refundModalOpen = signal(false);
   submittingRefund = signal(false);
+  cancellingOrder = signal(false);
   refundReason = '';
+  cancelReason = '';
   private baseUrl = environment.apiUrl.replace('/api/v1', '');
 
   constructor(
@@ -376,14 +392,23 @@ export class ClientOrderDetailComponent implements OnInit {
   }
 
   doCancel(): void {
-    this.cancelModalOpen.set(false);
-    this.orderService.cancelOrder(this.order().id).subscribe({
-      next: () => {
-        this.toast.success('Order cancelled successfully');
+    if (!this.cancelReason.trim()) return;
+    this.cancellingOrder.set(true);
+    this.orderService.cancelOrder(this.order().id, this.cancelReason).subscribe({
+      next: (res) => {
+        if (res.data?.refund) {
+          this.toast.success('Order cancelled. Refund request has been automatically created.');
+        } else {
+          this.toast.success('Order cancelled successfully');
+        }
+        this.cancelModalOpen.set(false);
+        this.cancelReason = '';
+        this.cancellingOrder.set(false);
         this.loadOrder(this.order().id);
       },
-      error: () => {
-        this.toast.error('Failed to cancel order. Please try again.');
+      error: (err) => {
+        this.toast.error(err.error?.error || 'Failed to cancel order. Please try again.');
+        this.cancellingOrder.set(false);
       }
     });
   }

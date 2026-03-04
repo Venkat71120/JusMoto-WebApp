@@ -131,29 +131,31 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .spinner { width: 36px; height: 36px; border: 3px solid #f3f4f6; border-top-color: #e31b23; border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .data-table { width: 100%; border-collapse: collapse; }
-    .data-table th { background: #f8f9fa; padding: 12px 16px; text-align: left; font-weight: 600; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
-    .data-table td { padding: 12px 16px; border-top: 1px solid #f1f5f9; font-size: 14px; color: #334155; }
+    .data-table th { background: #f8f9fa; padding: 14px 16px; text-align: left; font-weight: 600; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; border-bottom: 2px solid #e5e7eb; }
+    .data-table td { padding: 14px 16px; border-top: 1px solid #f1f5f9; font-size: 14px; color: #334155; vertical-align: middle; }
+    .data-table tbody tr { transition: background 0.15s; }
     .data-table tbody tr:hover { background: #fff5f5; }
     .invoice-cell { font-weight: 600; color: #1a1a2e; }
     .customer-cell { display: flex; flex-direction: column; }
     .customer-cell small { color: #94a3b8; font-size: 12px; }
     .amount-cell { font-weight: 600; color: #1a1a2e; }
     .text-muted { color: #94a3b8; }
-    .badge { display: inline-flex; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; border: none; }
-    .badge-clickable { cursor: pointer; transition: opacity 0.2s; }
-    .badge-clickable:hover { opacity: 0.8; }
-    .badge-active { background: #dcfce7; color: #16a34a; }
-    .badge-warning { background: #fef3c7; color: #d97706; }
+    .badge { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: none; gap: 4px; }
+    .badge-clickable { cursor: pointer; transition: all 0.2s; }
+    .badge-clickable:hover { transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+    .badge-active { background: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
+    .badge-warning { background: #fef3c7; color: #d97706; border: 1px solid #fcd34d; }
     .badge-service { background: #dbeafe; color: #2563eb; }
     .badge-product { background: #f3e8ff; color: #7c3aed; }
-    .status-select { padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; background: #fff; }
-    .status-select.status-0 { color: #d97706; }
-    .status-select.status-1 { color: #2563eb; }
-    .status-select.status-2 { color: #7c3aed; }
-    .status-select.status-3 { color: #16a34a; }
-    .status-select.status-4 { color: #dc2626; }
-    .btn-action { padding: 6px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fff; cursor: pointer; color: #64748b; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
-    .btn-view:hover { color: #3b82f6; border-color: #3b82f6; }
+    .status-select { padding: 6px 12px; border: 1px solid #e5e7eb; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; background: #fff; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; padding-right: 28px; transition: all 0.2s; }
+    .status-select:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .status-select.status-0 { color: #92400e; background: #fef3c7; border-color: #fcd34d; }
+    .status-select.status-1 { color: #1e40af; background: #dbeafe; border-color: #93c5fd; }
+    .status-select.status-2 { color: #5b21b6; background: #ede9fe; border-color: #c4b5fd; }
+    .status-select.status-3 { color: #065f46; background: #d1fae5; border-color: #6ee7b7; }
+    .status-select.status-4 { color: #991b1b; background: #fee2e2; border-color: #fca5a5; }
+    .btn-action { padding: 8px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; cursor: pointer; color: #64748b; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+    .btn-view:hover { color: #e31b23; border-color: #e31b23; background: #fff5f5; }
     .empty-state { text-align: center; padding: 40px !important; color: #94a3b8; }
     .pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 20px; }
     .page-btn { padding: 8px 16px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; cursor: pointer; font-weight: 500; color: #334155; transition: all 0.2s; }

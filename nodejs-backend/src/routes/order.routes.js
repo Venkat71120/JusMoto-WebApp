@@ -268,7 +268,26 @@ router.post('/:id/cancel', authenticate, isClient, async (req, res) => {
       order_note: reason ? `Cancelled by user: ${reason}` : 'Cancelled by user'
     });
 
-    res.json({ success: true, message: 'Order cancelled successfully' });
+    // Auto-create refund if the order was already paid
+    let refund = null;
+    if (order.payment_status === 1) {
+      const existingRefund = await RefundedOrder.findOne({ where: { order_id: order.id } });
+      if (!existingRefund) {
+        refund = await RefundedOrder.create({
+          order_id: order.id,
+          user_id: req.user.id,
+          amount: parseFloat(order.total),
+          cancel_reason: reason || 'Order cancelled',
+          status: 0
+        });
+      }
+    }
+
+    res.json({
+      success: true,
+      message: refund ? 'Order cancelled and refund request created' : 'Order cancelled successfully',
+      data: { refund }
+    });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

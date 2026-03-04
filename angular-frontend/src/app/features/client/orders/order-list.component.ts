@@ -118,7 +118,7 @@ import { environment } from '../../../../environments/environment';
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                     View
                   </a>
-                  <button *ngIf="order.status === 0" class="btn-cancel-order" (click)="cancelOrder(order.id)" title="Cancel Order">
+                  <button *ngIf="order.status < 2" class="btn-cancel-order" (click)="openCancelModal(order.id)" title="Cancel Order">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                   </button>
                 </td>
@@ -157,6 +157,9 @@ import { environment } from '../../../../environments/environment';
             <div class="service-img-wrap">
               <img *ngIf="svc.image" [src]="getServiceImageUrl(svc.image)" [alt]="svc.title" (error)="onImgError($event)">
               <svg *ngIf="!svc.image" class="img-fallback" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+              <button class="heart-btn" [class.active]="isFav(svc.id)" (click)="toggleFavourite(svc)" title="Add to favourites">
+                <svg width="18" height="18" viewBox="0 0 24 24" [attr.fill]="isFav(svc.id) ? '#e31b23' : 'none'" stroke="#e31b23" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
             </div>
             <div class="service-card-body">
               <h3 class="service-title">{{ svc.title }}</h3>
@@ -206,6 +209,9 @@ import { environment } from '../../../../environments/environment';
             <div class="service-img-wrap">
               <img *ngIf="prod.image" [src]="getServiceImageUrl(prod.image)" [alt]="prod.title" (error)="onImgError($event)">
               <svg *ngIf="!prod.image" class="img-fallback" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+              <button class="heart-btn" [class.active]="isFav(prod.id)" (click)="toggleFavourite(prod)" title="Add to favourites">
+                <svg width="18" height="18" viewBox="0 0 24 24" [attr.fill]="isFav(prod.id) ? '#e31b23' : 'none'" stroke="#e31b23" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </button>
             </div>
             <div class="service-card-body">
               <h3 class="service-title">{{ prod.title }}</h3>
@@ -228,6 +234,28 @@ import { environment } from '../../../../environments/environment';
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cancel Order Modal -->
+      <div class="cancel-overlay" *ngIf="cancelModalOpen()" (click)="closeCancelModal()">
+        <div class="cancel-modal" (click)="$event.stopPropagation()">
+          <div class="cancel-modal-header">
+            <h3>Cancel Order</h3>
+            <button class="cancel-close-btn" (click)="closeCancelModal()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="cancel-modal-body">
+            <p class="cancel-note">Please provide a reason for cancelling this order. If payment was already made, a refund will be initiated automatically.</p>
+            <textarea class="cancel-textarea" [(ngModel)]="cancelReason" placeholder="Enter reason for cancellation..." rows="4"></textarea>
+          </div>
+          <div class="cancel-modal-footer">
+            <button class="btn-cancel-dismiss" (click)="closeCancelModal()">Go Back</button>
+            <button class="btn-cancel-submit" (click)="doCancelOrder()" [disabled]="cancellingOrder() || !cancelReason.trim()">
+              {{ cancellingOrder() ? 'Cancelling...' : 'Cancel Order' }}
+            </button>
           </div>
         </div>
       </div>
@@ -324,6 +352,9 @@ import { environment } from '../../../../environments/environment';
     .service-img-wrap { background:#f8f9fa; padding:16px; display:flex; align-items:center; justify-content:center; min-height:160px; position:relative; }
     .service-img-wrap img { max-width:100%; max-height:140px; object-fit:contain; border-radius:8px; }
     .service-img-wrap .img-fallback { color:#cbd5e1; }
+    .heart-btn { position:absolute; top:10px; right:10px; width:34px; height:34px; background:#fff; border:none; border-radius:50%; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.15); display:flex; align-items:center; justify-content:center; transition:all 0.2s; z-index:10; }
+    .heart-btn:hover { transform:scale(1.15); }
+    .heart-btn.active { background:#fff5f5; }
     .service-card-body { padding:16px 20px; }
     .service-title { font-size:16px; font-weight:700; color:#1a1a2e; margin:0 0 6px; }
     .service-desc { font-size:13px; color:#64748b; margin:0 0 12px; line-height:1.4; }
@@ -341,6 +372,25 @@ import { environment } from '../../../../environments/environment';
     .cart-qty-control .qty-btn:hover:not(:disabled) { background:#fee2e2; }
     .cart-qty-control .qty-btn:disabled { opacity:0.4; cursor:not-allowed; }
     .cart-qty-control .qty-val { width:36px; text-align:center; font-weight:700; font-size:14px; color:#e31b23; background:#fff5f5; line-height:32px; }
+
+    /* Cancel Modal */
+    .cancel-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; display:flex; align-items:center; justify-content:center; padding:16px; }
+    .cancel-modal { background:#fff; border-radius:16px; width:100%; max-width:480px; box-shadow:0 20px 60px rgba(0,0,0,0.2); animation:slideUp 0.25s ease-out; }
+    @keyframes slideUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+    .cancel-modal-header { display:flex; justify-content:space-between; align-items:center; padding:20px 24px 0; }
+    .cancel-modal-header h3 { margin:0; font-size:20px; font-weight:700; color:#1a1a1a; }
+    .cancel-close-btn { background:none; border:none; cursor:pointer; color:#94a3b8; padding:4px; border-radius:6px; transition:all 0.2s; }
+    .cancel-close-btn:hover { color:#1a1a1a; background:#f1f5f9; }
+    .cancel-modal-body { padding:16px 24px; }
+    .cancel-note { font-size:14px; color:#64748b; line-height:1.5; margin:0 0 16px; }
+    .cancel-textarea { width:100%; padding:12px 14px; border:1px solid #e5e7eb; border-radius:10px; font-size:14px; font-family:inherit; resize:vertical; min-height:100px; transition:border-color 0.2s; box-sizing:border-box; }
+    .cancel-textarea:focus { outline:none; border-color:#e31b23; box-shadow:0 0 0 3px rgba(227,27,35,0.1); }
+    .cancel-modal-footer { display:flex; justify-content:flex-end; gap:12px; padding:0 24px 20px; }
+    .btn-cancel-dismiss { padding:10px 20px; background:#f1f5f9; color:#475569; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .btn-cancel-dismiss:hover { background:#e2e8f0; }
+    .btn-cancel-submit { padding:10px 24px; background:#dc2626; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .btn-cancel-submit:hover:not(:disabled) { background:#b91c1c; }
+    .btn-cancel-submit:disabled { opacity:0.5; cursor:not-allowed; }
 
     @media (max-width:768px) {
       .main-tabs { flex-direction:column; }
@@ -368,6 +418,11 @@ export class ClientOrderListComponent implements OnInit {
   updatingCartItem = signal<number | null>(null);
   cartCount = signal(0);
   cartItems = signal<CartItem[]>([]);
+  favouriteMap = signal<Map<number, number>>(new Map());
+  cancelModalOpen = signal(false);
+  cancellingOrder = signal(false);
+  cancelOrderId = signal<number | null>(null);
+  cancelReason = '';
   serviceSearch = '';
   productSearch = '';
 
@@ -393,6 +448,7 @@ export class ClientOrderListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadOrders();
+    this.loadFavourites();
     this.cartService.cart$.subscribe(cart => {
       this.cartCount.set(cart.item_count || 0);
       this.cartItems.set(cart.items || []);
@@ -544,17 +600,74 @@ export class ClientOrderListComponent implements OnInit {
     this.loadOrders();
   }
 
-  cancelOrder(orderId: number): void {
-    if (confirm('Are you sure you want to cancel this order?')) {
-      this.orderService.cancelOrder(orderId).subscribe({
+  // --- Favourites ---
+  loadFavourites(): void {
+    this.serviceService.getFavourites().subscribe({
+      next: (response) => {
+        const map = new Map<number, number>();
+        const items = response.data || response.favourites || [];
+        items.forEach((item: any) => {
+          map.set(item.service_id || item.service?.id, item.id);
+        });
+        this.favouriteMap.set(map);
+      },
+      error: () => {}
+    });
+  }
+
+  isFav(serviceId: number): boolean {
+    return this.favouriteMap().has(serviceId);
+  }
+
+  toggleFavourite(item: any): void {
+    const favId = this.favouriteMap().get(item.id);
+    if (favId) {
+      this.serviceService.removeFromFavourites(favId).subscribe({
         next: () => {
-          this.toast.success('Order cancelled successfully');
-          this.loadOrders();
+          this.favouriteMap.update(map => { const m = new Map(map); m.delete(item.id); return m; });
+          this.toast.success('Removed from favourites');
         },
-        error: () => {
-          this.toast.error('Failed to cancel order. Please try again.');
-        }
+        error: () => this.toast.error('Failed to remove from favourites')
+      });
+    } else {
+      this.serviceService.addToFavourites(item.id).subscribe({
+        next: (res) => {
+          this.favouriteMap.update(map => { const m = new Map(map); m.set(item.id, res.data?.id || 0); return m; });
+          this.toast.success('Added to favourites');
+        },
+        error: (err) => this.toast.error(err.error?.error || 'Failed to add to favourites')
       });
     }
+  }
+
+  openCancelModal(orderId: number): void {
+    this.cancelOrderId.set(orderId);
+    this.cancelReason = '';
+    this.cancelModalOpen.set(true);
+  }
+
+  closeCancelModal(): void {
+    this.cancelModalOpen.set(false);
+    this.cancelOrderId.set(null);
+    this.cancelReason = '';
+  }
+
+  doCancelOrder(): void {
+    const orderId = this.cancelOrderId();
+    if (!orderId || !this.cancelReason.trim()) return;
+    this.cancellingOrder.set(true);
+    this.orderService.cancelOrder(orderId, this.cancelReason.trim()).subscribe({
+      next: (res: any) => {
+        const msg = res?.refund ? 'Order cancelled. Refund has been initiated.' : 'Order cancelled successfully.';
+        this.toast.success(msg);
+        this.closeCancelModal();
+        this.cancellingOrder.set(false);
+        this.loadOrders();
+      },
+      error: () => {
+        this.toast.error('Failed to cancel order. Please try again.');
+        this.cancellingOrder.set(false);
+      }
+    });
   }
 }

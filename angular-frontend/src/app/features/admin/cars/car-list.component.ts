@@ -35,10 +35,10 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           <tr>
             <th>#</th>
             <th>Image</th>
-            <th>Brand</th>
-            <th>Car Name</th>
-            <th>Year</th>
-            <th>Status</th>
+            <th class="sortable" (click)="toggleSort('brand')">Brand <span class="sort-icon">{{ sortField === 'brand' ? (sortDir === 'ASC' ? '&#9650;' : '&#9660;') : '&#8693;' }}</span></th>
+            <th class="sortable" (click)="toggleSort('name')">Car Name <span class="sort-icon">{{ sortField === 'name' ? (sortDir === 'ASC' ? '&#9650;' : '&#9660;') : '&#8693;' }}</span></th>
+            <th class="sortable" (click)="toggleSort('Year')">Year <span class="sort-icon">{{ sortField === 'Year' ? (sortDir === 'ASC' ? '&#9650;' : '&#9660;') : '&#8693;' }}</span></th>
+            <th class="sortable" (click)="toggleSort('status')">Status <span class="sort-icon">{{ sortField === 'status' ? (sortDir === 'ASC' ? '&#9650;' : '&#9660;') : '&#8693;' }}</span></th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -146,7 +146,11 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .spinner { width: 36px; height: 36px; border: 3px solid #f3f4f6; border-top-color: #e31b23; border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .data-table { width: 100%; border-collapse: collapse; }
-    .data-table th { background: #f8f9fa; padding: 12px 16px; text-align: left; font-weight: 600; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .data-table th { background: #f8f9fa; padding: 12px 16px; text-align: left; font-weight: 600; color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+    .sortable { cursor: pointer; user-select: none; }
+    .sortable:hover { color: #e31b23; }
+    .sort-icon { font-size: 10px; margin-left: 4px; color: #94a3b8; }
+    .sortable:hover .sort-icon { color: #e31b23; }
     .data-table td { padding: 12px 16px; border-top: 1px solid #f1f5f9; font-size: 14px; color: #334155; }
     .data-table tbody tr:hover { background: #fff5f5; }
     .thumb { width: 48px; height: 36px; border-radius: 8px; object-fit: contain; background: #f8f9fa; padding: 2px; }
@@ -191,6 +195,8 @@ export class CarListComponent implements OnInit {
   loading = signal(false);
   search = '';
   brandFilter = '';
+  sortField = '';
+  sortDir: 'ASC' | 'DESC' = 'DESC';
   pagination = signal<any>({ page: 1, limit: 15, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false });
   viewCar = signal<any>(null);
   statusCar = signal<any>(null);
@@ -221,11 +227,22 @@ export class CarListComponent implements OnInit {
     const params: any = { page, limit: 15 };
     if (this.search) params.search = this.search;
     if (this.brandFilter) params.brand_id = this.brandFilter;
+    if (this.sortField) { params.sort = this.sortField; params.order = this.sortDir; }
     this.http.get<any>(`${environment.apiUrl}/admin/cars`, { params }).subscribe({
       next: (res) => { this.cars.set(res.data || []); this.pagination.set(res.pagination || {}); },
       error: () => this.toast.error('Failed to load cars'),
       complete: () => this.loading.set(false)
     });
+  }
+
+  toggleSort(field: string) {
+    if (this.sortField === field) {
+      this.sortDir = this.sortDir === 'ASC' ? 'DESC' : 'ASC';
+    } else {
+      this.sortField = field;
+      this.sortDir = 'ASC';
+    }
+    this.loadCars();
   }
 
   onSearch() {

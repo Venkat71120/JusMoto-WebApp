@@ -813,14 +813,20 @@ router.delete('/brands/:id', authenticate, isAdmin, async (req, res) => {
 // ==================== Cars Management ====================
 router.get('/cars', authenticate, isAdmin, async (req, res) => {
   try {
-    const { brand_id, search, page = 1, limit = 15 } = req.query;
+    const { brand_id, search, page = 1, limit = 15, sort, order: sortOrder } = req.query;
     const pagination = paginate(page, limit);
     const where = {};
     if (brand_id) where.brand_id = brand_id;
     if (search) where.name = { [Op.like]: `%${search}%` };
+    const dir = sortOrder === 'ASC' ? 'ASC' : 'DESC';
+    let orderClause = [['created_at', 'DESC']];
+    if (sort === 'name') orderClause = [['name', dir]];
+    else if (sort === 'Year') orderClause = [['Year', dir]];
+    else if (sort === 'status') orderClause = [['status', dir]];
+    else if (sort === 'brand') orderClause = [[{ model: Brand, as: 'brand' }, 'name', dir]];
     const { rows, count } = await Car.findAndCountAll({
       where, include: [{ association: 'brand', attributes: ['id', 'name', 'image'] }],
-      ...pagination, order: [['created_at', 'DESC']]
+      ...pagination, order: orderClause
     });
 
     // Resolve numeric image IDs (legacy Laravel media) to actual S3 URLs

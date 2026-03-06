@@ -10,7 +10,7 @@ router.get('/', optionalAuth, async (req, res) => {
   try {
     const {
       category_id, sub_category_id, type, is_featured,
-      min_price, max_price, search, sort_by, sort_order,
+      min_price, max_price, search, title, sort_by, sort_order,
       page = 1, limit = 15
     } = req.query;
 
@@ -26,6 +26,10 @@ router.get('/', optionalAuth, async (req, res) => {
       where.price = {};
       if (min_price) where.price[Op.gte] = min_price;
       if (max_price) where.price[Op.lte] = max_price;
+    }
+
+    if (title) {
+      where.title = { [Op.like]: `%${title}%` };
     }
 
     if (search) {

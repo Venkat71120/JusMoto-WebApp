@@ -1,11 +1,13 @@
-import { Component, OnInit, signal, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { SocketService } from '../../../core/services/socket.service';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
@@ -45,7 +47,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             <div class="custom-select-wrap">
               <select class="custom-select" [(ngModel)]="pendingStatus">
                 <option value="open">Open</option>
-                <option value="close">Closed</option>
+                <option value="closed">Closed</option>
               </select>
               <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
             </div>
@@ -79,7 +81,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
       </div>
 
       <!-- Payment Button (visible only when ticket is closed) -->
-      <div class="payment-section" *ngIf="ticket().status === 'close' || ticket().status === 'closed'">
+      <div class="payment-section" *ngIf="ticket().status === 'closed'">
         <div class="payment-card">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           <div class="payment-info">
@@ -117,7 +119,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         </div>
 
         <!-- Reply Box with Attachment -->
-        <div class="reply-box" *ngIf="ticket().status !== 'close' && ticket().status !== 'closed'">
+        <div class="reply-box" *ngIf="ticket().status !== 'closed'">
           <div class="reply-input-area">
             <textarea [(ngModel)]="replyText" placeholder="Type your reply..." rows="3"></textarea>
             <div class="attachment-preview" *ngIf="attachmentFile">
@@ -136,7 +138,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           </div>
         </div>
 
-        <div class="closed-notice" *ngIf="ticket().status === 'close' || ticket().status === 'closed'">
+        <div class="closed-notice" *ngIf="ticket().status === 'closed'">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
           <span>This service request is closed. Reopen to reply.</span>
         </div>
@@ -147,7 +149,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     <app-confirm-modal
       [open]="statusConfirmOpen()"
       title="Confirm Status Change"
-      [message]="'Are you sure you want to change status to &quot;' + (pendingStatus === 'close' ? 'Closed' : 'Open') + '&quot;?'"
+      [message]="'Are you sure you want to change status to &quot;' + (pendingStatus === 'closed' ? 'Closed' : 'Open') + '&quot;?'"
       confirmText="Yes, Change"
       type="warning"
       [loading]="statusUpdating()"
@@ -239,7 +241,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .closed-notice { display:flex; align-items:center; justify-content:center; gap:8px; padding:16px; border-top:1px solid #e5e7eb; color:#64748b; font-size:14px; }
   `]
 })
-export class TicketDetailComponent implements OnInit {
+export class TicketDetailComponent implements OnInit, OnDestroy {
   @ViewChild('messagesArea') messagesArea!: ElementRef;
   @ViewChild('fileInput') fileInput!: ElementRef;
 
@@ -260,6 +262,7 @@ export class TicketDetailComponent implements OnInit {
   attachmentFile: File | null = null;
   private ticketId = '';
   private uploadsBase = environment.apiUrl.replace('/api/v1', '') + '/uploads/';
+  private socketSubs: Subscription[] = [];
 
   isSuperAdmin = false;
 
@@ -268,7 +271,8 @@ export class TicketDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private toast: ToastService,
-    private authService: AuthService
+    private authService: AuthService,
+    private socketService: SocketService
   ) {
     const admin = this.authService.currentAdmin;
     this.isSuperAdmin = admin ? !admin.is_franchise : false;
@@ -278,6 +282,38 @@ export class TicketDetailComponent implements OnInit {
     this.ticketId = this.route.snapshot.paramMap.get('id') || '';
     this.loadTicket();
     this.loadFranchiseAdmins();
+    this.setupSocket();
+  }
+
+  ngOnDestroy() {
+    this.socketService.leaveTicket(this.ticketId);
+    this.socketSubs.forEach(s => s.unsubscribe());
+  }
+
+  private setupSocket() {
+    this.socketService.joinTicket(this.ticketId);
+
+    this.socketSubs.push(
+      this.socketService.onNewMessage().subscribe(msg => {
+        // Avoid duplicate if this admin sent it
+        const existing = this.messages();
+        if (!existing.find((m: any) => m.id === msg.id)) {
+          this.messages.set([...existing, msg]);
+          setTimeout(() => this.scrollToBottom(), 50);
+        }
+      })
+    );
+
+    this.socketSubs.push(
+      this.socketService.onTicketStatusChanged().subscribe(data => {
+        const t = this.ticket();
+        if (t) {
+          this.ticket.set({ ...t, status: data.status });
+          this.selectedStatus = data.status;
+          this.pendingStatus = data.status;
+        }
+      })
+    );
   }
 
   loadTicket() {
@@ -319,7 +355,7 @@ export class TicketDetailComponent implements OnInit {
     this.http.put<any>(`${environment.apiUrl}/admin/tickets/${this.ticketId}/status`, { status: this.pendingStatus }).subscribe({
       next: () => {
         this.selectedStatus = this.pendingStatus;
-        this.toast.success('Status updated to ' + (this.pendingStatus === 'close' ? 'Closed' : 'Open'));
+        this.toast.success('Status updated to ' + (this.pendingStatus === 'closed' ? 'Closed' : 'Open'));
         this.statusConfirmOpen.set(false);
         this.statusUpdating.set(false);
         this.loadTicket();

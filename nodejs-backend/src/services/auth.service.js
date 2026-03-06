@@ -110,7 +110,11 @@ class AuthService {
    * Login user
    */
   async loginUser(email, password) {
-    const user = await User.findOne({ where: { email } });
+    const { Op } = require('sequelize');
+    // Accept email or username
+    const user = await User.findOne({
+      where: { [Op.or]: [{ email }, { username: email }] }
+    });
 
     if (!user) {
       throw new Error('Invalid credentials');
@@ -142,7 +146,11 @@ class AuthService {
    * Login admin
    */
   async loginAdmin(email, password) {
-    const admin = await Admin.findOne({ where: { email } });
+    const { Op } = require('sequelize');
+    // Accept email or username
+    const admin = await Admin.findOne({
+      where: { [Op.or]: [{ email }, { username: email }] }
+    });
 
     if (!admin) {
       throw new Error('Invalid credentials');

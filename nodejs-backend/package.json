@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.997.0",
+    "apple-signin-auth": "^2.0.0",
     "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "bull": "^4.12.0",
@@ -30,7 +31,7 @@
     "express-rate-limit": "^7.1.5",
     "express-validator": "^7.0.1",
     "firebase-admin": "^12.0.0",
-    "google-auth-library": "^9.4.1",
+    "google-auth-library": "^9.15.1",
     "helmet": "^7.1.0",
     "html-pdf-node": "^1.0.8",
     "ioredis": "^5.3.2",

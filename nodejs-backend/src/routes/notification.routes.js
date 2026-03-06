@@ -12,6 +12,13 @@ function ownerWhere(req) {
   return {};
 }
 
+// Add is_read boolean to notification object
+function formatNotification(n) {
+  const json = n.toJSON ? n.toJSON() : { ...n };
+  json.is_read = json.read_at !== null;
+  return json;
+}
+
 // Get user notifications
 router.get('/', authenticate, async (req, res) => {
   try {
@@ -20,7 +27,11 @@ router.get('/', authenticate, async (req, res) => {
 
     const where = { ...ownerWhere(req) };
     if (is_read !== undefined) {
-      where.read_at = is_read === '1' || is_read === 'true' ? { [Op.ne]: null } : null;
+      if (is_read === '1' || is_read === 'true') {
+        where.read_at = { [Op.ne]: null };
+      } else if (is_read === '0' || is_read === 'false') {
+        where.read_at = null;
+      }
     }
 
     const { rows, count } = await Notification.findAndCountAll({
@@ -29,9 +40,11 @@ router.get('/', authenticate, async (req, res) => {
       order: [['created_at', 'DESC']]
     });
 
+    const formatted = rows.map(formatNotification);
+
     res.json({
       success: true,
-      ...paginationResponse(rows, count, pagination.page, pagination.limit)
+      ...paginationResponse(formatted, count, pagination.page, pagination.limit)
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -44,13 +57,35 @@ router.get('/unread-count', authenticate, async (req, res) => {
     const where = { ...ownerWhere(req), read_at: null };
     const count = await Notification.count({ where });
 
-    res.json({ success: true, data: { count } });
+    res.json({ success: true, unread_count: count, data: { count } });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// Mark as read
+// Update notification (mark read/unread via is_read)
+router.put('/:id', authenticate, async (req, res) => {
+  try {
+    const where = { id: req.params.id, ...ownerWhere(req) };
+    const notification = await Notification.findOne({ where });
+
+    if (!notification) {
+      return res.status(404).json({ success: false, message: 'Notification not found' });
+    }
+
+    const { is_read } = req.body;
+    if (is_read !== undefined) {
+      const readVal = is_read === true || is_read === 1 || is_read === '1' || is_read === 'true';
+      await notification.update({ read_at: readVal ? new Date() : null });
+    }
+
+    res.json({ success: true, message: is_read ? 'Marked as read' : 'Marked as unread', data: formatNotification(notification) });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Mark as read (legacy)
 router.put('/:id/read', authenticate, async (req, res) => {
   try {
     const where = { id: req.params.id, ...ownerWhere(req) };
@@ -71,12 +106,12 @@ router.put('/read-all', authenticate, async (req, res) => {
   try {
     const where = { ...ownerWhere(req), read_at: null };
 
-    await Notification.update(
+    const [affectedCount] = await Notification.update(
       { read_at: new Date() },
       { where }
     );
 
-    res.json({ success: true, message: 'All marked as read' });
+    res.json({ success: true, message: 'All marked as read', data: { updated: affectedCount } });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

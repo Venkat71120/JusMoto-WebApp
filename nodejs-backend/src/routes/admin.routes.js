@@ -1104,7 +1104,15 @@ router.put('/tickets/:id/status', authenticate, isAdmin, async (req, res) => {
     const updateData = {};
     if (req.body.status) updateData.status = req.body.status;
     if (req.body.admin_id !== undefined) updateData.admin_id = req.body.admin_id || null;
+    if (req.body.status === 'closed') updateData.closed_at = new Date();
     await Ticket.update(updateData, { where: { id: req.params.id } });
+
+    // Emit socket event for real-time status update
+    const io = req.app.get('io');
+    if (io && req.body.status) {
+      io.to(`ticket-${req.params.id}`).emit('ticket-status-changed', { ticketId: req.params.id, status: req.body.status });
+    }
+
     res.json({ success: true, message: 'Service request updated' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -1126,8 +1134,20 @@ router.post('/tickets/:id/reply', authenticate, isAdmin, ...uploadSingle('attach
       message,
       attachment
     });
-    // Update ticket status to answered
-    await Ticket.update({ status: 'answered' }, { where: { id: req.params.id } });
+    // Status stays as-is; only explicit close marks ticket as resolved
+
+    // Emit socket event for real-time chat
+    const io = req.app.get('io');
+    if (io) {
+      const fullMsg = await TicketMessage.findByPk(ticketMsg.id, {
+        include: [
+          { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'image'] },
+          { model: Admin, as: 'admin', attributes: ['id', 'name', 'image'] }
+        ]
+      });
+      io.to(`ticket-${req.params.id}`).emit('new-ticket-message', fullMsg);
+    }
+
     res.status(201).json({ success: true, data: ticketMsg, message: 'Reply sent' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });

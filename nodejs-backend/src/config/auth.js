@@ -24,14 +24,16 @@ module.exports = {
 
   social: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackUrl: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3000/api/v1/auth/google/callback'
+      clientIds: (process.env.GOOGLE_CLIENT_IDS || process.env.GOOGLE_CLIENT_ID || '').split(',').map(s => s.trim()).filter(Boolean)
+    },
+    apple: {
+      clientId: process.env.APPLE_CLIENT_ID || '',
+      teamId: process.env.APPLE_TEAM_ID || '',
+      keyId: process.env.APPLE_KEY_ID || ''
     },
     facebook: {
       appId: process.env.FACEBOOK_APP_ID,
-      appSecret: process.env.FACEBOOK_APP_SECRET,
-      callbackUrl: process.env.FACEBOOK_CALLBACK_URL || 'http://localhost:3000/api/v1/auth/facebook/callback'
+      appSecret: process.env.FACEBOOK_APP_SECRET
     }
   },
 

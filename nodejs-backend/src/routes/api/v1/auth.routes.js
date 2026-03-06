@@ -19,6 +19,11 @@ const loginValidation = [
   body('password').notEmpty()
 ];
 
+const adminLoginValidation = [
+  body('email').trim().notEmpty().withMessage('Email or username is required'),
+  body('password').notEmpty()
+];
+
 /**
  * @route   POST /api/v1/auth/register
  * @desc    Register new user
@@ -121,7 +126,7 @@ router.post('/login', loginValidation, async (req, res) => {
  * @desc    Login admin/franchise
  * @access  Public
  */
-router.post('/admin/login', loginValidation, async (req, res) => {
+router.post('/admin/login', adminLoginValidation, async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -399,74 +404,228 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
+// ──────────────────────────────────────────
+// Helper: find-or-create user for social login
+// ──────────────────────────────────────────
+async function findOrCreateSocialUser({ provider, socialId, email, firstName, lastName, image }) {
+  const { Op } = require('sequelize');
+
+  // First try to find by provider + social_id (most reliable)
+  let user = socialId
+    ? await User.findOne({ where: { provider, social_id: socialId } })
+    : null;
+
+  // Fallback: find by email
+  if (!user && email) {
+    user = await User.findOne({ where: { email } });
+    // Link existing email user to this social provider
+    if (user && !user.provider) {
+      await user.update({ provider, social_id: socialId || null });
+    }
+  }
+
+  // Create new user if not found
+  if (!user) {
+    const emailParts = (email || `${socialId}`).split('@');
+    let username = emailParts[0].replace(/[^a-zA-Z0-9_]/g, '') || provider + '_user';
+    const originalUsername = username;
+    let counter = 1;
+    while (await User.findOne({ where: { username } })) {
+      username = `${originalUsername}_${counter}`;
+      counter++;
+    }
+
+    user = await User.create({
+      email: email || null,
+      username,
+      first_name: firstName || null,
+      last_name: lastName || null,
+      image: image || null,
+      email_verified: 1,
+      provider,
+      social_id: socialId || null,
+      password: require('crypto').randomBytes(32).toString('hex'),
+      terms_condition: true
+    });
+  } else {
+    // Update name/image if user exists but fields are empty
+    const updates = {};
+    if (!user.first_name && firstName) updates.first_name = firstName;
+    if (!user.last_name && lastName) updates.last_name = lastName;
+    if (!user.image && image) updates.image = image;
+    if (!user.social_id && socialId) updates.social_id = socialId;
+    if (Object.keys(updates).length) await user.update(updates);
+  }
+
+  return user;
+}
+
+function socialLoginResponse(res, user) {
+  const token = authService.generateAccessToken(user, 'user');
+  const refreshToken = authService.generateRefreshToken(user);
+  res.json({
+    success: true,
+    message: 'Login successful',
+    data: {
+      user: {
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        phone: user.phone,
+        username: user.username,
+        email_verified: user.email_verified,
+        image: user.image,
+        provider: user.provider
+      },
+      token,
+      accessToken: token,
+      refreshToken
+    }
+  });
+}
+
+/**
+ * @route   POST /api/v1/auth/google
+ * @desc    Google Sign-In (verifies ID token from mobile/web SDK)
+ * @access  Public
+ */
+router.post('/google', async (req, res) => {
+  try {
+    const { idToken } = req.body;
+    if (!idToken) {
+      return res.status(400).json({ success: false, message: 'idToken is required' });
+    }
+
+    const authConfig = require('../../../config/auth');
+    const { OAuth2Client } = require('google-auth-library');
+    const googleClientIds = authConfig.social.google.clientIds;
+
+    let payload;
+    if (googleClientIds.length > 0) {
+      // Verify token with configured client IDs
+      const client = new OAuth2Client();
+      const ticket = await client.verifyIdToken({
+        idToken,
+        audience: googleClientIds
+      });
+      payload = ticket.getPayload();
+    } else {
+      // No client IDs configured — verify token structure but skip audience check
+      const client = new OAuth2Client();
+      const ticket = await client.verifyIdToken({ idToken });
+      payload = ticket.getPayload();
+    }
+
+    if (!payload || !payload.email) {
+      return res.status(401).json({ success: false, message: 'Invalid Google token' });
+    }
+
+    const user = await findOrCreateSocialUser({
+      provider: 'google',
+      socialId: payload.sub,
+      email: payload.email,
+      firstName: payload.given_name,
+      lastName: payload.family_name,
+      image: payload.picture
+    });
+
+    socialLoginResponse(res, user);
+  } catch (error) {
+    console.error('Google login error:', error.message);
+    res.status(401).json({ success: false, message: 'Google authentication failed: ' + error.message });
+  }
+});
+
+/**
+ * @route   POST /api/v1/auth/apple
+ * @desc    Apple Sign-In (verifies identity token from iOS/mobile SDK)
+ * @access  Public
+ */
+router.post('/apple', async (req, res) => {
+  try {
+    const { identityToken, firstName, lastName, email: clientEmail } = req.body;
+    if (!identityToken) {
+      return res.status(400).json({ success: false, message: 'identityToken is required' });
+    }
+
+    const appleSignin = require('apple-signin-auth');
+    const authConfig = require('../../../config/auth');
+
+    const verifyOptions = {};
+    if (authConfig.social.apple.clientId) {
+      verifyOptions.audience = authConfig.social.apple.clientId;
+    }
+    // Apple tokens from mobile can expire quickly, allow some leeway
+    verifyOptions.ignoreExpiration = true;
+
+    const payload = await appleSignin.verifyIdToken(identityToken, verifyOptions);
+
+    if (!payload || !payload.sub) {
+      return res.status(401).json({ success: false, message: 'Invalid Apple token' });
+    }
+
+    // Apple only sends email on first sign-in; use clientEmail as fallback
+    const email = payload.email || clientEmail || null;
+
+    const user = await findOrCreateSocialUser({
+      provider: 'apple',
+      socialId: payload.sub,
+      email,
+      firstName: firstName || null,
+      lastName: lastName || null,
+      image: null
+    });
+
+    socialLoginResponse(res, user);
+  } catch (error) {
+    console.error('Apple login error:', error.message);
+    res.status(401).json({ success: false, message: 'Apple authentication failed: ' + error.message });
+  }
+});
+
 /**
  * @route   POST /api/v1/auth/social/login
- * @desc    Social login (Google/Facebook)
+ * @desc    Generic social login (fallback — accepts provider + user data)
  * @access  Public
  */
 router.post('/social/login', async (req, res) => {
   try {
-    const { provider, email, firstName, lastName, socialId, image } = req.body;
+    const { provider, email, firstName, lastName, socialId, image, idToken, identityToken } = req.body;
+
+    // If idToken provided, redirect to Google flow
+    if (provider === 'google' && idToken) {
+      req.body = { idToken };
+      return router.handle(Object.assign(req, { url: '/google', method: 'POST' }), res);
+    }
+    // If identityToken provided, redirect to Apple flow
+    if (provider === 'apple' && identityToken) {
+      req.body = { identityToken, firstName, lastName, email };
+      return router.handle(Object.assign(req, { url: '/apple', method: 'POST' }), res);
+    }
 
     if (!provider || !email) {
-      return res.status(400).json({
-        success: false,
-        message: 'Provider and email required'
-      });
+      return res.status(400).json({ success: false, message: 'Provider and email required' });
     }
 
-    // Find or create user
-    let user = await User.findOne({ where: { email } });
-
-    if (!user) {
-      // Generate unique username from email (same as register)
-      const emailParts = email.split('@');
-      let username = emailParts[0].replace(/[^a-zA-Z0-9_]/g, '');
-      const originalUsername = username;
-      let counter = 1;
-      while (await User.findOne({ where: { username } })) {
-        username = `${originalUsername}_${counter}`;
-        counter++;
-      }
-
-      // Create new user — password is raw, beforeCreate hook will hash it
-      user = await User.create({
-        email,
-        username,
-        first_name: firstName || null,
-        last_name: lastName || null,
-        image: image || null,
-        email_verified: 1,
-        password: require('crypto').randomBytes(16).toString('hex'),
-        terms_condition: true
-      });
+    const validProviders = ['google', 'apple', 'facebook'];
+    if (!validProviders.includes(provider)) {
+      return res.status(400).json({ success: false, message: `Invalid provider. Use: ${validProviders.join(', ')}` });
     }
 
-    const token = authService.generateAccessToken(user, 'user');
-
-    res.json({
-      success: true,
-      message: 'Login successful',
-      data: {
-        user: {
-          id: user.id,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          email: user.email,
-          phone: user.phone,
-          username: user.username,
-          email_verified: user.email_verified,
-          image: user.image
-        },
-        token
-      }
+    const user = await findOrCreateSocialUser({
+      provider,
+      socialId: socialId || null,
+      email,
+      firstName,
+      lastName,
+      image
     });
+
+    socialLoginResponse(res, user);
   } catch (error) {
     console.error('Social login error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Social login failed'
-    });
+    res.status(500).json({ success: false, message: 'Social login failed' });
   }
 });
 

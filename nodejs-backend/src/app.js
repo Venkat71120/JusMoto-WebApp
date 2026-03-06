@@ -44,11 +44,7 @@ const httpServer = createServer(app);
 // Socket.io setup for real-time features
 const io = new Server(httpServer, {
   cors: {
-    origin: [
-    "http://localhost:4200",
-    "http://127.0.0.1:5500",
-    "http://localhost:5500"
-  ],
+    origin: '*',
     methods: ['GET', 'POST']
   }
 });
@@ -156,6 +152,24 @@ io.on('connection', (socket) => {
 
   socket.on('join-room', (roomId) => {
     socket.join(roomId);
+  });
+
+  // Ticket chat rooms
+  socket.on('join-ticket', (ticketId) => {
+    socket.join(`ticket-${ticketId}`);
+    console.log(`Socket ${socket.id} joined ticket-${ticketId}`);
+  });
+
+  socket.on('leave-ticket', (ticketId) => {
+    socket.leave(`ticket-${ticketId}`);
+  });
+
+  // Notification rooms (per user or admin)
+  socket.on('join-notifications', ({ type, id }) => {
+    if (type && id) {
+      socket.join(`notifications-${type}-${id}`);
+      console.log(`Socket ${socket.id} joined notifications-${type}-${id}`);
+    }
   });
 
   socket.on('disconnect', () => {

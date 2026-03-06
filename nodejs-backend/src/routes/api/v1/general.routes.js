@@ -7,7 +7,8 @@ const {
   AdminOutletLocation,
   State,
   City,
-  Area
+  Area,
+  StaticOption
 } = require('../../../models');
 
 /**
@@ -187,20 +188,161 @@ router.get('/languages', async (req, res) => {
 
 /**
  * @route   GET /api/v1/general/settings
- * @desc    Get public settings
+ * @desc    Get public settings (site info, contact details, etc.)
  * @access  Public
  */
 router.get('/settings', async (req, res) => {
-  res.json({
-    success: true,
-    data: {
-      site_name: 'JusMoto',
-      currency_symbol: '₹',
-      currency_code: 'INR',
-      default_language: 'en',
-      contact_email: 'support@jusmoto.com'
+  try {
+    // Fetch all static options from DB
+    const options = await StaticOption.findAll();
+    const optMap = {};
+    options.forEach(o => { optMap[o.option_name] = o.option_value; });
+
+    res.json({
+      success: true,
+      data: {
+        site_name: optMap.site_name || 'JusMoto',
+        site_tagline: optMap.site_tagline || 'Redefining Car Care',
+        site_logo: optMap.site_logo || null,
+        currency_symbol: optMap.currency_symbol || '₹',
+        currency_code: optMap.currency_code || 'INR',
+        default_language: optMap.default_language || 'en',
+        contact_email: optMap.contact_email || 'support@jusmoto.com',
+        contact_phone: optMap.contact_phone || '',
+        contact_whatsapp: optMap.contact_whatsapp || '',
+        contact_address: optMap.contact_address || '',
+        social_facebook: optMap.social_facebook || '',
+        social_instagram: optMap.social_instagram || '',
+        social_twitter: optMap.social_twitter || '',
+        social_youtube: optMap.social_youtube || '',
+        play_store_url: optMap.play_store_url || '',
+        app_store_url: optMap.app_store_url || '',
+        app_version: optMap.app_version || '1.0.0',
+        force_update: optMap.force_update || '0'
+      }
+    });
+  } catch (error) {
+    console.error('Get settings error:', error);
+    res.status(500).json({ success: false, message: 'Failed to get settings' });
+  }
+});
+
+/**
+ * @route   GET /api/v1/general/contact
+ * @desc    Get contact details
+ * @access  Public
+ */
+router.get('/contact', async (req, res) => {
+  try {
+    const options = await StaticOption.findAll({
+      where: {
+        option_name: ['contact_email', 'contact_phone', 'contact_whatsapp', 'contact_address',
+                       'social_facebook', 'social_instagram', 'social_twitter', 'social_youtube']
+      }
+    });
+    const optMap = {};
+    options.forEach(o => { optMap[o.option_name] = o.option_value; });
+
+    // Also get outlet locations as store addresses
+    const outlets = await AdminOutletLocation.findAll({ where: { status: 1 } });
+
+    res.json({
+      success: true,
+      data: {
+        email: optMap.contact_email || 'support@jusmoto.com',
+        phone: optMap.contact_phone || '',
+        whatsapp: optMap.contact_whatsapp || '',
+        address: optMap.contact_address || '',
+        social: {
+          facebook: optMap.social_facebook || '',
+          instagram: optMap.social_instagram || '',
+          twitter: optMap.social_twitter || '',
+          youtube: optMap.social_youtube || ''
+        },
+        outlets
+      }
+    });
+  } catch (error) {
+    console.error('Get contact error:', error);
+    res.status(500).json({ success: false, message: 'Failed to get contact details' });
+  }
+});
+
+/**
+ * @route   GET /api/v1/general/pages/:slug
+ * @desc    Get page content (terms, privacy, about, etc.)
+ * @access  Public
+ */
+router.get('/pages/:slug', async (req, res) => {
+  try {
+    const slug = req.params.slug;
+    const validSlugs = ['terms-and-conditions', 'privacy-policy', 'about-us', 'refund-policy', 'cancellation-policy'];
+
+    if (!validSlugs.includes(slug)) {
+      return res.status(404).json({ success: false, message: 'Page not found' });
     }
-  });
+
+    const optionName = `page_${slug.replace(/-/g, '_')}`;
+    const titleName = `page_${slug.replace(/-/g, '_')}_title`;
+
+    const [content, title] = await Promise.all([
+      StaticOption.findOne({ where: { option_name: optionName } }),
+      StaticOption.findOne({ where: { option_name: titleName } })
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        slug,
+        title: title?.option_value || slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+        content: content?.option_value || '',
+        updated_at: content?.updated_at || null
+      }
+    });
+  } catch (error) {
+    console.error('Get page error:', error);
+    res.status(500).json({ success: false, message: 'Failed to get page' });
+  }
+});
+
+/**
+ * @route   GET /api/v1/general/terms-and-conditions
+ * @desc    Get terms and conditions (shortcut)
+ * @access  Public
+ */
+router.get('/terms-and-conditions', async (req, res) => {
+  try {
+    const content = await StaticOption.findOne({ where: { option_name: 'page_terms_and_conditions' } });
+    res.json({
+      success: true,
+      data: {
+        title: 'Terms and Conditions',
+        content: content?.option_value || ''
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to get terms' });
+  }
+});
+
+/**
+ * @route   GET /api/v1/general/privacy-policy
+ * @desc    Get privacy policy (shortcut)
+ * @access  Public
+ */
+router.get('/privacy-policy', async (req, res) => {
+  try {
+    const content = await StaticOption.findOne({ where: { option_name: 'page_privacy_policy' } });
+    res.json({
+      success: true,
+      data: {
+        title: 'Privacy Policy',
+        content: content?.option_value || ''
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to get privacy policy' });
+  }
 });
 
 /**

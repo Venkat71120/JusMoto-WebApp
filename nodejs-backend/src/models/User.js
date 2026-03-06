@@ -101,6 +101,16 @@ const User = sequelize.define('User', {
     type: DataTypes.DATE,
     allowNull: true
   },
+  provider: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    comment: 'google, apple, facebook, or null for email'
+  },
+  social_id: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    comment: 'Provider unique user ID (sub claim)'
+  },
   remember_token: {
     type: DataTypes.STRING(100),
     allowNull: true

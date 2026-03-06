@@ -1,13 +1,28 @@
 const { v4: uuidv4 } = require('uuid');
 const { Notification } = require('../models');
 
+let _io = null;
+
 class NotificationService {
+  /** Set the Socket.IO instance (call once from server startup) */
+  setIO(io) {
+    _io = io;
+  }
+
+  /** Emit a notification via socket to the user/admin room */
+  _emitSocket(notification) {
+    if (_io && notification) {
+      const room = `notifications-${notification.notifiable_type}-${notification.notifiable_id}`;
+      _io.to(room).emit('new-notification', notification);
+    }
+  }
+
   /**
    * Create a notification for a user
    */
   async notify(userId, type, title, message, data = null) {
     try {
-      return await Notification.create({
+      const notification = await Notification.create({
         id: uuidv4(),
         notifiable_id: userId,
         notifiable_type: 'User',
@@ -16,6 +31,8 @@ class NotificationService {
         message,
         data: data ? JSON.stringify(data) : null
       });
+      this._emitSocket(notification);
+      return notification;
     } catch (err) {
       console.error('Failed to create notification:', err.message);
     }
@@ -26,7 +43,7 @@ class NotificationService {
    */
   async notifyAdmin(adminId, type, title, message, data = null) {
     try {
-      return await Notification.create({
+      const notification = await Notification.create({
         id: uuidv4(),
         notifiable_id: adminId,
         notifiable_type: 'Admin',
@@ -35,6 +52,8 @@ class NotificationService {
         message,
         data: data ? JSON.stringify(data) : null
       });
+      this._emitSocket(notification);
+      return notification;
     } catch (err) {
       console.error('Failed to create admin notification:', err.message);
     }

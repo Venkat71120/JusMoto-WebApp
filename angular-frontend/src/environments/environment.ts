@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api/v1',
-  socketUrl: 'http://localhost:3000',
+  apiUrl: 'https://16.112.128.19.nip.io/api/v1',
+  socketUrl: 'https://16.112.128.19.nip.io',
   appName: 'JusMoto',
   defaultLanguage: 'en',
   supportedLanguages: ['en', 'hi'],
@@ -10,5 +10,5 @@ export const environment = {
   googleMapsApiKey: '',
   stripePublishableKey: '',
   razorpayKeyId: '',
-  googleClientId: '613290699891-fh8n86h1cgrjsou58b9777logdffj7h4.apps.googleusercontent.com'
+  googleClientId: '754815765289-h8bnkiklrsbhcneua3vq5ajr8mgkf46u.apps.googleusercontent.com'
 };

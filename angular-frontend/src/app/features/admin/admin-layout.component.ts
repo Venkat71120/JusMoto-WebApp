@@ -1,8 +1,12 @@
-import { Component, OnInit, signal, computed, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import { SocketService } from '../../core/services/socket.service';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-admin-layout',
@@ -234,10 +238,12 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
           </div>
           <div class="header-right">
             <!-- Notification bell -->
-            <button class="header-icon-btn notification-btn">
+            <a routerLink="/admin/notification/all" class="header-icon-btn notification-btn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-              <span class="notification-dot"></span>
-            </button>
+              @if (unreadCount() > 0) {
+                <span class="notification-badge">{{ unreadCount() > 99 ? '99+' : unreadCount() }}</span>
+              }
+            </a>
 
             <!-- Profile section -->
             <div class="profile-section" (click)="toggleProfileDropdown($event)">
@@ -318,7 +324,8 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
     /* Notification bell */
     .header-icon-btn { position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: none; border: 1px solid #e5e7eb; border-radius: 10px; cursor: pointer; color: #64748b; transition: all 0.2s; }
     .header-icon-btn:hover { background: #f8fafc; color: #1e293b; border-color: #cbd5e1; }
-    .notification-dot { position: absolute; top: 8px; right: 9px; width: 8px; height: 8px; background: #e31b23; border-radius: 50%; border: 2px solid #fff; }
+    .notification-badge { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; background: #e31b23; color: #fff; font-size: 10px; font-weight: 600; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; border: 2px solid #fff; line-height: 1; }
+    .notification-btn { text-decoration: none; }
 
     /* Profile section */
     .profile-section { position: relative; }
@@ -404,7 +411,7 @@ import { ToastComponent } from '../../shared/components/toast/toast.component';
     }
   `]
 })
-export class AdminLayoutComponent implements OnInit {
+export class AdminLayoutComponent implements OnInit, OnDestroy {
   adminName = signal('Admin');
   adminImage = signal<string | null>(null);
   imageError = signal(false);
@@ -414,8 +421,15 @@ export class AdminLayoutComponent implements OnInit {
   permissions = signal<string[]>([]);
   sidebarOpen = signal(false);
   profileDropdownOpen = signal(false);
+  unreadCount = signal(0);
+  private notifSub?: Subscription;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private http: HttpClient,
+    private socketService: SocketService
+  ) {}
 
   ngOnInit(): void {
     const admin = this.authService.currentAdmin;
@@ -426,7 +440,23 @@ export class AdminLayoutComponent implements OnInit {
       this.adminRoleDisplay.set(this.formatRole(admin.role));
       this.isSuperAdmin.set(!admin.is_franchise);
       this.permissions.set(admin.permissions || []);
+
+      // Fetch initial unread count
+      this.http.get<any>(`${environment.apiUrl}/notifications/unread-count`).subscribe({
+        next: (res) => this.unreadCount.set(res.unread_count || 0),
+        error: () => {}
+      });
+
+      // Join socket room for real-time notifications
+      this.socketService.joinNotifications('Admin', admin.id);
+      this.notifSub = this.socketService.onNewNotification().subscribe(() => {
+        this.unreadCount.update(c => c + 1);
+      });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.notifSub?.unsubscribe();
   }
 
   hasPermission(permissionName: string): boolean {

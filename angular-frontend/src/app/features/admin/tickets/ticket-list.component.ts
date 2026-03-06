@@ -22,8 +22,6 @@ import { environment } from '../../../../environments/environment';
       <select class="filter-select" [(ngModel)]="statusFilter" (change)="loadTickets()">
         <option value="">All Statuses</option>
         <option value="open">Open</option>
-        <option value="in_progress">In Progress</option>
-        <option value="resolved">Resolved</option>
         <option value="closed">Closed</option>
       </select>
     </div>
@@ -62,10 +60,8 @@ import { environment } from '../../../../environments/environment';
             <td>
               <span class="badge"
                 [class.badge-blue]="ticket.status === 'open'"
-                [class.badge-yellow]="ticket.status === 'in_progress'"
-                [class.badge-green]="ticket.status === 'resolved'"
                 [class.badge-gray]="ticket.status === 'closed'">
-                {{ ticket.status?.replace('_', ' ') }}
+                {{ ticket.status }}
               </span>
             </td>
             <td>{{ ticket.created_at | date:'mediumDate' }}</td>

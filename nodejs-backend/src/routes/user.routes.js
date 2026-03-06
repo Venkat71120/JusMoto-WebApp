@@ -121,6 +121,101 @@ router.put('/change-password', authenticate, isClient, async (req, res) => {
   }
 });
 
+// Change phone number - send OTP
+router.post('/change-phone-number', authenticate, isClient, async (req, res) => {
+  try {
+    const { phone } = req.body;
+    const { User } = require('../models');
+
+    if (!phone) {
+      return res.status(422).json({ success: false, message: 'Phone number is required' });
+    }
+
+    // Check if phone is already used by another user
+    const existing = await User.findOne({ where: { phone } });
+    if (existing && existing.id !== req.user.id) {
+      return res.status(409).json({ success: false, message: 'Phone number already in use by another account' });
+    }
+
+    // Generate OTP
+    const crypto = require('crypto');
+    const otp = crypto.randomInt(100000, 999999).toString();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Store OTP in user record (reuse password_reset fields)
+    await User.update(
+      { password_reset_token: `phone:${phone}:${otp}`, password_reset_expires: otpExpires },
+      { where: { id: req.user.id } }
+    );
+
+    // Try SMS first, fallback to email
+    const smsService = require('../services/sms.service');
+    const smsResult = await smsService.sendOTP(phone, otp);
+
+    if (!smsResult.success) {
+      // Fallback: send OTP via email
+      const user = await User.findByPk(req.user.id);
+      if (user.email) {
+        const emailService = require('../services/email.service');
+        await emailService.sendOTP(user, otp);
+      }
+    }
+
+    res.json({
+      success: true,
+      message: 'OTP sent successfully',
+      data: {
+        phone,
+        otp_sent_via: smsResult.success ? 'sms' : 'email',
+        expires_in: 600,
+        ...(process.env.NODE_ENV === 'development' ? { otp } : {})
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Verify phone OTP and update phone number
+router.post('/verify-phone-otp', authenticate, isClient, async (req, res) => {
+  try {
+    const { phone, otp } = req.body;
+    const { User } = require('../models');
+
+    if (!phone || !otp) {
+      return res.status(422).json({ success: false, message: 'Phone and OTP are required' });
+    }
+
+    const user = await User.findByPk(req.user.id);
+
+    // Check OTP expiry
+    if (!user.password_reset_expires || new Date() > new Date(user.password_reset_expires)) {
+      return res.status(400).json({ success: false, message: 'OTP has expired. Please request a new one.' });
+    }
+
+    // Verify OTP (stored as "phone:{number}:{otp}")
+    const expected = `phone:${phone}:${otp}`;
+    if (user.password_reset_token !== expected) {
+      return res.status(400).json({ success: false, message: 'Invalid OTP' });
+    }
+
+    // Update phone number
+    await user.update({
+      phone,
+      password_reset_token: null,
+      password_reset_expires: null
+    });
+
+    res.json({
+      success: true,
+      message: 'Phone number updated successfully',
+      data: { phone: user.phone }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // User cars routes
 router.get('/cars', authenticate, isClient, async (req, res) => {
   try {

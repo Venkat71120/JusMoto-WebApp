@@ -232,8 +232,6 @@ import { TicketService } from '../../../core/services/ticket.service';
     }
 
     .status-open { background: #dbeafe; color: #1e40af; }
-    .status-pending { background: #fef3c7; color: #92400e; }
-    .status-answered { background: #d1fae5; color: #065f46; }
     .status-closed { background: #f3f4f6; color: #4b5563; }
 
     .ticket-subject {
@@ -300,8 +298,6 @@ export class ClientTicketListComponent implements OnInit {
   statuses = [
     { label: 'All', value: 'all' },
     { label: 'Open', value: 'open' },
-    { label: 'Pending', value: 'pending' },
-    { label: 'Answered', value: 'answered' },
     { label: 'Closed', value: 'closed' }
   ];
 

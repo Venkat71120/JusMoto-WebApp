@@ -2,6 +2,10 @@ require('dotenv').config();
 const { app, httpServer, io } = require('./app');
 const { sequelize, testConnection } = require('./config/database');
 const config = require('./config/app');
+const notificationService = require('./services/notification.service');
+
+// Pass Socket.IO to notification service for real-time push
+notificationService.setIO(io);
 
 const PORT = config.port || 3000;
 
@@ -62,6 +66,17 @@ const startServer = async () => {
       }
     } catch (e) {
       console.log('Migration check (service_additionals):', e.message);
+    }
+
+    // Add social login columns to users table if missing
+    try {
+      const [provCol] = await sequelize.query("SHOW COLUMNS FROM users LIKE 'provider'");
+      if (provCol.length === 0) {
+        await sequelize.query("ALTER TABLE users ADD COLUMN provider VARCHAR(20) NULL AFTER image, ADD COLUMN social_id VARCHAR(255) NULL AFTER provider");
+        console.log('Migration: Added provider, social_id to users table');
+      }
+    } catch (e) {
+      console.log('Migration check (users social login):', e.message);
     }
 
     // Add password_reset columns to users table if missing

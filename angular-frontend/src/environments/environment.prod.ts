@@ -10,5 +10,5 @@ export const environment = {
   googleMapsApiKey: '',
   stripePublishableKey: '',
   razorpayKeyId: '',
-  googleClientId: '613290699891-fh8n86h1cgrjsou58b9777logdffj7h4.apps.googleusercontent.com'
+  googleClientId: '754815765289-h8bnkiklrsbhcneua3vq5ajr8mgkf46u.apps.googleusercontent.com'
 };

@@ -1,7 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import { SocketService } from '../../core/services/socket.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -162,11 +165,12 @@ import { environment } from '../../../environments/environment';
               </svg>
               <span class="badge" *ngIf="cartCount() > 0">{{ cartCount() }}</span>
             </a>
-            <a routerLink="/client/notifications" class="header-icon">
+            <a routerLink="/client/notifications" class="header-icon notification-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                 <path d="M13.73 21a2 2 0 01-3.46 0"/>
               </svg>
+              <span class="notif-badge" *ngIf="unreadCount() > 0">{{ unreadCount() > 99 ? '99+' : unreadCount() }}</span>
             </a>
             <div class="user-dropdown">
               <button class="user-btn" (click)="toggleDropdown()">
@@ -409,6 +413,26 @@ import { environment } from '../../../environments/environment';
       text-align: center;
     }
 
+    .notification-icon { position: relative; }
+    .notif-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      min-width: 18px;
+      height: 18px;
+      background: #e31b23;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      border: 2px solid #fff;
+      line-height: 1;
+    }
+
     .user-dropdown {
       position: relative;
     }
@@ -546,24 +570,47 @@ import { environment } from '../../../environments/environment';
     }
   `]
 })
-export class ClientLayoutComponent implements OnInit {
+export class ClientLayoutComponent implements OnInit, OnDestroy {
   private baseUrl = environment.apiUrl.replace('/api/v1', '');
   currentUser = signal<any>(null);
   imageError = signal(false);
   cartCount = signal(0);
+  unreadCount = signal(0);
   showDropdown = signal(false);
   sidebarOpen = signal(false);
+  private notifSub?: Subscription;
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
+    private socketService: SocketService
   ) {}
 
   ngOnInit(): void {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser.set(user);
       this.imageError.set(false);
+
+      if (user?.id) {
+        // Fetch initial unread count
+        this.http.get<any>(`${environment.apiUrl}/notifications/unread-count`).subscribe({
+          next: (res) => this.unreadCount.set(res.unread_count || 0),
+          error: () => {}
+        });
+
+        // Join socket room for real-time notifications
+        this.socketService.joinNotifications('User', user.id);
+        this.notifSub?.unsubscribe();
+        this.notifSub = this.socketService.onNewNotification().subscribe(() => {
+          this.unreadCount.update(c => c + 1);
+        });
+      }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.notifSub?.unsubscribe();
   }
 
   getUserInitials(): string {

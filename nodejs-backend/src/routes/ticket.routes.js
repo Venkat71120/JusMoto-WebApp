@@ -158,9 +158,21 @@ router.post('/:id/messages', authenticate, ...uploadSingle('attachment'), async 
       attachment
     });
 
-    // Reopen ticket if resolved
-    if (ticket.status === 'resolved') {
+    // Reopen ticket if it was answered (admin replied but user has follow-up)
+    if (ticket.status === 'answered') {
       await ticket.update({ status: 'open' });
+    }
+
+    // Emit socket event for real-time chat
+    const io = req.app.get('io');
+    if (io) {
+      const fullMsg = await TicketMessage.findByPk(ticketMessage.id, {
+        include: [
+          { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'image'] },
+          { model: Admin, as: 'admin', attributes: ['id', 'name', 'image'] }
+        ]
+      });
+      io.to(`ticket-${ticket.id}`).emit('new-ticket-message', fullMsg);
     }
 
     res.status(201).json({ success: true, data: ticketMessage, message: 'Reply sent' });

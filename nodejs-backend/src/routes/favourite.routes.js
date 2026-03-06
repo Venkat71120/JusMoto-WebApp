@@ -6,16 +6,16 @@ const { authenticate, isClient } = require('../middleware/auth.middleware');
 router.get('/', authenticate, async (req, res) => {
   try {
     const favourites = await FavoriteItem.findAll({
-      where: { user_id: req.user.id, favoritable_type: 'Service' },
+      where: { user_id: req.user.id, type: 'Service' },
       order: [['created_at', 'DESC']]
     });
 
     const items = [];
     for (const fav of favourites) {
-      const service = await Service.findByPk(fav.favoritable_id);
+      const service = await Service.findByPk(fav.item_id);
       items.push({
         id: fav.id,
-        service_id: fav.favoritable_id,
+        service_id: fav.item_id,
         created_at: fav.created_at,
         service: service ? {
           id: service.id,
@@ -45,8 +45,8 @@ router.get('/check/:serviceId', authenticate, async (req, res) => {
     const fav = await FavoriteItem.findOne({
       where: {
         user_id: req.user.id,
-        favoritable_type: 'Service',
-        favoritable_id: req.params.serviceId
+        type: 'Service',
+        item_id: req.params.serviceId
       }
     });
 
@@ -69,8 +69,8 @@ router.post('/', authenticate, async (req, res) => {
     const existing = await FavoriteItem.findOne({
       where: {
         user_id: req.user.id,
-        favoritable_type: 'Service',
-        favoritable_id: service_id
+        type: 'Service',
+        item_id: service_id
       }
     });
 
@@ -80,8 +80,8 @@ router.post('/', authenticate, async (req, res) => {
 
     const fav = await FavoriteItem.create({
       user_id: req.user.id,
-      favoritable_type: 'Service',
-      favoritable_id: service_id
+      type: 'Service',
+      item_id: service_id
     });
 
     res.status(201).json({ success: true, data: fav, message: 'Added to favourites' });

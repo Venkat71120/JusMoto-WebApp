@@ -15,24 +15,18 @@ const FavoriteItem = sequelize.define('FavoriteItem', {
       key: 'id'
     }
   },
-  favoritable_type: {
-    type: DataTypes.STRING(100),
+  item_id: {
+    type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false
   },
-  favoritable_id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+  type: {
+    type: DataTypes.STRING(191),
     allowNull: false
   }
 }, {
   tableName: 'favorite_items',
   timestamps: true,
-  underscored: true,
-  indexes: [
-    {
-      unique: true,
-      fields: ['user_id', 'favoritable_type', 'favoritable_id']
-    }
-  ]
+  underscored: true
 });
 
 module.exports = FavoriteItem;

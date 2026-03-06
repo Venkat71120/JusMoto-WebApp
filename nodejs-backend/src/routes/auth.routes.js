@@ -14,7 +14,8 @@ router.post('/resend-otp', authValidator.resendOtpValidator, validate, authContr
 router.post('/forgot-password', authValidator.forgotPasswordValidator, validate, authController.forgotPassword);
 router.post('/reset-password', authValidator.resetPasswordValidator, validate, authController.resetPassword);
 
-// Social login (Google, Facebook, etc.)
+// Social login — delegates to v1 auth routes (Google, Apple, Facebook)
+// Use POST /api/v1/auth/google or /api/v1/auth/apple for verified login
 router.post('/social/login', async (req, res) => {
   try {
     const { provider, email, firstName, lastName, socialId, image } = req.body;
@@ -25,9 +26,19 @@ router.post('/social/login', async (req, res) => {
     const { User } = require('../models');
     const authService = require('../services/auth.service');
 
-    let user = await User.findOne({ where: { email } });
+    // Find by social_id first, then email
+    let user = socialId
+      ? await User.findOne({ where: { provider, social_id: socialId } })
+      : null;
+
     if (!user) {
-      // Generate unique username from email
+      user = await User.findOne({ where: { email } });
+      if (user && !user.provider) {
+        await user.update({ provider, social_id: socialId || null });
+      }
+    }
+
+    if (!user) {
       const emailParts = email.split('@');
       let username = emailParts[0].replace(/[^a-zA-Z0-9_]/g, '');
       const originalUsername = username;
@@ -44,12 +55,15 @@ router.post('/social/login', async (req, res) => {
         last_name: lastName || null,
         image: image || null,
         email_verified: 1,
-        password: require('crypto').randomBytes(16).toString('hex'),
+        provider,
+        social_id: socialId || null,
+        password: require('crypto').randomBytes(32).toString('hex'),
         terms_condition: true
       });
     }
 
     const token = authService.generateAccessToken(user, 'user');
+    const refreshToken = authService.generateRefreshToken(user);
 
     res.json({
       success: true,
@@ -63,9 +77,12 @@ router.post('/social/login', async (req, res) => {
           phone: user.phone,
           username: user.username,
           email_verified: user.email_verified,
-          image: user.image
+          image: user.image,
+          provider: user.provider
         },
-        token
+        token,
+        accessToken: token,
+        refreshToken
       }
     });
   } catch (error) {

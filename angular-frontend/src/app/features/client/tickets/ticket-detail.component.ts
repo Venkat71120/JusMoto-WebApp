@@ -1,10 +1,12 @@
-import { Component, OnInit, signal, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { TicketService } from '../../../core/services/ticket.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { SocketService } from '../../../core/services/socket.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -521,7 +523,7 @@ import { environment } from '../../../../environments/environment';
     }
   `]
 })
-export class ClientTicketDetailComponent implements OnInit, AfterViewChecked {
+export class ClientTicketDetailComponent implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('chatBody') chatBody!: ElementRef;
   @ViewChild('fileInput') fileInput!: ElementRef;
   ticket = signal<any>(null);
@@ -533,22 +535,32 @@ export class ClientTicketDetailComponent implements OnInit, AfterViewChecked {
   currentUser: any;
   private shouldScroll = false;
   private uploadsBase = environment.apiUrl.replace('/api/v1', '') + '/uploads/';
+  private ticketId: number = 0;
+  private socketSubs: Subscription[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private ticketService: TicketService,
     private authService: AuthService,
-    private toast: ToastService
+    private toast: ToastService,
+    private socketService: SocketService
   ) {
     this.currentUser = this.authService.currentUser;
   }
 
   ngOnInit(): void {
-    const ticketId = this.route.snapshot.paramMap.get('id');
-    if (ticketId) {
-      this.loadTicket(+ticketId);
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.ticketId = +id;
+      this.loadTicket(this.ticketId);
+      this.setupSocket();
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.ticketId) this.socketService.leaveTicket(this.ticketId);
+    this.socketSubs.forEach(s => s.unsubscribe());
   }
 
   ngAfterViewChecked(): void {
@@ -556,6 +568,32 @@ export class ClientTicketDetailComponent implements OnInit, AfterViewChecked {
       this.scrollToBottom();
       this.shouldScroll = false;
     }
+  }
+
+  private setupSocket(): void {
+    this.socketService.joinTicket(this.ticketId);
+
+    this.socketSubs.push(
+      this.socketService.onNewMessage().subscribe(msg => {
+        const t = this.ticket();
+        if (t && t.ticketMessages) {
+          const exists = t.ticketMessages.find((m: any) => m.id === msg.id);
+          if (!exists) {
+            this.ticket.set({ ...t, ticketMessages: [...t.ticketMessages, msg] });
+            this.shouldScroll = true;
+          }
+        }
+      })
+    );
+
+    this.socketSubs.push(
+      this.socketService.onTicketStatusChanged().subscribe(data => {
+        const t = this.ticket();
+        if (t) {
+          this.ticket.set({ ...t, status: data.status });
+        }
+      })
+    );
   }
 
   loadTicket(id: number): void {

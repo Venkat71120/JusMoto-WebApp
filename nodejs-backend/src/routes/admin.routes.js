@@ -822,7 +822,20 @@ router.get('/cars', authenticate, isAdmin, async (req, res) => {
       where, include: [{ association: 'brand', attributes: ['id', 'name', 'image'] }],
       ...pagination, order: [['created_at', 'DESC']]
     });
-    res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
+
+    // Resolve numeric image IDs (legacy Laravel media) to actual S3 URLs
+    const carsData = await Promise.all(rows.map(async (c) => {
+      const car = c.toJSON();
+      if (car.image && !isNaN(car.image) && Number(car.image) > 0) {
+        const media = await MediaUpload.findByPk(Number(car.image));
+        car.image = media ? media.path : null;
+      } else if (car.image === 0 || car.image === '0') {
+        car.image = null;
+      }
+      return car;
+    }));
+
+    res.json({ success: true, ...paginationResponse(carsData, count, pagination.page, pagination.limit) });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -832,7 +845,14 @@ router.get('/cars/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const car = await Car.findByPk(req.params.id, { include: ['brand'] });
     if (!car) return res.status(404).json({ success: false, error: 'Car not found' });
-    res.json({ success: true, data: car });
+    const carData = car.toJSON();
+    if (carData.image && !isNaN(carData.image) && Number(carData.image) > 0) {
+      const media = await MediaUpload.findByPk(Number(carData.image));
+      carData.image = media ? media.path : null;
+    } else if (carData.image === 0 || carData.image === '0') {
+      carData.image = null;
+    }
+    res.json({ success: true, data: carData });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

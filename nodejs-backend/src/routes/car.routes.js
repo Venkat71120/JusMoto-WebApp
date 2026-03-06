@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate, isAdmin } = require('../middleware/auth.middleware');
-const { Car, Brand, Variant, EngineType, FuelType } = require('../models');
+const { Car, Brand, Variant, EngineType, FuelType, MediaUpload } = require('../models');
 const { Op } = require('sequelize');
 const { createSlug } = require('../utils/helpers');
 
@@ -99,7 +99,19 @@ router.get('/', async (req, res) => {
       order: [['name', 'ASC']]
     });
 
-    res.json({ success: true, data: cars });
+    // Resolve numeric image IDs to actual S3 URLs
+    const carsData = await Promise.all(cars.map(async (c) => {
+      const car = c.toJSON();
+      if (car.image && !isNaN(car.image) && Number(car.image) > 0) {
+        const media = await MediaUpload.findByPk(Number(car.image));
+        car.image = media ? media.path : null;
+      } else if (car.image === 0 || car.image === '0') {
+        car.image = null;
+      }
+      return car;
+    }));
+
+    res.json({ success: true, data: carsData });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -122,7 +134,15 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ success: false, error: 'Car not found' });
     }
 
-    res.json({ success: true, data: car });
+    const carData = car.toJSON();
+    if (carData.image && !isNaN(carData.image) && Number(carData.image) > 0) {
+      const media = await MediaUpload.findByPk(Number(carData.image));
+      carData.image = media ? media.path : null;
+    } else if (carData.image === 0 || carData.image === '0') {
+      carData.image = null;
+    }
+
+    res.json({ success: true, data: carData });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

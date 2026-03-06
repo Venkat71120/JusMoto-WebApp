@@ -22,8 +22,7 @@ async function uploadToS3(buffer, key, contentType) {
     Bucket: BUCKET,
     Key: key,
     Body: buffer,
-    ContentType: contentType,
-    ACL: 'public-read'
+    ContentType: contentType
   }));
   return getS3Url(key);
 }

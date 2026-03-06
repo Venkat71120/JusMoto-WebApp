@@ -3,9 +3,23 @@ const router = express.Router();
 const { authenticate, isClient, isAdmin, isFranchise } = require('../middleware/auth.middleware');
 const { uploadSingle } = require('../middleware/upload.middleware');
 const { uploadToS3, generateS3Key } = require('../config/s3');
-const { Ticket, TicketMessage, User, Admin } = require('../models');
+const { Ticket, TicketMessage, User, Admin, Department } = require('../models');
 const { Op } = require('sequelize');
 const { paginate, paginationResponse, generateRandomString } = require('../utils/helpers');
+
+// Get active departments (public - for mobile app service request creation)
+router.get('/departments', async (req, res) => {
+  try {
+    const departments = await Department.findAll({
+      where: { status: 1 },
+      attributes: ['id', 'name'],
+      order: [['name', 'ASC']]
+    });
+    res.json({ success: true, data: departments });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 // Get user tickets
 router.get('/', authenticate, async (req, res) => {

@@ -14,7 +14,94 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
   template: `
     <div class="page-header">
       <h1 class="page-title">Cars</h1>
-      <a routerLink="/admin/car/add" class="btn-primary">+ Add Car</a>
+      <div class="header-actions">
+        <button class="btn-import" (click)="csvInput.click()" [disabled]="importing()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          {{ importing() ? 'Importing...' : 'Import CSV' }}
+        </button>
+        <input #csvInput type="file" accept=".csv" (change)="onCsvSelected($event)" style="display:none">
+        <a routerLink="/admin/car/add" class="btn-primary">+ Add Car</a>
+      </div>
+    </div>
+
+    <!-- Import Status Modal -->
+    <div class="modal-overlay" *ngIf="importStatus()">
+      <div class="import-modal" (click)="$event.stopPropagation()">
+        <div class="import-header">
+          <h3>{{ importStatus()?.done ? 'Import Complete' : 'Importing Cars...' }}</h3>
+          <button class="modal-close" *ngIf="importStatus()?.done" (click)="importStatus.set(null)">&times;</button>
+        </div>
+        <div class="import-body">
+          <!-- Progress -->
+          <div class="import-progress" *ngIf="!importStatus()?.done">
+            <div class="spinner-lg"></div>
+            <p class="import-msg">Parsing and importing CSV data...<br>This may take a moment for large files.</p>
+          </div>
+
+          <!-- Results -->
+          <div class="import-results" *ngIf="importStatus()?.done">
+            <div class="result-icon" [class.success]="!importStatus()?.error" [class.error]="importStatus()?.error">
+              <svg *ngIf="!importStatus()?.error" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <svg *ngIf="importStatus()?.error" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            </div>
+
+            <p class="result-message" *ngIf="importStatus()?.error">{{ importStatus()?.error }}</p>
+
+            <div class="stats-grid" *ngIf="importStatus()?.data">
+              <div class="stat-card">
+                <span class="stat-value">{{ importStatus()?.data?.total || 0 }}</span>
+                <span class="stat-label">Total Rows</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value text-green">{{ importStatus()?.data?.brandsCreated || 0 }}</span>
+                <span class="stat-label">Brands Created</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value text-green">{{ importStatus()?.data?.carsCreated || 0 }}</span>
+                <span class="stat-label">Cars Created</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value text-green">{{ importStatus()?.data?.variantsCreated || 0 }}</span>
+                <span class="stat-label">Variants Created</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value text-blue">{{ importStatus()?.data?.fuelTypesCreated || 0 }}</span>
+                <span class="stat-label">Fuel Types</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value text-blue">{{ importStatus()?.data?.engineTypesCreated || 0 }}</span>
+                <span class="stat-label">Engine Types</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value text-green">{{ importStatus()?.data?.imagesFound || 0 }}</span>
+                <span class="stat-label">Images Found</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value text-amber">{{ importStatus()?.data?.skipped || 0 }}</span>
+                <span class="stat-label">Duplicates Skipped</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-value text-red">{{ importStatus()?.data?.errorCount || 0 }}</span>
+                <span class="stat-label">Errors</span>
+              </div>
+            </div>
+
+            <p class="img-warning" *ngIf="importStatus()?.data && !importStatus()?.data?.imagesEnabled">
+              ⚠️ Image auto-fetch disabled. Add <strong>PEXELS_API_KEY</strong> in backend .env to enable.
+            </p>
+
+            <div class="error-list" *ngIf="importStatus()?.data?.errors?.length">
+              <h4>Errors (first 20):</h4>
+              <div class="error-item" *ngFor="let e of importStatus()?.data?.errors">
+                Row {{ e.row }}: {{ e.brand }} {{ e.model }} — {{ e.error }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="import-footer" *ngIf="importStatus()?.done">
+          <button class="btn-primary" (click)="importStatus.set(null)">Close</button>
+        </div>
+      </div>
     </div>
 
     <div class="filters-bar">
@@ -135,8 +222,12 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
   styles: [`
     .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
     .page-title { font-size: 24px; font-weight: 700; color: #1a1a2e; }
-    .btn-primary { background: #e31b23; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; text-decoration: none; font-size: 14px; }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+    .btn-primary { background: #e31b23; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
     .btn-primary:hover { background: #b11218; }
+    .btn-import { background: #fff; color: #334155; border: 1px solid #d1d5db; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+    .btn-import:hover { border-color: #e31b23; color: #e31b23; }
+    .btn-import:disabled { opacity: 0.5; cursor: not-allowed; }
     .filters-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
     .search-box { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0 14px; flex: 1; min-width: 200px; }
     .search-box input { border: none; outline: none; padding: 10px 0; width: 100%; font-size: 14px; }
@@ -186,13 +277,40 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .view-item label { font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; }
     .view-item span { font-size: 14px; color: #334155; }
 
-    @media (max-width: 768px) { .table-container { overflow-x: auto; } .view-grid { grid-template-columns: 1fr; } }
+    /* Import Modal */
+    .import-modal { background: #fff; border-radius: 16px; width: 90vw; max-width: 520px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+    .import-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #e5e7eb; }
+    .import-header h3 { margin: 0; font-size: 18px; font-weight: 700; color: #1a1a2e; }
+    .import-body { padding: 24px; }
+    .import-progress { text-align: center; padding: 32px 0; }
+    .spinner-lg { width: 48px; height: 48px; border: 4px solid #f3f4f6; border-top-color: #e31b23; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
+    .import-msg { color: #64748b; font-size: 14px; line-height: 1.6; }
+    .import-results { text-align: center; }
+    .result-icon { margin-bottom: 16px; }
+    .result-message { color: #dc2626; font-weight: 600; margin-bottom: 16px; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center; margin-top: 16px; }
+    .stat-card { background: #f8f9fa; border-radius: 10px; padding: 14px 8px; }
+    .stat-value { display: block; font-size: 22px; font-weight: 700; color: #1a1a2e; }
+    .stat-label { display: block; font-size: 11px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+    .text-green { color: #16a34a; }
+    .text-blue { color: #2563eb; }
+    .text-amber { color: #d97706; }
+    .text-red { color: #dc2626; }
+    .error-list { margin-top: 16px; text-align: left; max-height: 150px; overflow-y: auto; background: #fef2f2; border-radius: 8px; padding: 12px; }
+    .error-list h4 { margin: 0 0 8px; font-size: 13px; color: #dc2626; }
+    .error-item { font-size: 12px; color: #7f1d1d; padding: 3px 0; border-bottom: 1px solid #fecaca; }
+    .import-footer { padding: 16px 24px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; }
+    .img-warning { margin-top: 14px; padding: 10px 14px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; font-size: 13px; color: #92400e; text-align: left; }
+
+    @media (max-width: 768px) { .table-container { overflow-x: auto; } .view-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr 1fr; } .header-actions { flex-wrap: wrap; } }
   `]
 })
 export class CarListComponent implements OnInit {
   cars = signal<any[]>([]);
   brands = signal<any[]>([]);
   loading = signal(false);
+  importing = signal(false);
+  importStatus = signal<any>(null);
   search = '';
   brandFilter = '';
   sortField = '';
@@ -205,7 +323,7 @@ export class CarListComponent implements OnInit {
 
   private baseUrl = environment.apiUrl.replace('/api/v1', '');
 
-  constructor(private http: HttpClient, private toast: ToastService) {}
+  constructor(private http: HttpClient, private toast: ToastService) { }
 
   ngOnInit() { this.loadBrands(); this.loadCars(); }
 
@@ -251,6 +369,32 @@ export class CarListComponent implements OnInit {
   }
 
   goToPage(page: number) { this.loadCars(page); }
+
+  onCsvSelected(event: any) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    event.target.value = ''; // reset so same file can be re-selected
+
+    this.importing.set(true);
+    this.importStatus.set({ done: false });
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.http.post<any>(`${environment.apiUrl}/cars/import-csv`, formData).subscribe({
+      next: (res) => {
+        this.importStatus.set({ done: true, data: res.data, error: null });
+        this.toast.success(res.message || 'Import complete');
+        this.loadBrands();
+        this.loadCars();
+      },
+      error: (err) => {
+        this.importStatus.set({ done: true, data: null, error: err.error?.error || 'Import failed. Please check the CSV format.' });
+        this.toast.error(err.error?.error || 'Import failed');
+      },
+      complete: () => this.importing.set(false)
+    });
+  }
 
   openViewModal(car: any) { this.viewCar.set(car); }
 

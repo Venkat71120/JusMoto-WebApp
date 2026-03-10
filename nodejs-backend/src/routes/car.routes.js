@@ -1,9 +1,60 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const { authenticate, isAdmin } = require('../middleware/auth.middleware');
 const { Car, Brand, Variant, EngineType, FuelType, MediaUpload } = require('../models');
 const { Op } = require('sequelize');
 const { createSlug } = require('../utils/helpers');
+const { importCarsFromCSV } = require('../services/csv-import.service');
+
+// CSV upload config — disk storage, .csv only
+const csvStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = path.join(__dirname, '../../uploads/csv');
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `cars_import_${Date.now()}.csv`);
+  }
+});
+const csvUpload = multer({
+  storage: csvStorage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'text/csv' || file.originalname.endsWith('.csv')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only CSV files are allowed'), false);
+    }
+  },
+  limits: { fileSize: 50 * 1024 * 1024 } // 50MB
+});
+
+// ── CSV Import ──
+router.post('/import-csv', authenticate, isAdmin, csvUpload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No CSV file uploaded' });
+    }
+
+    const result = await importCarsFromCSV(req.file.path);
+
+    // Clean up uploaded file
+    fs.unlink(req.file.path, () => { });
+
+    res.json({
+      success: true,
+      message: `Import complete: ${result.carsCreated} cars, ${result.variantsCreated} variants, ${result.brandsCreated} brands created`,
+      data: result
+    });
+  } catch (error) {
+    // Clean up on error
+    if (req.file) fs.unlink(req.file.path, () => { });
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 // ── NHTSA API: Fetch & import car brands ──
 router.post('/fetch-brands', authenticate, async (req, res) => {
@@ -91,10 +142,12 @@ router.get('/', async (req, res) => {
       where,
       include: [
         { model: Brand, as: 'brand' },
-        { model: Variant, as: 'variants', where: { status: 1 }, required: false, include: [
-          { model: EngineType, as: 'engineType' },
-          { model: FuelType, as: 'fuelType' }
-        ]}
+        {
+          model: Variant, as: 'variants', where: { status: 1 }, required: false, include: [
+            { model: EngineType, as: 'engineType' },
+            { model: FuelType, as: 'fuelType' }
+          ]
+        }
       ],
       order: [['name', 'ASC']]
     });
@@ -123,10 +176,12 @@ router.get('/:id', async (req, res) => {
     const car = await Car.findByPk(req.params.id, {
       include: [
         { model: Brand, as: 'brand' },
-        { model: Variant, as: 'variants', where: { status: 1 }, required: false, include: [
-          { model: EngineType, as: 'engineType' },
-          { model: FuelType, as: 'fuelType' }
-        ]}
+        {
+          model: Variant, as: 'variants', where: { status: 1 }, required: false, include: [
+            { model: EngineType, as: 'engineType' },
+            { model: FuelType, as: 'fuelType' }
+          ]
+        }
       ]
     });
 

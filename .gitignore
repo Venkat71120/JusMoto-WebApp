@@ -11,3 +11,4 @@ bootstrap/cache/*
 .DS_Store
 core/public/direct-login.html
 aws-deployment/*.csv
+!.angular/*

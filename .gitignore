@@ -1,14 +1,58 @@
-vendor/
+# ─── Node.js ────────────────────────────────────────────────────────────────
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ─── Laravel (core/) ────────────────────────────────────────────────────────
+vendor/
 .env
+core/.env
 storage/logs/*.log
 storage/framework/cache/data/*
 storage/framework/sessions/*
 storage/framework/views/*
 bootstrap/cache/*
+
+# ─── Angular (angular-frontend/) ────────────────────────────────────────────
+angular-frontend/dist/
+angular-frontend/.angular/cache/
+# keep .angular/ config tracked
+!angular-frontend/.angular/
+
+# ─── Uploads / user content ─────────────────────────────────────────────────
+# nodejs-backend/uploads/images/*
+# nodejs-backend/uploads/media/*
+# nodejs-backend/uploads/ticket/*
+# !nodejs-backend/uploads/images/.gitkeep
+# !nodejs-backend/uploads/media/.gitkeep
+# !nodejs-backend/uploads/ticket/.gitkeep
+# core/public/assets/uploads/media-uploader/*
+# !core/public/assets/uploads/media-uploader/.gitkeep
+
+# ─── Database / data files ──────────────────────────────────────────────────
 *.sql
+*.sqlite
+*.db
+
+# ─── Archives / exports ─────────────────────────────────────────────────────
 *.zip
-.DS_Store
-core/public/direct-login.html
+*.tar.gz
 aws-deployment/*.csv
-!.angular/*
+
+# ─── OS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Editor ─────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── Misc ───────────────────────────────────────────────────────────────────
+core/public/direct-login.html
+tmp/
+*.log

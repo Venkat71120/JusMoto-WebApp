@@ -117,8 +117,25 @@ app.use(`${apiV1}/general`, generalRoutes);
 app.use(apiV1, mobileCompatRoutes); // Laravel-compatible routes for mobile app
 
 // Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get('/health', async (req, res) => {
+  const health = {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    database: { status: 'unknown' }
+  };
+
+  try {
+    await sequelize.authenticate();
+    health.database.status = 'ok';
+  } catch (err) {
+    health.status = 'degraded';
+    health.database.status = 'error';
+    health.database.error = err.message;
+  }
+
+  const httpStatus = health.status === 'ok' ? 200 : 503;
+  res.status(httpStatus).json(health);
 });
 
 // 404 handler

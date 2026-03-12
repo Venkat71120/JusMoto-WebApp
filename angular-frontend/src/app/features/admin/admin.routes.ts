@@ -92,8 +92,8 @@ export const adminRoutes: Routes = [
       { path: 'reports/revenue', loadComponent: () => import('./reports/revenue-report.component').then(m => m.RevenueReportComponent) },
       { path: 'reports/orders', loadComponent: () => import('./reports/order-report.component').then(m => m.OrderReportComponent) },
 
-      // Profile (redirect to settings)
-      { path: 'profile', redirectTo: 'settings/general', pathMatch: 'full' },
+      // Profile
+      { path: 'profile', loadComponent: () => import('./profile/admin-profile.component').then(m => m.AdminProfileComponent) },
 
       // Settings
       { path: 'settings/general', loadComponent: () => import('./settings/general-settings.component').then(m => m.GeneralSettingsComponent) },

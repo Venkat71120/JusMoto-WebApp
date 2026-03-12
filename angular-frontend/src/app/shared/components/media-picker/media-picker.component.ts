@@ -252,11 +252,10 @@ export class MediaPickerComponent implements OnInit, OnChanges {
   confirmSelection() {
     const item = this.selectedLibItem();
     if (!item) return;
-    const fullUrl = this.getFullUrl(item);
-    this.value = fullUrl;
-    this.valueChange.emit(fullUrl);
+    this.value = item.id;
+    this.valueChange.emit(item.id);
     this.mediaSelected.emit(item);
-    this.previewUrl.set(fullUrl);
+    this.previewUrl.set(this.getFullUrl(item));
     this.closeModal();
   }
 
@@ -291,11 +290,10 @@ export class MediaPickerComponent implements OnInit, OnChanges {
     this.http.post<any>(`${this.apiUrl}/admin/media/upload`, fd).subscribe({
       next: (res) => {
         const media = res.data;
-        const fullUrl = this.getFullUrl(media);
-        this.value = fullUrl;
-        this.valueChange.emit(fullUrl);
+        this.value = media.id;
+        this.valueChange.emit(media.id);
         this.mediaSelected.emit(media);
-        this.previewUrl.set(fullUrl);
+        this.previewUrl.set(this.getFullUrl(media));
         this.uploading.set(false);
         this.closeModal();
       },

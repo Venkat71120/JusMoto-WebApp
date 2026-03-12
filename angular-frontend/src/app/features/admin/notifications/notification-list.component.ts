@@ -27,21 +27,21 @@ import { environment } from '../../../../environments/environment';
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let notif of notifications(); let i = index" [class.unread-row]="!notif.read_at && notif.status !== 'read'">
+          <tr *ngFor="let notif of notifications(); let i = index" [class.unread-row]="notif.is_read !== 'read'">
             <td>{{ (pagination().page - 1) * pagination().limit + i + 1 }}</td>
             <td><span class="type-badge">{{ notif.type || '-' }}</span></td>
-            <td class="msg-cell">{{ notif.message || notif.data?.message || '-' }}</td>
+            <td class="msg-cell">{{ notif.message || '-' }}</td>
             <td>
-              <span class="badge" [class.badge-blue]="!notif.read_at && notif.status !== 'read'" [class.badge-gray]="notif.read_at || notif.status === 'read'">
-                {{ (notif.read_at || notif.status === 'read') ? 'Read' : 'Unread' }}
+              <span class="badge" [class.badge-blue]="notif.is_read !== 'read'" [class.badge-gray]="notif.is_read === 'read'">
+                {{ notif.is_read === 'read' ? 'Read' : 'Unread' }}
               </span>
             </td>
             <td>{{ notif.created_at | date:'medium' }}</td>
             <td>
-              <button class="btn-mark" *ngIf="!notif.read_at && notif.status !== 'read'" (click)="markAsRead(notif)">
+              <button class="btn-mark" *ngIf="notif.is_read !== 'read'" (click)="markAsRead(notif)">
                 Mark as Read
               </button>
-              <span *ngIf="notif.read_at || notif.status === 'read'" class="text-muted">--</span>
+              <span *ngIf="notif.is_read === 'read'" class="text-muted">--</span>
             </td>
           </tr>
           <tr *ngIf="notifications().length === 0 && !loading()">

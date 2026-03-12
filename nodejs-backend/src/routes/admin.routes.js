@@ -946,7 +946,16 @@ router.delete('/engine-types/:id', authenticate, isAdmin, async (req, res) => {
 router.get('/fuel-types', authenticate, isAdmin, async (req, res) => {
   try {
     const types = await FuelType.findAll({ order: [['name', 'ASC']] });
-    res.json({ success: true, data: types });
+    const data = [];
+    for (const t of types) {
+      const json = t.toJSON();
+      if (json.image && typeof json.image === 'number') {
+        const media = await MediaUpload.findByPk(json.image);
+        json.image_url = media ? media.path : null;
+      }
+      data.push(json);
+    }
+    res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -1002,10 +1011,26 @@ router.get('/variants', authenticate, isAdmin, async (req, res) => {
   }
 });
 
+router.get('/variants/:id', authenticate, isAdmin, async (req, res) => {
+  try {
+    const variant = await Variant.findByPk(req.params.id, {
+      include: [
+        { association: 'car', include: [{ association: 'brand', attributes: ['id', 'name'] }] },
+        { association: 'engineType' },
+        { association: 'fuelType' }
+      ]
+    });
+    if (!variant) return res.status(404).json({ success: false, error: 'Variant not found' });
+    res.json({ success: true, data: variant });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 router.post('/variants', authenticate, isAdmin, async (req, res) => {
   try {
-    const { name, car_id, engine_type_id, fual_type_id } = req.body;
-    const variant = await Variant.create({ name: name || null, car_id, engine_type_id, fual_type_id });
+    const { name, car_id, engine_type_id, fuel_type_id } = req.body;
+    const variant = await Variant.create({ name: name || null, car_id, engine_type_id, fual_type_id: fuel_type_id });
     res.status(201).json({ success: true, data: variant, message: 'Variant created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -1014,8 +1039,8 @@ router.post('/variants', authenticate, isAdmin, async (req, res) => {
 
 router.put('/variants/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const { car_id, engine_type_id, fual_type_id } = req.body;
-    await Variant.update({ car_id, engine_type_id, fual_type_id }, { where: { id: req.params.id } });
+    const { name, car_id, engine_type_id, fuel_type_id } = req.body;
+    await Variant.update({ name: name || null, car_id, engine_type_id, fual_type_id: fuel_type_id }, { where: { id: req.params.id } });
     const variant = await Variant.findByPk(req.params.id, {
       include: ['car', 'engineType', 'fuelType']
     });
@@ -1410,6 +1435,16 @@ router.get('/outlet-locations', authenticate, isAdmin, async (req, res) => {
   }
 });
 
+router.get('/outlet-locations/:id', authenticate, isAdmin, async (req, res) => {
+  try {
+    const loc = await AdminOutletLocation.findByPk(req.params.id);
+    if (!loc) return res.status(404).json({ success: false, error: 'Location not found' });
+    res.json({ success: true, data: loc });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 router.post('/outlet-locations', authenticate, isAdmin, async (req, res) => {
   try {
     const loc = await AdminOutletLocation.create({ ...req.body, admin_id: req.admin.id });
@@ -1779,10 +1814,16 @@ router.get('/refunded-orders', authenticate, isAdmin, async (req, res) => {
     const pagination = paginate(page, limit);
     const where = {};
     if (status !== undefined && status !== '') where.status = status;
+
+    const orderWhere = {};
+    if (req.admin.is_franchise) {
+      orderWhere.franchise_admin_id = req.admin.id;
+    }
+
     const { rows, count } = await RefundedOrder.findAndCountAll({
       where,
       include: [
-        { association: 'order', attributes: ['id', 'invoice_number', 'total'] },
+        { association: 'order', attributes: ['id', 'invoice_number', 'total', 'franchise_admin_id'], where: orderWhere },
         { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email'] }
       ],
       ...pagination, order: [['created_at', 'DESC']]

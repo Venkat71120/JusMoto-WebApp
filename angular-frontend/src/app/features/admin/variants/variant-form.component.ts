@@ -97,37 +97,60 @@ export class VariantFormComponent implements OnInit {
   selectedBrandId = '';
   form: any = { name: '', car_id: '', engine_type_id: '', fuel_type_id: '' };
 
+  private pendingVariant: any = null;
+
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
 
   ngOnInit() {
     this.variantId = this.route.snapshot.paramMap.get('id');
     this.isEdit = !!this.variantId;
+    if (this.isEdit) this.loadingData.set(true);
     this.loadDropdowns();
-    if (this.isEdit) this.loadVariant();
   }
 
   loadDropdowns() {
+    let loaded = 0;
+    const total = 4;
+    const checkDone = () => {
+      loaded++;
+      if (loaded >= total && this.isEdit) {
+        this.loadVariant();
+      }
+    };
+
     this.http.get<any>(`${environment.apiUrl}/admin/brands`).subscribe({
-      next: (res) => this.brands.set(res.data || [])
+      next: (res) => this.brands.set(res.data || []),
+      error: () => {},
+      complete: () => checkDone()
     });
-    this.http.get<any>(`${environment.apiUrl}/admin/cars`).subscribe({
-      next: (res) => { this.allCars.set(res.data || []); this.filterCars(); }
+    this.http.get<any>(`${environment.apiUrl}/admin/cars?limit=999`).subscribe({
+      next: (res) => this.allCars.set(res.data || []),
+      error: () => {},
+      complete: () => checkDone()
     });
     this.http.get<any>(`${environment.apiUrl}/admin/engine-types`).subscribe({
-      next: (res) => this.engineTypes.set(res.data || [])
+      next: (res) => this.engineTypes.set(res.data || []),
+      error: () => {},
+      complete: () => checkDone()
     });
     this.http.get<any>(`${environment.apiUrl}/admin/fuel-types`).subscribe({
-      next: (res) => this.fuelTypes.set(res.data || [])
+      next: (res) => this.fuelTypes.set(res.data || []),
+      error: () => {},
+      complete: () => checkDone()
     });
   }
 
   loadVariant() {
-    this.loadingData.set(true);
     this.http.get<any>(`${environment.apiUrl}/admin/variants/${this.variantId}`).subscribe({
       next: (res) => {
         const v = res.data;
-        this.form = { name: v.name || '', car_id: v.car_id || '', engine_type_id: v.engine_type_id || '', fuel_type_id: v.fuel_type_id || '' };
-        this.selectedBrandId = v.car?.brand_id || '';
+        this.form = {
+          name: v.name || '',
+          car_id: String(v.car_id || ''),
+          engine_type_id: String(v.engine_type_id || ''),
+          fuel_type_id: String(v.fual_type_id || v.fuel_type_id || '')
+        };
+        this.selectedBrandId = String(v.car?.brand_id || '');
         this.filterCars();
       },
       error: () => this.router.navigate(['/admin/variant/list']),

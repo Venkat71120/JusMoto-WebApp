@@ -63,6 +63,22 @@ router.get('/unread-count', authenticate, async (req, res) => {
   }
 });
 
+// Mark all as read (must be before /:id routes)
+router.put('/read-all', authenticate, async (req, res) => {
+  try {
+    const where = { ...ownerWhere(req), read_at: null };
+
+    const [affectedCount] = await Notification.update(
+      { read_at: new Date() },
+      { where }
+    );
+
+    res.json({ success: true, message: 'All marked as read', data: { updated: affectedCount } });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Update notification (mark read/unread via is_read)
 router.put('/:id', authenticate, async (req, res) => {
   try {
@@ -96,22 +112,6 @@ router.put('/:id/read', authenticate, async (req, res) => {
     );
 
     res.json({ success: true, message: 'Marked as read' });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-// Mark all as read
-router.put('/read-all', authenticate, async (req, res) => {
-  try {
-    const where = { ...ownerWhere(req), read_at: null };
-
-    const [affectedCount] = await Notification.update(
-      { read_at: new Date() },
-      { where }
-    );
-
-    res.json({ success: true, message: 'All marked as read', data: { updated: affectedCount } });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

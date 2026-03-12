@@ -157,7 +157,7 @@ import { environment } from '../../../environments/environment';
             </button>
           </div>
           <div class="header-right">
-            <a routerLink="/cart" class="header-icon cart-icon">
+            <a routerLink="/client/cart" class="header-icon cart-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="9" cy="21" r="1"/>
                 <circle cx="20" cy="21" r="1"/>

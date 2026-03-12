@@ -53,7 +53,7 @@ import { ToastService } from '../../../core/services/toast.service';
           <div class="ms-option" *ngFor="let s of services()">
             <label class="ms-label">
               <input type="checkbox" [checked]="isServiceSelected(s.id)" (change)="toggleService(s.id)">
-              {{ s.name }}
+              {{ s.title }}
             </label>
           </div>
           <div *ngIf="services().length === 0" class="text-muted">No services available</div>
@@ -125,7 +125,7 @@ export class OfferFormComponent implements OnInit {
   }
 
   loadServices() {
-    this.http.get<any>(`${environment.apiUrl}/admin/services`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/admin/services?limit=999`).subscribe({
       next: (res) => this.services.set(res.data || [])
     });
   }

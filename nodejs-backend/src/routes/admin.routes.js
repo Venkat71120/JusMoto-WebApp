@@ -1818,7 +1818,7 @@ router.get('/offers/:id', authenticate, isAdmin, async (req, res) => {
 router.post('/offers', authenticate, isAdmin, async (req, res) => {
   try {
     const { title, subTitle, image, offerPercentage, expires_at, is_primary, service_ids } = req.body;
-    const offer = await Offer.create({ title, subTitle, image, offerPercentage, expires_at, is_primary, status: 1 });
+    const offer = await Offer.create({ title, subTitle, image: image || null, offerPercentage, expires_at: expires_at || null, is_primary, status: 1 });
     if (service_ids && service_ids.length > 0) {
       await OfferService.bulkCreate(service_ids.map(id => ({ offer_id: offer.id, service_id: id })));
     }
@@ -1831,7 +1831,7 @@ router.post('/offers', authenticate, isAdmin, async (req, res) => {
 router.put('/offers/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const { title, subTitle, image, offerPercentage, expires_at, is_primary, status, service_ids } = req.body;
-    await Offer.update({ title, subTitle, image, offerPercentage, expires_at, is_primary, status }, { where: { id: req.params.id } });
+    await Offer.update({ title, subTitle, image: image || null, offerPercentage, expires_at: expires_at || null, is_primary, status }, { where: { id: req.params.id } });
     if (service_ids) {
       await OfferService.destroy({ where: { offer_id: req.params.id } });
       if (service_ids.length > 0) {

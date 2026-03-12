@@ -368,7 +368,7 @@ export class OutletLocationFormComponent implements OnInit, AfterViewInit {
         this.form = {
           name: l.name || '', address: l.address || '', post_code: l.post_code || '',
           latitude: l.latitude || '', longitude: l.longitude || '',
-          state_id: l.state_id || '', city_id: l.city_id || '', area_id: l.area_id || '',
+          state_id: l.state_id ? String(l.state_id) : '', city_id: l.city_id ? String(l.city_id) : '', area_id: l.area_id ? String(l.area_id) : '',
           area_name: '', status: !!l.status
         };
         if (l.state_id) this.loadCities(String(l.state_id));

@@ -1435,6 +1435,16 @@ router.get('/outlet-locations', authenticate, isAdmin, async (req, res) => {
   }
 });
 
+router.get('/outlet-locations/:id', authenticate, isAdmin, async (req, res) => {
+  try {
+    const loc = await AdminOutletLocation.findByPk(req.params.id);
+    if (!loc) return res.status(404).json({ success: false, error: 'Location not found' });
+    res.json({ success: true, data: loc });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 router.post('/outlet-locations', authenticate, isAdmin, async (req, res) => {
   try {
     const loc = await AdminOutletLocation.create({ ...req.body, admin_id: req.admin.id });

@@ -25,7 +25,7 @@ import { ToastService } from '../../../core/services/toast.service';
         <div class="empty-icon">❤️</div>
         <h3>No favourites yet</h3>
         <p>Browse our services and save your favorites for quick access.</p>
-        <a routerLink="/services" class="btn-primary">Browse Services</a>
+        <a routerLink="/client/orders" [queryParams]="{ tab: 'products' }" class="btn-primary">Browse Services</a>
       </div>
 
       <div class="favourites-grid" *ngIf="!loading() && favourites().length > 0">

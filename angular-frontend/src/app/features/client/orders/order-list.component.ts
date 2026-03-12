@@ -170,15 +170,23 @@ import { environment } from '../../../../environments/environment';
                   <span class="price-original" *ngIf="svc.discount_price && svc.discount_price < svc.price">{{ svc.price | currency:'INR':'symbol':'1.0-0' }}</span>
                 </div>
                 <!-- Qty control if in cart -->
+                <!--
                 <div class="cart-qty-control" *ngIf="getCartItem(svc.id) as ci">
                   <button class="qty-btn" (click)="decrementQty(ci)" [disabled]="updatingCartItem() === ci.id">-</button>
                   <span class="qty-val">{{ ci.quantity }}</span>
                   <button class="qty-btn" (click)="incrementQty(ci)" [disabled]="updatingCartItem() === ci.id">+</button>
                 </div>
-                <!-- Add to cart if not in cart -->
                 <button class="btn-add-cart" *ngIf="!getCartItem(svc.id)" (click)="addToCart(svc.id)" [disabled]="addingToCart() === svc.id">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   {{ addingToCart() === svc.id ? 'Adding...' : 'Add to Cart' }}
+                </button>
+                -->
+
+                <button class="btn-add-cart" (click)="addToCart(svc.id)" [disabled]="addingToCart() === svc.id" [class.blink]="blinkItem === svc.id" > 
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/> 
+                  </svg> 
+                  {{ addingToCart() === svc.id ? 'Adding...' : 'Add to Cart' }} 
                 </button>
               </div>
             </div>
@@ -561,14 +569,31 @@ export class ClientOrderListComponent implements OnInit {
     this.searchTimeout = setTimeout(() => this.loadProducts(this.productSearch), 400);
   }
 
+  // addToCart(serviceId: number) {
+  //   this.addingToCart.set(serviceId);
+  //   this.cartService.addItem({ service_id: serviceId }).subscribe({
+  //     next: () => this.toast.success('Added to cart!'),
+  //     error: (err) => this.toast.error(err.error?.error || 'Failed to add to cart'),
+  //     complete: () => this.addingToCart.set(null)
+  //   });
+  // }
   addToCart(serviceId: number) {
-    this.addingToCart.set(serviceId);
-    this.cartService.addItem({ service_id: serviceId }).subscribe({
-      next: () => this.toast.success('Added to cart!'),
-      error: (err) => this.toast.error(err.error?.error || 'Failed to add to cart'),
-      complete: () => this.addingToCart.set(null)
-    });
-  }
+  this.addingToCart.set(serviceId);
+
+  this.cartService.addItem({ service_id: serviceId }).subscribe({
+    next: (res) => {
+      this.toast.success(res.message || 'Added to cart');
+    },
+    error: (err) => {
+      this.toast.error(err.error?.error || 'Failed to add to cart');
+    },
+    complete: () => {
+      setTimeout(() => {
+        this.addingToCart.set(null);
+      }, 1000); 
+    }
+  });
+}
 
   // --- Orders ---
   loadOrders(): void {

@@ -14,7 +14,7 @@ import { TicketService } from '../../../core/services/ticket.service';
           <h1>Service Requests</h1>
           <p>View and manage your service requests</p>
         </div>
-        <a routerLink="/client/tickets/new" class="btn-primary">
+        <a style="display:none" routerLink="/client/tickets/new" class="btn-primary">
           + New Request
         </a>
       </div>

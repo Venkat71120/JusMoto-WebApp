@@ -60,7 +60,7 @@ import { environment } from '../../../../environments/environment';
               </div>
             </div>
 
-            <div class="divider-text" *ngIf="addresses().length > 0">or enter a new address</div>
+            <div class="divider-text" *ngIf="addresses().length > 0 && !selectedAddressId">or enter a new address</div>
 
             <!-- New address form -->
             <div class="address-form" [class.collapsed]="selectedAddressId && addresses().length > 0">
@@ -398,17 +398,26 @@ export class CheckoutComponent implements OnInit {
   }
 
   selectAddress(addr: any) {
-    this.selectedAddressId = addr.id;
-    this.addressForm = {
-      name: addr.name || '',
-      phone: addr.phone || '',
-      email: addr.email || '',
-      address: addr.address || addr.address_line1 || '',
-      city: addr.city || '',
-      state: addr.state || '',
-      zip_code: addr.zip_code || addr.pincode || ''
-    };
+
+  // If user clicks the same address again → unselect it
+  if (this.selectedAddressId === addr.id) {
+    this.selectedAddressId = null;
+    return;
   }
+
+  // Otherwise select it
+  this.selectedAddressId = addr.id;
+
+  this.addressForm = {
+    name: addr.name || '',
+    phone: addr.phone || '',
+    email: addr.email || '',
+    address: addr.address || addr.address_line1 || '',
+    city: addr.city || '',
+    state: addr.state || '',
+    zip_code: addr.zip_code || addr.pincode || ''
+  };
+}
 
   selectPayment(method: string) {
     this.selectedPayment = method;
@@ -448,11 +457,31 @@ export class CheckoutComponent implements OnInit {
     this.finalTotal.set(this.cart().sub_total);
   }
 
+  // isFormValid(): boolean {
+  //   const f = this.addressForm;
+  //   return !!(f.name?.trim() && f.phone?.trim() && f.address?.trim() && f.city?.trim() && f.state?.trim() && f.zip_code?.trim() && this.selectedPayment);
+  // }
+
   isFormValid(): boolean {
-    const f = this.addressForm;
-    return !!(f.name?.trim() && f.phone?.trim() && f.address?.trim() && f.city?.trim() && f.state?.trim() && f.zip_code?.trim() && this.selectedPayment);
+
+  // If user selected a saved/default address
+  if (this.selectedAddressId) {
+    return !!this.selectedPayment;
   }
 
+  // If no address selected → validate the form
+  const f = this.addressForm;
+
+  return !!(
+    f.name?.trim() &&
+    f.phone?.trim() &&
+    f.address?.trim() &&
+    f.city?.trim() &&
+    f.state?.trim() &&
+    f.zip_code?.trim() &&
+    this.selectedPayment
+  );
+}
   placeOrder() {
     if (!this.isFormValid()) {
       this.toast.error('Please fill in all required fields and select a payment method');

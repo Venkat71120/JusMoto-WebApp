@@ -180,11 +180,9 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             <img [src]="getImageUrl(viewCar()?.image)" alt="Car image">
           </div>
           <div class="view-grid">
-            <div class="view-item"><label>ID</label><span>{{ viewCar()?.id }}</span></div>
             <div class="view-item"><label>Brand</label><span>{{ viewCar()?.brand?.name || '-' }}</span></div>
             <div class="view-item"><label>Car Name</label><span class="fw-600">{{ viewCar()?.name }}</span></div>
             <div class="view-item"><label>Year</label><span>{{ viewCar()?.Year || '-' }}</span></div>
-            <div class="view-item"><label>Slug</label><span>{{ viewCar()?.slug || '-' }}</span></div>
             <div class="view-item"><label>Status</label>
               <span class="badge" [class.badge-active]="viewCar()?.status" [class.badge-inactive]="!viewCar()?.status">
                 {{ viewCar()?.status ? 'Active' : 'Inactive' }}

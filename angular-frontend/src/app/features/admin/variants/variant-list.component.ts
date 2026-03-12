@@ -18,10 +18,29 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     </div>
 
     <div class="filters-bar">
-      <select class="filter-select" [(ngModel)]="carFilter" (change)="loadVariants()">
-        <option value="">All Cars</option>
-        <option *ngFor="let car of cars()" [value]="car.id">{{ car.brand?.name || '' }} {{ car.name }}</option>
-      </select>
+      <div class="filter-group">
+        <button class="filter-btn" (click)="filterOpen = !filterOpen">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          {{ carFilter ? getCarName(carFilter) : 'Filter by Car' }}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="filter-dropdown" *ngIf="filterOpen">
+          <div class="filter-search">
+            <input type="text" placeholder="Search cars..." [(ngModel)]="carSearch" class="filter-search-input" />
+          </div>
+          <div class="filter-options">
+            <button class="filter-option" [class.active]="!carFilter" (click)="selectCar('')">All Cars</button>
+            <button class="filter-option" *ngFor="let car of filteredCarList()" [class.active]="carFilter === String(car.id)" (click)="selectCar(car.id)">
+              {{ car.brand?.name || '' }} {{ car.name }}
+            </button>
+          </div>
+        </div>
+        <div class="filter-backdrop" *ngIf="filterOpen" (click)="filterOpen = false"></div>
+      </div>
+      <button class="clear-filter-btn" *ngIf="carFilter" (click)="selectCar('')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Clear
+      </button>
     </div>
 
     <div class="table-container">
@@ -40,8 +59,8 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           <tr *ngFor="let v of variants(); let i = index">
             <td>{{ (pagination().page - 1) * pagination().limit + i + 1 }}</td>
             <td class="fw-600">{{ v.car?.brand?.name || '' }} {{ v.car?.name || '-' }}</td>
-            <td>{{ v.engine_type?.name || '-' }}</td>
-            <td>{{ v.fuel_type?.name || '-' }}</td>
+            <td>{{ v.engineType?.name || v.engine_type?.name || '-' }}</td>
+            <td>{{ v.fuelType?.name || v.fuel_type?.name || '-' }}</td>
             <td>
               <div class="action-btns">
                 <a [routerLink]="['/admin/variant/edit', v.id]" class="action-btn" title="Edit">
@@ -81,8 +100,21 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .page-title { font-size:24px; font-weight:700; color:#1a1a2e; margin:0; }
     .btn-primary { background:#e31b23; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
     .btn-primary:hover { background:#b11218; }
-    .filters-bar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
-    .filter-select { padding:10px 16px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; background:#fff; }
+    .filters-bar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
+    .filter-group { position:relative; }
+    .filter-btn { display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; background:#fff; cursor:pointer; color:#334155; font-weight:500; transition:all 0.2s; }
+    .filter-btn:hover { border-color:#e31b23; color:#e31b23; }
+    .filter-dropdown { position:absolute; top:calc(100% + 6px); left:0; background:#fff; border:1px solid #e5e7eb; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.12); z-index:100; min-width:280px; overflow:hidden; }
+    .filter-search { padding:10px; border-bottom:1px solid #f1f5f9; }
+    .filter-search-input { width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:6px; font-size:13px; box-sizing:border-box; }
+    .filter-search-input:focus { outline:none; border-color:#e31b23; }
+    .filter-options { max-height:240px; overflow-y:auto; padding:6px; }
+    .filter-option { display:block; width:100%; text-align:left; padding:9px 12px; border:none; background:none; cursor:pointer; font-size:13px; color:#334155; border-radius:6px; transition:background 0.15s; }
+    .filter-option:hover { background:#fee2e2; color:#e31b23; }
+    .filter-option.active { background:#e31b23; color:#fff; font-weight:600; }
+    .filter-backdrop { position:fixed; inset:0; z-index:99; }
+    .clear-filter-btn { display:inline-flex; align-items:center; gap:4px; padding:8px 14px; border:1px solid #fecaca; border-radius:8px; background:#fff5f5; color:#e31b23; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.2s; }
+    .clear-filter-btn:hover { background:#fee2e2; }
     .table-container { position:relative; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
     .loading-overlay { position:absolute; inset:0; background:rgba(255,255,255,0.7); display:flex; align-items:center; justify-content:center; z-index:10; }
     .spinner { width:36px; height:36px; border:3px solid #f3f4f6; border-top-color:#e31b23; border-radius:50%; animation:spin 0.8s linear infinite; }
@@ -109,6 +141,9 @@ export class VariantListComponent implements OnInit {
   loading = signal(false);
   deletingItem = signal<any>(null);
   carFilter = '';
+  carSearch = '';
+  filterOpen = false;
+  String = String;
   pagination = signal<any>({ page: 1, limit: 15, total: 0, totalPages: 0, hasNextPage: false, hasPrevPage: false });
 
   constructor(private http: HttpClient, private toast: ToastService) {}
@@ -119,9 +154,31 @@ export class VariantListComponent implements OnInit {
   }
 
   loadCars() {
-    this.http.get<any>(`${environment.apiUrl}/admin/cars`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/admin/cars?limit=999`).subscribe({
       next: (res) => this.cars.set(res.data || [])
     });
+  }
+
+  filteredCarList() {
+    if (!this.carSearch) return this.cars();
+    const q = this.carSearch.toLowerCase();
+    return this.cars().filter(c => {
+      const label = ((c.brand?.name || '') + ' ' + c.name).toLowerCase();
+      return label.includes(q);
+    });
+  }
+
+  getCarName(id: string): string {
+    const car = this.cars().find(c => String(c.id) === String(id));
+    if (!car) return 'Filter by Car';
+    return (car.brand?.name ? car.brand.name + ' ' : '') + car.name;
+  }
+
+  selectCar(id: any) {
+    this.carFilter = id ? String(id) : '';
+    this.filterOpen = false;
+    this.carSearch = '';
+    this.loadVariants();
   }
 
   loadVariants(page = 1) {

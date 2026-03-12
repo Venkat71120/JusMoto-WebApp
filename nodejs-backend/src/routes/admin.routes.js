@@ -1814,10 +1814,16 @@ router.get('/refunded-orders', authenticate, isAdmin, async (req, res) => {
     const pagination = paginate(page, limit);
     const where = {};
     if (status !== undefined && status !== '') where.status = status;
+
+    const orderWhere = {};
+    if (req.admin.is_franchise) {
+      orderWhere.franchise_admin_id = req.admin.id;
+    }
+
     const { rows, count } = await RefundedOrder.findAndCountAll({
       where,
       include: [
-        { association: 'order', attributes: ['id', 'invoice_number', 'total'] },
+        { association: 'order', attributes: ['id', 'invoice_number', 'total', 'franchise_admin_id'], where: orderWhere },
         { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email'] }
       ],
       ...pagination, order: [['created_at', 'DESC']]

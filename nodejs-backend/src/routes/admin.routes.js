@@ -946,7 +946,16 @@ router.delete('/engine-types/:id', authenticate, isAdmin, async (req, res) => {
 router.get('/fuel-types', authenticate, isAdmin, async (req, res) => {
   try {
     const types = await FuelType.findAll({ order: [['name', 'ASC']] });
-    res.json({ success: true, data: types });
+    const data = [];
+    for (const t of types) {
+      const json = t.toJSON();
+      if (json.image && typeof json.image === 'number') {
+        const media = await MediaUpload.findByPk(json.image);
+        json.image_url = media ? media.path : null;
+      }
+      data.push(json);
+    }
+    res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

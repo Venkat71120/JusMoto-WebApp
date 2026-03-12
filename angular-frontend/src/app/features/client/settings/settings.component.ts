@@ -263,7 +263,7 @@ import * as L from 'leaflet';
           </div>
 
           <!-- Security Tab -->
-          <div class="tab-content" [hidden]="activeTab() !== 'security'">
+          <div  class="tab-content" [hidden]="activeTab() !== 'security'">
             <h2>Security Settings</h2>
 
             <div class="security-section">
@@ -478,8 +478,8 @@ export class SettingsComponent implements OnInit, AfterViewChecked {
     { id: 'profile', label: 'Profile', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' },
     { id: 'password', label: 'Password', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>' },
     { id: 'addresses', label: 'Addresses', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>' },
-    { id: 'notifications', label: 'Notifications', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>' },
-    { id: 'security', label: 'Security', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' }
+    // { id: 'notifications', label: 'Notifications', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>' },
+    // { id: 'security', label: 'Security', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' }
   ];
 
   profile = { first_name: '', last_name: '', phone: '', date_of_birth: '' };
@@ -578,42 +578,82 @@ export class SettingsComponent implements OnInit, AfterViewChecked {
   }
 
   updateProfile(): void {
-    if (this.profile.phone && !/^\d{10}$/.test(this.profile.phone)) {
-      this.toast.error('Phone number must be exactly 10 digits');
+
+    // check required fields
+    if (!this.profile.first_name || !this.profile.phone) {
+      alert('Please fill all required fields');
       return;
     }
+
+    const payload: any = {
+      first_name: this.profile.first_name,
+      last_name: this.profile.last_name || null,
+      phone: this.profile.phone,
+      date_of_birth: this.profile.date_of_birth || null
+    };
+
     this.savingProfile.set(true);
-    this.http.put<any>(`${environment.apiUrl}/user/profile`, this.profile).subscribe({
+
+    this.http.put<any>(`${environment.apiUrl}/user/profile`, payload).subscribe({
       next: () => {
         this.savingProfile.set(false);
-        this.authService.updateCurrentUser({ first_name: this.profile.first_name, last_name: this.profile.last_name, phone: this.profile.phone } as any);
         this.toast.success('Profile updated successfully');
       },
-      error: () => { this.savingProfile.set(false); this.toast.error('Failed to update profile'); }
+      error: () => {
+        this.savingProfile.set(false);
+        this.toast.error('Failed to update profile');
+      }
     });
+
   }
 
   // ─── Password Methods ───
   changePassword(): void {
+
     if (!this.passwords.current_password || !this.passwords.new_password || !this.passwords.confirm_password) {
-      this.toast.warning('Please fill in all password fields'); return;
+      this.toast.warning('Please fill in all password fields');
+      return;
     }
-    if (this.passwords.new_password.length < 8) { this.toast.warning('New password must be at least 8 characters'); return; }
-    if (this.passwords.new_password !== this.passwords.confirm_password) { this.toast.error('Passwords do not match'); return; }
+
+    if (this.passwords.new_password.length < 8) {
+      this.toast.warning('New password must be at least 8 characters');
+      return;
+    }
+
+    if (this.passwords.new_password !== this.passwords.confirm_password) {
+      this.toast.error('Passwords do not match');
+      return;
+    }
 
     this.savingPassword.set(true);
+
     this.http.put<any>(`${environment.apiUrl}/user/change-password`, {
       current_password: this.passwords.current_password,
       new_password: this.passwords.new_password,
       confirm_password: this.passwords.confirm_password
     }).subscribe({
+
       next: () => {
         this.savingPassword.set(false);
         this.passwords = { current_password: '', new_password: '', confirm_password: '' };
         this.toast.success('Password changed successfully');
       },
-      error: (err) => { this.savingPassword.set(false); this.toast.error(err.error?.message || 'Failed to change password'); }
+
+      error: (err) => {
+
+        this.savingPassword.set(false);
+
+        // ✅ Custom message for wrong current password
+        if (err.error?.message === 'Current password is incorrect') {
+          this.toast.error('Current password is not matching');
+        } else {
+          this.toast.error(err.error?.message || 'Failed to change password');
+        }
+
+      }
+
     });
+
   }
 
   // ─── Notification Prefs ───

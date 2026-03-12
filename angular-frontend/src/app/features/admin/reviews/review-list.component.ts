@@ -156,7 +156,7 @@ export class ReviewListComponent implements OnInit {
   goToPage(page: number) { this.loadReviews(page); }
 
   changeStatus(review: any, status: string) {
-    this.http.put<any>(`${environment.apiUrl}/admin/reviews/${review.id}`, { status }).subscribe({
+    this.http.put<any>(`${environment.apiUrl}/admin/reviews/${review.id}/status`, { status }).subscribe({
       next: () => { this.toast.success('Review status updated'); this.loadReviews(this.pagination().page); },
       error: () => this.toast.error('Failed to update review status')
     });

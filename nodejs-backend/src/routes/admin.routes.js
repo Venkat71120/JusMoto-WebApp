@@ -246,12 +246,22 @@ router.get('/orders', authenticate, isAdmin, async (req, res) => {
     if (status !== undefined && status !== '') where.status = status;
     if (payment_status !== undefined && payment_status !== '') where.payment_status = payment_status;
     if (search) {
-      where[Op.or] = [
-        { invoice_number: { [Op.like]: `%${search}%` } },
-        { '$user.first_name$': { [Op.like]: `%${search}%` } },
-        { '$user.last_name$': { [Op.like]: `%${search}%` } },
-        { '$user.email$': { [Op.like]: `%${search}%` } }
-      ];
+      const words = search.trim().split(/\s+/);
+      if (words.length > 1) {
+        // Multi-word search: each word must match first_name or last_name
+        where[Op.or] = [
+          { invoice_number: { [Op.like]: `%${search}%` } },
+          { '$user.email$': { [Op.like]: `%${search}%` } },
+          { [Op.and]: words.map(w => ({ [Op.or]: [{ '$user.first_name$': { [Op.like]: `%${w}%` } }, { '$user.last_name$': { [Op.like]: `%${w}%` } }] })) }
+        ];
+      } else {
+        where[Op.or] = [
+          { invoice_number: { [Op.like]: `%${search}%` } },
+          { '$user.first_name$': { [Op.like]: `%${search}%` } },
+          { '$user.last_name$': { [Op.like]: `%${search}%` } },
+          { '$user.email$': { [Op.like]: `%${search}%` } }
+        ];
+      }
     }
     const { rows, count } = await Order.findAndCountAll({
       where,

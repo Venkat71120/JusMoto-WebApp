@@ -193,9 +193,10 @@ function parseCSV(filePath) {
                 const variant = cleanVariantName(row['Variant']);
                 const fuelType = normalizeFuelType(row['Fuel_Type']);
                 const engineType = extractEngineType(row['Displacement'], row['Cylinders']);
+                const imageUrl = (row['Image url'] || row['Image_url'] || '').trim();
 
                 if (brand && model) {
-                    results.push({ brand, model, variant, fuelType, engineType });
+                    results.push({ brand, model, variant, fuelType, engineType, imageUrl });
                 }
             })
             .on('end', () => resolve(results))
@@ -250,7 +251,7 @@ async function importCarsFromCSV(filePath) {
             } else {
                 const [brand, brandCreated] = await Brand.findOrCreate({
                     where: { name: row.brand },
-                    defaults: { name: row.brand }
+                    defaults: { name: row.brand, image: '' }
                 });
                 brandId = brand.id;
                 brandCache[brandKey] = brandId;
@@ -287,15 +288,16 @@ async function importCarsFromCSV(filePath) {
             } else {
                 const [car, carCreated] = await Car.findOrCreate({
                     where: { brand_id: brandId, name: row.model },
-                    defaults: { brand_id: brandId, name: row.model, status: 1 }
+                    defaults: { brand_id: brandId, name: row.model, image: row.imageUrl || '', status: 1 }
                 });
                 carId = car.id;
                 carCache[carKey] = carId;
 
                 if (carCreated) {
                     stats.carsCreated++;
-                    // Fetch car image (environment background photo)
-                    if (hasImageApi) {
+                    if (row.imageUrl) {
+                        stats.imagesFound++;
+                    } else if (hasImageApi) {
                         const imageUrl = await searchCarImage(row.brand, row.model);
                         if (imageUrl) {
                             const savedPath = await downloadImage(imageUrl, `car_${row.brand.toLowerCase().replace(/\s+/g, '_')}_${row.model.toLowerCase().replace(/\s+/g, '_')}`);

@@ -9,12 +9,10 @@ const { Op } = require('sequelize');
 const { createSlug } = require('../utils/helpers');
 const { importCarsFromCSV } = require('../services/csv-import.service');
 
-// CSV upload config — disk storage, .csv only
+// CSV upload config — use /tmp to avoid permission issues
 const csvStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../../uploads/csv');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
+    cb(null, '/tmp');
   },
   filename: (req, file, cb) => {
     cb(null, `cars_import_${Date.now()}.csv`);

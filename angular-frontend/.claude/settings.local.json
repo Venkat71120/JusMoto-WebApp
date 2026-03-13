@@ -58,7 +58,10 @@
       "Bash(EC2=\"ubuntu@16.112.128.19\")",
       "Bash(BACKEND=\"C:/xampp/htdocs/JusMoto-WebApp/nodejs-backend\":*)",
       "Bash(DIST=\"C:/xampp/htdocs/JusMoto-WebApp/angular-frontend/dist/jusmoto-frontend/browser/\")",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "WebSearch",
+      "WebFetch(domain:serpapi.com)",
+      "WebFetch(domain:www.carwale.com)"
     ]
   }
 }

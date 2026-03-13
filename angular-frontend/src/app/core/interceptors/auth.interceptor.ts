@@ -19,7 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
   ) {}
 
 intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-  const isAdminRequest = request.url.includes('/admin/');
+  const isAdminRequest = request.url.includes('/admin/') || request.url.includes('/cars/import-csv');
   let token = isAdminRequest ? this.authService.adminToken : this.authService.token;
   // Fallback: if no user token but admin is logged in, use admin token
   if (!token && this.authService.adminToken) {

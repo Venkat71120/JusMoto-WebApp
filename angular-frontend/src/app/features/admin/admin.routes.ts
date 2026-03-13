@@ -97,6 +97,7 @@ export const adminRoutes: Routes = [
 
       // Settings
       { path: 'settings/general', loadComponent: () => import('./settings/general-settings.component').then(m => m.GeneralSettingsComponent) },
+      { path: 'settings/contact', loadComponent: () => import('./contact-settings/contact-settings.component').then(m => m.ContactSettingsComponent) },
 
       // Outlet Locations
       { path: 'outletAddress/all', loadComponent: () => import('./outlet-locations/outlet-location-list.component').then(m => m.OutletLocationListComponent) },

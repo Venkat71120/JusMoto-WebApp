@@ -5,7 +5,7 @@ const { uploadSingle } = require('../middleware/upload.middleware');
 const { User, Admin, Order, Service, Category, SubCategory, Brand, Car, Coupon, Offer, OfferService,
         Variant, Review, Ticket, ChatMessage, Department, RefundedOrder, State, City, Area,
         Slider, AdminOutletLocation, AdminNotification, MediaUpload, EngineType, FuelType,
-        Role, Permission, ServiceInclude, ServiceFaq, ServiceAdditional } = require('../models');
+        Role, Permission, ServiceInclude, ServiceFaq, ServiceAdditional, StaticOption } = require('../models');
 const { Op } = require('sequelize');
 const { paginate, paginationResponse, createSlug } = require('../utils/helpers');
 const path = require('path');
@@ -2374,6 +2374,54 @@ router.post('/seed-data', authenticate, isAdmin, async (req, res) => {
     } catch (e) { console.log('City API error:', e.message); }
 
     res.json({ success: true, message: 'Data seeded successfully', data: results });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ==================== CONTACT SETTINGS ====================
+
+// PUT /admin/privacy-policy
+router.put('/privacy-policy', authenticate, isAdmin, async (req, res) => {
+  try {
+    const { content } = req.body;
+    await StaticOption.upsert({ option_name: 'page_privacy_policy', option_value: content || '' });
+    res.json({ success: true, message: 'Privacy policy saved successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// PUT /admin/terms-and-conditions
+router.put('/terms-and-conditions', authenticate, isAdmin, async (req, res) => {
+  try {
+    const { content } = req.body;
+    await StaticOption.upsert({ option_name: 'page_terms_and_conditions', option_value: content || '' });
+    res.json({ success: true, message: 'Terms and conditions saved successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// PUT /admin/contact
+router.put('/contact', authenticate, isAdmin, async (req, res) => {
+  try {
+    const fields = {
+      contact_email: req.body.email,
+      contact_phone: req.body.phone,
+      contact_whatsapp: req.body.whatsapp,
+      contact_address: req.body.address,
+      social_facebook: req.body.facebook,
+      social_instagram: req.body.instagram,
+      social_twitter: req.body.twitter,
+      social_youtube: req.body.youtube
+    };
+    for (const [key, val] of Object.entries(fields)) {
+      if (val !== undefined) {
+        await StaticOption.upsert({ option_name: key, option_value: val || '' });
+      }
+    }
+    res.json({ success: true, message: 'Contact details saved successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

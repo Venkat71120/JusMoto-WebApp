@@ -110,7 +110,7 @@ import { environment } from '../../../environments/environment';
                 <span>Traffic Challans</span>
               </a>
             </li>
-            <li>
+            <!-- <li>
               <a routerLink="/client/notifications" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
                 <svg width="19" height="18" viewBox="0 0 19 18" fill="none">
                   <path d="M8.3 3.75C8.3 3.35 8.46 2.97 8.74 2.69C9.03 2.41 9.41 2.25 9.8 2.25C10.2 2.25 10.58 2.41 10.87 2.69C11.15 2.97 11.3 3.35 11.3 3.75C12.17 4.16 12.9 4.79 13.43 5.58C13.96 6.38 14.26 7.3 14.3 8.25V10.5C14.36 10.97 14.53 11.41 14.79 11.8C15.05 12.19 15.4 12.52 15.8 12.75H3.8C4.21 12.52 4.56 12.19 4.82 11.8C5.08 11.41 5.25 10.97 5.3 10.5V8.25C5.35 7.3 5.65 6.38 6.18 5.58C6.71 4.79 7.44 4.16 8.3 3.75Z" stroke="currentColor" stroke-width="1.5"/>
@@ -118,7 +118,7 @@ import { environment } from '../../../environments/environment';
                 </svg>
                 <span>Notifications</span>
               </a>
-            </li>
+            </li> -->
             <li>
               <a routerLink="/client/settings" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none">

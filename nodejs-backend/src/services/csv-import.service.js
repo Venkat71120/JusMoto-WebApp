@@ -251,7 +251,7 @@ async function importCarsFromCSV(filePath) {
             } else {
                 const [brand, brandCreated] = await Brand.findOrCreate({
                     where: { name: row.brand },
-                    defaults: { name: row.brand, image: '' }
+                    defaults: { name: row.brand, image: 0 }
                 });
                 brandId = brand.id;
                 brandCache[brandKey] = brandId;

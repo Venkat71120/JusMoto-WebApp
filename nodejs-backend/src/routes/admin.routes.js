@@ -2381,11 +2381,21 @@ router.post('/seed-data', authenticate, isAdmin, async (req, res) => {
 
 // ==================== CONTACT SETTINGS ====================
 
+// Helper: find-or-create then update a static option by option_name
+async function saveStaticOption(name, value) {
+  const existing = await StaticOption.findOne({ where: { option_name: name } });
+  if (existing) {
+    await existing.update({ option_value: value });
+  } else {
+    await StaticOption.create({ option_name: name, option_value: value });
+  }
+}
+
 // PUT /admin/privacy-policy
 router.put('/privacy-policy', authenticate, isAdmin, async (req, res) => {
   try {
     const { content } = req.body;
-    await StaticOption.upsert({ option_name: 'page_privacy_policy', option_value: content || '' });
+    await saveStaticOption('page_privacy_policy', content || '');
     res.json({ success: true, message: 'Privacy policy saved successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -2396,7 +2406,7 @@ router.put('/privacy-policy', authenticate, isAdmin, async (req, res) => {
 router.put('/terms-and-conditions', authenticate, isAdmin, async (req, res) => {
   try {
     const { content } = req.body;
-    await StaticOption.upsert({ option_name: 'page_terms_and_conditions', option_value: content || '' });
+    await saveStaticOption('page_terms_and_conditions', content || '');
     res.json({ success: true, message: 'Terms and conditions saved successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -2418,7 +2428,7 @@ router.put('/contact', authenticate, isAdmin, async (req, res) => {
     };
     for (const [key, val] of Object.entries(fields)) {
       if (val !== undefined) {
-        await StaticOption.upsert({ option_name: key, option_value: val || '' });
+        await saveStaticOption(key, val || '');
       }
     }
     res.json({ success: true, message: 'Contact details saved successfully' });

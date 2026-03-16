@@ -1054,7 +1054,7 @@ router.get('/variants/:id', authenticate, isAdmin, async (req, res) => {
 router.post('/variants', authenticate, isAdmin, async (req, res) => {
   try {
     const { name, car_id, engine_type_id, fuel_type_id } = req.body;
-    const variant = await Variant.create({ name: name || null, car_id, engine_type_id, fual_type_id: fuel_type_id });
+    const variant = await Variant.create({ name: name || null, car_id, engine_type_id, fuel_type_id: fuel_type_id });
     res.status(201).json({ success: true, data: variant, message: 'Variant created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -1064,7 +1064,7 @@ router.post('/variants', authenticate, isAdmin, async (req, res) => {
 router.put('/variants/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const { name, car_id, engine_type_id, fuel_type_id } = req.body;
-    await Variant.update({ name: name || null, car_id, engine_type_id, fual_type_id: fuel_type_id }, { where: { id: req.params.id } });
+    await Variant.update({ name: name || null, car_id, engine_type_id, fuel_type_id: fuel_type_id }, { where: { id: req.params.id } });
     const variant = await Variant.findByPk(req.params.id, {
       include: ['car', 'engineType', 'fuelType']
     });
@@ -2284,7 +2284,7 @@ router.post('/seed-archive-cars', authenticate, isAdmin, async (req, res) => {
             car_id: carRecord.id,
             name: variantDisplayName,
             engine_type_id: engineTypeId,
-            fual_type_id: fuelTypeId,
+            fuel_type_id: fuelTypeId,
             status: 1
           }
         });

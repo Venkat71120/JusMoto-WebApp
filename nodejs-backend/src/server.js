@@ -30,11 +30,11 @@ const startServer = async () => {
     try {
       const [vCols] = await sequelize.query("SHOW COLUMNS FROM varients LIKE 'name'");
       if (vCols.length === 0) {
-        await sequelize.query("ALTER TABLE varients ADD COLUMN name VARCHAR(191) NULL AFTER car_id, ADD COLUMN status TINYINT DEFAULT 1 AFTER fual_type_id");
+        await sequelize.query("ALTER TABLE varients ADD COLUMN name VARCHAR(191) NULL AFTER car_id, ADD COLUMN status TINYINT DEFAULT 1 AFTER fuel_type_id");
         console.log('Migration: Added name, status to varients table');
       }
-      // Make engine_type_id and fual_type_id nullable for user-added variants
-      await sequelize.query("ALTER TABLE varients MODIFY COLUMN engine_type_id BIGINT UNSIGNED NULL, MODIFY COLUMN fual_type_id BIGINT UNSIGNED NULL");
+      // Make engine_type_id and fuel_type_id nullable for user-added variants
+      await sequelize.query("ALTER TABLE varients MODIFY COLUMN engine_type_id BIGINT UNSIGNED NULL, MODIFY COLUMN fuel_type_id BIGINT UNSIGNED NULL");
     } catch (e) {
       console.log('Migration check (varients):', e.message);
     }

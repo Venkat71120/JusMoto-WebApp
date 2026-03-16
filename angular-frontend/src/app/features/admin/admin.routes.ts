@@ -56,7 +56,7 @@ export const adminRoutes: Routes = [
       { path: 'engine/list', loadComponent: () => import('./engine-types/engine-type-list.component').then(m => m.EngineTypeListComponent) },
 
       // Fuel Types
-      { path: 'fual/list', loadComponent: () => import('./fuel-types/fuel-type-list.component').then(m => m.FuelTypeListComponent) },
+      { path: 'fuel/list', loadComponent: () => import('./fuel-types/fuel-type-list.component').then(m => m.FuelTypeListComponent) },
 
       // Coupons
       { path: 'coupons/all', loadComponent: () => import('./coupons/coupon-list.component').then(m => m.CouponListComponent) },

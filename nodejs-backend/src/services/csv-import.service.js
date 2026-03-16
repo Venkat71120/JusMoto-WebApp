@@ -363,7 +363,7 @@ async function importCarsFromCSV(filePath) {
                             car_id: carId,
                             name: row.variant,
                             engine_type_id: engineTypeId,
-                            fual_type_id: fuelTypeId,
+                            fuel_type_id: fuelTypeId,
                             status: 1
                         }
                     });

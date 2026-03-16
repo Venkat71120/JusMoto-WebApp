@@ -148,7 +148,7 @@ export class VariantFormComponent implements OnInit {
           name: v.name || '',
           car_id: String(v.car_id || ''),
           engine_type_id: String(v.engine_type_id || ''),
-          fuel_type_id: String(v.fual_type_id || v.fuel_type_id || '')
+          fuel_type_id: String(v.fuel_type_id || '')
         };
         this.selectedBrandId = String(v.car?.brand_id || '');
         this.filterCars();

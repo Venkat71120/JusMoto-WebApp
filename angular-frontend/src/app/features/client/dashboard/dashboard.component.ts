@@ -147,7 +147,7 @@ import { environment } from '../../../../environments/environment';
           <div class="quick-actions">
             <h4 class="section-title">Quick Actions</h4>
             <div class="action-buttons">
-              <a routerLink="/services" class="action-btn">
+              <a routerLink="/client/orders" class="action-btn">
                 <div class="action-icon red-bg">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="3"/>

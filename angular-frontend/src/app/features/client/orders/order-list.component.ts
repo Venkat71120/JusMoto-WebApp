@@ -163,30 +163,16 @@ import { environment } from '../../../../environments/environment';
             </div>
             <div class="service-card-body">
               <h3 class="service-title">{{ svc.title }}</h3>
-              <p class="service-desc" *ngIf="svc.description">{{ svc.description | slice:0:80 }}{{ svc.description?.length > 80 ? '...' : '' }}</p>
+              <p class="service-desc" *ngIf="svc.description">{{ svc.description }}</p>
+              <button class="view-more-link" *ngIf="svc.description?.length > 60" (click)="openDetailModal(svc)">View More</button>
               <div class="service-price-row">
                 <div class="service-price">
                   <span class="price-current">{{ (svc.discount_price || svc.price) | currency:'INR':'symbol':'1.0-0' }}</span>
                   <span class="price-original" *ngIf="svc.discount_price && svc.discount_price < svc.price">{{ svc.price | currency:'INR':'symbol':'1.0-0' }}</span>
                 </div>
-                <!-- Qty control if in cart -->
-                <!--
-                <div class="cart-qty-control" *ngIf="getCartItem(svc.id) as ci">
-                  <button class="qty-btn" (click)="decrementQty(ci)" [disabled]="updatingCartItem() === ci.id">-</button>
-                  <span class="qty-val">{{ ci.quantity }}</span>
-                  <button class="qty-btn" (click)="incrementQty(ci)" [disabled]="updatingCartItem() === ci.id">+</button>
-                </div>
-                <button class="btn-add-cart" *ngIf="!getCartItem(svc.id)" (click)="addToCart(svc.id)" [disabled]="addingToCart() === svc.id">
+                <button class="btn-add-cart" (click)="addToCart(svc.id)" [disabled]="addingToCart() === svc.id">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   {{ addingToCart() === svc.id ? 'Adding...' : 'Add to Cart' }}
-                </button>
-                -->
-
-                <button class="btn-add-cart" (click)="addToCart(svc.id)" [disabled]="addingToCart() === svc.id" [class.blink]="blinkItem === svc.id" > 
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/> 
-                  </svg> 
-                  {{ addingToCart() === svc.id ? 'Adding...' : 'Add to Cart' }} 
                 </button>
               </div>
             </div>
@@ -223,25 +209,49 @@ import { environment } from '../../../../environments/environment';
             </div>
             <div class="service-card-body">
               <h3 class="service-title">{{ prod.title }}</h3>
-              <p class="service-desc" *ngIf="prod.description">{{ prod.description | slice:0:80 }}{{ prod.description?.length > 80 ? '...' : '' }}</p>
+              <p class="service-desc" *ngIf="prod.description">{{ prod.description }}</p>
+              <button class="view-more-link" *ngIf="prod.description?.length > 60" (click)="openDetailModal(prod)">View More</button>
               <div class="service-price-row">
                 <div class="service-price">
                   <span class="price-current">{{ (prod.discount_price || prod.price) | currency:'INR':'symbol':'1.0-0' }}</span>
                   <span class="price-original" *ngIf="prod.discount_price && prod.discount_price < prod.price">{{ prod.price | currency:'INR':'symbol':'1.0-0' }}</span>
                 </div>
-                <!-- Qty control if in cart -->
                 <div class="cart-qty-control" *ngIf="getCartItem(prod.id) as ci">
                   <button class="qty-btn" (click)="decrementQty(ci)" [disabled]="updatingCartItem() === ci.id">-</button>
                   <span class="qty-val">{{ ci.quantity }}</span>
                   <button class="qty-btn" (click)="incrementQty(ci)" [disabled]="updatingCartItem() === ci.id">+</button>
                 </div>
-                <!-- Add to cart if not in cart -->
                 <button class="btn-add-cart" *ngIf="!getCartItem(prod.id)" (click)="addToCart(prod.id)" [disabled]="addingToCart() === prod.id">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   {{ addingToCart() === prod.id ? 'Adding...' : 'Add to Cart' }}
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service/Product Detail Modal -->
+      <div class="detail-overlay" *ngIf="detailModalItem()" (click)="closeDetailModal()">
+        <div class="detail-modal" (click)="$event.stopPropagation()">
+          <button class="detail-close-btn" (click)="closeDetailModal()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <div class="detail-img-wrap" *ngIf="detailModalItem()">
+            <img *ngIf="detailModalItem()!.image" [src]="getServiceImageUrl(detailModalItem()!.image)" [alt]="detailModalItem()!.title" (error)="onImgError($event)">
+            <svg *ngIf="!detailModalItem()!.image" class="img-fallback" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div class="detail-body" *ngIf="detailModalItem()">
+            <h2 class="detail-title">{{ detailModalItem()!.title }}</h2>
+            <div class="detail-price-row">
+              <span class="detail-price-current">{{ (detailModalItem()!.discount_price || detailModalItem()!.price) | currency:'INR':'symbol':'1.0-0' }}</span>
+              <span class="detail-price-original" *ngIf="detailModalItem()!.discount_price && detailModalItem()!.discount_price < detailModalItem()!.price">{{ detailModalItem()!.price | currency:'INR':'symbol':'1.0-0' }}</span>
+            </div>
+            <div class="detail-desc">{{ detailModalItem()!.description }}</div>
+            <button class="detail-add-cart" (click)="addToCart(detailModalItem()!.id); closeDetailModal()" [disabled]="addingToCart() === detailModalItem()!.id">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              {{ addingToCart() === detailModalItem()!.id ? 'Adding...' : 'Add to Cart' }}
+            </button>
           </div>
         </div>
       </div>
@@ -355,7 +365,7 @@ import { environment } from '../../../../environments/environment';
 
     /* Service/Product grid */
     .service-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px; }
-    .service-card { background:#fff; border-radius:14px; border:1px solid #e5e7eb; overflow:hidden; transition:all 0.2s; }
+    .service-card { background:#fff; border-radius:14px; border:1px solid #e5e7eb; overflow:hidden; transition:all 0.2s; display:flex; flex-direction:column; }
     .service-card:hover { border-color:#e31b23; box-shadow:0 4px 16px rgba(227,27,35,0.1); }
     .service-img-wrap { background:#f8f9fa; padding:16px; display:flex; align-items:center; justify-content:center; min-height:160px; position:relative; }
     .service-img-wrap img { max-width:100%; max-height:140px; object-fit:contain; border-radius:8px; }
@@ -363,10 +373,12 @@ import { environment } from '../../../../environments/environment';
     .heart-btn { position:absolute; top:10px; right:10px; width:34px; height:34px; background:#fff; border:none; border-radius:50%; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.15); display:flex; align-items:center; justify-content:center; transition:all 0.2s; z-index:10; }
     .heart-btn:hover { transform:scale(1.15); }
     .heart-btn.active { background:#fff5f5; }
-    .service-card-body { padding:16px 20px; }
-    .service-title { font-size:16px; font-weight:700; color:#1a1a2e; margin:0 0 6px; }
-    .service-desc { font-size:13px; color:#64748b; margin:0 0 12px; line-height:1.4; }
-    .service-price-row { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .service-card-body { padding:16px 20px; display:flex; flex-direction:column; flex:1; }
+    .service-title { font-size:16px; font-weight:700; color:#1a1a2e; margin:0 0 6px; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; line-height:1.4; min-height:22px; }
+    .service-desc { font-size:13px; color:#64748b; margin:0 0 4px; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:36px; }
+    .view-more-link { background:none; border:none; color:#e31b23; font-size:12px; font-weight:600; cursor:pointer; padding:0; margin:0 0 8px; text-align:left; align-self:flex-start; }
+    .view-more-link:hover { text-decoration:underline; }
+    .service-price-row { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:auto; }
     .service-price { display:flex; align-items:baseline; gap:8px; }
     .price-current { font-size:18px; font-weight:700; color:#e31b23; }
     .price-original { font-size:14px; color:#94a3b8; text-decoration:line-through; }
@@ -380,6 +392,23 @@ import { environment } from '../../../../environments/environment';
     .cart-qty-control .qty-btn:hover:not(:disabled) { background:#fee2e2; }
     .cart-qty-control .qty-btn:disabled { opacity:0.4; cursor:not-allowed; }
     .cart-qty-control .qty-val { width:36px; text-align:center; font-weight:700; font-size:14px; color:#e31b23; background:#fff5f5; line-height:32px; }
+
+    /* Detail Modal */
+    .detail-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; display:flex; align-items:center; justify-content:center; padding:16px; }
+    .detail-modal { background:#fff; border-radius:16px; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.2); animation:slideUp 0.25s ease-out; position:relative; }
+    .detail-close-btn { position:absolute; top:14px; right:14px; background:#fff; border:none; cursor:pointer; color:#64748b; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:2; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:all 0.2s; }
+    .detail-close-btn:hover { color:#1a1a1a; background:#f1f5f9; }
+    .detail-img-wrap { background:#f8f9fa; padding:32px 24px; display:flex; align-items:center; justify-content:center; min-height:200px; border-radius:16px 16px 0 0; }
+    .detail-img-wrap img { max-width:100%; max-height:220px; object-fit:contain; border-radius:8px; }
+    .detail-body { padding:24px; }
+    .detail-title { font-size:22px; font-weight:700; color:#1a1a2e; margin:0 0 12px; line-height:1.3; }
+    .detail-price-row { display:flex; align-items:baseline; gap:10px; margin-bottom:16px; }
+    .detail-price-current { font-size:24px; font-weight:700; color:#e31b23; }
+    .detail-price-original { font-size:16px; color:#94a3b8; text-decoration:line-through; }
+    .detail-desc { font-size:14px; color:#475569; line-height:1.7; margin-bottom:24px; white-space:pre-line; }
+    .detail-add-cart { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px 24px; background:#e31b23; color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .detail-add-cart:hover { background:#b11218; }
+    .detail-add-cart:disabled { opacity:0.6; cursor:not-allowed; }
 
     /* Cancel Modal */
     .cancel-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; display:flex; align-items:center; justify-content:center; padding:16px; }
@@ -427,6 +456,7 @@ export class ClientOrderListComponent implements OnInit {
   cartCount = signal(0);
   cartItems = signal<CartItem[]>([]);
   favouriteMap = signal<Map<number, number>>(new Map());
+  detailModalItem = signal<any>(null);
   cancelModalOpen = signal(false);
   cancellingOrder = signal(false);
   cancelOrderId = signal<number | null>(null);
@@ -663,6 +693,14 @@ export class ClientOrderListComponent implements OnInit {
         error: (err) => this.toast.error(err.error?.error || 'Failed to add to favourites')
       });
     }
+  }
+
+  openDetailModal(item: any): void {
+    this.detailModalItem.set(item);
+  }
+
+  closeDetailModal(): void {
+    this.detailModalItem.set(null);
   }
 
   openCancelModal(orderId: number): void {

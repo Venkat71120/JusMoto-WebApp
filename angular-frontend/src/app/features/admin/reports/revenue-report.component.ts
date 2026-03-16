@@ -18,11 +18,11 @@ import { ToastService } from '../../../core/services/toast.service';
       <div class="filter-row">
         <div class="filter-group">
           <label>From</label>
-          <input type="date" [(ngModel)]="fromDate" class="filter-input">
+          <input type="date" [(ngModel)]="fromDate" [max]="today" class="filter-input">
         </div>
         <div class="filter-group">
           <label>To</label>
-          <input type="date" [(ngModel)]="toDate" class="filter-input">
+          <input type="date" [(ngModel)]="toDate" [max]="today" class="filter-input">
         </div>
         <div class="filter-group">
           <label>Group By</label>
@@ -108,6 +108,7 @@ export class RevenueReportComponent implements OnInit {
   loading = signal(false);
   fromDate = '';
   toDate = '';
+  today = new Date().toISOString().split('T')[0];
   groupBy = 'day';
 
   constructor(private http: HttpClient, private toast: ToastService) {}

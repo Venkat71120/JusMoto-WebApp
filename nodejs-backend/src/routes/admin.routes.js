@@ -359,35 +359,86 @@ router.get('/orders/:id/invoice', authenticate, isAdmin, async (req, res) => {
 
     const itemsHtml = (order.items || []).map((item, i) => {
       const qty = item.qty || item.quantity || 1;
-      return `<tr><td>${i + 1}</td><td>${item.service?.title || 'Service #' + item.service_id}</td><td>&#8377;${Number(item.price).toFixed(2)}</td><td>${qty}</td><td style="text-align:right">&#8377;${(item.price * qty).toFixed(2)}</td></tr>`;
+      return `<tr><td style="border:1px solid #d1d5db;padding:10px 14px;text-align:center;font-size:13px;">${i + 1}</td><td style="border:1px solid #d1d5db;padding:10px 14px;font-size:13px;">${item.service?.title || 'Service #' + item.service_id}</td><td style="border:1px solid #d1d5db;padding:10px 14px;text-align:right;font-size:13px;">&#8377;${Number(item.price).toFixed(2)}</td><td style="border:1px solid #d1d5db;padding:10px 14px;text-align:center;font-size:13px;">${qty}</td><td style="border:1px solid #d1d5db;padding:10px 14px;text-align:right;font-size:13px;font-weight:600;">&#8377;${(item.price * qty).toFixed(2)}</td></tr>`;
     }).join('');
 
     const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Invoice ${order.invoice_number || order.id}</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#333;padding:40px;max-width:800px;margin:0 auto}
-.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px;border-bottom:3px solid #e31b23;padding-bottom:20px}
-.brand{font-size:28px;font-weight:700;color:#e31b23}
-.invoice-title{text-align:right}.invoice-title h2{font-size:24px;color:#333;margin-bottom:5px}.invoice-title p{color:#666;font-size:13px}
-.info-grid{display:flex;justify-content:space-between;margin-bottom:30px;gap:20px;flex-wrap:wrap}.info-box{flex:1;min-width:180px}.info-box h4{font-size:12px;text-transform:uppercase;color:#999;margin-bottom:8px;letter-spacing:0.5px}
-.info-box p{font-size:14px;line-height:1.6}
-table{width:100%;border-collapse:collapse;margin-bottom:20px}th{background:#f8f9fa;padding:10px 12px;text-align:left;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #e5e7eb}
-td{padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:14px}
-.totals{margin-left:auto;width:280px}.totals .row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
-.totals .total{border-top:2px solid #333;padding-top:10px;margin-top:6px;font-weight:700;font-size:18px;color:#e31b23}
-.footer{margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;text-align:center;color:#999;font-size:12px}
-@media print{body{padding:20px}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;color:#333;padding:30px;max-width:800px;margin:0 auto;background:#fff}
 </style></head><body>
-<div class="header"><div class="brand">JusMoto</div><div class="invoice-title"><h2>INVOICE</h2><p>${order.invoice_number || 'INV-' + order.id}</p><p>${new Date(order.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</p></div></div>
-<div class="info-grid"><div class="info-box"><h4>Bill To</h4><p><strong>${order.user?.first_name || ''} ${order.user?.last_name || ''}</strong><br>${order.user?.email || ''}<br>${order.user?.phone || ''}</p></div>
-<div class="info-box"><h4>Service Address</h4><p>${order.location?.title ? '<strong>' + order.location.title + '</strong><br>' : ''}${order.location?.address || '-'}<br>${order.location?.post_code ? 'PIN: ' + order.location.post_code : ''}${order.location?.phone ? '<br>Ph: ' + order.location.phone : ''}</p></div>
-<div class="info-box"><h4>Order Details</h4><p>Order #${order.id}<br>Status: ${statusLabels[order.status] || order.status}<br>Payment: ${order.payment_status ? '<strong style="color:#16a34a">Paid</strong>' : 'Unpaid'}${order.date ? '<br>Date: ' + new Date(order.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}${order.schedule ? '<br>Slot: ' + (scheduleLabels[order.schedule] || order.schedule) : ''}</p></div></div>
-<table><thead><tr><th>#</th><th>Service</th><th>Price</th><th>Qty</th><th style="text-align:right">Total</th></tr></thead><tbody>${itemsHtml}</tbody></table>
-<div class="totals"><div class="row"><span>Subtotal</span><span>&#8377;${Number(order.sub_total || 0).toFixed(2)}</span></div>
-<div class="row"><span>Tax</span><span>&#8377;${Number(order.tax || 0).toFixed(2)}</span></div>
-${order.coupon_amount > 0 ? `<div class="row"><span>Coupon (${order.coupon_code || ''})</span><span style="color:#16a34a">-&#8377;${Number(order.coupon_amount).toFixed(2)}</span></div>` : ''}
-${order.delivery_charge > 0 ? `<div class="row"><span>Delivery</span><span>&#8377;${Number(order.delivery_charge).toFixed(2)}</span></div>` : ''}
-<div class="row total"><span>Grand Total</span><span>&#8377;${Number(order.total || 0).toFixed(2)}</span></div></div>
-<div class="footer"><p>Thank you for choosing JusMoto!</p><p>This is a computer-generated invoice.</p></div>
+
+<table style="width:100%;border:none;margin-bottom:20px;border-collapse:collapse;">
+<tr>
+<td style="border:none;padding:0;vertical-align:top;">
+<div style="font-size:32px;font-weight:800;color:#e31b23;letter-spacing:-0.5px;">JusMoto</div>
+<div style="font-size:11px;color:#888;margin-top:4px;">Car Care & Services</div>
+</td>
+<td style="border:none;padding:0;text-align:right;vertical-align:top;">
+<div style="font-size:26px;font-weight:700;color:#1a1a2e;letter-spacing:1px;">INVOICE</div>
+<div style="font-size:13px;color:#555;margin-top:6px;font-weight:600;">${order.invoice_number || 'INV-' + order.id}</div>
+<div style="font-size:12px;color:#888;margin-top:2px;">Date: ${new Date(order.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+</td>
+</tr>
+</table>
+
+<div style="height:3px;background:linear-gradient(to right,#e31b23,#ff6b6b);margin-bottom:24px;border-radius:2px;"></div>
+
+<table style="width:100%;border:none;margin-bottom:24px;border-collapse:collapse;">
+<tr>
+<td style="border:none;padding:0 10px 0 0;vertical-align:top;width:33%;">
+<div style="font-size:10px;text-transform:uppercase;color:#999;font-weight:700;letter-spacing:1px;margin-bottom:8px;border-bottom:2px solid #e31b23;padding-bottom:5px;display:inline-block;">Bill To</div>
+<div style="font-size:13px;line-height:1.7;color:#333;">
+<strong>${order.user?.first_name || ''} ${order.user?.last_name || ''}</strong><br>
+${order.user?.email || ''}<br>
+${order.user?.phone || ''}
+</div>
+</td>
+<td style="border:none;padding:0 10px;vertical-align:top;width:33%;">
+<div style="font-size:10px;text-transform:uppercase;color:#999;font-weight:700;letter-spacing:1px;margin-bottom:8px;border-bottom:2px solid #e31b23;padding-bottom:5px;display:inline-block;">Service Address</div>
+<div style="font-size:13px;line-height:1.7;color:#333;">
+${order.location?.title ? '<strong>' + order.location.title + '</strong><br>' : ''}${order.location?.address || '-'}<br>
+${order.location?.post_code ? 'PIN: ' + order.location.post_code : ''}${order.location?.phone ? '<br>Ph: ' + order.location.phone : ''}
+</div>
+</td>
+<td style="border:none;padding:0 0 0 10px;vertical-align:top;width:33%;">
+<div style="font-size:10px;text-transform:uppercase;color:#999;font-weight:700;letter-spacing:1px;margin-bottom:8px;border-bottom:2px solid #e31b23;padding-bottom:5px;display:inline-block;">Order Info</div>
+<div style="font-size:13px;line-height:1.7;color:#333;">
+Order #${order.id}<br>
+Status: <strong>${statusLabels[order.status] || order.status}</strong><br>
+Payment: ${order.payment_status ? '<span style="color:#16a34a;font-weight:700;">Paid</span>' : '<span style="color:#dc2626;font-weight:600;">Unpaid</span>'}${order.date ? '<br>Date: ' + new Date(order.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}${order.schedule ? '<br>Slot: ' + (scheduleLabels[order.schedule] || order.schedule) : ''}
+</div>
+</td>
+</tr>
+</table>
+
+<table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+<thead>
+<tr style="background:#1a1a2e;">
+<th style="border:1px solid #1a1a2e;padding:11px 14px;text-align:center;font-size:11px;text-transform:uppercase;color:#fff;font-weight:700;letter-spacing:0.5px;width:50px;">#</th>
+<th style="border:1px solid #1a1a2e;padding:11px 14px;text-align:left;font-size:11px;text-transform:uppercase;color:#fff;font-weight:700;letter-spacing:0.5px;">Service / Product</th>
+<th style="border:1px solid #1a1a2e;padding:11px 14px;text-align:right;font-size:11px;text-transform:uppercase;color:#fff;font-weight:700;letter-spacing:0.5px;width:100px;">Price</th>
+<th style="border:1px solid #1a1a2e;padding:11px 14px;text-align:center;font-size:11px;text-transform:uppercase;color:#fff;font-weight:700;letter-spacing:0.5px;width:60px;">Qty</th>
+<th style="border:1px solid #1a1a2e;padding:11px 14px;text-align:right;font-size:11px;text-transform:uppercase;color:#fff;font-weight:700;letter-spacing:0.5px;width:110px;">Total</th>
+</tr>
+</thead>
+<tbody>${itemsHtml}</tbody>
+</table>
+
+<table style="width:280px;margin-left:auto;border-collapse:collapse;margin-bottom:30px;">
+<tr><td style="border:none;padding:7px 0;font-size:13px;color:#555;">Subtotal</td><td style="border:none;padding:7px 0;text-align:right;font-size:13px;color:#333;">&#8377;${Number(order.sub_total || 0).toFixed(2)}</td></tr>
+<tr><td style="border:none;padding:7px 0;font-size:13px;color:#555;">Tax</td><td style="border:none;padding:7px 0;text-align:right;font-size:13px;color:#333;">&#8377;${Number(order.tax || 0).toFixed(2)}</td></tr>
+${order.coupon_amount > 0 ? `<tr><td style="border:none;padding:7px 0;font-size:13px;color:#555;">Coupon (${order.coupon_code || ''})</td><td style="border:none;padding:7px 0;text-align:right;font-size:13px;color:#16a34a;font-weight:600;">-&#8377;${Number(order.coupon_amount).toFixed(2)}</td></tr>` : ''}
+${order.delivery_charge > 0 ? `<tr><td style="border:none;padding:7px 0;font-size:13px;color:#555;">Delivery</td><td style="border:none;padding:7px 0;text-align:right;font-size:13px;color:#333;">&#8377;${Number(order.delivery_charge).toFixed(2)}</td></tr>` : ''}
+<tr><td colspan="2" style="border:none;padding:0;"><div style="height:2px;background:#1a1a2e;margin:8px 0;"></div></td></tr>
+<tr><td style="border:none;padding:8px 0;font-size:17px;font-weight:800;color:#1a1a2e;">Grand Total</td><td style="border:none;padding:8px 0;text-align:right;font-size:17px;font-weight:800;color:#e31b23;">&#8377;${Number(order.total || 0).toFixed(2)}</td></tr>
+</table>
+
+<div style="margin-top:40px;padding-top:16px;border-top:1px solid #e5e7eb;text-align:center;">
+<div style="font-size:12px;color:#999;">Thank you for choosing <strong style="color:#e31b23;">JusMoto</strong>!</div>
+<div style="font-size:10px;color:#bbb;margin-top:4px;">This is a computer-generated invoice and does not require a signature.</div>
+</div>
+
 </body></html>`;
 
     res.setHeader('Content-Type', 'text/html');

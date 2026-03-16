@@ -26,17 +26,17 @@ const startServer = async () => {
       console.log('Migration check (tickets):', e.message);
     }
 
-    // Add name and status to varients table
+    // Add name and status to variants table
     try {
-      const [vCols] = await sequelize.query("SHOW COLUMNS FROM varients LIKE 'name'");
+      const [vCols] = await sequelize.query("SHOW COLUMNS FROM variants LIKE 'name'");
       if (vCols.length === 0) {
-        await sequelize.query("ALTER TABLE varients ADD COLUMN name VARCHAR(191) NULL AFTER car_id, ADD COLUMN status TINYINT DEFAULT 1 AFTER fuel_type_id");
-        console.log('Migration: Added name, status to varients table');
+        await sequelize.query("ALTER TABLE variants ADD COLUMN name VARCHAR(191) NULL AFTER car_id, ADD COLUMN status TINYINT DEFAULT 1 AFTER fuel_type_id");
+        console.log('Migration: Added name, status to variants table');
       }
       // Make engine_type_id and fuel_type_id nullable for user-added variants
-      await sequelize.query("ALTER TABLE varients MODIFY COLUMN engine_type_id BIGINT UNSIGNED NULL, MODIFY COLUMN fuel_type_id BIGINT UNSIGNED NULL");
+      await sequelize.query("ALTER TABLE variants MODIFY COLUMN engine_type_id BIGINT UNSIGNED NULL, MODIFY COLUMN fuel_type_id BIGINT UNSIGNED NULL");
     } catch (e) {
-      console.log('Migration check (varients):', e.message);
+      console.log('Migration check (variants):', e.message);
     }
     // Ensure user_selected_cars has all required columns
     try {

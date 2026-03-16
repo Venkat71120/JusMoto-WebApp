@@ -213,7 +213,7 @@ router.get('/:id/price', async (req, res) => {
     // Check for car-specific pricing
     if (variant_id || car_id) {
       const where = { service_id: service.id };
-      if (variant_id) where.varient_id = variant_id;
+      if (variant_id) where.variant_id = variant_id;
       else if (car_id) where.car_id = car_id;
 
       const serviceCar = await ServiceCar.findOne({ where });
@@ -375,7 +375,7 @@ router.post('/:id/car-pricing', authenticate, isAdmin, async (req, res) => {
     const serviceCar = await ServiceCar.create({
       service_id: req.params.id,
       car_id,
-      varient_id: variant_id,
+      variant_id: variant_id,
       price,
       discount_price
     });

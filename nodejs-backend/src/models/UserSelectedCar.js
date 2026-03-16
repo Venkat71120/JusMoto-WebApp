@@ -35,7 +35,7 @@ const UserSelectedCar = sequelize.define('UserSelectedCar', {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true,
     references: {
-      model: 'varients',
+      model: 'variants',
       key: 'id'
     }
   },

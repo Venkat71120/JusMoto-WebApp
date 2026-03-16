@@ -207,7 +207,7 @@ router.post('/client/service/order-create', authenticate, isClient, async (req, 
         : parseFloat(service.price);
 
       if (variantId) {
-        const serviceCar = await ServiceCar.findOne({ where: { service_id: serviceId, varient_id: variantId } });
+        const serviceCar = await ServiceCar.findOne({ where: { service_id: serviceId, variant_id: variantId } });
         if (serviceCar) {
           price = serviceCar.discount_price && parseFloat(serviceCar.discount_price) > 0
             ? parseFloat(serviceCar.discount_price)
@@ -600,7 +600,7 @@ router.post('/client/cart/add', authenticate, isClient, async (req, res) => {
 
     let price = parseFloat(service.discount_price) > 0 ? parseFloat(service.discount_price) : parseFloat(service.price);
     if (varId) {
-      const sc = await ServiceCar.findOne({ where: { service_id: svcId, varient_id: varId } });
+      const sc = await ServiceCar.findOne({ where: { service_id: svcId, variant_id: varId } });
       if (sc) price = sc.discount_price && parseFloat(sc.discount_price) > 0 ? parseFloat(sc.discount_price) : parseFloat(sc.price);
     }
 

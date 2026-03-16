@@ -28,7 +28,7 @@ const Variant = sequelize.define('Variant', {
     defaultValue: 1
   }
 }, {
-  tableName: 'varients',
+  tableName: 'variants',
   timestamps: true,
   underscored: true
 });

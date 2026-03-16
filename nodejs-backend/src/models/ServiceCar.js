@@ -15,7 +15,7 @@ const ServiceCar = sequelize.define('ServiceCar', {
       key: 'id'
     }
   },
-  varient_id: {
+  variant_id: {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true
   },

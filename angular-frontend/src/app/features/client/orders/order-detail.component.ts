@@ -436,12 +436,38 @@ export class ClientOrderDetailComponent implements OnInit {
     if (!o) return;
     this.orderService.getInvoice(o.id).subscribe({
       next: (html: string) => {
-        const blob = new Blob([html], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        window.open(url, '_blank');
+        this.generatePdfFromHtml(html, `invoice-${o.invoice_number || o.id}.pdf`);
       },
       error: () => this.toast.error('Failed to generate invoice')
     });
+  }
+
+  private generatePdfFromHtml(html: string, filename: string) {
+    const styleMatch = html.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+    const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+
+    // Extract CSS but remove body{} and *{} rules (they leak into the page)
+    let css = styleMatch ? styleMatch[1] : '';
+    css = css
+      .replace(/\*\s*\{[^}]*\}/g, '')
+      .replace(/body\s*\{[^}]*\}/g, '')
+      .replace(/@media\s+print[^{]*\{[\s\S]*?\}\s*\}/g, '');
+
+    const bodyContent = bodyMatch ? bodyMatch[1] : html;
+
+    // Build self-contained HTML — body styles applied inline on wrapper
+    const content = `<style>${css}</style><div style="font-family:Arial,Helvetica,sans-serif;color:#333;padding:40px;max-width:800px;margin:0 auto;box-sizing:border-box;background:#fff;">${bodyContent}</div>`;
+
+    import('html2pdf.js').then((mod: any) => {
+      const html2pdf = mod.default || mod;
+      html2pdf().set({
+        margin: [10, 5, 10, 5],
+        filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(content, 'string').save();
+    }).catch((err: any) => console.error('PDF generation failed:', err));
   }
 
   isServiceOrder(): boolean {

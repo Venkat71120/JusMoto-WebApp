@@ -13,7 +13,7 @@ import { AuthService } from '../../../core/services/auth.service';
       <!-- Greeting Header -->
       <div class="greeting-section">
         <h2 class="greeting-text">{{ greeting() }}, <span class="admin-name">{{ adminName() }}</span></h2>
-        <p class="greeting-sub">Here's your performance overview for today</p>
+        <p class="greeting-sub">{{ isFranchise() ? "Here's your franchise performance overview" : "Here's your performance overview for today" }}</p>
       </div>
 
       <!-- Row 1: Key Metric Cards -->
@@ -44,8 +44,9 @@ import { AuthService } from '../../../core/services/auth.service';
         }
       </div>
 
-      <!-- Row 2: Order Distribution -->
-      <div class="charts-grid">
+      <!-- Row 2: Order Distribution + Recent Orders (side by side) -->
+      <div class="distribution-orders-grid">
+        <!-- Order Distribution -->
         <div class="chart-card">
           <div class="chart-header">
             <h3>Order Distribution</h3>
@@ -84,86 +85,14 @@ import { AuthService } from '../../../core/services/auth.service';
             }
           </div>
         </div>
-      </div>
 
-      <!-- Row 3: Secondary Stats -->
-      <div class="secondary-stats-grid">
-        @for (card of secondaryStats(); track card.label) {
-          <div class="secondary-stat-card">
-            <div class="secondary-icon" [style.background]="card.iconBg">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" [attr.stroke]="card.iconColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                @if (card.icon === 'users') {
-                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
-                }
-                @if (card.icon === 'services') {
-                  <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
-                }
-                @if (card.icon === 'cars') {
-                  <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"/><path d="M6 21V3"/>
-                }
-              </svg>
-            </div>
-            <div class="secondary-value">{{ card.value }}</div>
-            <div class="secondary-label">{{ card.label }}</div>
-          </div>
-        }
-      </div>
-
-      <!-- Row 4: Recent Activity -->
-      <div class="activity-grid">
-        <!-- Recent Users -->
-        <div class="activity-card">
-          <div class="activity-header">
-            <h3>Recent Users</h3>
-            <span class="badge">{{ recentUsers().length }} new</span>
-          </div>
-          <div class="activity-body">
-            @if (recentUsers().length > 0) {
-              <table class="activity-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>User</th>
-                    <th>Joined</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (user of recentUsers(); track user.id; let i = $index) {
-                    <tr>
-                      <td class="row-num">{{ i + 1 }}</td>
-                      <td>
-                        <div class="user-cell">
-                          <div class="avatar">{{ getInitials(user.first_name, user.last_name) }}</div>
-                          <div>
-                            <div class="user-name">{{ user.first_name }} {{ user.last_name }}</div>
-                            <div class="user-email">{{ user.email }}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td><span class="date-badge">{{ user.created_at | date:'dd MMM' }}</span></td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            } @else {
-              <div class="empty-state">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a0a6a8" stroke-width="1.5">
-                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                  <circle cx="9" cy="7" r="4"/>
-                </svg>
-                <p>No recent users found</p>
-              </div>
-            }
-          </div>
-        </div>
-
-        <!-- Recent Orders -->
-        <div class="activity-card">
-          <div class="activity-header">
+        <!-- Recent Orders (next to Order Distribution) -->
+        <div class="chart-card">
+          <div class="chart-header">
             <h3>Recent Orders</h3>
-            <span class="badge">{{ recentOrders().length }} new</span>
+            <span class="badge">{{ recentOrders().length }} latest</span>
           </div>
-          <div class="activity-body">
+          <div class="chart-body-table">
             @if (recentOrders().length > 0) {
               <table class="activity-table">
                 <thead>
@@ -210,6 +139,81 @@ import { AuthService } from '../../../core/services/auth.service';
           </div>
         </div>
       </div>
+
+      <!-- Row 3: Secondary Stats (hidden for franchise admins) -->
+      @if (!isFranchise()) {
+        <div class="secondary-stats-grid">
+          @for (card of secondaryStats(); track card.label) {
+            <div class="secondary-stat-card">
+              <div class="secondary-icon" [style.background]="card.iconBg">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" [attr.stroke]="card.iconColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  @if (card.icon === 'users') {
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+                  }
+                  @if (card.icon === 'services') {
+                    <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+                  }
+                  @if (card.icon === 'cars') {
+                    <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2"/><path d="M6 21V3"/>
+                  }
+                </svg>
+              </div>
+              <div class="secondary-value">{{ card.value }}</div>
+              <div class="secondary-label">{{ card.label }}</div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Row 4: Recent Users (hidden for franchise admins) -->
+      @if (!isFranchise()) {
+        <div class="activity-grid-single">
+          <div class="activity-card">
+            <div class="activity-header">
+              <h3>Recent Users</h3>
+              <span class="badge">{{ recentUsers().length }} new</span>
+            </div>
+            <div class="activity-body">
+              @if (recentUsers().length > 0) {
+                <table class="activity-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>User</th>
+                      <th>Joined</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (user of recentUsers(); track user.id; let i = $index) {
+                      <tr>
+                        <td class="row-num">{{ i + 1 }}</td>
+                        <td>
+                          <div class="user-cell">
+                            <div class="avatar">{{ getInitials(user.first_name, user.last_name) }}</div>
+                            <div>
+                              <div class="user-name">{{ user.first_name }} {{ user.last_name }}</div>
+                              <div class="user-email">{{ user.email }}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td><span class="date-badge">{{ user.created_at | date:'dd MMM' }}</span></td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              } @else {
+                <div class="empty-state">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a0a6a8" stroke-width="1.5">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                  </svg>
+                  <p>No recent users found</p>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
 
       <!-- Loading Overlay -->
       @if (loading()) {
@@ -337,13 +341,16 @@ import { AuthService } from '../../../core/services/auth.service';
       margin-top: 2px;
     }
 
-    /* ========== ROW 2: CHARTS ========== */
-    .charts-grid {
+    /* ========== ROW 2: DISTRIBUTION + RECENT ORDERS ========== */
+    .distribution-orders-grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 18px;
       margin-bottom: 24px;
-      max-width: 600px;
+    }
+
+    .chart-body-table {
+      padding: 0;
     }
 
     .chart-card {
@@ -504,11 +511,12 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     /* ========== ROW 4: ACTIVITY TABLES ========== */
-    .activity-grid {
+    .activity-grid-single {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 18px;
       margin-bottom: 24px;
+      max-width: 680px;
     }
 
     .activity-card {
@@ -733,7 +741,7 @@ import { AuthService } from '../../../core/services/auth.service';
         grid-template-columns: repeat(3, 1fr);
       }
 
-      .activity-grid {
+      .distribution-orders-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -771,6 +779,7 @@ export class AdminDashboardComponent implements OnInit {
   greeting = signal('');
   adminName = signal('Admin');
   loading = signal(false);
+  isFranchise = signal(false);
 
   keyMetrics = signal<{ label: string; value: string; icon: string; iconBg: string; iconColor: string }[]>([]);
   secondaryStats = signal<{ label: string; value: string; icon: string; iconBg: string; iconColor: string }[]>([]);
@@ -790,6 +799,7 @@ export class AdminDashboardComponent implements OnInit {
     const admin = this.authService.currentAdmin;
     if (admin) {
       this.adminName.set(admin.name);
+      this.isFranchise.set(!!admin.is_franchise);
     }
     this.loadDashboard();
   }

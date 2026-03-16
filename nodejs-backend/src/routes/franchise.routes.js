@@ -43,12 +43,30 @@ router.get('/dashboard', authenticate, isFranchise, async (req, res) => {
       }
     });
 
+    // Orders by status (for distribution chart)
+    const [ordersByStatus] = await require('../models').sequelize.query(`
+      SELECT status, COUNT(*) as count FROM orders
+      WHERE franchise_admin_id = ?
+      GROUP BY status
+    `, { replacements: [franchiseId] });
+
+    // Recent orders
+    const [recentOrders] = await require('../models').sequelize.query(`
+      SELECT o.id, o.total, o.status, o.payment_status, o.created_at,
+             u.first_name, u.last_name, u.email, u.image as user_image
+      FROM orders o LEFT JOIN users u ON o.user_id = u.id
+      WHERE o.franchise_admin_id = ?
+      ORDER BY o.created_at DESC LIMIT 5
+    `, { replacements: [franchiseId] });
+
     res.json({
       success: true,
       data: {
         ...orderStats[0],
         today_orders: todayOrders,
-        open_tickets: openTickets
+        open_tickets: openTickets,
+        orders_by_status: ordersByStatus,
+        recent_orders: recentOrders
       }
     });
   } catch (error) {

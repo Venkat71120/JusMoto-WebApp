@@ -16,25 +16,49 @@ const sharp = require('sharp');
 // ==================== Dashboard ====================
 router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
   try {
-    const [stats] = await require('../models').sequelize.query(`
-      SELECT
-        (SELECT COUNT(*) FROM admins) as total_admins,
-        (SELECT COUNT(*) FROM users WHERE deleted_at IS NULL) as total_users,
-        (SELECT COUNT(*) FROM services WHERE status = 1 AND type = 0) as total_services,
-        (SELECT COUNT(*) FROM services WHERE status = 1 AND type = 1) as total_products,
-        (SELECT COUNT(*) FROM cars) as total_cars,
-        (SELECT COUNT(*) FROM coupons) as total_coupons,
-        (SELECT COUNT(*) FROM orders) as total_orders,
-        (SELECT COALESCE(SUM(tax), 0) FROM orders WHERE status IN (2,3) AND payment_status = 1) as total_tax,
-        (SELECT COALESCE(SUM(total), 0) FROM orders WHERE status IN (2,3) AND payment_status = 1) as total_earnings,
-        (SELECT COALESCE(SUM(total), 0) FROM orders WHERE payment_status = 1) as total_revenue,
-        (SELECT COUNT(*) FROM orders WHERE status = 0) as pending_orders,
-        (SELECT COUNT(*) FROM orders WHERE DATE(created_at) = CURDATE()) as today_orders
-    `);
+    const isFranchise = req.admin.is_franchise;
+    const franchiseId = req.admin.id;
+    const orderFilter = isFranchise ? `WHERE franchise_admin_id = ${parseInt(franchiseId)}` : '';
+    const orderFilterAnd = isFranchise ? `AND franchise_admin_id = ${parseInt(franchiseId)}` : '';
+
+    let stats;
+    if (isFranchise) {
+      // Franchise: only show their order stats
+      const [franchiseStats] = await require('../models').sequelize.query(`
+        SELECT
+          COUNT(*) as total_orders,
+          COALESCE(SUM(CASE WHEN status IN (2,3) AND payment_status = 1 THEN total ELSE 0 END), 0) as total_revenue,
+          COALESCE(SUM(CASE WHEN status IN (2,3) AND payment_status = 1 THEN tax ELSE 0 END), 0) as total_tax,
+          COALESCE(SUM(CASE WHEN status IN (2,3) AND payment_status = 1 THEN total ELSE 0 END), 0) as total_earnings,
+          SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) as pending_orders,
+          SUM(CASE WHEN DATE(created_at) = CURDATE() THEN 1 ELSE 0 END) as today_orders
+        FROM orders WHERE franchise_admin_id = ?
+      `, { replacements: [franchiseId] });
+      stats = franchiseStats;
+    } else {
+      const [adminStats] = await require('../models').sequelize.query(`
+        SELECT
+          (SELECT COUNT(*) FROM admins) as total_admins,
+          (SELECT COUNT(*) FROM users WHERE deleted_at IS NULL) as total_users,
+          (SELECT COUNT(*) FROM services WHERE status = 1 AND type = 0) as total_services,
+          (SELECT COUNT(*) FROM services WHERE status = 1 AND type = 1) as total_products,
+          (SELECT COUNT(*) FROM cars) as total_cars,
+          (SELECT COUNT(*) FROM coupons) as total_coupons,
+          (SELECT COUNT(*) FROM orders) as total_orders,
+          (SELECT COALESCE(SUM(tax), 0) FROM orders WHERE status IN (2,3) AND payment_status = 1) as total_tax,
+          (SELECT COALESCE(SUM(total), 0) FROM orders WHERE status IN (2,3) AND payment_status = 1) as total_earnings,
+          (SELECT COALESCE(SUM(total), 0) FROM orders WHERE payment_status = 1) as total_revenue,
+          (SELECT COUNT(*) FROM orders WHERE status = 0) as pending_orders,
+          (SELECT COUNT(*) FROM orders WHERE DATE(created_at) = CURDATE()) as today_orders
+      `);
+      stats = adminStats;
+    }
+
     const [recentOrders] = await require('../models').sequelize.query(`
       SELECT o.id, o.total, o.status, o.payment_status, o.created_at,
              u.first_name, u.last_name, u.email, u.image as user_image
       FROM orders o LEFT JOIN users u ON o.user_id = u.id
+      ${orderFilter}
       ORDER BY o.created_at DESC LIMIT 5
     `);
     const [recentUsers] = await require('../models').sequelize.query(`
@@ -49,14 +73,14 @@ router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
              COALESCE(SUM(total), 0) as revenue,
              COALESCE(SUM(CASE WHEN payment_status = 1 THEN total ELSE 0 END), 0) as paid_revenue
       FROM orders
-      WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+      WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) ${orderFilterAnd}
       GROUP BY month, label ORDER BY month ASC
     `);
     // Order status breakdown
     const [ordersByStatus] = await require('../models').sequelize.query(`
-      SELECT status, COUNT(*) as count FROM orders GROUP BY status
+      SELECT status, COUNT(*) as count FROM orders ${orderFilter} GROUP BY status
     `);
-    res.json({ success: true, data: { ...stats[0], recent_orders: recentOrders, recent_users: recentUsers, monthly_stats: monthlyStats, orders_by_status: ordersByStatus } });
+    res.json({ success: true, data: { ...stats[0], is_franchise: !!isFranchise, recent_orders: recentOrders, recent_users: recentUsers, monthly_stats: monthlyStats, orders_by_status: ordersByStatus } });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

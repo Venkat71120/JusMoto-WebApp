@@ -2,9 +2,10 @@ const csv = require('csv-parser');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
+const cheerio = require('cheerio');
+const { Op } = require('sequelize');
 const { Brand, Car, Variant, FuelType, EngineType } = require('../models');
 
-const PEXELS_API_KEY = process.env.PEXELS_API_KEY || '';
 const MEDIA_DIR = path.join(__dirname, '../../uploads/media');
 
 // Ensure media dir exists
@@ -71,76 +72,115 @@ function cleanName(raw) {
     return raw.trim().replace(/\s+/g, ' ');
 }
 
-/**
- * Search Pexels for a car image with environment background
- * Returns the image URL or null
- */
-async function searchCarImage(brand, model) {
-    if (!PEXELS_API_KEY) return null;
 
-    try {
-        const query = `${brand} ${model} car India`;
-        const resp = await axios.get('https://api.pexels.com/v1/search', {
-            headers: { Authorization: PEXELS_API_KEY },
-            params: {
-                query,
-                per_page: 1,
-                orientation: 'landscape',
-                size: 'medium'
-            },
-            timeout: 8000
-        });
-
-        if (resp.data?.photos?.length > 0) {
-            return resp.data.photos[0].src.medium; // 350px wide, good for thumbnails
-        }
-
-        // Fallback: try just the model name + "car"
-        const resp2 = await axios.get('https://api.pexels.com/v1/search', {
-            headers: { Authorization: PEXELS_API_KEY },
-            params: {
-                query: `${model} car`,
-                per_page: 1,
-                orientation: 'landscape',
-                size: 'medium'
-            },
-            timeout: 8000
-        });
-
-        if (resp2.data?.photos?.length > 0) {
-            return resp2.data.photos[0].src.medium;
-        }
-
-        return null;
-    } catch (error) {
-        console.log(`[Image Search] Failed for "${brand} ${model}": ${error.message}`);
-        return null;
-    }
-}
 
 /**
- * Search Pexels for a brand logo/image
+ * Scrape CarWale for a car image.
+ * Step 1: hit the homepage to get session cookies
+ * Step 2: call the suggest API (same as the searchbar autocomplete)
+ * Step 3: take the first suggestion URL
+ * Step 4: open that car page and extract the main image
  */
-async function searchBrandImage(brand) {
-    if (!PEXELS_API_KEY) return null;
+async function searchCarImageCarWale(brand, model, variant = '') {
+    const variantClean = variant ? variant.replace(/[^a-zA-Z0-9\s]/g, '').trim() : '';
+    const query = [brand, model, variantClean].filter(Boolean).join(' ');
+
+    const browserHeaders = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept-Language': 'en-IN,en;q=0.9',
+    };
 
     try {
-        const resp = await axios.get('https://api.pexels.com/v1/search', {
-            headers: { Authorization: PEXELS_API_KEY },
-            params: {
-                query: `${brand} car brand logo`,
-                per_page: 1,
-                size: 'small'
+        // Step 1: hit homepage to get session cookies
+        const homeUrl = 'https://www.carwale.com/';
+        console.log(`[CarWale:Home] URL: ${homeUrl}`);
+        const homeResp = await axios.get(homeUrl, {
+            headers: { ...browserHeaders, 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' },
+            timeout: 10000
+        });
+        const cookies = (homeResp.headers['set-cookie'] || []).map(c => c.split(';')[0]).join('; ');
+        console.log(`[CarWale:Home] Cookies: ${cookies || 'none'}`);
+
+        // Step 2: call suggest API — same endpoint the searchbar uses for autocomplete
+        const suggestUrl = `https://www.carwale.com/api/suggest/?q=${encodeURIComponent(query)}&campaignId=1&pageId=1&cityId=1`;
+        console.log(`[CarWale:Suggest] Query: "${query}"`);
+        console.log(`[CarWale:Suggest] URL: ${suggestUrl}`);
+
+        const suggestResp = await axios.get(suggestUrl, {
+            headers: {
+                ...browserHeaders,
+                'Accept': 'application/json, text/javascript, */*',
+                'Referer': 'https://www.carwale.com/',
+                'Cookie': cookies,
             },
-            timeout: 8000
+            timeout: 10000
         });
 
-        if (resp.data?.photos?.length > 0) {
-            return resp.data.photos[0].src.small; // small for logos
+        console.log(`[CarWale:Suggest] Status: ${suggestResp.status}`);
+        console.log(`[CarWale:Suggest] Response:`, JSON.stringify(suggestResp.data, null, 2));
+
+        // Extract the first suggestion URL
+        const suggestions = Array.isArray(suggestResp.data)
+            ? suggestResp.data
+            : suggestResp.data?.data || suggestResp.data?.suggestions || suggestResp.data?.results || [];
+
+        console.log(`[CarWale:Suggest] Total suggestions: ${suggestions.length}`);
+        if (!suggestions.length) {
+            console.log(`[CarWale:Suggest] No suggestions returned`);
+            return null;
         }
-        return null;
+
+        const first = suggestions[0];
+        console.log(`[CarWale:Suggest] First suggestion:`, JSON.stringify(first, null, 2));
+
+        // CarWale suggestions typically have a url/link/href field
+        const carPath = first.url || first.link || first.href || first.pageUrl || first.carUrl || null;
+        if (!carPath) {
+            console.log(`[CarWale:Suggest] No URL field in first suggestion`);
+            return null;
+        }
+
+        // Step 3: open the car page from the suggestion
+        const carPageUrl = carPath.startsWith('http') ? carPath : `https://www.carwale.com${carPath}`;
+        console.log(`[CarWale:Page] URL: ${carPageUrl}`);
+
+        const carResp = await axios.get(carPageUrl, {
+            headers: {
+                ...browserHeaders,
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Referer': 'https://www.carwale.com/',
+                'Cookie': cookies,
+            },
+            timeout: 10000
+        });
+
+        const $ = cheerio.load(carResp.data);
+
+        // Step 4: extract the main car image
+        // og:image is always the hero/primary car photo on CarWale pages
+        let imageUrl = $('meta[property="og:image"]').attr('content') || null;
+        console.log(`[CarWale:Page] og:image: ${imageUrl || 'none'}`);
+
+        // Fallback: first img served from CarWale's CDN
+        if (!imageUrl) {
+            $('img').each((_, el) => {
+                const src = $(el).attr('src') || $(el).attr('data-src') || '';
+                if (!imageUrl && src.includes('img.carwale.com')) {
+                    imageUrl = src;
+                }
+            });
+            if (imageUrl) console.log(`[CarWale:Page] CDN img fallback: ${imageUrl}`);
+        }
+
+        console.log(`[CarWale] ✓ "${query}" → ${imageUrl || 'null'}`);
+        return imageUrl;
+
     } catch (error) {
-        console.log(`[Brand Image] Failed for "${brand}": ${error.message}`);
+        console.log(`[CarWale] Failed for "${query}": ${error.message}`);
+        if (error.response) {
+            console.log(`[CarWale] Status: ${error.response.status}`);
+            console.log(`[CarWale] Response:`, JSON.stringify(error.response.data || '').slice(0, 500));
+        }
         return null;
     }
 }
@@ -209,7 +249,6 @@ function parseCSV(filePath) {
 async function importCarsFromCSV(filePath) {
     const rows = await parseCSV(filePath);
     const totalRows = rows.length;
-    const hasImageApi = !!PEXELS_API_KEY;
 
     const stats = {
         total: totalRows,
@@ -257,19 +296,14 @@ async function importCarsFromCSV(filePath) {
 
                 if (brandCreated) {
                     stats.brandsCreated++;
-                    // Fetch brand image
-                    if (hasImageApi) {
-                        const imageUrl = await searchBrandImage(row.brand);
-                        if (imageUrl) {
-                            const savedPath = await downloadImage(imageUrl, `brand_${row.brand.toLowerCase().replace(/\s+/g, '_')}`);
-                            if (savedPath) {
-                                await brand.update({ image: savedPath });
-                                stats.imagesFound++;
-                            } else {
-                                stats.imagesFailed++;
-                            }
-                        } else {
-                            stats.imagesFailed++;
+                    // Fetch brand logo from CarWale and save locally
+                    const logoUrl = await searchCarImageCarWale(row.brand, '', '');
+                    if (logoUrl) {
+                        const logoPrefix = `brand_${row.brand.toLowerCase().replace(/\s+/g, '_')}`;
+                        const savedLogoPath = await downloadImage(logoUrl, logoPrefix);
+                        if (savedLogoPath) {
+                            await brand.update({ image: savedLogoPath });
+                            stats.imagesFound++;
                         }
                     }
                 } else {
@@ -294,20 +328,28 @@ async function importCarsFromCSV(filePath) {
 
                 if (carCreated) {
                     stats.carsCreated++;
-                    // Fetch car image (environment background photo)
-                    if (hasImageApi) {
-                        const imageUrl = await searchCarImage(row.brand, row.model);
-                        if (imageUrl) {
-                            const savedPath = await downloadImage(imageUrl, `car_${row.brand.toLowerCase().replace(/\s+/g, '_')}_${row.model.toLowerCase().replace(/\s+/g, '_')}`);
-                            if (savedPath) {
-                                await car.update({ image: savedPath });
-                                stats.imagesFound++;
-                            } else {
-                                stats.imagesFailed++;
-                            }
+
+                    // Fetch car image from CarWale
+                    const imageUrl = await searchCarImageCarWale(row.brand, row.model, row.variant);
+
+                    const updateData = {};
+
+                    if (imageUrl) {
+                        const imgPrefix = `car_${row.brand.toLowerCase().replace(/\s+/g, '_')}_${row.model.toLowerCase().replace(/\s+/g, '_')}`;
+                        const savedPath = await downloadImage(imageUrl, imgPrefix);
+                        if (savedPath) {
+                            updateData.image = savedPath;
+                            stats.imagesFound++;
                         } else {
                             stats.imagesFailed++;
                         }
+                    } else {
+                        stats.imagesFailed++;
+                    }
+
+
+                    if (Object.keys(updateData).length > 0) {
+                        await car.update(updateData);
                     }
                 } else {
                     stats.carsSkipped++;
@@ -349,24 +391,29 @@ async function importCarsFromCSV(filePath) {
                 }
             }
 
-            // 5. Variant - findOrCreate if present
+            // 5. Variant - find or create (case-insensitive to avoid duplicates across imports)
             if (row.variant) {
                 const variantKey = `${carId}_${row.variant.toLowerCase()}`;
                 if (stats.uniqueVariants.has(variantKey)) {
+                    // Already handled in this run
                     stats.variantsSkipped++;
                 } else {
-                    const [variant, variantCreated] = await Variant.findOrCreate({
-                        where: { car_id: carId, name: row.variant },
-                        defaults: {
+                    stats.uniqueVariants.add(variantKey);
+                    // Case-insensitive DB check to avoid duplicates from previous imports
+                    const existing = await Variant.findOne({
+                        where: {
+                            car_id: carId,
+                            name: { [Op.like]: row.variant }
+                        }
+                    });
+                    if (!existing) {
+                        await Variant.create({
                             car_id: carId,
                             name: row.variant,
                             engine_type_id: engineTypeId,
-                            fual_type_id: fuelTypeId,
+                            fuel_type_id: fuelTypeId,
                             status: 1
-                        }
-                    });
-                    stats.uniqueVariants.add(variantKey);
-                    if (variantCreated) {
+                        });
                         stats.variantsCreated++;
                     } else {
                         stats.variantsSkipped++;
@@ -397,7 +444,7 @@ async function importCarsFromCSV(filePath) {
         engineTypesCreated: stats.engineTypesCreated,
         imagesFound: stats.imagesFound,
         imagesFailed: stats.imagesFailed,
-        imagesEnabled: hasImageApi,
+        imagesEnabled: true, // CarWale
         skipped: stats.brandsSkipped + stats.carsSkipped + stats.variantsSkipped,
         errorCount: stats.errors.length,
         errors: stats.errors.slice(0, 20)
@@ -407,6 +454,7 @@ async function importCarsFromCSV(filePath) {
 module.exports = {
     parseCSV,
     importCarsFromCSV,
+
     normalizeFuelType,
     extractEngineType,
     cleanVariantName

@@ -16,7 +16,7 @@ const FuelType = sequelize.define('FuelType', {
     allowNull: false
   }
 }, {
-  tableName: 'fual_types',
+  tableName: 'fuel_types',
   timestamps: true,
   underscored: true
 });

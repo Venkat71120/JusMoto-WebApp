@@ -12,6 +12,7 @@ const path = require('path');
 const fs = require('fs');
 const emailService = require('../services/email.service');
 const sharp = require('sharp');
+const { fetchBrandLogo } = require('../services/csv-import.service');
 
 // ==================== Dashboard ====================
 router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
@@ -783,7 +784,9 @@ router.get('/brands', authenticate, isAdmin, async (req, res) => {
 router.post('/brands', authenticate, isAdmin, async (req, res) => {
   try {
     const { name, image } = req.body;
-    const brand = await Brand.create({ name, image });
+    // Auto-fetch brand logo from Clearbit if no image provided
+    const logoUrl = image || await fetchBrandLogo(name);
+    const brand = await Brand.create({ name, image: logoUrl });
     res.status(201).json({ success: true, data: brand, message: 'Brand created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -994,8 +997,8 @@ router.get('/variants', authenticate, isAdmin, async (req, res) => {
 
 router.post('/variants', authenticate, isAdmin, async (req, res) => {
   try {
-    const { name, car_id, engine_type_id, fual_type_id } = req.body;
-    const variant = await Variant.create({ name: name || null, car_id, engine_type_id, fual_type_id });
+    const { name, car_id, engine_type_id, fuel_type_id } = req.body;
+    const variant = await Variant.create({ name: name || null, car_id, engine_type_id, fuel_type_id });
     res.status(201).json({ success: true, data: variant, message: 'Variant created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -1004,8 +1007,8 @@ router.post('/variants', authenticate, isAdmin, async (req, res) => {
 
 router.put('/variants/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const { car_id, engine_type_id, fual_type_id } = req.body;
-    await Variant.update({ car_id, engine_type_id, fual_type_id }, { where: { id: req.params.id } });
+    const { car_id, engine_type_id, fuel_type_id, name } = req.body;
+    await Variant.update({ name, car_id, engine_type_id, fuel_type_id }, { where: { id: req.params.id } });
     const variant = await Variant.findByPk(req.params.id, {
       include: ['car', 'engineType', 'fuelType']
     });
@@ -2209,7 +2212,7 @@ router.post('/seed-archive-cars', authenticate, isAdmin, async (req, res) => {
             car_id: carRecord.id,
             name: variantDisplayName,
             engine_type_id: engineTypeId,
-            fual_type_id: fuelTypeId,
+            fuel_type_id: fuelTypeId,
             status: 1
           }
         });

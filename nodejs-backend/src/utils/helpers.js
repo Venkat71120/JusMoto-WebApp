@@ -56,7 +56,7 @@ const createSlug = (text) => {
  */
 const paginate = (page = 1, limit = 15) => {
   const pageNum = Math.max(1, parseInt(page));
-  const limitNum = Math.min(100, Math.max(1, parseInt(limit)));
+  const limitNum = Math.min(1000, Math.max(1, parseInt(limit)));
   const offset = (pageNum - 1) * limitNum;
 
   return {

@@ -384,41 +384,8 @@ router.get('/:id/invoice', authenticate, isClient, async (req, res) => {
     });
     if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
 
-    const statusLabels = ['Pending', 'Accepted', 'In Progress', 'Completed', 'Cancelled'];
-    const scheduleLabels = { morning: '9 AM - 12 PM', afternoon: '12 PM - 4 PM', evening: '4 PM - 7 PM' };
-
-    const itemsHtml = (order.items || []).map((item, i) => {
-      const qty = item.qty || item.quantity || 1;
-      return `<tr><td>${i + 1}</td><td>${item.service?.title || 'Service #' + item.service_id}</td><td>&#8377;${Number(item.price).toFixed(2)}</td><td>${qty}</td><td style="text-align:right">&#8377;${(item.price * qty).toFixed(2)}</td></tr>`;
-    }).join('');
-
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Invoice ${order.invoice_number || order.id}</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#333;padding:40px;max-width:800px;margin:0 auto}
-.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px;border-bottom:3px solid #e31b23;padding-bottom:20px}
-.brand{font-size:28px;font-weight:700;color:#e31b23}
-.invoice-title{text-align:right}.invoice-title h2{font-size:24px;color:#333;margin-bottom:5px}.invoice-title p{color:#666;font-size:13px}
-.info-grid{display:flex;justify-content:space-between;margin-bottom:30px;gap:20px;flex-wrap:wrap}.info-box{flex:1;min-width:180px}.info-box h4{font-size:12px;text-transform:uppercase;color:#999;margin-bottom:8px;letter-spacing:0.5px}
-.info-box p{font-size:14px;line-height:1.6}
-table{width:100%;border-collapse:collapse;margin-bottom:20px}th{background:#f8f9fa;padding:10px 12px;text-align:left;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #e5e7eb}
-td{padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:14px}
-.totals{margin-left:auto;width:280px}.totals .row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
-.totals .total{border-top:2px solid #333;padding-top:10px;margin-top:6px;font-weight:700;font-size:18px;color:#e31b23}
-.footer{margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;text-align:center;color:#999;font-size:12px}
-@media print{body{padding:20px}}
-</style></head><body>
-<div class="header"><div class="brand">JusMoto</div><div class="invoice-title"><h2>INVOICE</h2><p>${order.invoice_number || 'INV-' + order.id}</p><p>${new Date(order.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</p></div></div>
-<div class="info-grid"><div class="info-box"><h4>Bill To</h4><p><strong>${order.user?.first_name || ''} ${order.user?.last_name || ''}</strong><br>${order.user?.email || ''}<br>${order.user?.phone || ''}</p></div>
-<div class="info-box"><h4>Service Address</h4><p>${order.location?.title ? '<strong>' + order.location.title + '</strong><br>' : ''}${order.location?.address || '-'}<br>${order.location?.post_code ? 'PIN: ' + order.location.post_code : ''}${order.location?.phone ? '<br>Ph: ' + order.location.phone : ''}</p></div>
-<div class="info-box"><h4>Order Details</h4><p>Order #${order.id}<br>Status: ${statusLabels[order.status] || order.status}<br>Payment: ${order.payment_status ? '<strong style="color:#16a34a">Paid</strong>' : 'Unpaid'}${order.date ? '<br>Date: ' + new Date(order.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}${order.schedule ? '<br>Slot: ' + (scheduleLabels[order.schedule] || order.schedule) : ''}</p></div></div>
-<table><thead><tr><th>#</th><th>Service</th><th>Price</th><th>Qty</th><th style="text-align:right">Total</th></tr></thead><tbody>${itemsHtml}</tbody></table>
-<div class="totals"><div class="row"><span>Subtotal</span><span>&#8377;${Number(order.sub_total || 0).toFixed(2)}</span></div>
-<div class="row"><span>Tax</span><span>&#8377;${Number(order.tax || 0).toFixed(2)}</span></div>
-${order.coupon_amount > 0 ? `<div class="row"><span>Coupon (${order.coupon_code || ''})</span><span style="color:#16a34a">-&#8377;${Number(order.coupon_amount).toFixed(2)}</span></div>` : ''}
-${order.delivery_charge > 0 ? `<div class="row"><span>Delivery</span><span>&#8377;${Number(order.delivery_charge).toFixed(2)}</span></div>` : ''}
-<div class="row total"><span>Grand Total</span><span>&#8377;${Number(order.total || 0).toFixed(2)}</span></div></div>
-<div class="footer"><p>Thank you for choosing JusMoto!</p><p>This is a computer-generated invoice.</p></div>
-</body></html>`;
+    const { generateInvoiceHtml } = require('../utils/invoice');
+    const html = generateInvoiceHtml(order);
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Content-Disposition', `inline; filename="invoice-${order.invoice_number || order.id}.html"`);

@@ -1,0 +1,5502 @@
+[
+  {
+    "id": 1,
+    "brand_id": 1,
+    "name": "Mercedes-Benz C-Class",
+    "image": "https://jusmoto.blackitechs.in/uploads/media/c300-mercedes-w206-11770617509.jpg",
+    "status": 1,
+    "created_at": "2026-02-09T04:51:34.000Z",
+    "updated_at": "2026-02-09T06:14:40.000Z",
+    "Year": 2023
+  },
+  {
+    "id": 2,
+    "brand_id": 1,
+    "name": "Mercedes-Benz E-Class",
+    "image": "https://jusmoto.blackitechs.in/uploads/media/mercedes-benz-w214-1x7a18411770617793.jpg",
+    "status": 1,
+    "created_at": "2026-02-09T04:51:34.000Z",
+    "updated_at": "2026-02-09T06:16:50.000Z",
+    "Year": 2024
+  },
+  {
+    "id": 3,
+    "brand_id": 2,
+    "name": "BMW 3 Series",
+    "image": "https://jusmoto.blackitechs.in/uploads/media/bmw-330e-review-2024-011770617904.jpg",
+    "status": 1,
+    "created_at": "2026-02-09T04:51:34.000Z",
+    "updated_at": "2026-02-09T06:18:42.000Z",
+    "Year": 2023
+  },
+  {
+    "id": 4,
+    "brand_id": 2,
+    "name": "BMW X5",
+    "image": "https://jusmoto.blackitechs.in/uploads/media/2025-bmw-x5-sdrive40i-sports-activity-vehicle-angular-front-exterior-view-100927280-l1770618113.webp",
+    "status": 1,
+    "created_at": "2026-02-09T04:51:34.000Z",
+    "updated_at": "2026-02-09T06:22:44.000Z",
+    "Year": 2024
+  },
+  {
+    "id": 5,
+    "brand_id": 3,
+    "name": "Land Rover Range Rover",
+    "image": "https://jusmoto.blackitechs.in/uploads/media/2022-land-rover-range-rover-se-p440e-awd-automatic-30-front1770618237.jpg",
+    "status": 1,
+    "created_at": "2026-02-09T04:51:34.000Z",
+    "updated_at": "2026-02-09T06:24:34.000Z",
+    "Year": 2023
+  },
+  {
+    "id": 6,
+    "brand_id": 3,
+    "name": "Land Rover Defender",
+    "image": "https://jusmoto.blackitechs.in/uploads/media/whatsapp-image-2025-01-22-at-152026-31770618724.webp",
+    "status": 1,
+    "created_at": "2026-02-09T04:51:34.000Z",
+    "updated_at": "2026-02-09T06:50:25.000Z",
+    "Year": 2024
+  },
+  {
+    "id": 7,
+    "brand_id": 4,
+    "name": "Nissan Altima",
+    "image": "https://jusmoto.blackitechs.in/uploads/media/706805f6fc5b56c45dcaede423a6d115d7bfa54b1770618730.jfif",
+    "status": 1,
+    "created_at": "2026-02-09T04:51:34.000Z",
+    "updated_at": "2026-02-09T06:53:39.000Z",
+    "Year": 2023
+  },
+  {
+    "id": 8,
+    "brand_id": 4,
+    "name": "Nissan Rogue",
+    "image": "https://jusmoto.blackitechs.in/uploads/media/2023-nissan-rogue-sv-in-super-black-front-left1770618716.jpg",
+    "status": 1,
+    "created_at": "2026-02-09T04:51:34.000Z",
+    "updated_at": "2026-02-09T06:59:29.000Z",
+    "Year": 2024
+  },
+  {
+    "id": 9,
+    "brand_id": 5,
+    "name": "Hyundai Elantra",
+    "image": "https://jusmoto.blackitechs.in/uploads/media/2024-hyundai-elantra1770618713.jpeg",
+    "status": 1,
+    "created_at": "2026-02-09T04:51:34.000Z",
+    "updated_at": "2026-02-09T07:01:01.000Z",
+    "Year": 2023
+  },
+  {
+    "id": 10,
+    "brand_id": 5,
+    "name": "Hyundai Tucson",
+    "image": "https://jusmoto.blackitechs.in/uploads/media/de11f2d3-cbbe-47d1-815f-e6f7a9c595dc.webp",
+    "status": 1,
+    "created_at": "2026-02-09T04:51:34.000Z",
+    "updated_at": "2026-02-20T11:09:16.000Z",
+    "Year": 2024
+  },
+  {
+    "id": 11,
+    "brand_id": 9,
+    "name": "TT",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:27.000Z",
+    "updated_at": "2026-02-20T07:46:27.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 12,
+    "brand_id": 9,
+    "name": "A4",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:27.000Z",
+    "updated_at": "2026-02-20T07:46:27.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 13,
+    "brand_id": 9,
+    "name": "S4",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:27.000Z",
+    "updated_at": "2026-02-20T07:46:27.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 14,
+    "brand_id": 9,
+    "name": "A6",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:27.000Z",
+    "updated_at": "2026-02-20T07:46:27.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 15,
+    "brand_id": 9,
+    "name": "RS 6",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:27.000Z",
+    "updated_at": "2026-02-20T07:46:27.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 16,
+    "brand_id": 9,
+    "name": "allroad",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:27.000Z",
+    "updated_at": "2026-02-20T07:46:27.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 17,
+    "brand_id": 9,
+    "name": "A8",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:27.000Z",
+    "updated_at": "2026-02-20T07:46:27.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 18,
+    "brand_id": 9,
+    "name": "RS 4",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:28.000Z",
+    "updated_at": "2026-02-20T07:46:28.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 19,
+    "brand_id": 9,
+    "name": "A3",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:28.000Z",
+    "updated_at": "2026-02-20T07:46:28.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 20,
+    "brand_id": 9,
+    "name": "S6",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:28.000Z",
+    "updated_at": "2026-02-20T07:46:28.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 21,
+    "brand_id": 9,
+    "name": "S8",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:28.000Z",
+    "updated_at": "2026-02-20T07:46:28.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 22,
+    "brand_id": 9,
+    "name": "Q7",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:28.000Z",
+    "updated_at": "2026-02-20T07:46:28.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 23,
+    "brand_id": 9,
+    "name": "A5",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:28.000Z",
+    "updated_at": "2026-02-20T07:46:28.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 24,
+    "brand_id": 9,
+    "name": "S5",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:28.000Z",
+    "updated_at": "2026-02-20T07:46:28.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 25,
+    "brand_id": 9,
+    "name": "R8",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:28.000Z",
+    "updated_at": "2026-02-20T07:46:28.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 26,
+    "brand_id": 9,
+    "name": "TTS",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:28.000Z",
+    "updated_at": "2026-02-20T07:46:28.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 27,
+    "brand_id": 9,
+    "name": "Q5",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:29.000Z",
+    "updated_at": "2026-02-20T07:46:29.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 28,
+    "brand_id": 9,
+    "name": "RS 5",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:29.000Z",
+    "updated_at": "2026-02-20T07:46:29.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 29,
+    "brand_id": 9,
+    "name": "A7",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:29.000Z",
+    "updated_at": "2026-02-20T07:46:29.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 30,
+    "brand_id": 9,
+    "name": "TT RS",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:29.000Z",
+    "updated_at": "2026-02-20T07:46:29.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 31,
+    "brand_id": 9,
+    "name": "Q3",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:29.000Z",
+    "updated_at": "2026-02-20T07:46:29.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 32,
+    "brand_id": 9,
+    "name": "SQ5",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:29.000Z",
+    "updated_at": "2026-02-20T07:46:29.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 33,
+    "brand_id": 9,
+    "name": "90",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:29.000Z",
+    "updated_at": "2026-02-20T07:46:29.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 34,
+    "brand_id": 9,
+    "name": "100",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:29.000Z",
+    "updated_at": "2026-02-20T07:46:29.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 35,
+    "brand_id": 9,
+    "name": "V8",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:29.000Z",
+    "updated_at": "2026-02-20T07:46:29.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 36,
+    "brand_id": 9,
+    "name": "Cabriolet",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:30.000Z",
+    "updated_at": "2026-02-20T07:46:30.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 37,
+    "brand_id": 9,
+    "name": "S3",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:30.000Z",
+    "updated_at": "2026-02-20T07:46:30.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 38,
+    "brand_id": 9,
+    "name": "S7",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:30.000Z",
+    "updated_at": "2026-02-20T07:46:30.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 39,
+    "brand_id": 9,
+    "name": "RS 7",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:30.000Z",
+    "updated_at": "2026-02-20T07:46:30.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 40,
+    "brand_id": 9,
+    "name": "A4 allroad",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:30.000Z",
+    "updated_at": "2026-02-20T07:46:30.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 41,
+    "brand_id": 9,
+    "name": "5000",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:30.000Z",
+    "updated_at": "2026-02-20T07:46:30.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 42,
+    "brand_id": 9,
+    "name": "4000",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:30.000Z",
+    "updated_at": "2026-02-20T07:46:30.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 43,
+    "brand_id": 9,
+    "name": "80",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:30.000Z",
+    "updated_at": "2026-02-20T07:46:30.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 44,
+    "brand_id": 9,
+    "name": "200",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:31.000Z",
+    "updated_at": "2026-02-20T07:46:31.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 45,
+    "brand_id": 9,
+    "name": "Coupe",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:31.000Z",
+    "updated_at": "2026-02-20T07:46:31.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 46,
+    "brand_id": 9,
+    "name": "RS 3",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:31.000Z",
+    "updated_at": "2026-02-20T07:46:31.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 47,
+    "brand_id": 9,
+    "name": "Q8",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:31.000Z",
+    "updated_at": "2026-02-20T07:46:31.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 48,
+    "brand_id": 9,
+    "name": "e-tron",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:31.000Z",
+    "updated_at": "2026-02-20T07:46:31.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 49,
+    "brand_id": 9,
+    "name": "A6 allroad",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:31.000Z",
+    "updated_at": "2026-02-20T07:46:31.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 50,
+    "brand_id": 9,
+    "name": "Q5 e",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:31.000Z",
+    "updated_at": "2026-02-20T07:46:31.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 51,
+    "brand_id": 9,
+    "name": "A8 e",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:31.000Z",
+    "updated_at": "2026-02-20T07:46:31.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 52,
+    "brand_id": 9,
+    "name": "SQ7",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:31.000Z",
+    "updated_at": "2026-02-20T07:46:31.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 53,
+    "brand_id": 9,
+    "name": "SQ8",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:32.000Z",
+    "updated_at": "2026-02-20T07:46:32.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 54,
+    "brand_id": 9,
+    "name": "RS Q8",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:32.000Z",
+    "updated_at": "2026-02-20T07:46:32.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 55,
+    "brand_id": 9,
+    "name": "e-tron Sportback",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:32.000Z",
+    "updated_at": "2026-02-20T07:46:32.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 56,
+    "brand_id": 9,
+    "name": "RS e-tron GT",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:32.000Z",
+    "updated_at": "2026-02-20T07:46:32.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 57,
+    "brand_id": 9,
+    "name": "Q4",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:32.000Z",
+    "updated_at": "2026-02-20T07:46:32.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 58,
+    "brand_id": 9,
+    "name": "A8 L",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:32.000Z",
+    "updated_at": "2026-02-20T07:46:32.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 59,
+    "brand_id": 9,
+    "name": "e-tron GT",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:32.000Z",
+    "updated_at": "2026-02-20T07:46:32.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 60,
+    "brand_id": 9,
+    "name": "A7 e",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:32.000Z",
+    "updated_at": "2026-02-20T07:46:32.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 61,
+    "brand_id": 9,
+    "name": "A8 L e",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:32.000Z",
+    "updated_at": "2026-02-20T07:46:32.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 62,
+    "brand_id": 9,
+    "name": "Q6",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:33.000Z",
+    "updated_at": "2026-02-20T07:46:33.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 63,
+    "brand_id": 9,
+    "name": "SQ6",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:33.000Z",
+    "updated_at": "2026-02-20T07:46:33.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 64,
+    "brand_id": 9,
+    "name": "RS 6 Avant",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:33.000Z",
+    "updated_at": "2026-02-20T07:46:33.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 65,
+    "brand_id": 9,
+    "name": "S e-tron GT",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-02-20T07:46:33.000Z",
+    "updated_at": "2026-02-20T07:46:33.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 67,
+    "brand_id": 9,
+    "name": "100 Sedan",
+    "image": "cars/audi-100-sedan-1994.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:13.000Z",
+    "updated_at": "2026-02-24T07:23:13.000Z",
+    "Year": 1994
+  },
+  {
+    "id": 68,
+    "brand_id": 9,
+    "name": "100 Wagon",
+    "image": "cars/audi-100-wagon-1994.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:14.000Z",
+    "updated_at": "2026-02-24T07:23:14.000Z",
+    "Year": 1994
+  },
+  {
+    "id": 69,
+    "brand_id": 9,
+    "name": "A5 Coupe",
+    "image": "cars/audi-a5-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:14.000Z",
+    "updated_at": "2026-02-24T07:23:14.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 70,
+    "brand_id": 9,
+    "name": "R8 Coupe",
+    "image": "cars/audi-r8-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:14.000Z",
+    "updated_at": "2026-02-24T07:23:14.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 71,
+    "brand_id": 9,
+    "name": "RS 4 Convertible",
+    "image": "cars/audi-rs-4-convertible-2008.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:14.000Z",
+    "updated_at": "2026-02-24T07:23:14.000Z",
+    "Year": 2008
+  },
+  {
+    "id": 72,
+    "brand_id": 9,
+    "name": "S4 Sedan",
+    "image": "cars/audi-s4-sedan-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:15.000Z",
+    "updated_at": "2026-02-24T07:23:15.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 73,
+    "brand_id": 9,
+    "name": "S5 Convertible",
+    "image": "cars/audi-s5-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:15.000Z",
+    "updated_at": "2026-02-24T07:23:15.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 74,
+    "brand_id": 9,
+    "name": "S5 Coupe",
+    "image": "cars/audi-s5-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:16.000Z",
+    "updated_at": "2026-02-24T07:23:16.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 75,
+    "brand_id": 9,
+    "name": "S6 Sedan",
+    "image": "cars/audi-s6-sedan-2011.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:16.000Z",
+    "updated_at": "2026-02-24T07:23:16.000Z",
+    "Year": 2011
+  },
+  {
+    "id": 76,
+    "brand_id": 9,
+    "name": "TT Hatchback",
+    "image": "cars/audi-tt-hatchback-2011.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:16.000Z",
+    "updated_at": "2026-02-24T07:23:16.000Z",
+    "Year": 2011
+  },
+  {
+    "id": 77,
+    "brand_id": 9,
+    "name": "TT RS Coupe",
+    "image": "cars/audi-tt-rs-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:17.000Z",
+    "updated_at": "2026-02-24T07:23:17.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 78,
+    "brand_id": 9,
+    "name": "TTS Coupe",
+    "image": "cars/audi-tts-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:17.000Z",
+    "updated_at": "2026-02-24T07:23:17.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 79,
+    "brand_id": 9,
+    "name": "V8 Sedan",
+    "image": "cars/audi-v8-sedan-1994.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:17.000Z",
+    "updated_at": "2026-02-24T07:23:17.000Z",
+    "Year": 1994
+  },
+  {
+    "id": 80,
+    "brand_id": 2,
+    "name": "1 Series Convertible",
+    "image": "cars/bmw-1-series-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:17.000Z",
+    "updated_at": "2026-02-24T07:23:17.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 81,
+    "brand_id": 2,
+    "name": "1 Series Coupe",
+    "image": "cars/bmw-1-series-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:18.000Z",
+    "updated_at": "2026-02-24T07:23:18.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 82,
+    "brand_id": 2,
+    "name": "3 Series Sedan",
+    "image": "cars/bmw-3-series-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:18.000Z",
+    "updated_at": "2026-02-24T07:23:18.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 83,
+    "brand_id": 2,
+    "name": "3 Series Wagon",
+    "image": "cars/bmw-3-series-wagon-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:18.000Z",
+    "updated_at": "2026-02-24T07:23:18.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 84,
+    "brand_id": 2,
+    "name": "6 Series Convertible",
+    "image": "cars/bmw-6-series-convertible-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:19.000Z",
+    "updated_at": "2026-02-24T07:23:19.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 85,
+    "brand_id": 2,
+    "name": "ActiveHybrid 5 Sedan",
+    "image": "cars/bmw-activehybrid-5-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:19.000Z",
+    "updated_at": "2026-02-24T07:23:19.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 86,
+    "brand_id": 2,
+    "name": "M3 Coupe",
+    "image": "cars/bmw-m3-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:19.000Z",
+    "updated_at": "2026-02-24T07:23:19.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 87,
+    "brand_id": 2,
+    "name": "M5 Sedan",
+    "image": "cars/bmw-m5-sedan-2010.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:20.000Z",
+    "updated_at": "2026-02-24T07:23:20.000Z",
+    "Year": 2010
+  },
+  {
+    "id": 88,
+    "brand_id": 2,
+    "name": "M6 Convertible",
+    "image": "cars/bmw-m6-convertible-2010.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:20.000Z",
+    "updated_at": "2026-02-24T07:23:20.000Z",
+    "Year": 2010
+  },
+  {
+    "id": 89,
+    "brand_id": 2,
+    "name": "X3 SUV",
+    "image": "cars/bmw-x3-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:20.000Z",
+    "updated_at": "2026-02-24T07:23:20.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 90,
+    "brand_id": 2,
+    "name": "X5 SUV",
+    "image": "cars/bmw-x5-suv-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:21.000Z",
+    "updated_at": "2026-02-24T07:23:21.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 91,
+    "brand_id": 2,
+    "name": "X6 SUV",
+    "image": "cars/bmw-x6-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:21.000Z",
+    "updated_at": "2026-02-24T07:23:21.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 92,
+    "brand_id": 2,
+    "name": "Z4 Convertible",
+    "image": "cars/bmw-z4-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:21.000Z",
+    "updated_at": "2026-02-24T07:23:21.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 93,
+    "brand_id": 5,
+    "name": "Accent Sedan",
+    "image": "cars/hyundai-accent-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:31.000Z",
+    "updated_at": "2026-02-24T07:23:31.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 94,
+    "brand_id": 5,
+    "name": "Azera Sedan",
+    "image": "cars/hyundai-azera-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:32.000Z",
+    "updated_at": "2026-02-24T07:23:32.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 95,
+    "brand_id": 5,
+    "name": "Elantra Sedan",
+    "image": "cars/hyundai-elantra-sedan-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:32.000Z",
+    "updated_at": "2026-02-24T07:23:32.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 96,
+    "brand_id": 5,
+    "name": "Elantra Touring Hatchback",
+    "image": "cars/hyundai-elantra-touring-hatchback-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:32.000Z",
+    "updated_at": "2026-02-24T07:23:32.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 97,
+    "brand_id": 5,
+    "name": "Genesis Sedan",
+    "image": "cars/hyundai-genesis-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:33.000Z",
+    "updated_at": "2026-02-24T07:23:33.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 98,
+    "brand_id": 5,
+    "name": "Santa Fe SUV",
+    "image": "cars/hyundai-santa-fe-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:33.000Z",
+    "updated_at": "2026-02-24T07:23:33.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 99,
+    "brand_id": 5,
+    "name": "Sonata Hybrid Sedan",
+    "image": "cars/hyundai-sonata-hybrid-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:33.000Z",
+    "updated_at": "2026-02-24T07:23:33.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 100,
+    "brand_id": 5,
+    "name": "Sonata Sedan",
+    "image": "cars/hyundai-sonata-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:34.000Z",
+    "updated_at": "2026-02-24T07:23:34.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 101,
+    "brand_id": 5,
+    "name": "Tucson SUV",
+    "image": "cars/hyundai-tucson-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:34.000Z",
+    "updated_at": "2026-02-24T07:23:34.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 102,
+    "brand_id": 5,
+    "name": "Veloster Hatchback",
+    "image": "cars/hyundai-veloster-hatchback-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:34.000Z",
+    "updated_at": "2026-02-24T07:23:34.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 103,
+    "brand_id": 5,
+    "name": "Veracruz SUV",
+    "image": "cars/hyundai-veracruz-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:34.000Z",
+    "updated_at": "2026-02-24T07:23:34.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 104,
+    "brand_id": 6,
+    "name": "XK XKR",
+    "image": "cars/jaguar-xk-xkr-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:35.000Z",
+    "updated_at": "2026-02-24T07:23:35.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 105,
+    "brand_id": 3,
+    "name": "LR2 SUV",
+    "image": "cars/land-rover-lr2-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:36.000Z",
+    "updated_at": "2026-02-24T07:23:36.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 106,
+    "brand_id": 3,
+    "name": "Range Rover SUV",
+    "image": "cars/land-rover-range-rover-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:37.000Z",
+    "updated_at": "2026-02-24T07:23:37.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 107,
+    "brand_id": 1,
+    "name": "300-Class Convertible",
+    "image": "cars/mercedes-benz-300-class-convertible-1993.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:37.000Z",
+    "updated_at": "2026-02-24T07:23:37.000Z",
+    "Year": 1993
+  },
+  {
+    "id": 108,
+    "brand_id": 1,
+    "name": "C-Class Sedan",
+    "image": "cars/mercedes-benz-c-class-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:38.000Z",
+    "updated_at": "2026-02-24T07:23:38.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 109,
+    "brand_id": 1,
+    "name": "E-Class Sedan",
+    "image": "cars/mercedes-benz-e-class-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:38.000Z",
+    "updated_at": "2026-02-24T07:23:38.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 110,
+    "brand_id": 1,
+    "name": "S-Class Sedan",
+    "image": "cars/mercedes-benz-s-class-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:38.000Z",
+    "updated_at": "2026-02-24T07:23:38.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 111,
+    "brand_id": 1,
+    "name": "SL-Class Coupe",
+    "image": "cars/mercedes-benz-sl-class-coupe-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:39.000Z",
+    "updated_at": "2026-02-24T07:23:39.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 112,
+    "brand_id": 1,
+    "name": "Sprinter Van",
+    "image": "cars/mercedes-benz-sprinter-van-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:39.000Z",
+    "updated_at": "2026-02-24T07:23:39.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 113,
+    "brand_id": 4,
+    "name": "240SX Coupe",
+    "image": "cars/nissan-240sx-coupe-1998.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:39.000Z",
+    "updated_at": "2026-02-24T07:23:39.000Z",
+    "Year": 1998
+  },
+  {
+    "id": 114,
+    "brand_id": 4,
+    "name": "Juke Hatchback",
+    "image": "cars/nissan-juke-hatchback-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:40.000Z",
+    "updated_at": "2026-02-24T07:23:40.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 115,
+    "brand_id": 4,
+    "name": "Leaf Hatchback",
+    "image": "cars/nissan-leaf-hatchback-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:40.000Z",
+    "updated_at": "2026-02-24T07:23:40.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 116,
+    "brand_id": 4,
+    "name": "NV Passenger Van",
+    "image": "cars/nissan-nv-passenger-van-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:40.000Z",
+    "updated_at": "2026-02-24T07:23:40.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 117,
+    "brand_id": 8,
+    "name": "Aerio Sedan",
+    "image": "cars/suzuki-aerio-sedan-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:41.000Z",
+    "updated_at": "2026-02-24T07:23:41.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 118,
+    "brand_id": 8,
+    "name": "Kizashi Sedan",
+    "image": "cars/suzuki-kizashi-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:42.000Z",
+    "updated_at": "2026-02-24T07:23:42.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 119,
+    "brand_id": 8,
+    "name": "SX4 Hatchback",
+    "image": "cars/suzuki-sx4-hatchback-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:42.000Z",
+    "updated_at": "2026-02-24T07:23:42.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 120,
+    "brand_id": 8,
+    "name": "SX4 Sedan",
+    "image": "cars/suzuki-sx4-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:42.000Z",
+    "updated_at": "2026-02-24T07:23:42.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 121,
+    "brand_id": 11,
+    "name": "Model S Sedan",
+    "image": "cars/tesla-model-s-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:43.000Z",
+    "updated_at": "2026-02-24T07:23:43.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 122,
+    "brand_id": 10,
+    "name": "4Runner SUV",
+    "image": "cars/toyota-4runner-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:43.000Z",
+    "updated_at": "2026-02-24T07:23:43.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 123,
+    "brand_id": 10,
+    "name": "Camry Sedan",
+    "image": "cars/toyota-camry-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:43.000Z",
+    "updated_at": "2026-02-24T07:23:43.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 124,
+    "brand_id": 10,
+    "name": "Corolla Sedan",
+    "image": "cars/toyota-corolla-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:44.000Z",
+    "updated_at": "2026-02-24T07:23:44.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 125,
+    "brand_id": 10,
+    "name": "Sequoia SUV",
+    "image": "cars/toyota-sequoia-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:44.000Z",
+    "updated_at": "2026-02-24T07:23:44.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 126,
+    "brand_id": 7,
+    "name": "240 Sedan",
+    "image": "cars/volvo-240-sedan-1993.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:44.000Z",
+    "updated_at": "2026-02-24T07:23:44.000Z",
+    "Year": 1993
+  },
+  {
+    "id": 127,
+    "brand_id": 7,
+    "name": "C30 Hatchback",
+    "image": "cars/volvo-c30-hatchback-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:45.000Z",
+    "updated_at": "2026-02-24T07:23:45.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 128,
+    "brand_id": 7,
+    "name": "XC90 SUV",
+    "image": "cars/volvo-xc90-suv-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:23:45.000Z",
+    "updated_at": "2026-02-24T07:23:45.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 129,
+    "brand_id": 12,
+    "name": "Hummer SUV",
+    "image": "cars/am-general-hummer-suv-2000.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:11.000Z",
+    "updated_at": "2026-02-24T07:29:11.000Z",
+    "Year": 2000
+  },
+  {
+    "id": 130,
+    "brand_id": 13,
+    "name": "Integra Type R",
+    "image": "cars/acura-integra-type-r-2001.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:11.000Z",
+    "updated_at": "2026-02-24T07:29:11.000Z",
+    "Year": 2001
+  },
+  {
+    "id": 131,
+    "brand_id": 13,
+    "name": "RL Sedan",
+    "image": "cars/acura-rl-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:12.000Z",
+    "updated_at": "2026-02-24T07:29:12.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 132,
+    "brand_id": 13,
+    "name": "TL Sedan",
+    "image": "cars/acura-tl-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:12.000Z",
+    "updated_at": "2026-02-24T07:29:12.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 133,
+    "brand_id": 13,
+    "name": "TL Type-S",
+    "image": "cars/acura-tl-type-s-2008.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:12.000Z",
+    "updated_at": "2026-02-24T07:29:12.000Z",
+    "Year": 2008
+  },
+  {
+    "id": 134,
+    "brand_id": 13,
+    "name": "TSX Sedan",
+    "image": "cars/acura-tsx-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:12.000Z",
+    "updated_at": "2026-02-24T07:29:12.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 135,
+    "brand_id": 13,
+    "name": "ZDX Hatchback",
+    "image": "cars/acura-zdx-hatchback-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:13.000Z",
+    "updated_at": "2026-02-24T07:29:13.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 136,
+    "brand_id": 14,
+    "name": "V8 Vantage Convertible",
+    "image": "cars/aston-martin-v8-vantage-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:13.000Z",
+    "updated_at": "2026-02-24T07:29:13.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 137,
+    "brand_id": 14,
+    "name": "V8 Vantage Coupe",
+    "image": "cars/aston-martin-v8-vantage-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:13.000Z",
+    "updated_at": "2026-02-24T07:29:13.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 138,
+    "brand_id": 14,
+    "name": "Virage Convertible",
+    "image": "cars/aston-martin-virage-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:14.000Z",
+    "updated_at": "2026-02-24T07:29:14.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 139,
+    "brand_id": 14,
+    "name": "Virage Coupe",
+    "image": "cars/aston-martin-virage-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:14.000Z",
+    "updated_at": "2026-02-24T07:29:14.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 140,
+    "brand_id": 15,
+    "name": "Arnage Sedan",
+    "image": "cars/bentley-arnage-sedan-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:21.000Z",
+    "updated_at": "2026-02-24T07:29:21.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 141,
+    "brand_id": 15,
+    "name": "Continental Flying Spur Sedan",
+    "image": "cars/bentley-continental-flying-spur-sedan-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:21.000Z",
+    "updated_at": "2026-02-24T07:29:21.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 142,
+    "brand_id": 15,
+    "name": "Continental GT Coupe",
+    "image": "cars/bentley-continental-gt-coupe-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:22.000Z",
+    "updated_at": "2026-02-24T07:29:22.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 143,
+    "brand_id": 15,
+    "name": "Continental Supersports Conv. Convertible",
+    "image": "cars/bentley-continental-supersports-conv-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:22.000Z",
+    "updated_at": "2026-02-24T07:29:22.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 144,
+    "brand_id": 15,
+    "name": "Mulsanne Sedan",
+    "image": "cars/bentley-mulsanne-sedan-2011.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:22.000Z",
+    "updated_at": "2026-02-24T07:29:22.000Z",
+    "Year": 2011
+  },
+  {
+    "id": 145,
+    "brand_id": 16,
+    "name": "Veyron 16.4 Convertible",
+    "image": "cars/bugatti-veyron-16-4-convertible-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:23.000Z",
+    "updated_at": "2026-02-24T07:29:23.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 146,
+    "brand_id": 16,
+    "name": "Veyron 16.4 Coupe",
+    "image": "cars/bugatti-veyron-16-4-coupe-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:23.000Z",
+    "updated_at": "2026-02-24T07:29:23.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 147,
+    "brand_id": 17,
+    "name": "Enclave SUV",
+    "image": "cars/buick-enclave-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:23.000Z",
+    "updated_at": "2026-02-24T07:29:23.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 148,
+    "brand_id": 17,
+    "name": "Rainier SUV",
+    "image": "cars/buick-rainier-suv-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:24.000Z",
+    "updated_at": "2026-02-24T07:29:24.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 149,
+    "brand_id": 17,
+    "name": "Regal GS",
+    "image": "cars/buick-regal-gs-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:24.000Z",
+    "updated_at": "2026-02-24T07:29:24.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 150,
+    "brand_id": 17,
+    "name": "Verano Sedan",
+    "image": "cars/buick-verano-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:24.000Z",
+    "updated_at": "2026-02-24T07:29:24.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 151,
+    "brand_id": 18,
+    "name": "CTS-V Sedan",
+    "image": "cars/cadillac-cts-v-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:25.000Z",
+    "updated_at": "2026-02-24T07:29:25.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 152,
+    "brand_id": 18,
+    "name": "Escalade EXT Crew Cab",
+    "image": "cars/cadillac-escalade-ext-crew-cab-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:25.000Z",
+    "updated_at": "2026-02-24T07:29:25.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 153,
+    "brand_id": 18,
+    "name": "SRX SUV",
+    "image": "cars/cadillac-srx-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:25.000Z",
+    "updated_at": "2026-02-24T07:29:25.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 154,
+    "brand_id": 19,
+    "name": "Avalanche Crew Cab",
+    "image": "cars/chevrolet-avalanche-crew-cab-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:26.000Z",
+    "updated_at": "2026-02-24T07:29:26.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 155,
+    "brand_id": 19,
+    "name": "Camaro Convertible",
+    "image": "cars/chevrolet-camaro-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:26.000Z",
+    "updated_at": "2026-02-24T07:29:26.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 156,
+    "brand_id": 19,
+    "name": "Cobalt SS",
+    "image": "cars/chevrolet-cobalt-ss-2010.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:26.000Z",
+    "updated_at": "2026-02-24T07:29:26.000Z",
+    "Year": 2010
+  },
+  {
+    "id": 157,
+    "brand_id": 19,
+    "name": "Corvette Convertible",
+    "image": "cars/chevrolet-corvette-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:27.000Z",
+    "updated_at": "2026-02-24T07:29:27.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 158,
+    "brand_id": 19,
+    "name": "Corvette Ron Fellows Edition Z06",
+    "image": "cars/chevrolet-corvette-ron-fellows-edition-z06-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:27.000Z",
+    "updated_at": "2026-02-24T07:29:27.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 159,
+    "brand_id": 19,
+    "name": "Corvette ZR1",
+    "image": "cars/chevrolet-corvette-zr1-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:27.000Z",
+    "updated_at": "2026-02-24T07:29:27.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 160,
+    "brand_id": 19,
+    "name": "Express Cargo Van",
+    "image": "cars/chevrolet-express-cargo-van-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:28.000Z",
+    "updated_at": "2026-02-24T07:29:28.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 161,
+    "brand_id": 19,
+    "name": "Express Van",
+    "image": "cars/chevrolet-express-van-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:28.000Z",
+    "updated_at": "2026-02-24T07:29:28.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 162,
+    "brand_id": 19,
+    "name": "HHR SS",
+    "image": "cars/chevrolet-hhr-ss-2010.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:28.000Z",
+    "updated_at": "2026-02-24T07:29:28.000Z",
+    "Year": 2010
+  },
+  {
+    "id": 163,
+    "brand_id": 19,
+    "name": "Impala Sedan",
+    "image": "cars/chevrolet-impala-sedan-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:29.000Z",
+    "updated_at": "2026-02-24T07:29:29.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 164,
+    "brand_id": 19,
+    "name": "Malibu Hybrid Sedan",
+    "image": "cars/chevrolet-malibu-hybrid-sedan-2010.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:29.000Z",
+    "updated_at": "2026-02-24T07:29:29.000Z",
+    "Year": 2010
+  },
+  {
+    "id": 165,
+    "brand_id": 19,
+    "name": "Malibu Sedan",
+    "image": "cars/chevrolet-malibu-sedan-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:29.000Z",
+    "updated_at": "2026-02-24T07:29:29.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 166,
+    "brand_id": 19,
+    "name": "Monte Carlo Coupe",
+    "image": "cars/chevrolet-monte-carlo-coupe-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:30.000Z",
+    "updated_at": "2026-02-24T07:29:30.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 167,
+    "brand_id": 19,
+    "name": "Silverado 1500 Classic Extended Cab",
+    "image": "cars/chevrolet-silverado-1500-classic-extended-cab-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:30.000Z",
+    "updated_at": "2026-02-24T07:29:30.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 168,
+    "brand_id": 19,
+    "name": "Silverado 1500 Extended Cab",
+    "image": "cars/chevrolet-silverado-1500-extended-cab-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:30.000Z",
+    "updated_at": "2026-02-24T07:29:30.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 169,
+    "brand_id": 19,
+    "name": "Silverado 1500 Hybrid Crew Cab",
+    "image": "cars/chevrolet-silverado-1500-hybrid-crew-cab-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:30.000Z",
+    "updated_at": "2026-02-24T07:29:30.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 170,
+    "brand_id": 19,
+    "name": "Silverado 1500 Regular Cab",
+    "image": "cars/chevrolet-silverado-1500-regular-cab-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:31.000Z",
+    "updated_at": "2026-02-24T07:29:31.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 171,
+    "brand_id": 19,
+    "name": "Silverado 2500HD Regular Cab",
+    "image": "cars/chevrolet-silverado-2500hd-regular-cab-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:31.000Z",
+    "updated_at": "2026-02-24T07:29:31.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 172,
+    "brand_id": 19,
+    "name": "Sonic Sedan",
+    "image": "cars/chevrolet-sonic-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:31.000Z",
+    "updated_at": "2026-02-24T07:29:31.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 173,
+    "brand_id": 19,
+    "name": "Tahoe Hybrid SUV",
+    "image": "cars/chevrolet-tahoe-hybrid-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:32.000Z",
+    "updated_at": "2026-02-24T07:29:32.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 174,
+    "brand_id": 19,
+    "name": "TrailBlazer SS",
+    "image": "cars/chevrolet-trailblazer-ss-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:32.000Z",
+    "updated_at": "2026-02-24T07:29:32.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 175,
+    "brand_id": 19,
+    "name": "Traverse SUV",
+    "image": "cars/chevrolet-traverse-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:32.000Z",
+    "updated_at": "2026-02-24T07:29:32.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 176,
+    "brand_id": 20,
+    "name": "300 SRT-8",
+    "image": "cars/chrysler-300-srt-8-2010.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:33.000Z",
+    "updated_at": "2026-02-24T07:29:33.000Z",
+    "Year": 2010
+  },
+  {
+    "id": 177,
+    "brand_id": 20,
+    "name": "Aspen SUV",
+    "image": "cars/chrysler-aspen-suv-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:33.000Z",
+    "updated_at": "2026-02-24T07:29:33.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 178,
+    "brand_id": 20,
+    "name": "Crossfire Convertible",
+    "image": "cars/chrysler-crossfire-convertible-2008.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:33.000Z",
+    "updated_at": "2026-02-24T07:29:33.000Z",
+    "Year": 2008
+  },
+  {
+    "id": 179,
+    "brand_id": 20,
+    "name": "PT Cruiser Convertible",
+    "image": "cars/chrysler-pt-cruiser-convertible-2008.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:34.000Z",
+    "updated_at": "2026-02-24T07:29:34.000Z",
+    "Year": 2008
+  },
+  {
+    "id": 180,
+    "brand_id": 20,
+    "name": "Sebring Convertible",
+    "image": "cars/chrysler-sebring-convertible-2010.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:34.000Z",
+    "updated_at": "2026-02-24T07:29:34.000Z",
+    "Year": 2010
+  },
+  {
+    "id": 181,
+    "brand_id": 20,
+    "name": "Town and Country Minivan",
+    "image": "cars/chrysler-town-and-country-minivan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:34.000Z",
+    "updated_at": "2026-02-24T07:29:34.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 182,
+    "brand_id": 21,
+    "name": "Nubira Wagon",
+    "image": "cars/daewoo-nubira-wagon-2002.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:35.000Z",
+    "updated_at": "2026-02-24T07:29:35.000Z",
+    "Year": 2002
+  },
+  {
+    "id": 183,
+    "brand_id": 22,
+    "name": "Caliber Wagon",
+    "image": "cars/dodge-caliber-wagon-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:35.000Z",
+    "updated_at": "2026-02-24T07:29:35.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 184,
+    "brand_id": 22,
+    "name": "Caravan Minivan",
+    "image": "cars/dodge-caravan-minivan-1997.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:36.000Z",
+    "updated_at": "2026-02-24T07:29:36.000Z",
+    "Year": 1997
+  },
+  {
+    "id": 185,
+    "brand_id": 22,
+    "name": "Challenger SRT8",
+    "image": "cars/dodge-challenger-srt8-2011.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:36.000Z",
+    "updated_at": "2026-02-24T07:29:36.000Z",
+    "Year": 2011
+  },
+  {
+    "id": 186,
+    "brand_id": 22,
+    "name": "Charger SRT-8",
+    "image": "cars/dodge-charger-srt-8-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:36.000Z",
+    "updated_at": "2026-02-24T07:29:36.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 187,
+    "brand_id": 22,
+    "name": "Charger Sedan",
+    "image": "cars/dodge-charger-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:37.000Z",
+    "updated_at": "2026-02-24T07:29:37.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 188,
+    "brand_id": 22,
+    "name": "Dakota Club Cab",
+    "image": "cars/dodge-dakota-club-cab-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:37.000Z",
+    "updated_at": "2026-02-24T07:29:37.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 189,
+    "brand_id": 22,
+    "name": "Dakota Crew Cab",
+    "image": "cars/dodge-dakota-crew-cab-2010.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:37.000Z",
+    "updated_at": "2026-02-24T07:29:37.000Z",
+    "Year": 2010
+  },
+  {
+    "id": 190,
+    "brand_id": 22,
+    "name": "Durango SUV",
+    "image": "cars/dodge-durango-suv-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:38.000Z",
+    "updated_at": "2026-02-24T07:29:38.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 191,
+    "brand_id": 22,
+    "name": "Journey SUV",
+    "image": "cars/dodge-journey-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:38.000Z",
+    "updated_at": "2026-02-24T07:29:38.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 192,
+    "brand_id": 22,
+    "name": "Magnum Wagon",
+    "image": "cars/dodge-magnum-wagon-2008.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:38.000Z",
+    "updated_at": "2026-02-24T07:29:38.000Z",
+    "Year": 2008
+  },
+  {
+    "id": 193,
+    "brand_id": 22,
+    "name": "Ram Pickup 3500 Crew Cab",
+    "image": "cars/dodge-ram-pickup-3500-crew-cab-2010.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:39.000Z",
+    "updated_at": "2026-02-24T07:29:39.000Z",
+    "Year": 2010
+  },
+  {
+    "id": 194,
+    "brand_id": 22,
+    "name": "Ram Pickup 3500 Quad Cab",
+    "image": "cars/dodge-ram-pickup-3500-quad-cab-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:39.000Z",
+    "updated_at": "2026-02-24T07:29:39.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 195,
+    "brand_id": 22,
+    "name": "Sprinter Cargo Van",
+    "image": "cars/dodge-sprinter-cargo-van-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:39.000Z",
+    "updated_at": "2026-02-24T07:29:39.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 196,
+    "brand_id": 23,
+    "name": "Talon Hatchback",
+    "image": "cars/eagle-talon-hatchback-1998.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:40.000Z",
+    "updated_at": "2026-02-24T07:29:40.000Z",
+    "Year": 1998
+  },
+  {
+    "id": 197,
+    "brand_id": 24,
+    "name": "500 Abarth",
+    "image": "cars/fiat-500-abarth-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:40.000Z",
+    "updated_at": "2026-02-24T07:29:40.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 198,
+    "brand_id": 24,
+    "name": "500 Convertible",
+    "image": "cars/fiat-500-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:40.000Z",
+    "updated_at": "2026-02-24T07:29:40.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 199,
+    "brand_id": 25,
+    "name": "458 Italia Convertible",
+    "image": "cars/ferrari-458-italia-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:41.000Z",
+    "updated_at": "2026-02-24T07:29:41.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 200,
+    "brand_id": 25,
+    "name": "458 Italia Coupe",
+    "image": "cars/ferrari-458-italia-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:41.000Z",
+    "updated_at": "2026-02-24T07:29:41.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 201,
+    "brand_id": 25,
+    "name": "California Convertible",
+    "image": "cars/ferrari-california-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:41.000Z",
+    "updated_at": "2026-02-24T07:29:41.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 202,
+    "brand_id": 25,
+    "name": "FF Coupe",
+    "image": "cars/ferrari-ff-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:41.000Z",
+    "updated_at": "2026-02-24T07:29:41.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 203,
+    "brand_id": 26,
+    "name": "Karma Sedan",
+    "image": "cars/fisker-karma-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:42.000Z",
+    "updated_at": "2026-02-24T07:29:42.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 204,
+    "brand_id": 27,
+    "name": "E-Series Wagon Van",
+    "image": "cars/ford-e-series-wagon-van-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:42.000Z",
+    "updated_at": "2026-02-24T07:29:42.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 205,
+    "brand_id": 27,
+    "name": "Edge SUV",
+    "image": "cars/ford-edge-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:42.000Z",
+    "updated_at": "2026-02-24T07:29:42.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 206,
+    "brand_id": 27,
+    "name": "Expedition EL SUV",
+    "image": "cars/ford-expedition-el-suv-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:43.000Z",
+    "updated_at": "2026-02-24T07:29:43.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 207,
+    "brand_id": 27,
+    "name": "F-150 Regular Cab",
+    "image": "cars/ford-f-150-regular-cab-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:43.000Z",
+    "updated_at": "2026-02-24T07:29:43.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 208,
+    "brand_id": 27,
+    "name": "F-450 Super Duty Crew Cab",
+    "image": "cars/ford-f-450-super-duty-crew-cab-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:44.000Z",
+    "updated_at": "2026-02-24T07:29:44.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 209,
+    "brand_id": 27,
+    "name": "Fiesta Sedan",
+    "image": "cars/ford-fiesta-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:44.000Z",
+    "updated_at": "2026-02-24T07:29:44.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 210,
+    "brand_id": 27,
+    "name": "Focus Sedan",
+    "image": "cars/ford-focus-sedan-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:44.000Z",
+    "updated_at": "2026-02-24T07:29:44.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 211,
+    "brand_id": 27,
+    "name": "Freestar Minivan",
+    "image": "cars/ford-freestar-minivan-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:45.000Z",
+    "updated_at": "2026-02-24T07:29:45.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 212,
+    "brand_id": 27,
+    "name": "GT Coupe",
+    "image": "cars/ford-gt-coupe-2006.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:45.000Z",
+    "updated_at": "2026-02-24T07:29:45.000Z",
+    "Year": 2006
+  },
+  {
+    "id": 213,
+    "brand_id": 27,
+    "name": "Mustang Convertible",
+    "image": "cars/ford-mustang-convertible-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:45.000Z",
+    "updated_at": "2026-02-24T07:29:45.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 214,
+    "brand_id": 27,
+    "name": "Ranger SuperCab",
+    "image": "cars/ford-ranger-supercab-2011.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:45.000Z",
+    "updated_at": "2026-02-24T07:29:45.000Z",
+    "Year": 2011
+  },
+  {
+    "id": 215,
+    "brand_id": 28,
+    "name": "Acadia SUV",
+    "image": "cars/gmc-acadia-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:46.000Z",
+    "updated_at": "2026-02-24T07:29:46.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 216,
+    "brand_id": 28,
+    "name": "Canyon Extended Cab",
+    "image": "cars/gmc-canyon-extended-cab-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:46.000Z",
+    "updated_at": "2026-02-24T07:29:46.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 217,
+    "brand_id": 28,
+    "name": "Savana Van",
+    "image": "cars/gmc-savana-van-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:46.000Z",
+    "updated_at": "2026-02-24T07:29:46.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 218,
+    "brand_id": 28,
+    "name": "Terrain SUV",
+    "image": "cars/gmc-terrain-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:47.000Z",
+    "updated_at": "2026-02-24T07:29:47.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 219,
+    "brand_id": 28,
+    "name": "Yukon Hybrid SUV",
+    "image": "cars/gmc-yukon-hybrid-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:47.000Z",
+    "updated_at": "2026-02-24T07:29:47.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 220,
+    "brand_id": 29,
+    "name": "Metro Convertible",
+    "image": "cars/geo-metro-convertible-1993.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:47.000Z",
+    "updated_at": "2026-02-24T07:29:47.000Z",
+    "Year": 1993
+  },
+  {
+    "id": 221,
+    "brand_id": 30,
+    "name": "H2 SUT Crew Cab",
+    "image": "cars/hummer-h2-sut-crew-cab-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:48.000Z",
+    "updated_at": "2026-02-24T07:29:48.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 222,
+    "brand_id": 30,
+    "name": "H3T Crew Cab",
+    "image": "cars/hummer-h3t-crew-cab-2010.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:48.000Z",
+    "updated_at": "2026-02-24T07:29:48.000Z",
+    "Year": 2010
+  },
+  {
+    "id": 223,
+    "brand_id": 31,
+    "name": "Accord Coupe",
+    "image": "cars/honda-accord-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:48.000Z",
+    "updated_at": "2026-02-24T07:29:48.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 224,
+    "brand_id": 31,
+    "name": "Accord Sedan",
+    "image": "cars/honda-accord-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:49.000Z",
+    "updated_at": "2026-02-24T07:29:49.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 225,
+    "brand_id": 31,
+    "name": "Odyssey Minivan",
+    "image": "cars/honda-odyssey-minivan-2007.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:49.000Z",
+    "updated_at": "2026-02-24T07:29:49.000Z",
+    "Year": 2007
+  },
+  {
+    "id": 226,
+    "brand_id": 32,
+    "name": "G Coupe IPL",
+    "image": "cars/infiniti-g-coupe-ipl-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:52.000Z",
+    "updated_at": "2026-02-24T07:29:52.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 227,
+    "brand_id": 32,
+    "name": "QX56 SUV",
+    "image": "cars/infiniti-qx56-suv-2011.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:52.000Z",
+    "updated_at": "2026-02-24T07:29:52.000Z",
+    "Year": 2011
+  },
+  {
+    "id": 228,
+    "brand_id": 33,
+    "name": "Ascender SUV",
+    "image": "cars/isuzu-ascender-suv-2008.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:53.000Z",
+    "updated_at": "2026-02-24T07:29:53.000Z",
+    "Year": 2008
+  },
+  {
+    "id": 229,
+    "brand_id": 34,
+    "name": "Compass SUV",
+    "image": "cars/jeep-compass-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:53.000Z",
+    "updated_at": "2026-02-24T07:29:53.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 230,
+    "brand_id": 34,
+    "name": "Grand Cherokee SUV",
+    "image": "cars/jeep-grand-cherokee-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:54.000Z",
+    "updated_at": "2026-02-24T07:29:54.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 231,
+    "brand_id": 34,
+    "name": "Liberty SUV",
+    "image": "cars/jeep-liberty-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:54.000Z",
+    "updated_at": "2026-02-24T07:29:54.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 232,
+    "brand_id": 34,
+    "name": "Patriot SUV",
+    "image": "cars/jeep-patriot-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:54.000Z",
+    "updated_at": "2026-02-24T07:29:54.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 233,
+    "brand_id": 34,
+    "name": "Wrangler SUV",
+    "image": "cars/jeep-wrangler-suv-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:54.000Z",
+    "updated_at": "2026-02-24T07:29:54.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 234,
+    "brand_id": 35,
+    "name": "Aventador Coupe",
+    "image": "cars/lamborghini-aventador-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:55.000Z",
+    "updated_at": "2026-02-24T07:29:55.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 235,
+    "brand_id": 35,
+    "name": "Diablo Coupe",
+    "image": "cars/lamborghini-diablo-coupe-2001.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:55.000Z",
+    "updated_at": "2026-02-24T07:29:55.000Z",
+    "Year": 2001
+  },
+  {
+    "id": 236,
+    "brand_id": 35,
+    "name": "Gallardo LP 570-4 Superleggera",
+    "image": "cars/lamborghini-gallardo-lp-570-4-superleggera-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:55.000Z",
+    "updated_at": "2026-02-24T07:29:55.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 237,
+    "brand_id": 35,
+    "name": "Reventon Coupe",
+    "image": "cars/lamborghini-reventon-coupe-2008.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:56.000Z",
+    "updated_at": "2026-02-24T07:29:56.000Z",
+    "Year": 2008
+  },
+  {
+    "id": 238,
+    "brand_id": 36,
+    "name": "Town Car Sedan",
+    "image": "cars/lincoln-town-car-sedan-2011.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:56.000Z",
+    "updated_at": "2026-02-24T07:29:56.000Z",
+    "Year": 2011
+  },
+  {
+    "id": 239,
+    "brand_id": 37,
+    "name": "Cooper Roadster Convertible",
+    "image": "cars/mini-cooper-roadster-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:57.000Z",
+    "updated_at": "2026-02-24T07:29:57.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 240,
+    "brand_id": 38,
+    "name": "Landaulet Convertible",
+    "image": "cars/maybach-landaulet-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:57.000Z",
+    "updated_at": "2026-02-24T07:29:57.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 241,
+    "brand_id": 39,
+    "name": "Tribute SUV",
+    "image": "cars/mazda-tribute-suv-2011.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:57.000Z",
+    "updated_at": "2026-02-24T07:29:57.000Z",
+    "Year": 2011
+  },
+  {
+    "id": 242,
+    "brand_id": 40,
+    "name": "MP4-12C Coupe",
+    "image": "cars/mclaren-mp4-12c-coupe-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:58.000Z",
+    "updated_at": "2026-02-24T07:29:58.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 243,
+    "brand_id": 41,
+    "name": "Lancer Sedan",
+    "image": "cars/mitsubishi-lancer-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:29:59.000Z",
+    "updated_at": "2026-02-24T07:29:59.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 244,
+    "brand_id": 42,
+    "name": "Neon Coupe",
+    "image": "cars/plymouth-neon-coupe-1999.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:01.000Z",
+    "updated_at": "2026-02-24T07:30:01.000Z",
+    "Year": 1999
+  },
+  {
+    "id": 245,
+    "brand_id": 43,
+    "name": "Panamera Sedan",
+    "image": "cars/porsche-panamera-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:01.000Z",
+    "updated_at": "2026-02-24T07:30:01.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 246,
+    "brand_id": 44,
+    "name": "C-V Cargo Van Minivan",
+    "image": "cars/ram-c-v-cargo-van-minivan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:01.000Z",
+    "updated_at": "2026-02-24T07:30:01.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 247,
+    "brand_id": 45,
+    "name": "Ghost Sedan",
+    "image": "cars/rolls-royce-ghost-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:02.000Z",
+    "updated_at": "2026-02-24T07:30:02.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 248,
+    "brand_id": 45,
+    "name": "Phantom Drophead Coupe Convertible",
+    "image": "cars/rolls-royce-phantom-drophead-coupe-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:02.000Z",
+    "updated_at": "2026-02-24T07:30:02.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 249,
+    "brand_id": 45,
+    "name": "Phantom Sedan",
+    "image": "cars/rolls-royce-phantom-sedan-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:02.000Z",
+    "updated_at": "2026-02-24T07:30:02.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 250,
+    "brand_id": 46,
+    "name": "xD Hatchback",
+    "image": "cars/scion-xd-hatchback-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:03.000Z",
+    "updated_at": "2026-02-24T07:30:03.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 251,
+    "brand_id": 47,
+    "name": "C8 Convertible",
+    "image": "cars/spyker-c8-convertible-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:03.000Z",
+    "updated_at": "2026-02-24T07:30:03.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 252,
+    "brand_id": 47,
+    "name": "C8 Coupe",
+    "image": "cars/spyker-c8-coupe-2009.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:03.000Z",
+    "updated_at": "2026-02-24T07:30:03.000Z",
+    "Year": 2009
+  },
+  {
+    "id": 253,
+    "brand_id": 48,
+    "name": "Beetle Hatchback",
+    "image": "cars/volkswagen-beetle-hatchback-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:06.000Z",
+    "updated_at": "2026-02-24T07:30:06.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 254,
+    "brand_id": 48,
+    "name": "Golf Hatchback",
+    "image": "cars/volkswagen-golf-hatchback-1991.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:06.000Z",
+    "updated_at": "2026-02-24T07:30:06.000Z",
+    "Year": 1991
+  },
+  {
+    "id": 255,
+    "brand_id": 49,
+    "name": "fortwo Convertible",
+    "image": "cars/smart-fortwo-convertible-2012.jpg",
+    "status": 1,
+    "created_at": "2026-02-24T07:30:08.000Z",
+    "updated_at": "2026-02-24T07:30:08.000Z",
+    "Year": 2012
+  },
+  {
+    "id": 257,
+    "brand_id": 10,
+    "name": "Fortuner",
+    "image": "https://jusmoto-uploads.s3.ap-south-1.amazonaws.com/images/ab8c42ec-6f76-4883-b304-09a3537f21be.jpg",
+    "status": 1,
+    "created_at": "2026-03-11T07:36:50.000Z",
+    "updated_at": "2026-03-11T07:36:50.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 258,
+    "brand_id": 28,
+    "name": "ddd",
+    "image": "cars/gmc-canyon-extended-cab-2012.jpg",
+    "status": 1,
+    "created_at": "2026-03-11T07:37:31.000Z",
+    "updated_at": "2026-03-11T07:37:31.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 259,
+    "brand_id": 5,
+    "name": "Santro",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:46.000Z",
+    "updated_at": "2026-03-11T10:02:46.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 260,
+    "brand_id": 10,
+    "name": "Etios Liva",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:47.000Z",
+    "updated_at": "2026-03-11T10:02:47.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 261,
+    "brand_id": 4,
+    "name": "Micra Active",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:48.000Z",
+    "updated_at": "2026-03-11T10:02:48.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 262,
+    "brand_id": 5,
+    "name": "Xcent Prime",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:49.000Z",
+    "updated_at": "2026-03-11T10:02:49.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 263,
+    "brand_id": 5,
+    "name": "Elite I20",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:50.000Z",
+    "updated_at": "2026-03-11T10:02:50.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 264,
+    "brand_id": 5,
+    "name": "Aura",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:50.000Z",
+    "updated_at": "2026-03-11T10:02:50.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 265,
+    "brand_id": 48,
+    "name": "Polo",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:51.000Z",
+    "updated_at": "2026-03-11T10:02:51.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 266,
+    "brand_id": 27,
+    "name": "Freestyle",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:52.000Z",
+    "updated_at": "2026-03-11T10:02:52.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 267,
+    "brand_id": 48,
+    "name": "Ameo",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:54.000Z",
+    "updated_at": "2026-03-11T10:02:54.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 268,
+    "brand_id": 27,
+    "name": "Aspire",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:54.000Z",
+    "updated_at": "2026-03-11T10:02:54.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 269,
+    "brand_id": 10,
+    "name": "Platinum Etios",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:55.000Z",
+    "updated_at": "2026-03-11T10:02:55.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 270,
+    "brand_id": 10,
+    "name": "Etios Cross",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:56.000Z",
+    "updated_at": "2026-03-11T10:02:56.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 271,
+    "brand_id": 24,
+    "name": "Urban Cross",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:57.000Z",
+    "updated_at": "2026-03-11T10:02:57.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 272,
+    "brand_id": 10,
+    "name": "Glanza",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:58.000Z",
+    "updated_at": "2026-03-11T10:02:58.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 273,
+    "brand_id": 24,
+    "name": "Avventura",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:02:59.000Z",
+    "updated_at": "2026-03-11T10:02:59.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 274,
+    "brand_id": 31,
+    "name": "Jazz",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:00.000Z",
+    "updated_at": "2026-03-11T10:03:00.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 275,
+    "brand_id": 34,
+    "name": "Compass Trailhawk",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:01.000Z",
+    "updated_at": "2026-03-11T10:03:01.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 276,
+    "brand_id": 33,
+    "name": "Mu-X",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:02.000Z",
+    "updated_at": "2026-03-11T10:03:02.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 277,
+    "brand_id": 48,
+    "name": "Tiguan",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:03.000Z",
+    "updated_at": "2026-03-11T10:03:03.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 278,
+    "brand_id": 31,
+    "name": "Cr-V",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:04.000Z",
+    "updated_at": "2026-03-11T10:03:04.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 279,
+    "brand_id": 37,
+    "name": "Cooper 5 Door",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:05.000Z",
+    "updated_at": "2026-03-11T10:03:05.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 280,
+    "brand_id": 37,
+    "name": "Convertible",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:06.000Z",
+    "updated_at": "2026-03-11T10:03:06.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 281,
+    "brand_id": 7,
+    "name": "Xc40",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:07.000Z",
+    "updated_at": "2026-03-11T10:03:07.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 282,
+    "brand_id": 37,
+    "name": "Clubman",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:08.000Z",
+    "updated_at": "2026-03-11T10:03:08.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 283,
+    "brand_id": 37,
+    "name": "John Cooper Works",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:09.000Z",
+    "updated_at": "2026-03-11T10:03:09.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 284,
+    "brand_id": 6,
+    "name": "Xe",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:10.000Z",
+    "updated_at": "2026-03-11T10:03:10.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 285,
+    "brand_id": 6,
+    "name": "Xf",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:11.000Z",
+    "updated_at": "2026-03-11T10:03:11.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 286,
+    "brand_id": 9,
+    "name": "A3 Cabriolet",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:12.000Z",
+    "updated_at": "2026-03-11T10:03:12.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 287,
+    "brand_id": 2,
+    "name": "X3",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:13.000Z",
+    "updated_at": "2026-03-11T10:03:13.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 288,
+    "brand_id": 3,
+    "name": "Discovery Sport",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:14.000Z",
+    "updated_at": "2026-03-11T10:03:14.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 289,
+    "brand_id": 7,
+    "name": "S90",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:14.000Z",
+    "updated_at": "2026-03-11T10:03:14.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 290,
+    "brand_id": 2,
+    "name": "X5",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:15.000Z",
+    "updated_at": "2026-03-11T10:03:15.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 291,
+    "brand_id": 27,
+    "name": "Mustang",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:16.000Z",
+    "updated_at": "2026-03-11T10:03:16.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 292,
+    "brand_id": 34,
+    "name": "Grand Cherokee",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:17.000Z",
+    "updated_at": "2026-03-11T10:03:17.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 293,
+    "brand_id": 2,
+    "name": "M2 Competition",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:18.000Z",
+    "updated_at": "2026-03-11T10:03:18.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 294,
+    "brand_id": 43,
+    "name": "718",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:19.000Z",
+    "updated_at": "2026-03-11T10:03:19.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 295,
+    "brand_id": 10,
+    "name": "Land Cruiser Prado",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:19.000Z",
+    "updated_at": "2026-03-11T10:03:19.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 296,
+    "brand_id": 9,
+    "name": "Rs5",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:20.000Z",
+    "updated_at": "2026-03-11T10:03:20.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 297,
+    "brand_id": 2,
+    "name": "7-Series",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:21.000Z",
+    "updated_at": "2026-03-11T10:03:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 298,
+    "brand_id": 43,
+    "name": "Panamera",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:22.000Z",
+    "updated_at": "2026-03-11T10:03:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 299,
+    "brand_id": 35,
+    "name": "Urus",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:22.000Z",
+    "updated_at": "2026-03-11T10:03:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 300,
+    "brand_id": 15,
+    "name": "Continental Gt",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:23.000Z",
+    "updated_at": "2026-03-11T10:03:23.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 301,
+    "brand_id": 25,
+    "name": "Portofino",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:24.000Z",
+    "updated_at": "2026-03-11T10:03:24.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 302,
+    "brand_id": 15,
+    "name": "Bentayga",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:25.000Z",
+    "updated_at": "2026-03-11T10:03:25.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 303,
+    "brand_id": 14,
+    "name": "Db 11",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:26.000Z",
+    "updated_at": "2026-03-11T10:03:26.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 304,
+    "brand_id": 25,
+    "name": "458 Speciale",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:28.000Z",
+    "updated_at": "2026-03-11T10:03:28.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 305,
+    "brand_id": 15,
+    "name": "Mulsanne",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:29.000Z",
+    "updated_at": "2026-03-11T10:03:29.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 306,
+    "brand_id": 16,
+    "name": "Chiron",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:30.000Z",
+    "updated_at": "2026-03-11T10:03:30.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 307,
+    "brand_id": 5,
+    "name": "Grand I10 Prime",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:30.000Z",
+    "updated_at": "2026-03-11T10:03:30.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 308,
+    "brand_id": 31,
+    "name": "Amaze",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:32.000Z",
+    "updated_at": "2026-03-11T10:03:32.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 309,
+    "brand_id": 5,
+    "name": "Venue",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:33.000Z",
+    "updated_at": "2026-03-11T10:03:33.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 310,
+    "brand_id": 24,
+    "name": "Linea",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:33.000Z",
+    "updated_at": "2026-03-11T10:03:33.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 311,
+    "brand_id": 5,
+    "name": "I20 Active",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:34.000Z",
+    "updated_at": "2026-03-11T10:03:34.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 312,
+    "brand_id": 27,
+    "name": "Ecosport",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:34.000Z",
+    "updated_at": "2026-03-11T10:03:34.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 313,
+    "brand_id": 5,
+    "name": "Verna",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:35.000Z",
+    "updated_at": "2026-03-11T10:03:35.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 314,
+    "brand_id": 48,
+    "name": "Vento",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:35.000Z",
+    "updated_at": "2026-03-11T10:03:35.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 315,
+    "brand_id": 31,
+    "name": "Brv",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:36.000Z",
+    "updated_at": "2026-03-11T10:03:36.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 316,
+    "brand_id": 24,
+    "name": "Abarth Avventura",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:36.000Z",
+    "updated_at": "2026-03-11T10:03:36.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 317,
+    "brand_id": 10,
+    "name": "Innova Crysta",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:36.000Z",
+    "updated_at": "2026-03-11T10:03:36.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 318,
+    "brand_id": 34,
+    "name": "Compass",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:37.000Z",
+    "updated_at": "2026-03-11T10:03:37.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 319,
+    "brand_id": 10,
+    "name": "Corolla Altis",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:38.000Z",
+    "updated_at": "2026-03-11T10:03:38.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 320,
+    "brand_id": 31,
+    "name": "Civic",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:38.000Z",
+    "updated_at": "2026-03-11T10:03:38.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 321,
+    "brand_id": 7,
+    "name": "V40",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:38.000Z",
+    "updated_at": "2026-03-11T10:03:38.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 322,
+    "brand_id": 27,
+    "name": "Endeavour",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:39.000Z",
+    "updated_at": "2026-03-11T10:03:39.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 323,
+    "brand_id": 37,
+    "name": "Cooper 3 Door",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:40.000Z",
+    "updated_at": "2026-03-11T10:03:40.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 324,
+    "brand_id": 2,
+    "name": "X1",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:40.000Z",
+    "updated_at": "2026-03-11T10:03:40.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 325,
+    "brand_id": 7,
+    "name": "S60",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:40.000Z",
+    "updated_at": "2026-03-11T10:03:40.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 326,
+    "brand_id": 2,
+    "name": "3-Series",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:41.000Z",
+    "updated_at": "2026-03-11T10:03:41.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 327,
+    "brand_id": 7,
+    "name": "S60 Cross Country",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:41.000Z",
+    "updated_at": "2026-03-11T10:03:41.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 328,
+    "brand_id": 7,
+    "name": "Xc60",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:42.000Z",
+    "updated_at": "2026-03-11T10:03:42.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 329,
+    "brand_id": 2,
+    "name": "X4",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:42.000Z",
+    "updated_at": "2026-03-11T10:03:42.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 330,
+    "brand_id": 34,
+    "name": "Wrangler",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:43.000Z",
+    "updated_at": "2026-03-11T10:03:43.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 331,
+    "brand_id": 2,
+    "name": "Z4 Roadster",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:43.000Z",
+    "updated_at": "2026-03-11T10:03:43.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 332,
+    "brand_id": 7,
+    "name": "Xc90",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:44.000Z",
+    "updated_at": "2026-03-11T10:03:44.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 333,
+    "brand_id": 6,
+    "name": "Xj",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:44.000Z",
+    "updated_at": "2026-03-11T10:03:44.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 334,
+    "brand_id": 43,
+    "name": "Cayenne",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:45.000Z",
+    "updated_at": "2026-03-11T10:03:45.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 335,
+    "brand_id": 10,
+    "name": "Land Cruiser",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:46.000Z",
+    "updated_at": "2026-03-11T10:03:46.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 336,
+    "brand_id": 9,
+    "name": "Rs7",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:46.000Z",
+    "updated_at": "2026-03-11T10:03:46.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 337,
+    "brand_id": 35,
+    "name": "Huracan",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:46.000Z",
+    "updated_at": "2026-03-11T10:03:46.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 338,
+    "brand_id": 25,
+    "name": "488 Gtb",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:47.000Z",
+    "updated_at": "2026-03-11T10:03:47.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 339,
+    "brand_id": 25,
+    "name": "488 Gtb",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:47.000Z",
+    "updated_at": "2026-03-11T10:03:47.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 340,
+    "brand_id": 25,
+    "name": "Gtc4 Lusso",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:47.000Z",
+    "updated_at": "2026-03-11T10:03:47.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 341,
+    "brand_id": 35,
+    "name": "Aventador",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:47.000Z",
+    "updated_at": "2026-03-11T10:03:47.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 342,
+    "brand_id": 24,
+    "name": "Punto Evo Pure",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:48.000Z",
+    "updated_at": "2026-03-11T10:03:48.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 343,
+    "brand_id": 24,
+    "name": "Punto Evo Pure",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:48.000Z",
+    "updated_at": "2026-03-11T10:03:48.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 344,
+    "brand_id": 27,
+    "name": "Figo",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:49.000Z",
+    "updated_at": "2026-03-11T10:03:49.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 345,
+    "brand_id": 5,
+    "name": "Grand I10",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:49.000Z",
+    "updated_at": "2026-03-11T10:03:49.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 346,
+    "brand_id": 24,
+    "name": "Linea Classic",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:49.000Z",
+    "updated_at": "2026-03-11T10:03:49.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 347,
+    "brand_id": 4,
+    "name": "Sunny",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:49.000Z",
+    "updated_at": "2026-03-11T10:03:49.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 348,
+    "brand_id": 31,
+    "name": "Wr-V",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:50.000Z",
+    "updated_at": "2026-03-11T10:03:50.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 349,
+    "brand_id": 31,
+    "name": "Wr-V",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:50.000Z",
+    "updated_at": "2026-03-11T10:03:50.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 350,
+    "brand_id": 4,
+    "name": "Terrano",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:51.000Z",
+    "updated_at": "2026-03-11T10:03:51.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 351,
+    "brand_id": 5,
+    "name": "Elantra",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:52.000Z",
+    "updated_at": "2026-03-11T10:03:52.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 352,
+    "brand_id": 5,
+    "name": "Tucson",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:52.000Z",
+    "updated_at": "2026-03-11T10:03:52.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 353,
+    "brand_id": 48,
+    "name": "Passat",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:52.000Z",
+    "updated_at": "2026-03-11T10:03:52.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 354,
+    "brand_id": 7,
+    "name": "V40 Cross Country",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:53.000Z",
+    "updated_at": "2026-03-11T10:03:53.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 355,
+    "brand_id": 37,
+    "name": "Countryman",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:53.000Z",
+    "updated_at": "2026-03-11T10:03:53.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 356,
+    "brand_id": 10,
+    "name": "Prius",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:53.000Z",
+    "updated_at": "2026-03-11T10:03:53.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 357,
+    "brand_id": 6,
+    "name": "F-Pace",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:54.000Z",
+    "updated_at": "2026-03-11T10:03:54.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 358,
+    "brand_id": 7,
+    "name": "V90 Cross Country",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:54.000Z",
+    "updated_at": "2026-03-11T10:03:54.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 359,
+    "brand_id": 9,
+    "name": "A5 Cabriolet",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:55.000Z",
+    "updated_at": "2026-03-11T10:03:55.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 360,
+    "brand_id": 2,
+    "name": "X7",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:55.000Z",
+    "updated_at": "2026-03-11T10:03:55.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 361,
+    "brand_id": 2,
+    "name": "M4",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:56.000Z",
+    "updated_at": "2026-03-11T10:03:56.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 362,
+    "brand_id": 43,
+    "name": "911",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:56.000Z",
+    "updated_at": "2026-03-11T10:03:56.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 363,
+    "brand_id": 4,
+    "name": "Gtr",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:57.000Z",
+    "updated_at": "2026-03-11T10:03:57.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 364,
+    "brand_id": 14,
+    "name": "Vantage",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:57.000Z",
+    "updated_at": "2026-03-11T10:03:57.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 365,
+    "brand_id": 14,
+    "name": "Rapide",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:57.000Z",
+    "updated_at": "2026-03-11T10:03:57.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 366,
+    "brand_id": 25,
+    "name": "812 Superfast",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:58.000Z",
+    "updated_at": "2026-03-11T10:03:58.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 367,
+    "brand_id": 5,
+    "name": "Grand I10 Nios",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:58.000Z",
+    "updated_at": "2026-03-11T10:03:58.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 368,
+    "brand_id": 5,
+    "name": "Grand I10 Nios",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:58.000Z",
+    "updated_at": "2026-03-11T10:03:58.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 369,
+    "brand_id": 5,
+    "name": "Xcent",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:59.000Z",
+    "updated_at": "2026-03-11T10:03:59.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 370,
+    "brand_id": 4,
+    "name": "Micra",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:03:59.000Z",
+    "updated_at": "2026-03-11T10:03:59.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 371,
+    "brand_id": 24,
+    "name": "Abarth Punto",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:00.000Z",
+    "updated_at": "2026-03-11T10:04:00.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 372,
+    "brand_id": 5,
+    "name": "Creta",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:00.000Z",
+    "updated_at": "2026-03-11T10:04:00.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 373,
+    "brand_id": 33,
+    "name": "Dmax V-Cross",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:01.000Z",
+    "updated_at": "2026-03-11T10:04:01.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 374,
+    "brand_id": 33,
+    "name": "Dmax V-Cross",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:01.000Z",
+    "updated_at": "2026-03-11T10:04:01.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 375,
+    "brand_id": 41,
+    "name": "Outlander",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:02.000Z",
+    "updated_at": "2026-03-11T10:04:02.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 376,
+    "brand_id": 41,
+    "name": "Outlander",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:02.000Z",
+    "updated_at": "2026-03-11T10:04:02.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 377,
+    "brand_id": 31,
+    "name": "Accord Hybrid",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:03.000Z",
+    "updated_at": "2026-03-11T10:04:03.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 378,
+    "brand_id": 31,
+    "name": "Accord Hybrid",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:03.000Z",
+    "updated_at": "2026-03-11T10:04:03.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 379,
+    "brand_id": 2,
+    "name": "5-Series",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:03.000Z",
+    "updated_at": "2026-03-11T10:04:03.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 380,
+    "brand_id": 2,
+    "name": "6-Series",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:04.000Z",
+    "updated_at": "2026-03-11T10:04:04.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 381,
+    "brand_id": 43,
+    "name": "Macan",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:04.000Z",
+    "updated_at": "2026-03-11T10:04:04.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 382,
+    "brand_id": 43,
+    "name": "Macan",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:04.000Z",
+    "updated_at": "2026-03-11T10:04:04.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 383,
+    "brand_id": 6,
+    "name": "F-Type",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:05.000Z",
+    "updated_at": "2026-03-11T10:04:05.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 384,
+    "brand_id": 2,
+    "name": "M5",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:05.000Z",
+    "updated_at": "2026-03-11T10:04:05.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 385,
+    "brand_id": 25,
+    "name": "458 Spider",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:06.000Z",
+    "updated_at": "2026-03-11T10:04:06.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 386,
+    "brand_id": 4,
+    "name": "Kicks",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:07.000Z",
+    "updated_at": "2026-03-11T10:04:07.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 387,
+    "brand_id": 5,
+    "name": "Kona Electric",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:07.000Z",
+    "updated_at": "2026-03-11T10:04:07.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 388,
+    "brand_id": 10,
+    "name": "Camry",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:07.000Z",
+    "updated_at": "2026-03-11T10:04:07.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 389,
+    "brand_id": 3,
+    "name": "Discovery",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:08.000Z",
+    "updated_at": "2026-03-11T10:04:08.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 390,
+    "brand_id": 24,
+    "name": "Punto Evo",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:08.000Z",
+    "updated_at": "2026-03-11T10:04:08.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 391,
+    "brand_id": 10,
+    "name": "Yaris",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:09.000Z",
+    "updated_at": "2026-03-11T10:04:09.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 392,
+    "brand_id": 43,
+    "name": "Cayenne Coupe",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:10.000Z",
+    "updated_at": "2026-03-11T10:04:10.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 393,
+    "brand_id": 43,
+    "name": "Cayenne Coupe",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:10.000Z",
+    "updated_at": "2026-03-11T10:04:10.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 394,
+    "brand_id": 41,
+    "name": "Pajero Sport",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:10.000Z",
+    "updated_at": "2026-03-11T10:04:10.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 395,
+    "brand_id": 41,
+    "name": "Pajero Sport",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:10.000Z",
+    "updated_at": "2026-03-11T10:04:10.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 396,
+    "brand_id": 15,
+    "name": "Flying Spur",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:11.000Z",
+    "updated_at": "2026-03-11T10:04:11.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 397,
+    "brand_id": 31,
+    "name": "City",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:11.000Z",
+    "updated_at": "2026-03-11T10:04:11.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 398,
+    "brand_id": 41,
+    "name": "Montere",
+    "image": null,
+    "status": 1,
+    "created_at": "2026-03-11T10:04:12.000Z",
+    "updated_at": "2026-03-12T08:33:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 399,
+    "brand_id": 5,
+    "name": "i20",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/150603/i20-exterior-right-front-three-quarter-13.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 400,
+    "brand_id": 5,
+    "name": "Exter",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/144851/exter-exterior-right-front-three-quarter-64.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 401,
+    "brand_id": 5,
+    "name": "Alcazar",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/157825/alcazar-exterior-right-front-three-quarter-24.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 402,
+    "brand_id": 5,
+    "name": "Creta Electric",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/167017/creta-electric-exterior-right-front-three-quarter-15.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 403,
+    "brand_id": 5,
+    "name": "Venue N Line",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/210466/new-venue-n-line-exterior-right-front-three-quarter-11.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 404,
+    "brand_id": 5,
+    "name": "i20 N Line",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/158139/i20-n-line-exterior-right-front-three-quarter-16.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 405,
+    "brand_id": 5,
+    "name": "Creta N Line",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/168697/creta-n-line-exterior-right-front-three-quarter-26.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 406,
+    "brand_id": 5,
+    "name": "Ioniq 5",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/110289/ioniq-5-exterior-right-front-three-quarter-96.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 407,
+    "brand_id": 5,
+    "name": "Exter Facelift",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/216807/exter-facelift-exterior-front-view.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 408,
+    "brand_id": 5,
+    "name": "Tucson Facelift",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/166917/tucson-facelift-exterior-left-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 409,
+    "brand_id": 5,
+    "name": "Stargazer",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/124705/stargazer-exterior-left-front-three-quarter-4.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 410,
+    "brand_id": 5,
+    "name": "Ioniq 5 Facelift",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/201627/ioniq-5-facelift-exterior-left-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 411,
+    "brand_id": 5,
+    "name": "New Santa Fe",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/153827/new-santa-fe-exterior-left-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 412,
+    "brand_id": 5,
+    "name": "Bayon",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/216517/bayon-exterior-left-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 413,
+    "brand_id": 5,
+    "name": "Ioniq 6",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/139795/ioniq-6-exterior-right-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 414,
+    "brand_id": 5,
+    "name": "Ioniq 9",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/196941/ioniq-9-exterior-left-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 415,
+    "brand_id": 5,
+    "name": "Palisade",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/162965/palisade-exterior-right-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 416,
+    "brand_id": 5,
+    "name": "Creta Facelift",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/216847/creta-facelift-exterior-left-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 417,
+    "brand_id": 5,
+    "name": "Staria",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/196235/staria-exterior-right-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 418,
+    "brand_id": 10,
+    "name": "Urban Cruiser Hyryder",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/124027/hyryder-exterior-right-front-three-quarter-74.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 419,
+    "brand_id": 10,
+    "name": "Innova Hycross",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/115025/innova-hycross-exterior-right-front-three-quarter-74.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 420,
+    "brand_id": 10,
+    "name": "Urban Cruiser Taisor",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/132427/taisor-exterior-right-front-three-quarter-41.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 421,
+    "brand_id": 10,
+    "name": "Rumion",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/105799/rumion-exterior-right-front-three-quarter-8.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 422,
+    "brand_id": 10,
+    "name": "Hilux",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/109265/hilux-exterior-right-front-three-quarter-44.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 423,
+    "brand_id": 10,
+    "name": "Fortuner Legender",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/137767/fortuner-legender-exterior-right-front-three-quarter-5.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 424,
+    "brand_id": 10,
+    "name": "Vellfire",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/154483/vellfire-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 425,
+    "brand_id": 10,
+    "name": "Urban Cruiser Ebella",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/191295/urban-cruiser-ebella-exterior-right-front-three-quarter-14.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 426,
+    "brand_id": 10,
+    "name": "Fortuner Facelift",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/218734/fortuner-facelift-exterior-right-front-three-quarter.avif",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 427,
+    "brand_id": 10,
+    "name": "Urban Cruiser Hyryder 7 seater",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/201657/urban-cruiser-hyryder-7-seater-exterior-rear-view.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 428,
+    "brand_id": 10,
+    "name": "BZ4X",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/163403/bz4x-exterior-left-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 429,
+    "brand_id": 10,
+    "name": "New Land Cruiser FJ",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/212025/exterior-right-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 430,
+    "brand_id": 2,
+    "name": "3 Series LWB",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/198567/3-series-exterior-right-front-three-quarter-10.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 431,
+    "brand_id": 2,
+    "name": "5 Series",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/175183/5-series-exterior-right-front-three-quarter-95.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 432,
+    "brand_id": 2,
+    "name": "iX1 LWB",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/196035/ix1-lwb-exterior-right-front-three-quarter-2.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 433,
+    "brand_id": 2,
+    "name": "2 Series Gran Coupe",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/205930/2-series-gran-coupe-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 434,
+    "brand_id": 2,
+    "name": "M340i",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/135697/m340i-exterior-right-front-three-quarter-5.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 435,
+    "brand_id": 2,
+    "name": "Z4",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/149075/z4-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 436,
+    "brand_id": 2,
+    "name": "7 Series",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/132513/7-series-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 437,
+    "brand_id": 2,
+    "name": "M2",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/150125/m2-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 438,
+    "brand_id": 2,
+    "name": "XM",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/135681/xm-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 439,
+    "brand_id": 2,
+    "name": "M8",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/47278/m8-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 440,
+    "brand_id": 2,
+    "name": "iX1",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/140585/ix1-exterior-right-front-three-quarter-26.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 441,
+    "brand_id": 2,
+    "name": "i7",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/137875/i7-exterior-right-front-three-quarter-9.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 442,
+    "brand_id": 2,
+    "name": "i4",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/109123/i4-exterior-right-front-three-quarter-2.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 443,
+    "brand_id": 2,
+    "name": "X4 M40i",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/163337/x4-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 444,
+    "brand_id": 2,
+    "name": "i5",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/174353/i5-exterior-right-front-three-quarter-6.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 445,
+    "brand_id": 2,
+    "name": "iX",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/108499/ix-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 446,
+    "brand_id": 2,
+    "name": "iX3",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/211249/ix3-exterior-right-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 447,
+    "brand_id": 4,
+    "name": "Gravite",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/200003/gravite-exterior-right-front-three-quarter-6.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 448,
+    "brand_id": 4,
+    "name": "Magnite",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/173325/magnite-exterior-right-front-three-quarter-27.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 449,
+    "brand_id": 4,
+    "name": "X-Trail",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/133165/x-trail-exterior-right-front-three-quarter-28.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 450,
+    "brand_id": 4,
+    "name": "Tekton",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/200007/tekton-exterior-left-front-three-quarter.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 451,
+    "brand_id": 1,
+    "name": "E-Class",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/162929/e-class-exterior-right-front-three-quarter-35.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 452,
+    "brand_id": 1,
+    "name": "G-Class",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/150621/g-class-exterior-right-front-three-quarter-24.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 453,
+    "brand_id": 1,
+    "name": "V-Class",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/217073/new-v-class-exterior-right-front-three-quarter-13.avif",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 454,
+    "brand_id": 1,
+    "name": "A-Class Limousine",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/149525/a-class-limousine-exterior-right-front-three-quarter-8.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 455,
+    "brand_id": 1,
+    "name": "C-Class",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/178535/c-class-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 456,
+    "brand_id": 1,
+    "name": "GLS",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/167373/gls-exterior-right-front-three-quarter-22.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 457,
+    "brand_id": 1,
+    "name": "GLC",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/178525/glc-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 458,
+    "brand_id": 1,
+    "name": "GLA",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/169159/gla-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 459,
+    "brand_id": 1,
+    "name": "AMG CLE",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/207030/amg-cle-exterior-right-front-three-quarter-33.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 460,
+    "brand_id": 1,
+    "name": "GLE",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/163317/gle-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:21.000Z",
+    "updated_at": "2026-03-13T08:21:21.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 461,
+    "brand_id": 1,
+    "name": "Maybach S-Class",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/115149/maybach-s-class-exterior-right-front-three-quarter-6.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 462,
+    "brand_id": 1,
+    "name": "S-Class",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/48067/s-class-exterior-right-front-three-quarter-10.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 463,
+    "brand_id": 1,
+    "name": "Maybach GLS",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/177511/maybach-gls-exterior-right-front-three-quarter-5.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 464,
+    "brand_id": 1,
+    "name": "AMG GLA35",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/94279/amg-gla35-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 465,
+    "brand_id": 1,
+    "name": "AMG G-Class",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/190739/amg-g-class-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 466,
+    "brand_id": 1,
+    "name": "CLE Cabriolet",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/182371/cle-cabriolet-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 467,
+    "brand_id": 1,
+    "name": "AMG GLC43 Coupe",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/182375/amg-glc43-coupe-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 468,
+    "brand_id": 1,
+    "name": "AMG GT 63",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/204994/amg-gt-63-exterior-right-front-three-quarter-2.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 469,
+    "brand_id": 1,
+    "name": "AMG C 43",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/163327/amg-c-43-exterior-right-front-three-quarter-5.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 470,
+    "brand_id": 1,
+    "name": "G580 with EQ Technology",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/175191/g580-with-eq-technology-exterior-right-front-three-quarter-9.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 471,
+    "brand_id": 1,
+    "name": "EQS",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/131249/eqs-exterior-right-front-three-quarter-31.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 472,
+    "brand_id": 1,
+    "name": "Maybach SL 680",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/197325/maybach-sl-680-exterior-right-front-three-quarter-6.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 473,
+    "brand_id": 1,
+    "name": "EQB",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/108055/eqb-exterior-right-front-three-quarter-15.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 474,
+    "brand_id": 1,
+    "name": "AMG GLE Coupe",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/169185/amg-gle-coupe-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 475,
+    "brand_id": 1,
+    "name": "AMG E53 Cabriolet",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/137541/amg-e53-cabriolet-exterior-right-front-three-quarter-9.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 476,
+    "brand_id": 1,
+    "name": "EQS SUV",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/187171/eqs-suv-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 477,
+    "brand_id": 1,
+    "name": "AMG SL55 Roadster",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/148919/amg-sl55-roadster-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 478,
+    "brand_id": 1,
+    "name": "EQA",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/178797/eqa-exterior-right-front-three-quarter-43.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 479,
+    "brand_id": 1,
+    "name": "AMG A45 S",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/149523/amg-a45-s-exterior-right-front-three-quarter-8.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 480,
+    "brand_id": 1,
+    "name": "AMG S 63 E Performance",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/177545/amg-s-63-e-performance-exterior-right-front-three-quarter-12.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 481,
+    "brand_id": 1,
+    "name": "AMG GT 63 S E Performance",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/145977/amg-gt-63-s-e-performance-exterior-right-front-three-quarter-11.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 482,
+    "brand_id": 1,
+    "name": "AMG C 63 S E Performance",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/191161/amg-c-63-s-e-performance-exterior-right-front-three-quarter-17.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 483,
+    "brand_id": 1,
+    "name": "AMG GT 63 S 4Matic Plus",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/45126/amg-gt-63-s-4matic-plus-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 484,
+    "brand_id": 1,
+    "name": "AMG EQS",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/58165/amg-eqs-exterior-right-front-three-quarter-62.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 485,
+    "brand_id": 1,
+    "name": "EQE SUV",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/108113/eqe-suv-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 486,
+    "brand_id": 1,
+    "name": "Maybach EQS SUV",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/175201/maybach-eqs-suv-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 487,
+    "brand_id": 1,
+    "name": "CLA",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/216979/cla-exterior-right-front-three-quarter-34.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 488,
+    "brand_id": 1,
+    "name": "GLC EV",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/210035/glc-ev-exterior-left-front-three-quarter-2.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 489,
+    "brand_id": 1,
+    "name": "S-Class Facelift",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/216615/s-class-facelift-exterior-front-view.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 490,
+    "brand_id": 48,
+    "name": "Virtus",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/144681/virtus-exterior-right-front-three-quarter-11.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 491,
+    "brand_id": 48,
+    "name": "Taigun",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/144689/taigun-exterior-right-front-three-quarter-8.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 492,
+    "brand_id": 48,
+    "name": "Tiguan R-Line",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/198751/tiguan-r-line-exterior-right-front-three-quarter-10.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 493,
+    "brand_id": 48,
+    "name": "Tayron R-Line",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/202557/tayron-r-line-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 494,
+    "brand_id": 48,
+    "name": "Golf GTI",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/198749/golf-gti-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 495,
+    "brand_id": 48,
+    "name": "Taigun Facelift",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/207718/taigun-facelift-exterior-right-side-view.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 496,
+    "brand_id": 48,
+    "name": "Tera SUV",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/191839/tera-suv-exterior-grille.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 497,
+    "brand_id": 48,
+    "name": "ID.4",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/138087/id4-exterior-right-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 498,
+    "brand_id": 31,
+    "name": "Elevate",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/142515/elevate-exterior-right-front-three-quarter-29.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 499,
+    "brand_id": 31,
+    "name": "City Hybrid eHEV",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/143275/city-hybrid-exterior-right-front-three-quarter-6.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 500,
+    "brand_id": 31,
+    "name": "Amaze 2nd Gen",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/45951/amaze-2nd-gen-exterior-right-front-three-quarter-5.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 501,
+    "brand_id": 31,
+    "name": "Super One",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/212273/super-one-exterior-left-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 502,
+    "brand_id": 31,
+    "name": "0 Alpha",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/211889/0-alpha-exterior-left-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 503,
+    "brand_id": 31,
+    "name": "CR-V Hybrid",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/212355/cr-v-hybrid-exterior-right-front-three-quarter.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 504,
+    "brand_id": 3,
+    "name": "Defender",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/55215/defender-exterior-right-front-three-quarter-23.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 505,
+    "brand_id": 3,
+    "name": "Range Rover Velar",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/153319/range-rover-velar-exterior-right-front-three-quarter-5.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 506,
+    "brand_id": 3,
+    "name": "Range Rover",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/107719/range-rover-exterior-right-front-three-quarter-47.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 507,
+    "brand_id": 3,
+    "name": "Range Rover Sport",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/122451/range-rover-sport-exterior-right-front-three-quarter-44.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 508,
+    "brand_id": 3,
+    "name": "Range Rover Evoque",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/37721/range-rover-evoque-exterior-right-front-three-quarter-2.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 509,
+    "brand_id": 9,
+    "name": "S5 Sportback",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/51378/s5-sportback-exterior-right-front-three-quarter-6.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 510,
+    "brand_id": 9,
+    "name": "Q3 Sportback",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/141373/q3-sportback-exterior-right-front-three-quarter-15.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 511,
+    "brand_id": 9,
+    "name": "RS Q8 Performance",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/196687/rs-q8-performance-exterior-right-front-three-quarter-8.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 512,
+    "brand_id": 9,
+    "name": "Q8 e-tron",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/152943/q8-e-tron-exterior-right-front-three-quarter-15.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 513,
+    "brand_id": 9,
+    "name": "Q8 Sportback e-tron",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/153789/q8-sportback-e-tron-exterior-right-front-three-quarter-6.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 514,
+    "brand_id": 9,
+    "name": "New Q5 third-gen",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/185855/new-q5-third-gen-exterior-right-front-three-quarter-16.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 515,
+    "brand_id": 9,
+    "name": "Q6 e-tron",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/180355/q6-e-tron-exterior-right-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 516,
+    "brand_id": 34,
+    "name": "Meridian",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/47139/meridian-exterior-right-front-three-quarter-18.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 517,
+    "brand_id": 43,
+    "name": "Taycan",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/45063/taycan-exterior-right-front-three-quarter-6.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 518,
+    "brand_id": 43,
+    "name": "Macan Turbo EV",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/169989/macan-turbo-ev-exterior-right-front-three-quarter-2.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 519,
+    "brand_id": 43,
+    "name": "Cayenne EV",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/212775/cayenne-ev-exterior-right-front-three-quarter-2.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 520,
+    "brand_id": 7,
+    "name": "EX30",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/173187/ex30-exterior-right-front-three-quarter-6.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 521,
+    "brand_id": 7,
+    "name": "EX40",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/189773/ex40-exterior-right-front-three-quarter-2.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 522,
+    "brand_id": 7,
+    "name": "EC40",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/150611/c40-recharge-exterior-right-front-three-quarter-3.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 523,
+    "brand_id": 7,
+    "name": "EX90",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/172845/ex90-exterior-left-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 524,
+    "brand_id": 25,
+    "name": "849 Testarossa",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/219214/849-testarossa-exterior-left-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 525,
+    "brand_id": 25,
+    "name": "Purosangue SUV",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/47137/purosangue-suv-exterior-right-front-three-quarter-15.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 526,
+    "brand_id": 25,
+    "name": "296 GTB",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/154779/296-gtb-exterior-right-front-three-quarter-24.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 527,
+    "brand_id": 25,
+    "name": "Roma",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/97963/roma-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 528,
+    "brand_id": 25,
+    "name": "F8 Tributo",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/49376/f8-tributo-exterior-right-front-three-quarter-13.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 529,
+    "brand_id": 25,
+    "name": "296 GTS",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/155685/296-gts-exterior-right-front-three-quarter-5.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 530,
+    "brand_id": 37,
+    "name": "Cooper",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/180421/cooper-exterior-right-front-three-quarter-16.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 531,
+    "brand_id": 37,
+    "name": "Cooper S Convertible",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/212765/cooper-s-convertible-exterior-right-front-three-quarter-7.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 532,
+    "brand_id": 37,
+    "name": "Cooper SE",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/108863/cooper-se-exterior-right-front-three-quarter-40.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 533,
+    "brand_id": 37,
+    "name": "Countryman Electric",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/181081/countryman-electric-exterior-right-front-three-quarter-13.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 534,
+    "brand_id": 35,
+    "name": "Revuelto",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/164543/revuelto-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 535,
+    "brand_id": 35,
+    "name": "Urus SE",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/182149/urus-se-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 536,
+    "brand_id": 35,
+    "name": "Temerario",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/200453/temerario-exterior-right-front-three-quarter-8.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 537,
+    "brand_id": 45,
+    "name": "Phantom",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/30181/phantom-exterior-right-front-three-quarter-2.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 538,
+    "brand_id": 45,
+    "name": "Cullinan",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/34427/cullinan-exterior-right-front-three-quarter.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 539,
+    "brand_id": 45,
+    "name": "Spectre",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/168715/spectre-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:22.000Z",
+    "updated_at": "2026-03-13T08:21:22.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 540,
+    "brand_id": 33,
+    "name": "Hi-Lander",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/218682/hi-lander-exterior-right-front-three-quarter-2.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:23.000Z",
+    "updated_at": "2026-03-13T08:21:23.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 541,
+    "brand_id": 33,
+    "name": "V-Cross",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/175515/v-cross-exterior-right-front-three-quarter-3.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:23.000Z",
+    "updated_at": "2026-03-13T08:21:23.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 542,
+    "brand_id": 14,
+    "name": "Vanquish",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/199469/vanquish-exterior-right-front-three-quarter-7.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:23.000Z",
+    "updated_at": "2026-03-13T08:21:23.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 543,
+    "brand_id": 14,
+    "name": "DB11",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/25539/db11-exterior-right-front-three-quarter-82873.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:23.000Z",
+    "updated_at": "2026-03-13T08:21:23.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 544,
+    "brand_id": 14,
+    "name": "DBX",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/134427/dbx-exterior-right-front-three-quarter-8.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:23.000Z",
+    "updated_at": "2026-03-13T08:21:23.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 545,
+    "brand_id": 14,
+    "name": "DB12",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/158905/db12-exterior-right-front-three-quarter-2.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:23.000Z",
+    "updated_at": "2026-03-13T08:21:23.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 546,
+    "brand_id": 40,
+    "name": "750S",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/167883/750s-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:23.000Z",
+    "updated_at": "2026-03-13T08:21:23.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 547,
+    "brand_id": 40,
+    "name": "720S",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/95143/720s-exterior-right-front-three-quarter-11.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:23.000Z",
+    "updated_at": "2026-03-13T08:21:23.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 548,
+    "brand_id": 40,
+    "name": "GT",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/95701/gt-exterior-right-front-three-quarter-4.png",
+    "status": 1,
+    "created_at": "2026-03-13T08:21:23.000Z",
+    "updated_at": "2026-03-13T08:21:23.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 549,
+    "brand_id": 50,
+    "name": "GO",
+    "image": "https://imgd.aeplcdn.com/664x374/cw/ec/36449/Datsun-Go-Exterior-138944.jpg",
+    "status": 1,
+    "created_at": "2026-03-13T08:39:36.000Z",
+    "updated_at": "2026-03-13T08:39:36.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 550,
+    "brand_id": 50,
+    "name": "GO+",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/36451/go-plus-exterior-right-front-three-quarter.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:39:36.000Z",
+    "updated_at": "2026-03-13T08:39:36.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 551,
+    "brand_id": 50,
+    "name": "redi-GO",
+    "image": "https://imgd.aeplcdn.com/664x374/n/cw/ec/45245/datsun-redi-go-right-front-three-quarter19.jpeg",
+    "status": 1,
+    "created_at": "2026-03-13T08:39:36.000Z",
+    "updated_at": "2026-03-13T08:39:36.000Z",
+    "Year": 2026
+  },
+  {
+    "id": 553,
+    "brand_id": 52,
+    "name": "BE 6 Batman Edition",
+    "image": "https://jusmoto-uploads.s3.ap-south-1.amazonaws.com/images/1fbde8ee-c1a0-4545-8262-87db466618d7.webp",
+    "status": 1,
+    "created_at": "2026-03-17T04:14:18.000Z",
+    "updated_at": "2026-03-17T04:14:18.000Z",
+    "Year": 2026
+  }
+]

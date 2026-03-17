@@ -82,8 +82,8 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           </div>
 
           <div class="modal-body">
-            <!-- Mode Toggle -->
-            <div class="mode-toggle">
+            <!-- Mode Toggle (hidden - only database mode) -->
+            <!-- <div class="mode-toggle">
               <button class="mode-btn" [class.active]="!manualMode()" (click)="manualMode.set(false)">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 Search Database
@@ -92,28 +92,19 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
                 Add Manually
               </button>
-            </div>
+            </div> -->
 
-            <!-- Car Image Preview -->
+            <!-- Car Image Preview (read-only, no upload) -->
             <div class="car-image-section">
-              <div class="car-image-preview" *ngIf="form.image || imagePreview()">
-                <img [src]="imagePreview() || getImageUrl(form.image)" alt="Car preview" (error)="form.image = ''">
+              <div class="car-image-preview" *ngIf="form.image">
+                <img [src]="getImageUrl(form.image)" alt="Car preview" (error)="form.image = ''">
               </div>
-              <div class="car-image-placeholder" *ngIf="!form.image && !imagePreview()">
+              <div class="car-image-placeholder" *ngIf="!form.image">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
                   <path d="M7 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/><path d="M17 17m-2 0a2 2 0 104 0 2 2 0 10-4 0"/>
                   <path d="M5 17H3v-6l2-5h9l4 5h1a2 2 0 012 2v4h-2"/><path d="M9 17h6"/>
                 </svg>
-                <span>Upload a car image</span>
-              </div>
-              <!-- File upload -->
-              <div class="file-upload-area">
-                <input #carFileInput type="file" accept="image/*" (change)="onFileSelected($event)" style="display:none">
-                <button type="button" class="file-upload-btn" (click)="carFileInput.click()">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  {{ imageFile ? 'Change Image' : 'Upload Image' }}
-                </button>
-                <span class="file-name" *ngIf="imageFile">{{ imageFile.name }}</span>
+                <span>Car image will appear when you select a model</span>
               </div>
             </div>
 
@@ -165,8 +156,8 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
               </div>
             </ng-container>
 
-            <!-- MANUAL MODE: Text inputs -->
-            <ng-container *ngIf="manualMode()">
+            <!-- MANUAL MODE: hidden -->
+            <!-- <ng-container *ngIf="manualMode()">
               <div class="form-group">
                 <label>Brand Name *</label>
                 <input type="text" class="form-control" [(ngModel)]="form.brand_name" placeholder="e.g. Toyota, Honda, BMW">
@@ -175,7 +166,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
                 <label>Car Model *</label>
                 <input type="text" class="form-control" [(ngModel)]="form.car_name" placeholder="e.g. Camry, Civic, 3 Series">
               </div>
-            </ng-container>
+            </ng-container> -->
 
             <!-- Variant -->
             <div class="form-group">

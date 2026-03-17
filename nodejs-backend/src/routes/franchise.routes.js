@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate, isFranchise, isAdmin } = require('../middleware/auth.middleware');
-const { Order, OrderItem, User, Service, Admin, Ticket } = require('../models');
+const { Order, OrderItem, User, Service, Admin, Ticket, Review } = require('../models');
 const { Op } = require('sequelize');
+const { sequelize } = require('../config/database');
 const { paginate, paginationResponse } = require('../utils/helpers');
 
 // Franchise dashboard stats
@@ -71,6 +72,167 @@ router.get('/dashboard', authenticate, isFranchise, async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ── Dashboard breakdown endpoints ──
+
+// GET /franchise/dashboard/statistics
+router.get('/dashboard/statistics', authenticate, isFranchise, async (req, res) => {
+  try {
+    const franchiseId = req.admin.id;
+    const orderWhere = { franchise_admin_id: franchiseId };
+    const serviceWhere = { admin_id: franchiseId };
+
+    const [
+      totalUsers,
+      totalOrders,
+      totalServices,
+      pendingOrders,
+      completedOrders,
+      totalRevenue
+    ] = await Promise.all([
+      User.count(),
+      Order.count({ where: orderWhere }),
+      Service.count({ where: { ...serviceWhere, status: 1 } }),
+      Order.count({ where: { ...orderWhere, status: 0 } }),
+      Order.count({ where: { ...orderWhere, status: 3 } }),
+      Order.sum('total', { where: { ...orderWhere, payment_status: 1 } })
+    ]);
+
+    res.json({
+      success: true,
+      data: { totalUsers, totalOrders, totalServices, pendingOrders, completedOrders, totalRevenue: totalRevenue || 0 }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to get dashboard statistics' });
+  }
+});
+
+// GET /franchise/dashboard/order-counts
+router.get('/dashboard/order-counts', authenticate, isFranchise, async (req, res) => {
+  try {
+    const franchiseId = req.admin.id;
+
+    const statusCounts = await Order.findAll({
+      where: { franchise_admin_id: franchiseId },
+      attributes: [
+        'status',
+        [sequelize.fn('COUNT', sequelize.col('id')), 'count']
+      ],
+      group: ['status']
+    });
+
+    const counts = { pending: 0, accepted: 0, in_progress: 0, completed: 0, cancelled: 0 };
+    const statusMap = { 0: 'pending', 1: 'accepted', 2: 'in_progress', 3: 'completed', 4: 'cancelled' };
+
+    statusCounts.forEach(item => {
+      const key = statusMap[item.status];
+      if (key) counts[key] = parseInt(item.dataValues.count);
+    });
+
+    res.json({ success: true, data: counts });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to get order counts' });
+  }
+});
+
+// GET /franchise/dashboard/earnings
+router.get('/dashboard/earnings', authenticate, isFranchise, async (req, res) => {
+  try {
+    const franchiseId = req.admin.id;
+    const orderWhere = { franchise_admin_id: franchiseId, payment_status: 1 };
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - today.getDay());
+    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    const [todayEarnings, weekEarnings, monthEarnings, totalEarnings] = await Promise.all([
+      Order.sum('total', { where: { ...orderWhere, created_at: { [Op.gte]: today } } }),
+      Order.sum('total', { where: { ...orderWhere, created_at: { [Op.gte]: weekStart } } }),
+      Order.sum('total', { where: { ...orderWhere, created_at: { [Op.gte]: monthStart } } }),
+      Order.sum('total', { where: orderWhere })
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        today: todayEarnings || 0,
+        thisWeek: weekEarnings || 0,
+        thisMonth: monthEarnings || 0,
+        total: totalEarnings || 0
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to get earnings' });
+  }
+});
+
+// GET /franchise/dashboard/recent-orders?limit=10
+router.get('/dashboard/recent-orders', authenticate, isFranchise, async (req, res) => {
+  try {
+    const franchiseId = req.admin.id;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const orders = await Order.findAll({
+      where: { franchise_admin_id: franchiseId },
+      include: [
+        { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'phone', 'image'] }
+      ],
+      order: [['created_at', 'DESC']],
+      limit
+    });
+
+    res.json({ success: true, data: orders });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to get recent orders' });
+  }
+});
+
+// GET /franchise/dashboard/earnings-chart?days=7
+router.get('/dashboard/earnings-chart', authenticate, isFranchise, async (req, res) => {
+  try {
+    const franchiseId = req.admin.id;
+    const days = parseInt(req.query.days) || 7;
+
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    startDate.setHours(0, 0, 0, 0);
+
+    const earnings = await Order.findAll({
+      where: {
+        franchise_admin_id: franchiseId,
+        payment_status: 1,
+        created_at: { [Op.gte]: startDate }
+      },
+      attributes: [
+        [sequelize.fn('DATE', sequelize.col('created_at')), 'date'],
+        [sequelize.fn('SUM', sequelize.col('total')), 'total'],
+        [sequelize.fn('COUNT', sequelize.col('id')), 'order_count']
+      ],
+      group: [sequelize.fn('DATE', sequelize.col('created_at'))],
+      order: [[sequelize.fn('DATE', sequelize.col('created_at')), 'ASC']]
+    });
+
+    // Fill missing dates with 0
+    const chartData = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      const found = earnings.find(e => e.dataValues.date === dateStr);
+      chartData.push({
+        date: dateStr,
+        total: found ? parseFloat(found.dataValues.total) : 0,
+        order_count: found ? parseInt(found.dataValues.order_count) : 0
+      });
+    }
+
+    res.json({ success: true, data: chartData });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to get earnings chart' });
   }
 });
 

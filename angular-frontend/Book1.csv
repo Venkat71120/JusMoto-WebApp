@@ -1,8 +1,978 @@
-Make,Model,Variant,Fuel_Type,Displacement,Cylinders,Image url
-Nissan,Gravite,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/200003/gravite-exterior-right-front-three-quarter-6.jpeg
-Nissan,Magnite,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/173325/magnite-exterior-right-front-three-quarter-27.png
-Nissan,X-Trail,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/133165/x-trail-exterior-right-front-three-quarter-28.png
-Nissan,Tekton,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/200007/tekton-exterior-left-front-three-quarter.png
-Datsun,GO,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/36449/Datsun-Go-Exterior-138944.jpg
-Datsun,GO+,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/36451/go-plus-exterior-right-front-three-quarter.jpeg
-Datsun,redi-GO,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45245/datsun-redi-go-right-front-three-quarter19.jpeg
+Make,Model,Model_Year,Status,Variant,Fuel_Type,Displacement,Cylinders,Image url
+Maruti Suzuki,Fronx,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/130591/fronx-exterior-right-front-three-quarter-109.png
+Maruti Suzuki,Swift,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/159099/swift-exterior-right-front-three-quarter-31.png
+Maruti Suzuki,Baleno,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/102663/baleno-exterior-right-front-three-quarter-69.png
+Maruti Suzuki,Brezza,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/107543/brezza-exterior-right-front-three-quarter-9.png
+Maruti Suzuki,Dzire,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/170173/dzire-exterior-right-front-three-quarter-27.png
+Maruti Suzuki,Grand Vitara,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/123185/grand-vitara-exterior-right-front-three-quarter-5.png
+Maruti Suzuki,Victoris,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/194921/victoris-exterior-right-front-three-quarter-8.png
+Maruti Suzuki,Ertiga,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/115777/ertiga-exterior-right-front-three-quarter-10.png
+Maruti Suzuki,Wagon R,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/112947/wagon-r-exterior-right-front-three-quarter-6.png
+Maruti Suzuki,Alto K10,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/127563/alto-k10-exterior-right-front-three-quarter-63.png
+Maruti Suzuki,e Vitara,2026,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139269/e-vitara-exterior-right-front-three-quarter-5.png
+Maruti Suzuki,Celerio,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/53695/celerio-exterior-right-front-three-quarter-8.png
+Maruti Suzuki,XL6,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/115601/xl6-exterior-right-front-three-quarter-13.png
+Maruti Suzuki,S-Presso,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/126463/s-presso-exterior-right-front-three-quarter-5.png
+Maruti Suzuki,Ignis,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/142921/ignis-exterior-right-front-three-quarter-17.png
+Maruti Suzuki,Jimny,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45299/jimny-exterior-right-front-three-quarter-23.png
+Maruti Suzuki,Eeco,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/135523/eeco-exterior-right-front-three-quarter-3.png
+Maruti Suzuki,Ciaz,2018,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/48542/ciaz-exterior-right-front-three-quarter-2.png
+Maruti Suzuki,Invicto,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/147201/invicto-exterior-right-front-three-quarter-68.png
+Maruti Suzuki,2026 Brezza,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/212741/2026-brezza-exterior-rear-view.avif
+Maruti Suzuki,Grand Vitara,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/123185/grand-vitara-exterior-right-front-three-quarter-5.png
+Maruti Suzuki,Wagon R,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/112947/wagon-r-exterior-right-front-three-quarter-6.png
+Maruti Suzuki,Zen,2003,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/maruti-suzuki/zen-2003-2006.jpg
+Maruti Suzuki,Wagon R [2019-2022],2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/34467/wagonr-exterior-right-front-three-quarter-3.jpeg
+Maruti Suzuki,Alto K10 [2014-2020],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/54/EB/14494/img/m/Maruti-Suzuki-Alto-K10-Right-Front-Three-Quarter-48397_ol.jpg
+Maruti Suzuki,Ertiga [2018-2022],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/35211/ertiga-exterior-right-front-three-quarter-141879.jpeg
+Maruti Suzuki,SX4,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/maruti-suzuki/sx4-2013-2015.jpg
+Maruti Suzuki,Baleno [2019-2022],2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/37710/Maruti-Suzuki-Baleno-Right-Front-Three-Quarter-147420.jpg
+Maruti Suzuki,Vitara Brezza [2020-2022],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/39028/marutisuzuki-vitara-brezza-right-front-three-quarter3.jpeg
+Maruti Suzuki,Ignis [2020-2023],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/44409/marutisuzuki-ignis-right-front-three-quarter3.jpeg
+Maruti Suzuki,Alto 800,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/39013/Maruti-Suzuki-Alto-Right-Front-Three-Quarter-154833.jpg
+Maruti Suzuki,Swift [2021-2024],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/54399/swift-exterior-right-front-three-quarter-64.jpeg
+Maruti Suzuki,Dzire [2020-2024],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45691/dzire-exterior-right-front-three-quarter-3.jpeg
+Maruti Suzuki,S Cross,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/108351/s-cross-exterior-left-rear-three-quarter-2.jpeg
+Maruti Suzuki,Ciaz [2017-2018],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/28475/Maruti-Suzuki-Ciaz-Right-Front-Three-Quarter-93815.jpg
+Maruti Suzuki,Celerio [2017-2021],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/31314/celerio-exterior-right-front-three-quarter-2.jpeg
+Maruti Suzuki,Celerio X,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/31393/Maruti-Suzuki-Celerio-X-Right-Front-Three-Quarter-153971.jpg
+Maruti Suzuki,S-Presso [2019-2022],2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/40726/s-presso-exterior-right-front-three-quarter-171853.jpeg
+Maruti Suzuki,XL6 [2019-2022],2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/41043/Maruti-Suzuki-XL6-Exterior-165499.jpg
+Maruti Suzuki,Futuro-E,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/44736/marutisuzuki-futuro-e-exterior3.jpeg
+Maruti Suzuki,Estilo,2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/maruti-suzuki/estilo-2009-2014.jpg
+Maruti Suzuki,Swift Dzire [2015-2017],2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/maruti-suzuki/swift-dzire.jpg
+Maruti Suzuki,Kizashi,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/maruti-suzuki/kizashi-2011-2014.jpg
+Maruti Suzuki,Eeco [2010-2022],2010,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/9710/eeco-exterior-right-front-three-quarter-14.jpeg
+Maruti Suzuki,Ritz,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/maruti-suzuki/ritz.jpg
+Maruti Suzuki,A-Star,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/maruti-suzuki/a-star-2012-2014.jpg
+Maruti Suzuki,1000 [1990-2000],1990,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/maruti-suzuki/1000.jpg
+Maruti Suzuki,Grand Vitara [2009-2015],2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/maruti-suzuki/grand-vitara-2009-2015.jpg
+Maruti Suzuki,Versa,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/maruti-suzuki/versa.jpg
+Maruti Suzuki,Omni,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/9f/C9/10723/img/m/Maruti-Suzuki-Omni-Right-Front-Three-Quarter-48395_ol.jpg
+Maruti Suzuki,Gypsy,2010,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/26/0E/17998/img/m/Maruti-Suzuki-Gypsy-Right-Front-Three-Quarter-48817_ol.jpg
+Maruti Suzuki,Esteem,2004,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/maruti-suzuki/esteem-2004-2008.jpg
+Maruti Suzuki,Baleno [1999-2007],1999,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/maruti-suzuki/baleno.jpg
+Maruti Suzuki,800 [2008-2014],2008,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/maruti-suzuki/800-2008-2014.jpg
+Tata,Punch,2026,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/172825/punch-facelift-exterior-right-front-three-quarter.png
+Tata,Sierra,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/193017/sierra-exterior-right-front-three-quarter-61.png
+Tata,Nexon,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/141867/nexon-exterior-right-front-three-quarter-79.png
+Tata,Tiago,2020,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/39345/tiago-exterior-right-front-three-quarter-34.png
+Tata,Harrier,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139139/harrier-exterior-right-front-three-quarter-7.png
+Tata,Punch EV,2026,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/217141/punch-ev-facelift-exterior-right-front-three-quarter-4.png
+Tata,Curvv,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139651/curvv-exterior-right-front-three-quarter-16.png
+Tata,Safari,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/138895/safari-exterior-right-front-three-quarter-40.png
+Tata,Harrier EV,2025,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139585/harrier-ev-exterior-right-front-three-quarter-58.png
+Tata,Altroz,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/199863/altroz-exterior-right-front-three-quarter-13.png
+Tata,Nexon EV,2023,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/149123/nexon-ev-exterior-right-front-three-quarter-80.png
+Tata,Tigor,2020,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/41160/tigor-exterior-right-front-three-quarter-25.png
+Tata,Curvv EV,2024,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/115617/curvv-ev-exterior-right-front-three-quarter-8.png
+Tata,Tiago EV,2022,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/40453/tiago-ev-exterior-right-front-three-quarter-15.png
+Tata,Tiago NRG,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/99113/tiago-nrg-exterior-right-front-three-quarter-8.png
+Tata,Tigor EV,2022,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/135723/tigor-ev-exterior-right-front-three-quarter-4.png
+Tata,Sierra EV,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139467/sierra-ev-exterior-right-front-three-quarter.jpeg
+Tata,Tiago EV Facelift,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/218950/tiago-ev-facelift-exterior-right-front-three-quarter.avif
+Tata,Safari EV,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/155631/safari-ev-exterior-right-front-three-quarter-2.jpeg
+Tata,Avinya,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/121335/avinya-concept-exterior-left-front-three-quarter.jpeg
+Tata,Altroz EV,2027,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/46800/altroz-ev-exterior-left-front-three-quarter.png
+Tata,Punch [2021-2026],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/39015/punch-exterior-right-front-three-quarter-58.png
+Tata,Altroz [2020-2025],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/32597/tata-altroz-exterior-18.jpeg
+Tata,Punch EV [2024-2026],2024,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/148309/punch-ev-exterior-right-front-three-quarter-11.png
+Tata,Tigor [2018-2020],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/36261/Tata-Tigor-Exterior-137896.jpg
+Tata,Nano GenX,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/18712/Tata-Nano-GenX-Exterior-122442.jpg
+Tata,Safari Old Generation [2023-2023],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/142865/safari-exterior-right-front-three-quarter-4.jpeg
+Tata,Tiago [2016-2020],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/20880/Tata-Tiago-Exterior-120831.jpg
+Tata,Nexon [2020-2023],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/41645/tata-nexon-right-front-three-quarter3.jpeg
+Tata,Hexa,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/38637/Tata-Hexa-Right-Front-Three-Quarter-171007.jpg
+Tata,Indica eV2 [2012-2013],2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/tata/indica-ev2-2012-2013.jpg
+Tata,Harrier Old Generation [2023-2023],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/142739/harrier-exterior-right-front-three-quarter-3.jpeg
+Tata,Tiago NRG [2018-2020],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/36039/Tata-Tiago-NRG-Right-Front-Three-Quarter-158328.jpg
+Tata,Tiago JTP,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/36135/Tata-Tiago-JTP-Right-Front-Three-Quarter-166424.jpg
+Tata,Tigor EV [2021-2022],2021,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45849/tigor-ev-facelift-exterior-right-front-three-quarter-5.jpeg
+Tata,Tigor JTP,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/36442/Tata-Tigor-JTP-Right-Front-Three-Quarter-166421.jpg
+Tata,Nexon EV Prime,2022,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/126681/nexon-ev-prime-exterior-right-front-three-quarter-2.jpeg
+Tata,Aria [2014-2017],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/08/52/10745/img/m/Tata-Aria-Right-Front-Three-Quarter-48886_ol.jpg
+Tata,Indigo eCS [2013-2018],2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/45/1E/10734/img/m/Tata-Indigo-eCS-Right-Front-Three-Quarter-48867_ol.jpg
+Tata,Venture,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/f7/5C/10740/img/m/Tata-Venture-Right-Front-Three-Quarter-48863_ol.jpg
+Tata,Winger [2011-2016],2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/tata/winger.jpg
+Tata,Manza [2011-2015],2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/tata/manza.jpg
+Tata,Xenon XT,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/4c/26/10742/img/m/Tata-Xenon-XT-Right-Front-Three-Quarter-48885_ol.jpg
+Tata,Vista Tech,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/tata/vista-tech.jpg
+Tata,Movus,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/tata/movus.jpg
+Tata,TL,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/tata/tl.jpg
+Tata,Estate,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Tata,1991 Sierra [1991-2003],1991,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/212509/sierra-1991-exterior-left-front-three-quarter.jpeg
+Tata,Sumo Gold,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/BD/f0/10752/img/m/Tata-Sumo-Gold-Right-Front-Three-Quarter-48868_ol.jpg
+Tata,Bolt,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/17402/Tata-Bolt-Right-Front-Three-Quarter-145389.jpg
+Tata,Zest,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/13976/Tata-Zest-Exterior-118092.jpg
+Mahindra,Scorpio N,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/40432/scorpio-n-exterior-right-front-three-quarter-4.png
+Mahindra,XUV 3XO,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/156405/xuv-3xo-exterior-right-front-three-quarter-33.png
+Mahindra,Thar Roxx,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/124839/thar-roxx-exterior-right-front-three-quarter-2.png
+Mahindra,XUV 7XO,2026,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/205104/xuv-7xo-exterior-right-front-three-quarter-3.jpeg
+Mahindra,Thar,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/204996/thar-2025-exterior-right-front-three-quarter-5.png
+Mahindra,Scorpio,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/128413/scorpio-exterior-right-front-three-quarter-2.png
+Mahindra,BE 6,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131825/be-6-exterior-right-front-three-quarter-6.png
+Mahindra,Bolero Neo,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/210989/bolero-neo-exterior-right-front-three-quarter-3.png
+Mahindra,Bolero,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/210987/bolero-exterior-right-front-three-quarter-3.png
+Mahindra,XEV 9S,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/212003/xev9s-exterior-right-front-three-quarter-11.png
+Mahindra,XEV 9e,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/130595/xev-9e-exterior-right-front-three-quarter-2.png
+Mahindra,BE 6 FE,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/216225/fe-exterior-right-front-three-quarter.png
+Mahindra,XUV 3XO EV,2026,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/184409/xuv-3xo-ev-exterior-right-front-three-quarter-3.png
+Mahindra,Bolero Neo Plus,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/123643/bolero-neo-plus-exterior-right-front-three-quarter-3.png
+Mahindra,XUV400,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45278/xuv400-exterior-right-front-three-quarter-8.png
+Mahindra,Marazzo,2020,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/49114/marazzo-exterior-right-front-three-quarter-2.png
+Mahindra,Vision S Sub Compact SUV,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/208724/vision-s-sub-4metre-suv-exterior-left-front-three-quarter.png
+Mahindra,Bolero 2026,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/204404/new-bolero-exterior-left-front-three-quarter-9.jpeg
+Mahindra,Vision X Compact SUV,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/208686/vision-x-exterior-right-front-three-quarter.jpeg
+Mahindra,Scorpio N Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/214461/scorpio-n-facelift-exterior-right-side-view-2.avif
+Mahindra,Thar.e,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/154685/thare-exterior-right-front-three-quarter.jpeg
+Mahindra,Global Pik Up,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/154867/scorpio-n-pick-up-exterior-right-front-three-quarter.jpeg
+Mahindra,BE.07,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131807/be07-exterior-right-front-three-quarter.jpeg
+Mahindra,Vision S Compact SUV,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/208688/vision-s-compact-suv-exterior-right-front-three-quarter-2.avif
+Mahindra,BE.09,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131799/be09-exterior-front-view.jpeg
+Mahindra,Vision X Sub Compact SUV,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/208728/vision-x-sub-4-metre-suv-exterior-left-side-view.png
+Mahindra,Vision T,2028,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/208682/vision-t-exterior-left-front-three-quarter-2.jpeg
+Mahindra,Vision SXT,2028,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/208684/sxt-exterior-right-front-three-quarter-2.jpeg
+Mahindra,Old Generation XUV700,2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/42355/xuv700-exterior-right-front-three-quarter-2.png
+Mahindra,Thar [2020-2025],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/40087/thar-exterior-right-front-three-quarter-38.png
+Mahindra,Bolero [2022-2025],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131179/bolero-exterior-right-front-three-quarter-2.jpeg
+Mahindra,Bolero Neo [2022-2025],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131181/bolero-neo-exterior-right-front-three-quarter-2.jpeg
+Mahindra,XEV 7e,2026,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131955/xuve8-exterior-right-front-three-quarter.jpeg
+Mahindra,XUV300 TurboSport,2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131907/xuv300-turbosport-exterior-right-front-three-quarter-9.jpeg
+Mahindra,Xylo,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/31432/Mahindra-Xylo-Exterior-109406.jpg
+Mahindra,XUV500,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/34024/xuv500-exterior-right-front-three-quarter-3.jpeg
+Mahindra,Jeep,1989,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mahindra,Marshal,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mahindra,Scorpio facelift,2025,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/210251/scorpio-facelift-exterior-right-side-view.avif
+Mahindra,Armada,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mahindra,Voyager,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mahindra,Marazzo [2018-2020],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/26944/marazzo-2018-2020-exterior-right-front-three-quarter-2.jpeg
+Mahindra,Verito Vibe CS,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/10593/mahindra-veritovibecs-exterior12.jpeg
+Mahindra,TUV300,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/39470/Mahindra-TUV300-Right-Front-Three-Quarter-155763.jpg
+Mahindra,NuvoSport,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/22722/Mahindra-NuvoSport-Right-Front-Three-Quarter-70408.jpg
+Mahindra,e2o PLUS,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/25867/Mahindra-e2o-Plus-Right-Front-Three-Quarter-84855.jpg
+Mahindra,KUV100 NXT,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/21497/kuv100-nxt-exterior-right-front-three-quarter-64047.jpeg
+Mahindra,eKUV100,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/33261/Mahindra-eKUV100-Exterior-170053.jpg
+Mahindra,Alturas G4,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/33266/alturas-g4-exterior-right-front-three-quarter-2.jpeg
+Mahindra,REVAi,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mahindra,e2o [2014-2016],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/mahindra/e2o.jpg
+Mahindra,Quanto [2012-2016],2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/mahindra/quanto.jpg
+Hyundai,Creta,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/106815/creta-exterior-right-front-three-quarter-6.png
+Hyundai,Venue,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/197163/venue-exterior-right-front-three-quarter-38.png
+Hyundai,Verna,2026,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/204398/verna-exterior-right-front-three-quarter.png
+Hyundai,i20,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/150603/i20-exterior-right-front-three-quarter-13.png
+Hyundai,Exter,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/144851/exter-exterior-right-front-three-quarter-64.png
+Hyundai,Grand i10 Nios,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/136183/grand-i10-nios-exterior-right-front-three-quarter-17.png
+Hyundai,Aura,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139133/aura-exterior-right-front-three-quarter-9.png
+Hyundai,Alcazar,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/157825/alcazar-exterior-right-front-three-quarter-24.png
+Hyundai,Creta Electric,2025,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/167017/creta-electric-exterior-right-front-three-quarter-15.png
+Hyundai,i20 N Line,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/158139/i20-n-line-exterior-right-front-three-quarter-16.png
+Hyundai,Venue N Line,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/210466/new-venue-n-line-exterior-right-front-three-quarter-11.png
+Hyundai,Ioniq 5,2023,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/110289/ioniq-5-exterior-right-front-three-quarter-96.png
+Hyundai,Creta N Line,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/168697/creta-n-line-exterior-right-front-three-quarter-26.png
+Hyundai,Exter Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/216807/exter-facelift-exterior-front-view.jpeg
+Hyundai,Tucson Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/166917/tucson-facelift-exterior-left-front-three-quarter.jpeg
+Hyundai,Stargazer,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/124705/stargazer-exterior-left-front-three-quarter-4.jpeg
+Hyundai,Ioniq 5 Facelift,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/201627/ioniq-5-facelift-exterior-left-front-three-quarter.jpeg
+Hyundai,New Santa Fe,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/153827/new-santa-fe-exterior-left-front-three-quarter.jpeg
+Hyundai,Bayon,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/216517/bayon-exterior-left-front-three-quarter.jpeg
+Hyundai,Ioniq 6,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139795/ioniq-6-exterior-right-front-three-quarter.jpeg
+Hyundai,Ioniq 9,2027,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/196941/ioniq-9-exterior-left-front-three-quarter.jpeg
+Hyundai,Palisade,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/162965/palisade-exterior-right-front-three-quarter.jpeg
+Hyundai,Creta Facelift,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/216847/creta-facelift-exterior-left-front-three-quarter.jpeg
+Hyundai,Staria,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/196235/staria-exterior-right-front-three-quarter.jpeg
+Hyundai,Venue [2023-2025],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/141113/venue-exterior-right-front-three-quarter-19.png
+Hyundai,Verna [2023-2026],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/121943/verna-exterior-right-front-three-quarter-103.png
+Hyundai,Venue N Line [2023-2025],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/142677/venue-n-line-exterior-right-front-three-quarter-6.png
+Hyundai,Tucson,2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/106821/tucson-exterior-right-front-three-quarter-8.png
+Hyundai,Alcazar [2023-2024],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/142523/alcazar-exterior-right-front-three-quarter-11.jpeg
+Hyundai,Creta [2023-2024],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/141115/creta-exterior-right-front-three-quarter-16.jpeg
+Hyundai,Aura [2020-2023],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/41652/aura-exterior-right-front-three-quarter-54.jpeg
+Hyundai,Elantra,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/41138/elantra-exterior-right-front-three-quarter-3.jpeg
+Hyundai,i20 [2020-2023],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/40530/i20-exterior-right-front-three-quarter-5.jpeg
+Hyundai,Grand i10 Nios [2019-2023],2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/35465/grand-i10-nios-exterior-right-front-three-quarter-2.jpeg
+Hyundai,i20 Active,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/34288/Hyundai-i20-Active-Exterior-126611.jpg
+Hyundai,New Kona,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/49892/new-kona-exterior-front-view.jpeg
+Hyundai,i20 N Line [2021-2023],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/100121/i20-n-line-exterior-right-front-three-quarter-12.jpeg
+Hyundai,Casper,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/51891/casper-exterior-left-front-three-quarter-3.jpeg
+Hyundai,Genesis,2008,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Hyundai,i20 [2012-2014],2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/hyundai/i20-2012-2014.jpg
+Hyundai,Accent,2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/hyundai/accent-2009-2013.jpg
+Hyundai,Santa Fe [2014-2017],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/10483/Hyundai-Santa-Fe-Right-Front-Three-Quarter-88687.jpg
+Hyundai,Xcent,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/26914/xcent-exterior-right-front-three-quarter.jpeg
+Hyundai,Grand i10,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/26859/grand-i10-exterior-right-front-three-quarter.jpeg
+Hyundai,Sonata,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/hyundai/sonata-2011-2015.jpg
+Hyundai,Eon,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/9692/Hyundai-Eon-Right-Front-Three-Quarter-94097.jpg
+Hyundai,i10 [2010-2017],2010,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/9694/Hyundai-i10-Right-Front-Three-Quarter-94096.jpg
+Hyundai,Getz Prime [2007-2010],2007,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/hyundai/getz-prime-2007-2010.jpg
+Hyundai,Santro,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/32940/santro-exterior-right-front-three-quarter-138782.jpeg
+Hyundai,Terracan [2003-2006],2003,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/hyundai/terracan-2003-2006.jpg
+Toyota,Urban Cruiser Hyryder,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/124027/hyryder-exterior-right-front-three-quarter-74.png
+Toyota,Innova Hycross,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/115025/innova-hycross-exterior-right-front-three-quarter-74.png
+Toyota,Fortuner,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/44709/fortuner-exterior-right-front-three-quarter-28.png
+Toyota,Glanza,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/112839/glanza-exterior-right-front-three-quarter-6.png
+Toyota,Urban Cruiser Taisor,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/132427/taisor-exterior-right-front-three-quarter-41.png
+Toyota,Innova Crysta,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/140809/innova-crysta-exterior-right-front-three-quarter-3.png
+Toyota,Hilux,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/109265/hilux-exterior-right-front-three-quarter-44.png
+Toyota,Rumion,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/105799/rumion-exterior-right-front-three-quarter-8.png
+Toyota,Fortuner Legender,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/137767/fortuner-legender-exterior-right-front-three-quarter-5.png
+Toyota,Camry,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/192443/camry-exterior-right-front-three-quarter-15.png
+Toyota,Vellfire,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/154483/vellfire-exterior-right-front-three-quarter-4.png
+Toyota,Land Cruiser,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139739/land-cruiser-exterior-right-front-three-quarter-3.png
+Toyota,Urban Cruiser Ebella,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/191295/urban-cruiser-ebella-exterior-right-front-three-quarter-14.png
+Toyota,Fortuner Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/218734/fortuner-facelift-exterior-right-front-three-quarter.avif
+Toyota,Urban Cruiser Hyryder 7 seater,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/201657/urban-cruiser-hyryder-7-seater-exterior-rear-view.jpeg
+Toyota,BZ4X,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/163403/bz4x-exterior-left-front-three-quarter.jpeg
+Toyota,New Land Cruiser FJ,2028,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/212025/exterior-right-front-three-quarter.jpeg
+Toyota,Glanza [2019-2022],2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/39545/glanza-exterior-right-front-three-quarter-159523.jpeg
+Toyota,Platinum Etios,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/24731/Toyota-Platinum-Etios-Exterior-119077.jpg
+Toyota,Innova Crysta [2020-2023],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/51435/innova-crysta-exterior-right-front-three-quarter-3.jpeg
+Toyota,Camry [2022-2024],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/110233/camry-exterior-right-front-three-quarter-3.jpeg
+Toyota,Vellfire [2014],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/n/cw/ec/154483/vellfire-exterior-right-front-three-quarter-4.png
+Toyota,Innova [2015-2016],2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/14545/Toyota-Innova-Right-Front-Three-Quarter-72626.jpg
+Toyota,Ventury,2010,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Fortuner [2016-2021],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/19812/fortuner-exterior-right-front-three-quarter-2.jpeg
+Toyota,Land Cruiser [2015-2020],2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/20695/Toyota-Land-Cruiser-Right-Front-Three-Quarter-60016.jpg
+Toyota,Prius,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/22566/Toyota-Prius-Right-Front-Three-Quarter-90763.jpg
+Toyota,Etios Liva,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/24898/Toyota-Etios-Liva-Exterior-127727.jpg
+Toyota,Corolla Altis,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/26588/Toyota-Corolla-Altis-Exterior-92974.jpg
+Toyota,Vellfire [2020-2023],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/41217/toyota-vellfire-right-front-three-quarter5.jpeg
+Toyota,Urban Cruiser,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/47016/urban-cruiser-exterior-right-front-three-quarter-61.jpeg
+Toyota,Belta,2025,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/105735/exterior-front-view.jpeg
+Toyota,Tundra,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Rush,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/143937/rush-exterior-left-front-three-quarter.jpeg
+Toyota,Lexus,2007,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Hiace,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Estima,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Tercel,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Cressida,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Majesta,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Corolla Ceres,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Sera,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,RAV-4,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Celica,2010,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Cynos,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,MR2,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Crown,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Corona,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Land Cruiser Prado,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/10219/Toyota-Land-Cruiser-Prado-Exterior-127835.jpg
+Toyota,Qualis [2002-2004],2002,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/toyota/qualis-2002-2004.jpg
+Toyota,Yaris,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/32943/yaris-exterior-right-front-three-quarter-2.jpeg
+Toyota,Mark II,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,MasterAce,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Cresta,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Toyota,Commuter,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Kia,Seltos,2026,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/192817/seltos-exterior-right-front-three-quarter-50.png
+Kia,Sonet,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/174423/sonet-exterior-right-front-three-quarter-12.png
+Kia,Carens,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/174325/carens-exterior-right-front-three-quarter-9.png
+Kia,Carens Clavis,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/195199/carens-clavis-exterior-right-front-three-quarter-3.png
+Kia,Syros,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/168707/syros-exterior-right-front-three-quarter-12.png
+Kia,Carens Clavis EV,2025,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/174553/carens-clavis-ev-exterior-right-front-three-quarter-4.png
+Kia,Carnival,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/138947/carnival-exterior-right-front-three-quarter-20.png
+Kia,EV6,2025,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/186465/ev6-exterior-right-front-three-quarter-3.png
+Kia,EV9,2024,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/144485/ev9-exterior-right-front-three-quarter-6.png
+Kia,Carens Clavis EV,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/174553/carens-clavis-ev-exterior-right-front-three-quarter-4.png
+Kia,EV3,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/176961/ev3-exterior-left-front-three-quarter-2.jpeg
+Kia,Syros EV,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/200981/syros-ev-exterior-right-front-three-quarter-2.png
+Kia,Sorento,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/214457/sorento-exterior-right-front-three-quarter.avif
+Kia,EV5,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/162959/ev5-exterior-left-front-three-quarter.jpeg
+Kia,Tasman,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/191513/tasman-exterior-left-front-three-quarter.jpeg
+Kia,Old Generation Seltos 2024,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/174323/seltos-exterior-right-front-three-quarter-4.png
+Kia,EV6 [2022-2025],2022,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/114971/ev6-exterior-right-front-three-quarter-4.jpeg
+Kia,Sonet [2024-2024],2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/141383/sonet-facelift-exterior-right-front-three-quarter-8.jpeg
+Kia,Carens [2023-2024],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/144163/carens-exterior-right-front-three-quarter-5.jpeg
+Kia,Rio,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/34131/Kia-Rio-Exterior-170078.jpg
+Kia,Carnival [2020-2023],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/41205/carnival-exterior-right-front-three-quarter-55.jpeg
+Skoda,Kylaq,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/171777/kylaq-exterior-right-front-three-quarter-10.jpeg
+Skoda,Slavia,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/175951/slavia-exterior-right-front-three-quarter-10.png
+Skoda,Kushaq,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/175993/kushaq-exterior-right-front-three-quarter-2.png
+Skoda,Kodiaq,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/158729/kodiaq-exterior-right-front-three-quarter-14.png
+Skoda,Octavia RS,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/204968/octaviars-exterior-right-front-three-quarter-61.png
+Skoda,Kushaq Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/187043/kushaq-facelift-exterior-right-front-three-quarter-6.png
+Skoda,Slavia Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/179753/slavia-facelift-exterior-left-side-view-2.jpeg
+Skoda,New Superb,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/195979/new-superb-exterior-left-front-three-quarter.jpeg
+Skoda,Elroq,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/188525/elroq-exterior-right-front-three-quarter.jpeg
+Skoda,Kodiaq RS,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/216477/kodiaq-rs-exterior-left-front-three-quarter.jpeg
+Skoda,Octavia Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/170883/octavia-facelift-exterior-front-view-6.jpeg
+Skoda,Epiq,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/217463/epiq-exterior-left-front-three-quarter.jpeg
+Skoda,Enyaq,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/137871/enyaq-exterior-right-front-three-quarter-2.jpeg
+Skoda,Kodiaq [2022-2025],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/49051/kodiaq-exterior-right-front-three-quarter-3.jpeg
+Skoda,Slavia [2023-2024],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/144999/slavia-exterior-right-front-three-quarter-6.jpeg
+Skoda,Kushaq [2023-2024],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/145021/kushaq-exterior-right-front-three-quarter-12.jpeg
+Skoda,Superb [2024],2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/158937/superb-exterior-right-front-three-quarter-6.jpeg
+Skoda,Rapid TSI,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/49980/rapid-tsi-at-exterior-right-front-three-quarter-3.jpeg
+Skoda,Octavia,2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/40371/octavia-exterior-right-front-three-quarter-2.jpeg
+Skoda,Kamiq,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/41784/Skoda-Kamiq-Exterior-170110.jpg
+Skoda,Yeti,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21013/Skoda-Yeti-Right-Front-Three-Quarter-61517.jpg
+Skoda,Laura,2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/skoda/laura-2009-2013.jpg
+Skoda,Fabia Scout,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Skoda,Karoq,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/29168/karoq-exterior-right-front-three-quarter-2.jpeg
+BMW,3 Series LWB,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/198567/3-series-exterior-right-front-three-quarter-10.png
+BMW,X3,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/179903/x3-exterior-right-front-three-quarter-8.png
+BMW,X7,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/136217/x7-exterior-right-front-three-quarter-10.png
+BMW,5 Series,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/175183/5-series-exterior-right-front-three-quarter-95.png
+BMW,X5,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/152681/x5-exterior-right-front-three-quarter-7.png
+BMW,2 Series Gran Coupe,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/205930/2-series-gran-coupe-exterior-right-front-three-quarter-4.png
+BMW,M4,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/176129/m4-exterior-right-front-three-quarter-4.png
+BMW,X1,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/140591/x1-exterior-right-front-three-quarter-8.png
+BMW,iX1 LWB,2025,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/196035/ix1-lwb-exterior-right-front-three-quarter-2.png
+BMW,M340i,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/135697/m340i-exterior-right-front-three-quarter-5.png
+BMW,M5,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/192747/m5-exterior-right-front-three-quarter-11.png
+BMW,Z4,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/149075/z4-exterior-right-front-three-quarter-3.png
+BMW,M2,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/150125/m2-exterior-right-front-three-quarter-3.png
+BMW,7 Series,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/132513/7-series-exterior-right-front-three-quarter-4.png
+BMW,XM,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/135681/xm-exterior-right-front-three-quarter-4.png
+BMW,M8,2020,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/47278/m8-exterior-right-front-three-quarter-3.png
+BMW,i7,2023,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/137875/i7-exterior-right-front-three-quarter-9.png
+BMW,iX1,2023,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/140585/ix1-exterior-right-front-three-quarter-26.png
+BMW,i4,2022,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/109123/i4-exterior-right-front-three-quarter-2.png
+BMW,X4 M40i,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/163337/x4-exterior-right-front-three-quarter-3.png
+BMW,iX,2021,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/108499/ix-exterior-right-front-three-quarter-4.png
+BMW,i5,2024,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/174353/i5-exterior-right-front-three-quarter-6.png
+BMW,M2,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/150125/m2-exterior-right-front-three-quarter-3.png
+BMW,iX3,2027,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/211249/ix3-exterior-right-front-three-quarter.jpeg
+BMW,2 Series Gran Coupe [2020-2025],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/48034/2-series-gran-coupe-exterior-right-front-three-quarter-3.jpeg
+BMW,3 Series Gran Limousine,2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139177/3-series-gran-limousine-exterior-right-front-three-quarter-3.jpeg
+BMW,X3 [2022-2025],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/110503/x3-exterior-right-front-three-quarter-3.jpeg
+BMW,M340i [2021-2022],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/124843/m340i-exterior-right-front-three-quarter.jpeg
+BMW,7 Series [2019-2023],2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/38113/BMW-7-Series-Right-Front-Three-Quarter-164132.jpg
+BMW,5 Series [2021-2024],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/96443/5-series-exterior-right-front-three-quarter-5.jpeg
+BMW,X5 [2019-2023],2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/37065/BMW-X5-Right-Front-Three-Quarter-157119.jpg
+BMW,1 Series,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/0f/0e/11204/img/m/BMW-1-Series-Right-Front-Three-Quarter-50876_ol.jpg
+BMW,6 Series Gran Coupe,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/C4/2F/9769/img/m/BMW-6-Series-Right-Front-Three-Quarter-52292_ol.jpg
+BMW,Z4 [2019-2023],2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/37095/BMW-Z4-Roadster-Right-Front-Three-Quarter-153914.jpg
+BMW,M3,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/33171/BMW-M3-Exterior-119388.jpg
+BMW,Z3,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+BMW,M5 [2021-2023],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/50723/m5-exterior-right-front-three-quarter-2.jpeg
+BMW,X6,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/41375/x6-exterior-right-front-three-quarter.jpeg
+BMW,M6,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/28449/BMW-M6-Right-Front-Three-Quarter-94306.jpg
+BMW,X1 [2020-2023],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45242/bmw-x1-facelift-right-front-three-quarter2.jpeg
+BMW,i8 [2015-2019],2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/18023/BMW-i8-Exterior-114972.jpg
+BMW,3 Series GT [2016-2021],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/18273/BMW-3-Series-GT-Right-Front-Three-Quarter-82155.jpg
+BMW,M4 Competition [2022-2024],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/111981/m4-competition-exterior-right-front-three-quarter-2.jpeg
+BMW,X7 [2019-2023],2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/28286/BMW-X7-Right-Front-Three-Quarter-164106.jpg
+BMW,6 Series GT,2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/56433/6-series-gt-exterior-right-front-three-quarter-2.jpeg
+BMW,M2 [2018-2022],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/37092/BMW-M2-Exterior-141232.jpg
+BMW,X4 [2022-2023],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/112929/x4-exterior-right-front-three-quarter-5.jpeg
+BMW,8 Series,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/41406/bmw-8-series-right-front-three-quarter8.jpeg
+BMW,X8,2025,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/47349/bmw-x8-left-side-view0.jpeg
+BMW,X3 M,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/51065/x3-m-exterior-right-front-three-quarter.jpeg
+BMW,X5 M,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/51529/x5-m-exterior-right-front-three-quarter-2.jpeg
+BMW,X3 M40i,2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/146751/x3-m40i-exterior-right-front-three-quarter-2.jpeg
+BMW,M4 CS,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/188481/m4-cs-exterior-right-front-three-quarter.jpeg
+Nissan,Gravite,2026,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/200003/gravite-exterior-right-front-three-quarter-6.jpeg
+Nissan,Magnite,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/173325/magnite-exterior-right-front-three-quarter-27.png
+Nissan,X-Trail,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/133165/x-trail-exterior-right-front-three-quarter-28.png
+Nissan,Tekton,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/200007/tekton-exterior-left-front-three-quarter.png
+Nissan,Gravite,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/200003/gravite-exterior-right-front-three-quarter-6.jpeg
+Nissan,Sunny,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/94/C0/9725/img/m/Nissan-Sunny-Right-Front-Three-Quarter-48975_ol.jpg
+Nissan,Safari Granroad,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,Micra Active,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/35639/Nissan-Micra-Active-Exterior-133308.jpg
+Nissan,X-Trail [2009-2014],2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/nissan/x-trail-2009-2014.jpg
+Nissan,Evalia [2014-2016],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/nissan/evalia.jpg
+Nissan,Terrano,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/28376/Nissan-Terrano-Front-view-93548.jpg
+Nissan,NV350,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,Kicks,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/32596/Nissan-Kicks-Right-Front-Three-Quarter-159680.jpg
+Nissan,Magnite [2020-2024],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45795/magnite-exterior-right-front-three-quarter-11.jpeg
+Nissan,Murano,2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,Qashqai,2027,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/133127/qashqai-exterior-right-front-three-quarter.jpeg
+Nissan,Juke,2025,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/138127/juke-exterior-right-front-three-quarter.jpeg
+Nissan,Leaf EV,2024,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/664x374/cw/ec/40522/Nissan-Leaf-EV-Right-Front-Three-Quarter-169812.jpg
+Nissan,Patrol,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,Infiniti,2008,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,Cima,2025,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,Gloria,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,Teana [2007-2014],2007,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/nissan/teana-2007-2014.jpg
+Nissan,350Z,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,370Z [2010-2014],2010,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/nissan/370z-2010-2014.jpg
+Nissan,Serena,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,Fairlady 300 ZX,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,GT-R,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/20361/Nissan-GTR-Right-Front-Three-Quarter-84895.jpg
+Nissan,Cedric,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,Jonga,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,Laurel,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Nissan,Bluebird,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Renault,Duster,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/163801/duster-exterior-right-front-three-quarter-5.jpeg
+Renault,Triber,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/199767/triber-exterior-right-front-three-quarter-26.png
+Renault,Kwid,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/141125/kwid-exterior-right-front-three-quarter-38.png
+Renault,Kiger,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/208550/kiger-exterior-right-front-three-quarter-30.png
+Renault,Boreal (Bigster),2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/189585/bigster-exterior-right-front-three-quarter.jpeg
+Renault,Kwid Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/217559/kwid-facelift-exterior-left-front-three-quarter.avif
+Renault,Bridger,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/218964/bridger-exterior-left-front-three-quarter-4.jpeg
+Renault,Kwid EV,2027,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/173191/new-kwid-exterior-left-front-three-quarter-4.jpeg
+Renault,Triber [2023-2025],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/141119/triber-exterior-right-front-three-quarter-10.jpeg
+Renault,Kiger [2023-2025],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/141857/kiger-exterior-right-front-three-quarter-9.jpeg
+Renault,Kwid [2022-2023],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/120405/kwid-exterior-right-front-three-quarter-9.jpeg
+Renault,Old Generation Duster [2020-2022],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/47028/duster-exterior-right-front-three-quarter-4.jpeg
+Renault,Koleos [2014-2017],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/renault/kolese.jpg
+Renault,Pulse [2015-2017],2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/26/CF/18477/img/m/Renault-Pulse-Right-Front-Three-Quarter-50837_ol.jpg
+Renault,Scala [2012-2017],2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/11/5C/9945/img/m/Renault-Scala-Right-Front-Three-Quarter-52078_ol.jpg
+Renault,Lodgy,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/10448/Renault-Lodgy-Right-Front-Three-Quarter-73220.jpg
+Renault,Scenic,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Renault,Fluence [2014-2017],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/42/B1/17815/img/m/Renault-Fluence-Right-Front-Three-Quarter-48978_ol.jpg
+Renault,Megane,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Renault,Captur,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/39217/Renault-Captur-Right-Front-Three-Quarter-153590.jpg
+Mercedes-Benz,E-Class,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/162929/e-class-exterior-right-front-three-quarter-35.png
+Mercedes-Benz,GLS,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/167373/gls-exterior-right-front-three-quarter-22.png
+Mercedes-Benz,GLE,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/163317/gle-exterior-right-front-three-quarter-4.png
+Mercedes-Benz,Maybach GLS,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/177511/maybach-gls-exterior-right-front-three-quarter-5.png
+Mercedes-Benz,G-Class,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/150621/g-class-exterior-right-front-three-quarter-24.png
+Mercedes-Benz,A-Class Limousine,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/149525/a-class-limousine-exterior-right-front-three-quarter-8.png
+Mercedes-Benz,C-Class,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/178535/c-class-exterior-right-front-three-quarter-4.png
+Mercedes-Benz,V-Class,2026,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/217073/new-v-class-exterior-right-front-three-quarter-13.avif
+Mercedes-Benz,GLA,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/169159/gla-exterior-right-front-three-quarter-4.png
+Mercedes-Benz,GLC,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/178525/glc-exterior-right-front-three-quarter-4.png
+Mercedes-Benz,Maybach S-Class,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/115149/maybach-s-class-exterior-right-front-three-quarter-6.png
+Mercedes-Benz,AMG CLE,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/207030/amg-cle-exterior-right-front-three-quarter-33.png
+Mercedes-Benz,S-Class,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/48067/s-class-exterior-right-front-three-quarter-10.png
+Mercedes-Benz,CLE Cabriolet,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/182371/cle-cabriolet-exterior-right-front-three-quarter-4.png
+Mercedes-Benz,AMG G-Class,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/190739/amg-g-class-exterior-right-front-three-quarter-3.png
+Mercedes-Benz,AMG GLA35,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/94279/amg-gla35-exterior-right-front-three-quarter-3.png
+Mercedes-Benz,EQS,2022,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131249/eqs-exterior-right-front-three-quarter-31.png
+Mercedes-Benz,G580 with EQ Technology,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/175191/g580-with-eq-technology-exterior-right-front-three-quarter-9.png
+Mercedes-Benz,AMG GLC43 Coupe,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/182375/amg-glc43-coupe-exterior-right-front-three-quarter-4.png
+Mercedes-Benz,AMG GT 63,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/204994/amg-gt-63-exterior-right-front-three-quarter-2.png
+Mercedes-Benz,AMG C 43,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/163327/amg-c-43-exterior-right-front-three-quarter-5.png
+Mercedes-Benz,Maybach SL 680,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/197325/maybach-sl-680-exterior-right-front-three-quarter-6.png
+Mercedes-Benz,EQB,2022,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/108055/eqb-exterior-right-front-three-quarter-15.png
+Mercedes-Benz,AMG GLE Coupe,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/169185/amg-gle-coupe-exterior-right-front-three-quarter-3.png
+Mercedes-Benz,EQS SUV,2024,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/187171/eqs-suv-exterior-right-front-three-quarter-4.png
+Mercedes-Benz,EQA,2024,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/178797/eqa-exterior-right-front-three-quarter-43.png
+Mercedes-Benz,AMG E53 Cabriolet,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/137541/amg-e53-cabriolet-exterior-right-front-three-quarter-9.png
+Mercedes-Benz,AMG SL55 Roadster,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/148919/amg-sl55-roadster-exterior-right-front-three-quarter-3.png
+Mercedes-Benz,AMG A45 S,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/149523/amg-a45-s-exterior-right-front-three-quarter-8.png
+Mercedes-Benz,AMG S 63 E Performance,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/177545/amg-s-63-e-performance-exterior-right-front-three-quarter-12.png
+Mercedes-Benz,AMG GT 63 S E Performance,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/145977/amg-gt-63-s-e-performance-exterior-right-front-three-quarter-11.png
+Mercedes-Benz,Maybach EQS SUV,2024,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/175201/maybach-eqs-suv-exterior-right-front-three-quarter-4.png
+Mercedes-Benz,AMG GT 63 S 4Matic Plus,2020,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45126/amg-gt-63-s-4matic-plus-exterior-right-front-three-quarter-3.png
+Mercedes-Benz,AMG EQS,2022,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/58165/amg-eqs-exterior-right-front-three-quarter-62.png
+Mercedes-Benz,EQE SUV,2023,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/108113/eqe-suv-exterior-right-front-three-quarter-4.png
+Mercedes-Benz,AMG C 63 S E Performance,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/191161/amg-c-63-s-e-performance-exterior-right-front-three-quarter-17.png
+Mercedes-Benz,CLA,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/216979/cla-exterior-right-front-three-quarter-34.jpeg
+Mercedes-Benz,GLC EV,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/210035/glc-ev-exterior-left-front-three-quarter-2.jpeg
+Mercedes-Benz,S-Class Facelift,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/216615/s-class-facelift-exterior-front-view.jpeg
+Mercedes-Benz,GLB,2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/134297/glb-exterior-right-front-three-quarter-2.jpeg
+Mercedes-Benz,CLA 2026,2026,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/202913/cla-2026-exterior-left-front-three-quarter.jpeg
+Mercedes-Benz,SL,2008,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mercedes-Benz,C-Class [2022-2024],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/116201/c-class-exterior-right-front-three-quarter-3.jpeg
+Mercedes-Benz,CLK,2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mercedes-Benz,SLK,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/mercedese/slk-class.jpg
+Mercedes-Benz,CLS,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/32594/MercedesBenz-CLS-Exterior-141234.jpg
+Mercedes-Benz,AMG E53,2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/98397/amg-e53-exterior-right-front-three-quarter-2.jpeg
+Mercedes-Benz,G-Class [2018-2023],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/36129/g-class-exterior-right-front-three-quarter.jpeg
+Mercedes-Benz,M-Class,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/DA/c4/10817/img/m/Mercedes-Benz-M-Class-Right-Front-Three-Quarter-50675_ol.jpg
+Mercedes-Benz,S-Class (W222) [2017-2022],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/30149/s-class-w222-exterior-right-front-three-quarter.jpeg
+Mercedes-Benz,MB-Class,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mercedes-Benz,GL,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/mercedese/gl-class.jpg
+Mercedes-Benz,AMG GT,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/20865/amg-gt-exterior-right-front-three-quarter-60800.jpeg
+Mercedes-Benz,R-Class,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mercedes-Benz,190,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mercedes-Benz,B-Class,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/4e/E9/18471/img/m/Mercedes-Benz-B-Class-Right-Front-Three-Quarter-50812_ol.jpg
+Mercedes-Benz,SDL,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mercedes-Benz,Viano,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mercedes-Benz,A-Class [2015-2019],2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/20954/Mercedes-Benz-A-Class-Right-Front-Three-Quarter-61539.jpg
+Mercedes-Benz,GLA [2021-2024],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/44784/gla-exterior-right-front-three-quarter.jpeg
+Mercedes-Benz,GLE [2020-2023],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/36137/gle-exterior-right-front-three-quarter.jpeg
+Mercedes-Benz,GLS [2020-2024],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45390/gls-exterior-right-front-three-quarter-2.jpeg
+Mercedes-Benz,E-Class Cabriolet,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/26933/MercedesBenz-EClass-Cabriolet-Exterior-129489.jpg
+Mercedes-Benz,S-Coupe,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/A0/b2/19601/img/m/Mercedes-Benz-S-Coupe-Right-Front-Three-Quarter-54969_ol.jpg
+Mercedes-Benz,GLE Coupe [2016-2020],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21245/MercedesBenz-GLE-Coupe-Right-Front-Three-Quarter-63844.jpg
+Mercedes-Benz,GLC [2023-2024],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/150705/glc-exterior-right-front-three-quarter-94.jpeg
+Mercedes-Benz,S-Class Cabriolet,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/22563/MercedesBenz-SClass-Cabriolet-Right-Front-Three-Quarter-83692.jpg
+Mercedes-Benz,SLC,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/24097/MercedesBenz-SLC-Right-Front-Three-Quarter-77115.jpg
+Mercedes-Benz,W123,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mercedes-Benz,C-Class Cabriolet,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/36861/MercedesBenz-CClass-Cabriolet-Exterior-139428.jpg
+Mercedes-Benz,200,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mercedes-Benz,GLC Coupe,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45477/mercedesbenz-glc-coupe-right-front-three-quarter1.jpeg
+Mercedes-Benz,E-Class All Terrain,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/32948/MercedesBenz-EClass-All-Terrain-Exterior-137296.jpg
+Mercedes-Benz,Old Generation V-Class 2019,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/37616/MercedesBenz-VClass-Right-Front-Three-Quarter-147184.jpg
+Mercedes-Benz,C-Coupe,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/39072/MercedesBenz-CCoupe-Right-Front-Three-Quarter-152578.jpg
+Mercedes-Benz,EQC,2020,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/44579/eqc-exterior-right-front-three-quarter-5.jpeg
+Mercedes-Benz,A-Class Limousine [2021-2023],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45207/a-class-limousine-exterior-right-front-three-quarter-67.jpeg
+Mercedes-Benz,AMG GLC43 Coupe [2020-2024],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/50924/amg-glc43-coupe-exterior-right-front-three-quarter-2.jpeg
+Mercedes-Benz,AMG GLE Coupe [2020-2024],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/51617/amg-gle-coupe-exterior-right-front-three-quarter-5.jpeg
+Mercedes-Benz,AMG A35,2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/94041/amg-a35-exterior-right-front-three-quarter-6.jpeg
+Mercedes-Benz,Maybach GLS [2021-2024],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/95489/maybach-gls-exterior-right-front-three-quarter-5.jpeg
+Mercedes-Benz,AMG A45 S [2021-2023],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/106785/exterior-right-front-three-quarter-3.jpeg
+MG,Windsor EV,2024,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/174611/windsor-ev-exterior-right-front-three-quarter-84.png
+MG,Hector,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/212881/hector-facelift-exterior-right-front-three-quarter.png
+MG,Cyberster,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/193375/cyberster-exterior-right-front-three-quarter-10.png
+MG,Comet EV,2023,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/125193/comet-ev-exterior-right-front-three-quarter-31.png
+MG,M9,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139761/m9-exterior-right-front-three-quarter-3.png
+MG,ZS EV,2022,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/110437/zs-ev-exterior-right-front-three-quarter-70.png
+MG,Astor,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/51940/astor-exterior-right-front-three-quarter-8.png
+MG,Gloster,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/129689/gloster-exterior-right-front-three-quarter-5.png
+MG,Hector Plus,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/214253/hector-plus-exterior-right-front-three-quarter.png
+MG,Hector Plus,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/214253/hector-plus-exterior-right-front-three-quarter.png
+MG,Majestor,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/166035/majestor-exterior-right-front-three-quarter-7.avif
+MG,Astor Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/185899/astor-facelift-exterior-right-front-three-quarter.jpeg
+MG,Hector [2023-2025],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/130583/hector-exterior-right-front-three-quarter-87.png
+MG,Hector Plus [2023-2025],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139315/hector-plus-exterior-right-front-three-quarter-15.png
+MG,4,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139753/4-exterior-right-front-three-quarter.jpeg
+MG,5 Estate,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139823/5-estate-exterior-left-front-three-quarter.jpeg
+MG,Marvel R,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139805/marvel-r-exterior-left-front-three-quarter.jpeg
+MG,eRX5,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139813/erx5-exterior-left-front-three-quarter.jpeg
+MG,6,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139779/6-exterior-left-front-three-quarter.jpeg
+MG,eHS,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139769/ehs-exterior-right-front-three-quarter-3.jpeg
+MG,Euniq 7,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139647/euniq-7-exterior-right-front-three-quarter.jpeg
+MG,Gloster [2020-2022],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/43485/gloster-exterior-right-front-three-quarter-3.jpeg
+MG,ZS EV [2020-2022],2020,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/39348/zs-ev-exterior-right-front-three-quarter-2.jpeg
+Volkswagen,Virtus,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/144681/virtus-exterior-right-front-three-quarter-11.png
+Volkswagen,Taigun,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/144689/taigun-exterior-right-front-three-quarter-8.png
+Volkswagen,Tayron R-Line,2026,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/202557/tayron-r-line-exterior-right-front-three-quarter-3.png
+Volkswagen,Golf GTI,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/198749/golf-gti-exterior-right-front-three-quarter-4.png
+Volkswagen,Tiguan R-Line,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/198751/tiguan-r-line-exterior-right-front-three-quarter-10.png
+Volkswagen,Taigun Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/207718/taigun-facelift-exterior-right-side-view.jpeg
+Volkswagen,Tera SUV,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/191839/tera-suv-exterior-grille.jpeg
+Volkswagen,ID.4,2027,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/138087/id4-exterior-right-front-three-quarter.jpeg
+Volkswagen,Tiguan,2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/53123/tiguan-exterior-right-front-three-quarter-4.jpeg
+Volkswagen,Transporter,2003,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Volkswagen,Polo,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/29628/polo-exterior-right-front-three-quarter-2.jpeg
+Volkswagen,Passat,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/22548/Volkswagen-Passat-Headlamps-135233.jpg
+Volkswagen,Vento,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/26563/Volkswagen-Vento-Right-Front-Three-Quarter-169094.jpg
+Volkswagen,Taigun [2021-2023],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45057/taigun-exterior-right-front-three-quarter-2.jpeg
+Volkswagen,T-Roc,2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/55747/t-roc-exterior-right-front-three-quarter-3.jpeg
+Volkswagen,Tiguan AllSpace,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45290/volkswagen-tiguan-allspace-right-front-three-quarter54.jpeg
+Volkswagen,Virtus [2022-2023],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/101055/virtus-exterior-right-front-three-quarter.jpeg
+Volkswagen,GTI,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21687/Volkswagen-GTI-Exterior-119312.jpg
+Volkswagen,7HM H13,2009,Discontinued,-,Petrol,,,
+Volkswagen,Touareg,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/volkswagen/touareg-2012-2014.jpg
+Volkswagen,1600,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Volkswagen,Caravelle,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Volkswagen,Beetle,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/20795/Volkswagen-Beetle-Exterior-95635.jpg
+Volkswagen,Phaeton,2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/volkswagen/phaeton-2009-2014.jpg
+Volkswagen,Jetta,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/17725/Volkswagen-Jetta-Right-Front-Three-Quarter-55817.jpg
+Volkswagen,Ameo,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21603/Volkswagen-Ameo-Exterior-119016.jpg
+Honda,Elevate,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/142515/elevate-exterior-right-front-three-quarter-29.png
+Honda,Amaze,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/184377/amaze-exterior-right-front-three-quarter-5.png
+Honda,City,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/134287/city-exterior-right-front-three-quarter-2.png
+Honda,City Hybrid eHEV,2023,Active,-,Hybrid,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/143275/city-hybrid-exterior-right-front-three-quarter-6.png
+Honda,Amaze 2nd Gen,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45951/amaze-2nd-gen-exterior-right-front-three-quarter-5.png
+Honda,Super One,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/212273/super-one-exterior-left-front-three-quarter.jpeg
+Honda,WR-V,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/134113/wr-v-exterior-left-front-three-quarter-5.png
+Honda,0 Alpha,2027,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/211889/0-alpha-exterior-left-front-three-quarter.jpeg
+Honda,CR-V Hybrid,2027,Upcoming,-,Hybrid,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/212355/cr-v-hybrid-exterior-right-front-three-quarter.png
+Honda,Elevate EV,2026,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/194035/elevate-based-ev-exterior-right-side-view.jpeg
+Honda,CR-V,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/34457/cr-v-exterior-right-front-three-quarter.jpeg
+Honda,Accord,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21613/Honda-Accord-Right-Front-Three-Quarter-82683.jpg
+Honda,Jazz,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/46891/jazz-exterior-right-front-three-quarter.jpeg
+Honda,BR-V,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/19810/Honda-BRV-Exterior-119023.jpg
+Honda,Amaze [2018-2021],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/33276/amaze-exterior-right-front-three-quarter-2.jpeg
+Honda,Brio,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/25121/Honda-Brio-Exterior-119148.jpg
+Honda,WR-V,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45732/wr-v-exterior-right-front-three-quarter.jpeg
+Honda,All New City [2020-2023],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/40535/all-new-city-exterior-right-front-three-quarter.jpeg
+Honda,Civic,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/27074/civic-exterior-right-front-three-quarter-148156.jpeg
+Honda,City Hybrid eHEV [2022-2023],2022,Discontinued,-,Hybrid,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/115031/city-hybrid-ehev-exterior-right-front-three-quarter-3.jpeg
+Honda,Mobilio,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/e2/86/13839/img/m/Honda-Mobilio-Right-Front-Three-Quarter-49019_ol.jpg
+Honda,Step WGN,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Honda,Concerto,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Honda,CR-X,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Land Rover,Defender,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/55215/defender-exterior-right-front-three-quarter-23.png
+Land Rover,Range Rover Velar,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/153319/range-rover-velar-exterior-right-front-three-quarter-5.png
+Land Rover,Range Rover,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/107719/range-rover-exterior-right-front-three-quarter-47.png
+Land Rover,Range Rover Sport,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/122451/range-rover-sport-exterior-right-front-three-quarter-44.png
+Land Rover,Range Rover Evoque,2020,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/37721/range-rover-evoque-exterior-right-front-three-quarter-2.png
+Land Rover,Discovery Sport,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/127321/discovery-sport-exterior-right-front-three-quarter-42.png
+Land Rover,Discovery,2017,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/24806/discovery-exterior-right-front-three-quarter-3.png
+Land Rover,Discovery Sport [2020-2022],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/44879/landrover-discovery-sport-right-front-three-quarter16.jpeg
+Land Rover,Range Rover Sport [2018-2022],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/35042/Land-Rover-Range-Rover-Sport-Exterior-130458.jpg
+Land Rover,Range Rover Evoque [2016-2020],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/26575/Land-Rover-Range-Rover-Evoque-Exterior-126890.jpg
+Land Rover,Range Rover [2018-2022],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/35133/Land-Rover-Range-Rover-Exterior-130854.jpg
+Land Rover,Range Rover Velar [2017-2023],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/28085/Land-Rover-Range-Rover-Velar-Exterior-114227.jpg
+Land Rover,Defender [2020-2021],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/41970/landrover-defender-right-front-three-quarter1.jpeg
+Land Rover,Freelander 2,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/land-rover/freelander-2.jpg
+Land Rover,Discovery [2014-2017],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/62/AC/18600/img/m/Land-Rover-Discovery-Right-Front-Three-Quarter-51383_ol.jpg
+Citroen,C3,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/103611/c3-exterior-right-front-three-quarter-34.png
+Citroen,Basalt X,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/209805/basalt-x-exterior-right-front-three-quarter-3.png
+Citroen,Aircross X,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/210879/aircross-x-exterior-right-front-three-quarter-2.png
+Citroen,eC3,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/132771/ec3-exterior-right-front-three-quarter-8.png
+Citroen,C5 Aircross,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/129909/c5-aircross-exterior-right-front-three-quarter-8.png
+Citroen,C3 Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/173529/c3-facelift-exterior-right-front-three-quarter.jpeg
+Citroen,Aircross X Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/172917/aircross-facelift-exterior-right-front-three-quarter-2.jpeg
+Citroen,eC3 Facelift,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/172911/citroen-ec3-facelift-exterior-right-front-three-quarter.jpeg
+Citroen,New C5 Aircross,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/194039/new-c5-aircross-exterior-left-front-three-quarter.png
+Citroen,Basalt EV,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/191113/basalt-ev-exterior-grille.jpeg
+Citroen,Aircross,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/188399/aircross-exterior-right-front-three-quarter.jpeg
+Citroen,Basalt,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/163873/basalt-exterior-right-front-three-quarter-3.jpeg
+Citroen,C5 Aircross [2021-2022],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/38601/c5-aircross-exterior-right-front-three-quarter-103.jpeg
+Citroen,sub-4-metre compact SUV,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/128928/sub-4-metre-compact-suv-exterior-left-rear-three-quarter.jpeg
+Citroen,C3 Aircross [2023-2024],2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/142375/c3-aircross-exterior-right-front-three-quarter-34.jpeg
+Audi,SQ8,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/218698/sq8-exterior-right-front-three-quarter.jpeg
+Audi,Q3,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/28379/q3-exterior-right-front-three-quarter-93482.png
+Audi,A4,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/51909/a4-exterior-right-front-three-quarter-80.png
+Audi,A6,2019,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/39472/a6-exterior-right-front-three-quarter-3.png
+Audi,Q7,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/192279/q7-exterior-right-front-three-quarter-4.png
+Audi,Q5,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/53591/q5-exterior-right-front-three-quarter-37.png
+Audi,S5 Sportback,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/51378/s5-sportback-exterior-right-front-three-quarter-6.png
+Audi,RS5,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/100073/rs5-exterior-right-front-three-quarter-5.png
+Audi,Q3 Sportback,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/141373/q3-sportback-exterior-right-front-three-quarter-15.png
+Audi,Q8,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/184519/q8-exterior-right-front-three-quarter-26.png
+Audi,A8 L,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/124141/a8-l-exterior-right-front-three-quarter-5.png
+Audi,RS Q8 Performance,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/196687/rs-q8-performance-exterior-right-front-three-quarter-8.png
+Audi,e-tron GT,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/47073/e-tron-gt-exterior-right-front-three-quarter-13.png
+Audi,Q8 e-tron,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/152943/q8-e-tron-exterior-right-front-three-quarter-15.png
+Audi,e-tron Sportback,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/39045/e-tron-sportback-exterior-right-front-three-quarter-4.png
+Audi,e-tron,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/39048/e-tron-exterior-right-front-three-quarter-3.jpeg
+Audi,Q8 Sportback e-tron,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/153789/q8-sportback-e-tron-exterior-right-front-three-quarter-6.png
+Audi,New Q5 third-gen,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/185855/new-q5-third-gen-exterior-right-front-three-quarter-16.jpeg
+Audi,Q6 e-tron,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/180355/q6-e-tron-exterior-right-front-three-quarter.jpeg
+Audi,RS Q8 [2020-2025],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/49294/rs-q8-exterior-right-front-three-quarter-6.jpeg
+Audi,Q8 [2020-2024],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/34470/q8-exterior-right-front-three-quarter-2.jpeg
+Audi,Q2,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/22801/q2-exterior-right-front-three-quarter-70077.jpeg
+Audi,Q7 [2022-2024],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/22803/audi-q7-facelift-right-front-three-quarter4.jpeg
+Audi,Q5 [2018-2020],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/26521/Audi-Q5-Exterior-165497.jpg
+Audi,Q3 [2017-2020],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/26916/Audi-Q3-Right-Front-Three-Quarter-165496.jpg
+Audi,New A3,2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/47030/new-a3-exterior-right-front-three-quarter-6.jpeg
+Audi,A5,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/31252/Audi-A5-Right-Front-Three-Quarter-165509.jpg
+Audi,A5 Cabriolet,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/31305/Audi-A5-Cabriolet-Exterior-108960.jpg
+Audi,RS5 [2018-2020],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/34028/Audi-RS5-Exterior-125266.jpg
+Audi,S4 [2012-2016],2012,Discontinued,-,Petrol,,,
+Audi,RS7 Sportback,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/48342/rs7-sportback-exterior-right-front-three-quarter-3.jpeg
+Audi,A8 L [2018-2022],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/37410/Audi-New-A8-L-Exterior-170120.jpg
+Audi,R8,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21724/Audi-R8-Right-Front-Three-Quarter-66713.jpg
+Audi,A6 [2015-2019],2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/19796/Audi-A6-Right-Front-Three-Quarter-165485.jpg
+Audi,A4 [2016-2020],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/22613/Audi-A4-Right-Front-Three-Quarter-165484.jpg
+Audi,S6,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/11934/Audi-S6-Exterior-98807.jpg
+Audi,A7 [2011-2015],2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Audi,TT,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/c5/3E/18867/img/m/Audi-TT-Right-Front-Three-Quarter-52278_ol.jpg
+Audi,S5 Sportback [2015-2017],2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/20498/Audi-S5-Sportback-Right-Front-Three-Quarter-59025.jpg
+Jeep,Compass,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/47051/compass-exterior-right-front-three-quarter-84.png
+Jeep,Meridian,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/47139/meridian-exterior-right-front-three-quarter-18.png
+Jeep,Wrangler,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/174975/wrangler-exterior-right-front-three-quarter-34.png
+Jeep,Grand Cherokee,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/132711/grand-cherokee-exterior-right-front-three-quarter-28.png
+Jeep,Avenger,2026,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/125241/avenger-exterior-right-front-three-quarter.jpeg
+Jeep,Grand Cherokee [2016-2020],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/9672/Jeep-Grand-Cherokee-Right-Front-Three-Quarter-79395.jpg
+Jeep,Willys,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Jeep,Kaiser,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Jeep,Wrangler [2021-2024],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/54437/wrangler-exterior-right-front-three-quarter-52.jpeg
+Jeep,Compass [2017-2021],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/25107/Jeep-Compass-Exterior-103917.jpg
+Jeep,Renegade,2025,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21592/Jeep-Renegade-Exterior-170081.jpg
+BYD,Atto 3,2022,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/130183/atto-3-exterior-right-front-three-quarter-105.png
+BYD,Sealion 7,2025,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/195195/sealion-7-exterior-right-front-three-quarter-28.png
+BYD,Seal,2024,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139619/seal-exterior-right-front-three-quarter-10.png
+BYD,eMax 7,2024,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/185983/emax-7-exterior-right-front-three-quarter-5.png
+BYD,Atto 2,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/207722/atto-2-exterior-right-front-three-quarter.jpeg
+BYD,e6,2022,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/129901/e6-exterior-right-front-three-quarter-48.jpeg
+BYD,Atto 3 facelift,2024,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/173095/atto-3-facelift-exterior-left-front-three-quarter.jpeg
+Vinfast,VF 6,2025,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/171545/vf-6-exterior-right-front-three-quarter-32.png
+Vinfast,VF 7,2025,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/171787/vf-7-exterior-right-front-three-quarter-13.png
+Vinfast,VF e34,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/181121/vf-e34-exterior-rear-view.jpeg
+Vinfast,VF 8,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/171549/vf8-exterior-right-front-three-quarter.jpeg
+Vinfast,Limo Green,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/213681/limo-green-exterior-left-front-three-quarter.jpeg
+Vinfast,VF 3,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/171625/vf3-exterior-left-front-three-quarter.jpeg
+Vinfast,VF 9,2026,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/171647/vf9-exterior-right-front-three-quarter-2.jpeg
+Porsche,911,2019,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/39232/911-exterior-right-front-three-quarter-154385.png
+Porsche,Cayenne,2018,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/32951/cayenne-exterior-right-front-three-quarter-3.png
+Porsche,Macan,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/99421/macan-exterior-right-front-three-quarter-10.png
+Porsche,Taycan,2021,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45063/taycan-exterior-right-front-three-quarter-6.png
+Porsche,Panamera,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/165641/panamera-exterior-right-front-three-quarter-2.png
+Porsche,Macan Turbo EV,2024,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/169989/macan-turbo-ev-exterior-right-front-three-quarter-2.png
+Porsche,Cayenne Coupe,2019,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/43728/cayenne-coupe-exterior-right-front-three-quarter-3.png
+Porsche,Cayenne EV,2025,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/212775/cayenne-ev-exterior-right-front-three-quarter-2.png
+Porsche,718,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/24421/718-exterior-right-front-three-quarter-90912.jpeg
+Porsche,Panamera [2017-2023],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/28304/panamera-exterior-right-front-three-quarter.jpeg
+Porsche,Taycan Cross Turismo,2021,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/108081/taycan-cross-turismo-exterior-right-front-three-quarter-4.jpeg
+Porsche,Macan [2019-2021],2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/18715/Porsche-Macan-Right-Front-Three-Quarter-166772.jpg
+Porsche,911 [2006-2019],2006,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/10803/Porsche-911-Right-Front-Three-Quarter-154333.jpg
+Porsche,Cayenne [2014-2018],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/D7/48/18716/img/m/Porsche-Cayenne-Right-Front-Three-Quarter-51810_ol.jpg
+Porsche,Cayman [2014-2017],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/porsche/cayman.jpg
+Porsche,Carrera GT,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Porsche,Boxster [2014-2017],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/porsche/boxster.jpg
+Volvo,EX30,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/173187/ex30-exterior-right-front-three-quarter-6.png
+Volvo,XC90,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/198257/xc90-exterior-right-front-three-quarter-4.png
+Volvo,XC60,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/206978/xc60-exterior-right-front-three-quarter-8.png
+Volvo,EX40,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/189773/ex40-exterior-right-front-three-quarter-2.png
+Volvo,EC40,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/150611/c40-recharge-exterior-right-front-three-quarter-3.jpeg
+Volvo,EX90,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/172845/ex90-exterior-left-front-three-quarter.jpeg
+Volvo,XC90 [2022-2025],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131135/xc90-exterior-right-front-three-quarter-106.jpeg
+Volvo,XC60 [2022-2025],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131131/xc60-exterior-right-front-three-quarter-3.jpeg
+Volvo,S90,2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131145/s90-exterior-right-front-three-quarter-4.jpeg
+Volvo,V90 Cross Country,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/26873/Volvo-V90-Cross-Country-Right-Front-Three-Quarter-102476.jpg
+Volvo,XC40,2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/131141/xc40-exterior-right-front-three-quarter-108.jpeg
+Volvo,XC40 Recharge [2022-2024],2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/51766/xc40-recharge-exterior-right-front-three-quarter-2.jpeg
+Volvo,S40,2004,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Volvo,S60,2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/27032/s60-exterior-right-front-three-quarter-3.jpeg
+Volvo,V40 Cross Country [2016-2019],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/26228/Volvo-V40-Cross-Country-Right-Front-Three-Quarter-102818.jpg
+Volvo,S80 [2015-2017],2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/volvo/s80.jpg
+Volvo,V70 [Import],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Volvo,V40 [2016-2019],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/22723/Volvo-V40-Right-Front-Three-Quarter-85786.jpg
+Lexus,New ES,2026,Upcoming,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/219038/new-es-exterior-left-front-three-quarter.jpeg
+Lexus,ES,2018,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/35351/es-exterior-right-front-three-quarter-3.png
+Lexus,LM,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/155855/lm-exterior-right-front-three-quarter-5.png
+Lexus,LX,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/137979/lx-exterior-right-front-three-quarter-40.png
+Lexus,RX,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139465/rx-exterior-right-front-three-quarter-15.png
+Lexus,NX,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/113023/nx-exterior-right-front-three-quarter-4.png
+Lexus,LS,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/28191/ls-exterior-right-front-three-quarter-3.jpeg
+Lexus,UX 300e,2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/128227/ux-300e-exterior-right-front-three-quarter-2.jpeg
+Lexus,LC 500h,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/44615/lexus-lc-500h-right-front-three-quarter10.jpeg
+Lexus,NX [2017-2022],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/31918/Lexus-NX-Exterior-115308.jpg
+Lexus,ES [2017-2018],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/28343/Lexus-ES-Right-Front-Three-Quarter-93381.jpg
+Lexus,RX [2017-2023],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/28283/Lexus-RX-Right-Front-Three-Quarter-94305.jpg
+Lexus,LX [2017-2022],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/28188/lx-exterior-right-front-three-quarter.jpeg
+Lexus,GS 350,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Lexus,SC 430,2001,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ferrari,849 Testarossa,2026,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/219214/849-testarossa-exterior-right-front-three-quarter-2.png
+Ferrari,Purosangue SUV,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/47137/purosangue-suv-exterior-right-front-three-quarter-15.png
+Ferrari,296 GTB,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/154779/296-gtb-exterior-right-front-three-quarter-24.png
+Ferrari,Roma,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/97963/roma-exterior-right-front-three-quarter-3.png
+Ferrari,F8 Tributo,2020,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/49376/f8-tributo-exterior-right-front-three-quarter-13.png
+Ferrari,Portofino,2018,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/36258/portofino-exterior-right-front-three-quarter-2.png
+Ferrari,296 GTS,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/155685/296-gts-exterior-right-front-three-quarter-5.png
+Ferrari,F12berlinetta,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21105/Ferrari-F12berlinetta-Right-Front-Three-Quarter-62007.jpg
+Ferrari,812,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/33641/Ferrari-812-Exterior-123393.jpg
+Ferrari,GTC4 Lusso,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/24539/Ferrari-GTC4-Lusso-Exterior-104086.jpg
+Ferrari,599 GTB Fiorano,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ferrari,488,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21101/Ferrari-488-Right-Front-Three-Quarter-61997.jpg
+Ferrari,458,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21090/Ferrari-458-Right-Front-Three-Quarter-61977.jpg
+Ferrari,360,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ferrari,FF,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/10775/Ferrari-FF-Right-Front-Three-Quarter-61966.jpg
+Ferrari,California,2010,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/10766/Ferrari-California-Right-Front-Three-Quarter-61993.jpg
+Ferrari,575 Superamerica,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ferrari,612,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ferrari,F430,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mini,Cooper,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/180421/cooper-exterior-right-front-three-quarter-16.png
+Mini,Cooper S Convertible,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/212765/cooper-s-convertible-exterior-right-front-three-quarter-7.png
+Mini,Countryman,2018,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/34290/countryman-exterior-right-front-three-quarter-49.png
+Mini,Cooper SE,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/108863/cooper-se-exterior-right-front-three-quarter-40.png
+Mini,Countryman Electric,2024,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/181081/countryman-electric-exterior-right-front-three-quarter-13.png
+Mini,Countryman JCW,2025,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/210382/countryman-jcw-exterior-right-front-three-quarter.webp
+Mini,Cooper [2018-2024],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/34560/cooper-2018-2024-exterior-right-front-three-quarter-3.jpeg
+Mini,Clubman,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/50379/clubman-exterior-right-front-three-quarter.jpeg
+Mini,Cooper JCW,2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/39603/cooper-jcw-exterior-right-front-three-quarter-2.jpeg
+Mini,Cooper Convertible,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/34561/cooper-convertible-exterior-right-front-three-quarter-2.jpeg
+Mini,Countryman [2015-2018],2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/BD/EC/19662/img/m/Mini-Countryman-Right-Front-Three-Quarter-55249_ol.jpg
+Mini,Cooper S [2014-2015],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Lamborghini,Revuelto,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/164543/revuelto-exterior-right-front-three-quarter-3.png
+Lamborghini,Urus SE,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/182149/urus-se-exterior-right-front-three-quarter-4.png
+Lamborghini,Temerario,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/200453/temerario-exterior-right-front-three-quarter-8.png
+Lamborghini,Huracan Tecnica,2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/130671/huracan-tecnica-exterior-right-front-three-quarter-4.jpeg
+Lamborghini,Huracan Evo Spyder,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/95475/huracan-evo-spyder-exterior-right-front-three-quarter-2.jpeg
+Lamborghini,Huracan STO,2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/97705/huracan-sto-exterior-right-front-three-quarter-4.jpeg
+Lamborghini,Huracan Sterrato,2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/163239/huracan-sterrato-exterior-right-front-three-quarter.jpeg
+Lamborghini,Gallardo [2005 - 2014],2005,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Lamborghini,Murcielago,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Lamborghini,Aventador Ultimae,2022,Discontinued,-,Petrol,,,
+Lamborghini,Urus S,2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/146547/urus-s-exterior-right-front-three-quarter-6.jpeg
+Lamborghini,Urus Performante,2022,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/53859/urus-performante-exterior-right-front-three-quarter-4.jpeg
+Force Motors,Gurkha,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/124851/gurkha-exterior-right-front-three-quarter-27.png
+Force Motors,Trax Cruiser,2020,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/135589/trax-cruiser-exterior-right-front-three-quarter-3.png
+Force Motors,Force One,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/74/70/9794/img/m/Force-Motors-Force-One-Right-Front-Three-Quarter-52849_ol.jpg
+Force Motors,Gurkha [2021-2024],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/49096/gurkha-new-exterior-right-front-three-quarter-3.jpeg
+Jaguar,F-Pace,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/56265/f-pace-exterior-right-front-three-quarter-5.png
+Jaguar,I-Pace,2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/39480/i-pace-exterior-right-front-three-quarter-2.jpeg
+Jaguar,E-Pace,2025,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/31125/Jaguar-EPace-Exterior-170060.jpg
+Jaguar,XF,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/19826/xf-exterior-right-front-three-quarter-2.jpeg
+Jaguar,F-Type,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/46994/f-type-exterior-right-front-three-quarter-3.jpeg
+Jaguar,XE,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/43356/jaguar-xe-front-right-three-quarter-7.jpeg
+Jaguar,XJ L,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21686/Jaguar-XJ-L-Right-Front-Three-Quarter-64990.jpg
+Jaguar,F-Pace [2016-2021],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/20222/Jaguar-FPace-Right-Front-Three-Quarter-81369.jpg
+Jaguar,XK,2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/19803/Jaguar-XK-Right-Front-Three-Quarter-55884.jpg
+Rolls-Royce,Phantom,2018,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/30181/phantom-exterior-right-front-three-quarter-2.png
+Rolls-Royce,Cullinan,2018,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/34427/cullinan-exterior-right-front-three-quarter.png
+Rolls-Royce,Spectre,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/168715/spectre-exterior-right-front-three-quarter-4.png
+Rolls-Royce,Phantom Coupe,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/rolls-royce/phantom-coupe.jpg
+Rolls-Royce,Drophead Coupe,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/51/ca/10772/img/m/Rolls-Royce-Drophead-Coupe-Right-Front-Three-Quarter-51839_ol.jpg
+Rolls-Royce,Ghost Series II,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/03/E0/14521/img/m/Rolls-Royce-Ghost-Series-II-Right-Front-Three-Quarter-51841_ol.jpg
+Rolls-Royce,Wraith,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/21135/wraith-exterior-right-front-three-quarter-62430.jpeg
+Rolls-Royce,Dawn,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/23875/dawn-exterior-right-front-three-quarter-75145.jpeg
+Rolls-Royce,Silver Spur,1988,Discontinued,-,Petrol,,,
+Isuzu,Hi-Lander,2026,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/218682/hi-lander-exterior-right-front-three-quarter-2.png
+Isuzu,V-Cross,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/175515/v-cross-exterior-right-front-three-quarter-3.png
+Isuzu,MU-X,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/48084/mu-x-exterior-right-front-three-quarter-5.png
+Isuzu,MU7 [2014-2017],2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/19839/Isuzu-MU7-Right-Front-Three-Quarter-56158.jpg
+Isuzu,Trooper,1991,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Isuzu,MU-X [2018-2020],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/36646/Isuzu-MUX-Exterior-138329.jpg
+Isuzu,D-Max [2021-2024],2021,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/48082/d-max-exterior-right-side-view-2.jpeg
+Maserati,Ghibli,2018,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/33688/ghibli-exterior-right-front-three-quarter-3.png
+Maserati,MC20,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/108971/mc20-exterior-right-front-three-quarter-3.png
+Maserati,Levante,2018,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/26924/levante-exterior-right-front-three-quarter-4.png
+Maserati,MCPura,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/210947/mcpura-exterior-right-front-three-quarter-6.png
+Maserati,Grecale,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/183271/grecale-exterior-right-front-three-quarter-2.png
+Maserati,GranTurismo,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/186189/granturismo-exterior-right-front-three-quarter-2.png
+Maserati,Quattroporte,2015,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/19429/quattroporte-exterior-right-front-three-quarter-149976.png
+Maserati,Quattroporte [2011-2015],2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/n/cw/ec/19429/quattroporte-exterior-right-front-three-quarter-149976.png
+Maserati,GranTurismo [2018-2021],2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/19431/Maserati-GranTurismo-Exterior-138060.jpg
+Maserati,GranCabrio,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/FD/1C/19433/img/m/Maserati-GranCabrio-Right-Front-Three-Quarter-54327_ol.jpg
+Maserati,Ghibli [2015-2018],2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/A4/84/19425/img/m/Maserati-Ghibli-Right-Front-Three-Quarter-54295_ol.jpg
+Maserati,Levante [2017-2024],2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/n/cw/ec/26924/levante-exterior-right-front-three-quarter-4.png
+Tesla,Model Y,2025,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/201411/model-y-exterior-right-front-three-quarter-5.png
+Tesla,Model 3,2027,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/37138/model-3-exterior-right-front-three-quarter-2.png
+Tesla,Model S,2027,Upcoming,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/93821/exterior-right-front-three-quarter.jpeg
+Aston Martin,Vanquish,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/199469/vanquish-exterior-right-front-three-quarter-7.png
+Aston Martin,DB11,2016,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/25539/db11-exterior-right-front-three-quarter-82873.png
+Aston Martin,DBX,2022,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/134427/dbx-exterior-right-front-three-quarter-8.png
+Aston Martin,Vantage,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/186003/vantage-exterior-right-front-three-quarter-6.png
+Aston Martin,DB12,2023,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/158905/db12-exterior-right-front-three-quarter-2.png
+Aston Martin,Vantage [2024-2024],2024,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/175497/vantage-exterior-right-front-three-quarter.jpeg
+Aston Martin,DB9,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/aston-martin/db9.jpg
+Aston Martin,DBS [2007-2012],2007,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Aston Martin,Rapide,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/9748/Aston-Martin-Rapide-Right-Front-Three-Quarter-83210.jpg
+Aston Martin,Vanquish [2012-2019],2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/21/CB/18902/img/m/Aston-Martin-Vanquish-Right-Front-Three-Quarter-52575_ol.jpg
+Aston Martin,Virage,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Aston Martin,DBX [2020-2022],2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/n/cw/ec/134427/dbx-exterior-right-front-three-quarter-8.png
+McLaren,750S,2024,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/167883/750s-exterior-right-front-three-quarter-4.png
+McLaren,720S,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/95143/720s-exterior-right-front-three-quarter-11.png
+McLaren,GT,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/95701/gt-exterior-right-front-three-quarter-4.png
+McLaren,570S,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+McLaren,Artura,2023,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Bentley,Bentayga,2021,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/55335/bentayga-exterior-right-front-three-quarter-4.png
+Bentley,Arnage,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Bentley,Continental GT,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/40239/Bentley-Continental-GT-Exterior-158571.jpg
+Bentley,Continental Flying Spur [2013-2020],2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/A4/ab/9775/img/m/Bentley-Continental-Flying-Spur-Right-Front-Three-Quarter-52651_ol.jpg
+Bentley,Continental GTC,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/9777/Bentley-Continental-GTC-Right-Front-Three-Quarter-157717.jpg
+Bentley,Azure,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Bentley,Mulsanne,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/9776/Bentley-Mulsanne-Exterior-158599.jpg
+Bentley,Continental Super Sports,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Bentley,Bentayga [2016-2020],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/23020/Bentley-Bentayga-Right-Front-Three-Quarter-71410.jpg
+Lotus,Emeya,2025,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/196547/emeya-exterior-right-front-three-quarter-7.png
+Lotus,Eletre,2023,Active,-,Electric,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/164919/eletre-exterior-right-front-three-quarter-4.png
+Lotus,Emira,2025,Active,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/196543/emira-exterior-right-front-three-quarter-10.png
+Ford,Figo,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/n/cw/ec/35463/figo-exterior-right-front-three-quarter-151689.jpeg
+Ford,Endeavour,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/n/cw/ec/37640/endeavour-exterior-right-front-three-quarter-149473.jpeg
+Ford,Classic [2012-2015],,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/ford/classic.jpg
+Ford,Fusion [2006-2010],,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/discontinued/ford/fusion-2006-2010.jpg
+Ford,Ikon,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/discontinued/ford/ikon-2009-2011.jpg
+Ford,Endeavour,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/37640/endeavour-exterior-right-front-three-quarter-149473.jpeg
+Ford,Classic [2012-2015],2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/ford/classic.jpg
+Ford,Figo,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/35463/figo-exterior-right-front-three-quarter-151689.jpeg
+Ford,Fusion [2006-2010],2006,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/ford/fusion-2006-2010.jpg
+Ford,Ikon,2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/ford/ikon-2009-2011.jpg
+Ford,Mustang,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/23766/Ford-Mustang-Exterior-126883.jpg
+Ford,EcoSport,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/40369/Ford-EcoSport-Right-Front-Three-Quarter-159249.jpg
+Ford,Freestyle,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/32698/freestyle-exterior-right-front-three-quarter-2.jpeg
+Ford,Aspire,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/35583/aspire-exterior-right-front-three-quarter-2.jpeg
+Ford,Raptor,2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ford,Jeep,1942,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ford,Capri,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ford,Escort,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ford,Mondeo,2017,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/ford/mondeo.jpg
+Ford,Model T,2002,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ford,Zephyr,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ford,Fiesta,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/ford/fiesta.jpg
+Chevrolet,Spark,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/chevrolet/spark.jpg
+Chevrolet,Beat,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/ec/21745/Chevrolet-Beat-Right-Front-Three-Quarter-81148.jpg
+Chevrolet,Captiva [2012-2016],,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/chevrolet/captiva.jpg
+Chevrolet,Cruze,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/ec/22891/Chevrolet-Cruze-Right-Front-Three-Quarter-73032.jpg
+Chevrolet,Spark,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/chevrolet/spark.jpg
+Chevrolet,Fleetline,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Chevrolet,Beat,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21745/Chevrolet-Beat-Right-Front-Three-Quarter-81148.jpg
+Chevrolet,Captiva [2012-2016],2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/chevrolet/captiva.jpg
+Chevrolet,Cruze,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/22891/Chevrolet-Cruze-Right-Front-Three-Quarter-73032.jpg
+Chevrolet,Forester [2005-2007],2005,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/chevrolet/forester-2005-2007.jpg
+Chevrolet,Optra Magnum [2007-2012],2007,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/chevrolet/optra-magnum-2007-2012.jpg
+Chevrolet,Impala,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Chevrolet,Sail,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/89/0F/10442/img/m/Chevrolet-Sail-Right-Front-Three-Quarter-49012_ol.jpg
+Chevrolet,Sail Hatchback,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/76/29/18223/img/m/Chevrolet-Sail-Hatchback-Right-Front-Three-Quarter-49910_ol.jpg
+Chevrolet,Trailblazer,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/20509/Chevrolet-Trailblazer-Right-Front-Three-Quarter-59055.jpg
+Chevrolet,Tourer,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Chevrolet,Camaro,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Chevrolet,Aveo [2009-2012],2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/chevrolet/aveo-2009-2012.jpg
+Chevrolet,Tavera,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/89/7A/9793/img/m/Chevrolet-Tavera-Right-Front-Three-Quarter-49908_ol.jpg
+Chevrolet,Aveo U-VA [2006-2012],2006,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/chevrolet/aveo-u-va-2006-2012.jpg
+Chevrolet,Silverado,1999,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Chevrolet,Corvette,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Chevrolet,Enjoy,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/65/A5/10311/img/m/Chevrolet-Enjoy-Right-Front-Three-Quarter-49907_ol.jpg
+Fiat,Linea,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/ec/12624/Fiat-Linea-Exterior-128099.jpg
+Fiat,Urban Cross,,Active,-,Petrol,,,
+Fiat,Punto Pure [2016-2017],,Active,-,Petrol,,,
+Fiat,Abarth Punto,,Active,-,Petrol,,,
+Fiat,Abarth 595,,Active,-,Petrol,,,
+Fiat,Linea,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/12624/Fiat-Linea-Exterior-128099.jpg
+Fiat,Urban Cross,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/26386/Fiat-Urban-Cross-Right-Front-Three-Quarter-86802.jpg
+Fiat,Punto Pure [2016-2017],2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/21942/Fiat-Punto-Pure-Right-Front-Three-Quarter-66366.jpg
+Fiat,Abarth Punto,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/19739/Fiat-Abarth-Punto-Exterior-Door-Handles-108927.jpg
+Fiat,Abarth 595,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/fiat/abarth-595.jpg
+Fiat,Uno [1996-2000],1996,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/discontinued/fiat/uno.jpg
+Fiat,Siena,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/fiat/siena.jpg
+Fiat,Avventura,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/fiat/avventura.jpg
+Fiat,Palio Stile [2007-2011],2007,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/discontinued/fiat/palio-stile-2007-2011.jpg
+Fiat,1100,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Fiat,Millicento,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Fiat,Petra D,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Fiat,Adventure,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Datsun,GO,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/ec/36449/Datsun-Go-Exterior-138944.jpg
+Datsun,GO+,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/ec/36449/Datsun-Go-Exterior-138944.jpg
+Datsun,redi-GO,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/ec/12795/Datsun-RediGO-Right-Front-Three-Quarter-91418.jpg
+Datsun,GO,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/36449/Datsun-Go-Exterior-138944.jpg
+Datsun,GO+,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/36451/go-plus-exterior-right-front-three-quarter.jpeg
+Datsun,redi-GO,2020,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/45245/datsun-redi-go-right-front-three-quarter19.jpeg
+Hindustan Motors,Ambassador,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Hindustan Motors,Contessa,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Hindustan Motors,Ambassador,1983,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Hindustan Motors,Contessa,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Premier,118 NE [1990-2000],,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Premier,Padmini,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Premier,138 D,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Premier,Rio [2012-2015],,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/primirer/rio.jpg
+Premier,118 NE [1990-2000],1990,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Premier,Padmini,2010,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Premier,138 D,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Premier,Rio [2012-2015],2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/cars/primirer/rio.jpg
+Daewoo,Matiz,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Daewoo,Nexia,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Daewoo,Cielo [1994-1999],1994,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Daewoo,Matiz,1990,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Daewoo,Nexia,1990,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Opel,Astra [2000-2003],,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Opel,Corsa,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Opel,Vectra,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Opel,Astra [2000-2003],2000,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Opel,Corsa,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Opel,Vectra,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Ssangyong,Rexton,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/ec/9437/Ssangyong-Rexton-Right-Front-Three-Quarter-92143.jpg
+Ssangyong,Rexton,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/9437/Ssangyong-Rexton-Right-Front-Three-Quarter-92143.jpg
+Dodge,Nitro,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Dodge,Challenger,2025,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Cadillac,CTS,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Cadillac,Limousine,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Cadillac,Escalade,2014,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mitsubishi,Lancer Evolution [2011-2013],,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/ec/D6/9c/10834/img/orig/Mitsubishi-Lancer-Evolution-Left-Front-Three-Quarter-18562.jpg
+Mitsubishi,Pajero Sport,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/ec/b8/0e/9739/img/m/Mitsubishi-Pajero-Sport-Right-Front-Three-Quarter-52939_ol.jpg
+Mitsubishi,Cedia [2009-2013],,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/ec/8C/12/10835/img/orig/Mitsubishi-Cedia-Right-Front-Three-Quater-18564.jpg
+Mitsubishi,Montero,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/ec/23799/Mitsubishi-Montero-Right-Front-Three-Quarter-74529.jpg
+Mitsubishi,Outlander,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/ec/34253/Mitsubishi-Outlander-Exterior-130062.jpg
+Mitsubishi,Lancer Evolution [2011-2013],2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/D6/9c/10834/img/orig/Mitsubishi-Lancer-Evolution-Left-Front-Three-Quarter-18562.jpg
+Mitsubishi,Pajero Sport,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/b8/0e/9739/img/m/Mitsubishi-Pajero-Sport-Right-Front-Three-Quarter-52939_ol.jpg
+Mitsubishi,Cedia [2009-2013],2009,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/8C/12/10835/img/orig/Mitsubishi-Cedia-Right-Front-Three-Quater-18564.jpg
+Mitsubishi,Montero,2016,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/23799/Mitsubishi-Montero-Right-Front-Three-Quarter-74529.jpg
+Mitsubishi,Outlander,2018,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/34253/Mitsubishi-Outlander-Exterior-130062.jpg
+Mitsubishi,Challenger,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mitsubishi,GTO,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mitsubishi,Galant,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mitsubishi,FTO,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Bugatti,Veyron,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/ec/8D/e4/9779/img/m/Bugatti-Veyron-Right-Front-Three-Quarter-52786_ol.jpg
+Bugatti,Veyron,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/ec/8D/e4/9779/img/m/Bugatti-Veyron-Right-Front-Three-Quarter-52786_ol.jpg
+DC,Avanti,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/ec/19505/DC-Avanti-Right-Front-Three-Quarter-55890.jpg
+DC,Avanti,2015,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/cw/ec/19505/DC-Avanti-Right-Front-Three-Quarter-55890.jpg
+Caterham,7,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Caterham,7,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Hummer,H3,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Hummer,H2,2002,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Hummer,H3,2005,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Hummer,EV,2025,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Chrysler,Avenger,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Chrysler,300,2005,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Chrysler,Grand Voyager,2014,Discontinued,-,Petrol,,,
+Peugeot,309,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Peugeot,309,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Smart,Fortwo,2012,Discontinued,-,Electric,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Maybach,62,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Maybach,57,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Maybach,62,2019,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Subaru,J10,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Subaru,Impreza,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mazda,Miata,,Active,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mazda,RX-8,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mazda,Sentia,2011,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Mazda,Miata,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+GMC,Sierra 2500,2016,Discontinued,-,Petrol,,,
+GMC,Denali,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Pontiac,Bonneville,2025,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/664x374/n/cw/ec/139065/alto-exterior-right-front-three-quarter-40.jpeg
+SAAB,9-3,,Discontinued,-,Petrol,,,
+Willys,CJ3B,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Willys,MB,,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Willys,CJ-5,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Holden,Commodore,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Austin,Cambridge,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Morris,Minor,2012,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/227x128/n/cw/ec/174611/windsor-ev-exterior-right-front-three-quarter-84.png
+Humber,Hawk,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg
+Studebaker,Champion,2013,Discontinued,-,Petrol,,,https://imgd.aeplcdn.com/642x336/cw/cars/no-cars.jpg

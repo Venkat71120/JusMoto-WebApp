@@ -61,7 +61,12 @@
       "Bash(grep:*)",
       "WebSearch",
       "WebFetch(domain:serpapi.com)",
-      "WebFetch(domain:www.carwale.com)"
+      "WebFetch(domain:www.carwale.com)",
+      "WebFetch(domain:www.carmodelslist.com)",
+      "WebFetch(domain:www.cardekho.com)",
+      "WebFetch(domain:www.cartrade.com)",
+      "WebFetch(domain:www.autoevolution.com)",
+      "WebFetch(domain:en.wikipedia.org)"
     ]
   }
 }

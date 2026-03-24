@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate, isFranchise, isAdmin } = require('../middleware/auth.middleware');
-const { Order, OrderItem, User, Service, Admin, Ticket, Review } = require('../models');
+const { Order, OrderItem, User, Service, Admin, Ticket, Review, TicketMessage } = require('../models');
 const { Op } = require('sequelize');
 const { sequelize } = require('../config/database');
 const { paginate, paginationResponse } = require('../utils/helpers');
+const { uploadSingle } = require('../middleware/upload.middleware');
+const { uploadToS3, generateS3Key } = require('../config/s3');
 
 // Franchise dashboard stats
 router.get('/dashboard', authenticate, isFranchise, async (req, res) => {
@@ -370,7 +372,183 @@ router.put('/profile', authenticate, isFranchise, async (req, res) => {
   }
 });
 
-// Franchise tickets
+// ==================== Franchise Service Requests ====================
+
+// GET /franchise/service-requests/counts — status counts for dashboard
+router.get('/service-requests/counts', authenticate, isFranchise, async (req, res) => {
+  try {
+    const franchiseId = req.admin.id;
+
+    const statusCounts = await Ticket.findAll({
+      where: { admin_id: franchiseId },
+      attributes: [
+        'status',
+        [sequelize.fn('COUNT', sequelize.col('id')), 'count']
+      ],
+      group: ['status']
+    });
+
+    const counts = { open: 0, in_progress: 0, closed: 0, total: 0 };
+    statusCounts.forEach(item => {
+      const key = item.status;
+      if (counts[key] !== undefined) counts[key] = parseInt(item.dataValues.count);
+      counts.total += parseInt(item.dataValues.count);
+    });
+
+    res.json({ success: true, data: counts });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// GET /franchise/service-requests — list with filters
+router.get('/service-requests', authenticate, isFranchise, async (req, res) => {
+  try {
+    const { status, priority, search, page = 1, limit = 15 } = req.query;
+    const pagination = paginate(page, limit);
+
+    const where = { admin_id: req.admin.id };
+    if (status) where.status = status;
+    if (priority) where.priority = priority;
+    if (search) {
+      where[Op.or] = [
+        { title: { [Op.like]: `%${search}%` } },
+        { subject: { [Op.like]: `%${search}%` } }
+      ];
+    }
+
+    const { rows, count } = await Ticket.findAndCountAll({
+      where,
+      include: [
+        { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'phone', 'image'] },
+        { association: 'order', attributes: ['id', 'invoice_number', 'total', 'status', 'payment_status', 'created_at'] }
+      ],
+      ...pagination,
+      order: [['created_at', 'DESC']]
+    });
+
+    res.json({
+      success: true,
+      ...paginationResponse(rows, count, pagination.page, pagination.limit)
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// GET /franchise/service-requests/:id — full detail with messages
+router.get('/service-requests/:id', authenticate, isFranchise, async (req, res) => {
+  try {
+    const ticket = await Ticket.findOne({
+      where: { id: req.params.id, admin_id: req.admin.id },
+      include: [
+        { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'email', 'phone', 'image'] },
+        { association: 'department' },
+        { association: 'order', attributes: ['id', 'invoice_number', 'total', 'status', 'payment_status', 'date', 'schedule', 'created_at'] },
+        {
+          model: TicketMessage, as: 'ticketMessages',
+          include: [
+            { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'image'] },
+            { model: Admin, as: 'admin', attributes: ['id', 'name', 'image'] }
+          ]
+        }
+      ],
+      order: [[{ model: TicketMessage, as: 'ticketMessages' }, 'created_at', 'ASC']]
+    });
+
+    if (!ticket) return res.status(404).json({ success: false, error: 'Service request not found' });
+
+    res.json({ success: true, data: ticket });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// PUT /franchise/service-requests/:id/status — update status
+router.put('/service-requests/:id/status', authenticate, isFranchise, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const validStatuses = ['pending', 'open', 'in_progress', 'closed', 'cancelled'];
+    if (!status || !validStatuses.includes(status)) {
+      return res.status(400).json({ success: false, error: `Status must be one of: ${validStatuses.join(', ')}` });
+    }
+
+    const ticket = await Ticket.findOne({
+      where: { id: req.params.id, admin_id: req.admin.id }
+    });
+    if (!ticket) return res.status(404).json({ success: false, error: 'Service request not found' });
+
+    const updateData = { status };
+    if (status === 'closed') updateData.closed_at = new Date();
+
+    await ticket.update(updateData);
+
+    // Emit socket event
+    const io = req.app.get('io');
+    if (io) {
+      io.to(`ticket-${req.params.id}`).emit('ticket-status-changed', {
+        ticketId: parseInt(req.params.id),
+        status,
+        updatedBy: 'franchise'
+      });
+    }
+
+    res.json({ success: true, data: ticket, message: 'Service request status updated' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// POST /franchise/service-requests/:id/reply — add reply with optional attachment
+router.post('/service-requests/:id/reply', authenticate, isFranchise, ...uploadSingle('attachment'), async (req, res) => {
+  try {
+    const ticket = await Ticket.findOne({
+      where: { id: req.params.id, admin_id: req.admin.id }
+    });
+    if (!ticket) return res.status(404).json({ success: false, error: 'Service request not found' });
+
+    const { message } = req.body;
+    if (!message && !req.file) {
+      return res.status(400).json({ success: false, error: 'Message or attachment is required' });
+    }
+
+    let attachment = null;
+    if (req.file) {
+      const s3Key = generateS3Key('tickets', req.file.originalname);
+      attachment = await uploadToS3(req.file.buffer, s3Key, req.file.mimetype);
+    }
+
+    const ticketMsg = await TicketMessage.create({
+      ticket_id: ticket.id,
+      admin_id: req.admin.id,
+      message: message || '',
+      attachment
+    });
+
+    // Auto-set status to in_progress if currently open
+    if (ticket.status === 'open') {
+      await ticket.update({ status: 'in_progress' });
+    }
+
+    // Emit socket event
+    const io = req.app.get('io');
+    if (io) {
+      const fullMsg = await TicketMessage.findByPk(ticketMsg.id, {
+        include: [
+          { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'image'] },
+          { model: Admin, as: 'admin', attributes: ['id', 'name', 'image'] }
+        ]
+      });
+      io.to(`ticket-${ticket.id}`).emit('new-ticket-message', fullMsg);
+    }
+
+    res.status(201).json({ success: true, data: ticketMsg, message: 'Reply sent' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Legacy alias — keep old /tickets endpoint working
 router.get('/tickets', authenticate, isFranchise, async (req, res) => {
   try {
     const { status, page = 1, limit = 15 } = req.query;
@@ -381,6 +559,10 @@ router.get('/tickets', authenticate, isFranchise, async (req, res) => {
 
     const { rows, count } = await Ticket.findAndCountAll({
       where,
+      include: [
+        { model: User, as: 'user', attributes: ['id', 'first_name', 'last_name', 'email'] },
+        { association: 'order', attributes: ['id', 'invoice_number', 'total', 'status'] }
+      ],
       ...pagination,
       order: [['created_at', 'DESC']]
     });

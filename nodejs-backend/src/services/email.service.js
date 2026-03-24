@@ -3,6 +3,9 @@ const mailConfig = require('../config/mail');
 
 class EmailService {
   constructor() {
+    this.fromName = mailConfig.from.name;
+    this.fromAddress = mailConfig.from.address;
+    this._dbLoaded = false;
     this.transporter = nodemailer.createTransport({
       host: mailConfig.host,
       port: mailConfig.port,
@@ -15,12 +18,46 @@ class EmailService {
   }
 
   /**
+   * Reload transporter with SMTP settings from database (static_options table)
+   * Falls back to .env config for any missing values
+   */
+  async reloadTransporter() {
+    try {
+      const { StaticOption } = require('../models');
+      const keys = ['smtp_host', 'smtp_port', 'smtp_username', 'smtp_password', 'smtp_from_email', 'smtp_from_name', 'smtp_secure'];
+      const rows = await StaticOption.findAll({ where: { option_name: keys } });
+      const db = {};
+      rows.forEach(r => { db[r.option_name] = r.option_value; });
+
+      const host = db.smtp_host || mailConfig.host;
+      const port = parseInt(db.smtp_port || mailConfig.port, 10);
+      const secure = db.smtp_secure === 'true' || mailConfig.secure;
+      const user = db.smtp_username || mailConfig.auth.user;
+      const pass = db.smtp_password || mailConfig.auth.pass;
+
+      this.fromName = db.smtp_from_name || mailConfig.from.name;
+      this.fromAddress = db.smtp_from_email || mailConfig.from.address;
+
+      this.transporter = nodemailer.createTransport({ host, port, secure, auth: { user, pass } });
+      console.log(`Email transporter reloaded: ${host}:${port} (${user})`);
+    } catch (err) {
+      console.error('Failed to reload email transporter:', err.message);
+    }
+  }
+
+  /**
    * Send email
    */
   async send(to, subject, html, text = null) {
     try {
+      // Auto-load DB settings on first send
+      if (!this._dbLoaded) {
+        this._dbLoaded = true;
+        await this.reloadTransporter();
+      }
+
       const mailOptions = {
-        from: `"${mailConfig.from.name}" <${mailConfig.from.address}>`,
+        from: `"${this.fromName}" <${this.fromAddress}>`,
         to,
         subject,
         html,

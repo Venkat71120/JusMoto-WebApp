@@ -67,10 +67,12 @@ module.exports = {
 
   // Ticket Status
   TICKET_STATUS: {
+    PENDING: 'pending',
     OPEN: 'open',
     IN_PROGRESS: 'in_progress',
     RESOLVED: 'resolved',
-    CLOSED: 'closed'
+    CLOSED: 'closed',
+    CANCELLED: 'cancelled'
   },
 
   // Wallet Transaction Types

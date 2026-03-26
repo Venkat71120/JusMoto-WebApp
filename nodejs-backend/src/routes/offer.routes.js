@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Offer, OfferService, Service } = require('../models');
 const { Op } = require('sequelize');
+const { formatError } = require('../utils/formatError');
 
 // Get active offers
 router.get('/', async (req, res) => {
@@ -27,7 +28,7 @@ router.get('/', async (req, res) => {
 
     res.json({ success: true, data: offers });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -56,7 +57,7 @@ router.get('/:id', async (req, res) => {
 
     res.json({ success: true, data: offer });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -90,7 +91,7 @@ router.get('/:id/services', async (req, res) => {
 
     res.json({ success: true, data: services });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

@@ -6,6 +6,7 @@ const { Op } = require('sequelize');
 const { paginate, paginationResponse, generateOrderNumber, generateInvoiceNumber } = require('../utils/helpers');
 const emailService = require('../services/email.service');
 const notificationService = require('../services/notification.service');
+const { formatError } = require('../utils/formatError');
 
 // Get user orders
 router.get('/', authenticate, isClient, async (req, res) => {
@@ -36,7 +37,7 @@ router.get('/', authenticate, isClient, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -73,7 +74,7 @@ router.get('/:id', authenticate, async (req, res) => {
 
     res.json({ success: true, data: order });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -186,7 +187,15 @@ router.post('/', authenticate, isClient, async (req, res) => {
     if (address) {
       await OrderLocation.create({
         order_id: order.id,
-        ...address
+        title: address.name || address.title || null,
+        address: address.address || null,
+        phone: address.phone || null,
+        post_code: address.zip_code || address.post_code || null,
+        state_id: address.state_id || null,
+        city_id: address.city_id || null,
+        area_id: address.area_id || null,
+        latitude: address.latitude || null,
+        longitude: address.longitude || null,
       });
     }
 
@@ -219,7 +228,7 @@ router.post('/', authenticate, isClient, async (req, res) => {
       message: 'Order created successfully'
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -242,7 +251,7 @@ router.post('/:id/complete-request', authenticate, isClient, async (req, res) =>
 
     res.json({ success: true, message: 'Completion request submitted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -289,7 +298,7 @@ router.post('/:id/cancel', authenticate, isClient, async (req, res) => {
       data: { refund }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -326,7 +335,7 @@ router.post('/:id/refund', authenticate, isClient, async (req, res) => {
 
     res.status(201).json({ success: true, data: refund, message: 'Refund request submitted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -367,7 +376,7 @@ router.post('/:id/review', authenticate, isClient, async (req, res) => {
 
     res.status(201).json({ success: true, data: newReview, message: 'Review submitted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -391,7 +400,7 @@ router.get('/:id/invoice', authenticate, isClient, async (req, res) => {
     res.setHeader('Content-Disposition', `inline; filename="invoice-${order.invoice_number || order.id}.html"`);
     res.send(html);
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -434,7 +443,7 @@ router.get('/admin/all', authenticate, isAdmin, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -469,7 +478,7 @@ router.put('/admin/:id/status', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, data: order, message: 'Order status updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

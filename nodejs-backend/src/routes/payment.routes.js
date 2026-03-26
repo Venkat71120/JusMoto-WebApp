@@ -5,6 +5,7 @@ const { authenticate, isClient } = require('../middleware/auth.middleware');
 const { uploadSingle } = require('../middleware/upload.middleware');
 const { uploadToS3, generateS3Key } = require('../config/s3');
 const { Order, Wallet, WalletTransaction, PaymentGateway } = require('../models');
+const { formatError } = require('../utils/formatError');
 
 // ─── GET AVAILABLE PAYMENT METHODS ──────────────────────────────────
 router.get('/methods', async (req, res) => {
@@ -62,7 +63,7 @@ router.get('/methods', async (req, res) => {
 
     res.json({ success: true, data: methods });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -190,7 +191,7 @@ router.post('/initiate', authenticate, isClient, async (req, res) => {
 
     return res.status(400).json({ success: false, error: `Payment method '${payment_method}' is not supported` });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -261,7 +262,7 @@ router.post('/verify', authenticate, isClient, async (req, res) => {
 
     return res.status(400).json({ success: false, error: 'Cannot verify payment. Missing transaction_id or payment_response.' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -306,7 +307,7 @@ router.post('/manual-upload', authenticate, isClient, ...uploadSingle('image'), 
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -335,7 +336,7 @@ router.get('/status/:order_id', authenticate, isClient, async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -362,7 +363,7 @@ router.post('/webhook/payzapp', async (req, res) => {
 
     res.json({ received: true, order_id: orderId, status });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: formatError(error) });
   }
 });
 

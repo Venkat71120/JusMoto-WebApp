@@ -1,6 +1,7 @@
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const paymentConfig = require('../../config/payment');
+const { formatError } = require('../../utils/formatError');
 
 class RazorpayIntegration {
   constructor() {
@@ -48,7 +49,7 @@ class RazorpayIntegration {
       console.error('Razorpay createOrder error:', error);
       return {
         success: false,
-        error: error.message
+        error: formatError(error)
       };
     }
   }
@@ -90,7 +91,7 @@ class RazorpayIntegration {
       console.error('Razorpay capturePayment error:', error);
       return {
         success: false,
-        error: error.message
+        error: formatError(error)
       };
     }
   }
@@ -116,7 +117,7 @@ class RazorpayIntegration {
       console.error('Razorpay fetchPayment error:', error);
       return {
         success: false,
-        error: error.message
+        error: formatError(error)
       };
     }
   }
@@ -146,7 +147,7 @@ class RazorpayIntegration {
       console.error('Razorpay refund error:', error);
       return {
         success: false,
-        error: error.message
+        error: formatError(error)
       };
     }
   }

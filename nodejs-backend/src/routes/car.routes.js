@@ -8,6 +8,7 @@ const { Car, Brand, Variant, EngineType, FuelType, MediaUpload } = require('../m
 const { Op } = require('sequelize');
 const { createSlug } = require('../utils/helpers');
 const { importCarsFromCSV } = require('../services/csv-import.service');
+const { formatError } = require('../utils/formatError');
 
 // CSV upload config — use /tmp to avoid permission issues
 const csvStorage = multer.diskStorage({
@@ -50,7 +51,7 @@ router.post('/import-csv', authenticate, isAdmin, csvUpload.single('file'), asyn
   } catch (error) {
     // Clean up on error
     if (req.file) fs.unlink(req.file.path, () => { });
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -78,7 +79,7 @@ router.post('/fetch-brands', authenticate, async (req, res) => {
 
     res.json({ success: true, message: `Imported ${imported} new brands (${json.Results.length} total from API)` });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -120,7 +121,7 @@ router.post('/fetch-models', authenticate, async (req, res) => {
 
     res.json({ success: true, message: `Imported ${imported} new models (${json.Results.length} from API)`, data: cars });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -164,7 +165,7 @@ router.get('/', async (req, res) => {
 
     res.json({ success: true, data: carsData });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -197,7 +198,7 @@ router.get('/:id', async (req, res) => {
 
     res.json({ success: true, data: carData });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -215,7 +216,7 @@ router.get('/:id/variants', async (req, res) => {
 
     res.json({ success: true, data: variants });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -235,7 +236,7 @@ router.post('/', authenticate, isAdmin, async (req, res) => {
 
     res.status(201).json({ success: true, data: car, message: 'Car created successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -260,7 +261,7 @@ router.put('/:id', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, data: car, message: 'Car updated successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -276,7 +277,7 @@ router.delete('/:id', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, message: 'Car deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -295,7 +296,7 @@ router.post('/:carId/variants', authenticate, isAdmin, async (req, res) => {
 
     res.status(201).json({ success: true, data: variant, message: 'Variant created successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -311,7 +312,7 @@ router.put('/variants/:id', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, data: variant, message: 'Variant updated successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -327,7 +328,7 @@ router.delete('/variants/:id', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, message: 'Variant deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

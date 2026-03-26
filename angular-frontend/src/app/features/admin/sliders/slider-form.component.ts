@@ -99,7 +99,7 @@ export class SliderFormComponent implements OnInit {
     this.http.get<any>(`${environment.apiUrl}/admin/sliders/${this.sliderId}`).subscribe({
       next: (res) => {
         const s = res.data;
-        this.form = { image: s.image || '', type: s.type || '', identity: s.identity || '', status: !!s.status };
+        this.form = { image: s.image ?? '', type: s.type || '', identity: s.identity || '', status: !!s.status };
       },
       error: () => this.router.navigate(['/admin/slider/all']),
       complete: () => this.loadingData.set(false)
@@ -107,7 +107,7 @@ export class SliderFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.form.image.trim()) { this.error.set('Image is required'); return; }
+    if (!this.form.image && this.form.image !== 0) { this.error.set('Image is required'); return; }
     this.saving.set(true);
     this.error.set('');
     const data = { ...this.form, status: this.form.status ? 1 : 0 };

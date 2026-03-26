@@ -2,6 +2,7 @@ const router = require('express').Router();
 const trafficChallanService = require('../../../services/trafficChallan.service');
 const { authenticateUser } = require('../../../middleware/auth.middleware');
 const { body, validationResult } = require('express-validator');
+const { formatError } = require('../../../utils/formatError');
 
 // All routes require authentication
 router.use(authenticateUser);
@@ -38,7 +39,7 @@ router.post('/fetch', [
     console.error('Fetch challans error:', error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Failed to fetch challans'
+      message: formatError(error) || 'Failed to fetch challans'
     });
   }
 });
@@ -114,7 +115,7 @@ router.get('/:id', async (req, res) => {
     console.error('Get challan details error:', error);
     res.status(404).json({
       success: false,
-      message: error.message || 'Challan not found'
+      message: formatError(error) || 'Challan not found'
     });
   }
 });
@@ -155,7 +156,7 @@ router.post('/:id/pay', [
     console.error('Pay challan error:', error);
     res.status(400).json({
       success: false,
-      message: error.message || 'Payment failed'
+      message: formatError(error) || 'Payment failed'
     });
   }
 });

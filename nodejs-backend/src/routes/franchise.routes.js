@@ -14,6 +14,7 @@ router.get('/dashboard', authenticate, isFranchise, async (req, res) => {
     const franchiseId = req.admin.id;
 
     const [orderStats] = await require('../models').sequelize.query(`
+const { formatError } = require('../utils/formatError');
       SELECT
         COUNT(*) as total_orders,
         SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) as pending_orders,
@@ -73,7 +74,7 @@ router.get('/dashboard', authenticate, isFranchise, async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -269,7 +270,7 @@ router.get('/orders', authenticate, isFranchise, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -291,7 +292,7 @@ router.get('/orders/:id', authenticate, isFranchise, async (req, res) => {
 
     res.json({ success: true, data: order });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -317,7 +318,7 @@ router.put('/orders/:id/status', authenticate, isFranchise, async (req, res) => 
 
     res.json({ success: true, data: order, message: 'Order status updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -342,7 +343,7 @@ router.get('/services', authenticate, isFranchise, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -352,7 +353,7 @@ router.get('/profile', authenticate, isFranchise, async (req, res) => {
     const admin = await Admin.findByPk(req.admin.id);
     res.json({ success: true, data: admin });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -368,7 +369,7 @@ router.put('/profile', authenticate, isFranchise, async (req, res) => {
     const admin = await Admin.findByPk(req.admin.id);
     res.json({ success: true, data: admin, message: 'Profile updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -397,7 +398,7 @@ router.get('/service-requests/counts', authenticate, isFranchise, async (req, re
 
     res.json({ success: true, data: counts });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -432,7 +433,7 @@ router.get('/service-requests', authenticate, isFranchise, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -460,17 +461,28 @@ router.get('/service-requests/:id', authenticate, isFranchise, async (req, res) 
 
     res.json({ success: true, data: ticket });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
 // PUT /franchise/service-requests/:id/status — update status
 router.put('/service-requests/:id/status', authenticate, isFranchise, async (req, res) => {
   try {
-    const { status } = req.body;
+    let { status } = req.body;
+
+    // Map mobile app status names to canonical DB values
+    const statusAliases = {
+      'accepted': 'open',
+      'completed': 'closed',
+      'canceled': 'cancelled',
+    };
+    if (status && statusAliases[status]) {
+      status = statusAliases[status];
+    }
+
     const validStatuses = ['pending', 'open', 'in_progress', 'closed', 'cancelled'];
     if (!status || !validStatuses.includes(status)) {
-      return res.status(400).json({ success: false, error: `Status must be one of: ${validStatuses.join(', ')}` });
+      return res.status(400).json({ success: false, error: `Status must be one of: ${[...validStatuses, ...Object.keys(statusAliases)].join(', ')}` });
     }
 
     const ticket = await Ticket.findOne({
@@ -495,7 +507,7 @@ router.put('/service-requests/:id/status', authenticate, isFranchise, async (req
 
     res.json({ success: true, data: ticket, message: 'Service request status updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -544,7 +556,7 @@ router.post('/service-requests/:id/reply', authenticate, isFranchise, ...uploadS
 
     res.status(201).json({ success: true, data: ticketMsg, message: 'Reply sent' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -572,7 +584,7 @@ router.get('/tickets', authenticate, isFranchise, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -615,7 +627,7 @@ router.get('/reports/revenue', authenticate, isFranchise, async (req, res) => {
 
     res.json({ success: true, data: revenue });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

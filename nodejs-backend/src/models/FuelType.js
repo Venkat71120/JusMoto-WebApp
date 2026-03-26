@@ -12,8 +12,8 @@ const FuelType = sequelize.define('FuelType', {
     allowNull: false
   },
   image: {
-    type: DataTypes.INTEGER,
-    allowNull: false
+    type: DataTypes.STRING(500),
+    allowNull: true
   }
 }, {
   tableName: 'fuel_types',

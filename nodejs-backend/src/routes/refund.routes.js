@@ -3,6 +3,7 @@ const router = express.Router();
 const { authenticate, isClient } = require('../middleware/auth.middleware');
 const { RefundedOrder, Order, OrderItem, Service } = require('../models');
 const { paginate, paginationResponse } = require('../utils/helpers');
+const { formatError } = require('../utils/formatError');
 
 const STATUS_MAP = { 0: 'pending', 1: 'approved', 2: 'rejected' };
 
@@ -57,7 +58,7 @@ router.get('/', authenticate, isClient, async (req, res) => {
       ...paginationResponse(data, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -87,7 +88,7 @@ router.get('/:id', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data: formatRefund(refund) });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

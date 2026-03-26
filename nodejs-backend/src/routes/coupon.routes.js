@@ -3,6 +3,7 @@ const router = express.Router();
 const { authenticate, isClient } = require('../middleware/auth.middleware');
 const { Coupon } = require('../models');
 const { Op } = require('sequelize');
+const { formatError } = require('../utils/formatError');
 
 // Validate coupon
 router.post('/validate', authenticate, isClient, async (req, res) => {
@@ -31,7 +32,7 @@ router.post('/validate', authenticate, isClient, async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -53,7 +54,7 @@ router.get('/available', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data: coupons });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

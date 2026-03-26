@@ -5,6 +5,7 @@ const smsService = require('../../../services/sms.service');
 const { User, Admin } = require('../../../models');
 const { authenticateUser } = require('../../../middleware/auth.middleware');
 const { body, validationResult } = require('express-validator');
+const { formatError } = require('../../../utils/formatError');
 
 // Validation middleware
 const registerValidation = [
@@ -78,7 +79,7 @@ router.post('/register', registerValidation, async (req, res) => {
     console.error('Registration error:', error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Registration failed'
+      message: formatError(error) || 'Registration failed'
     });
   }
 });
@@ -116,7 +117,7 @@ router.post('/login', loginValidation, async (req, res) => {
     console.error('Login error:', error);
     res.status(401).json({
       success: false,
-      message: error.message || 'Invalid credentials'
+      message: formatError(error) || 'Invalid credentials'
     });
   }
 });
@@ -155,7 +156,7 @@ router.post('/admin/login', adminLoginValidation, async (req, res) => {
     console.error('Admin login error:', error);
     res.status(401).json({
       success: false,
-      message: error.message || 'Invalid credentials'
+      message: formatError(error) || 'Invalid credentials'
     });
   }
 });
@@ -533,7 +534,7 @@ router.post('/google', async (req, res) => {
     socialLoginResponse(res, user);
   } catch (error) {
     console.error('Google login error:', error.message);
-    res.status(401).json({ success: false, message: 'Google authentication failed: ' + error.message });
+    res.status(401).json({ success: false, message: formatError(error) });
   }
 });
 
@@ -580,7 +581,7 @@ router.post('/apple', async (req, res) => {
     socialLoginResponse(res, user);
   } catch (error) {
     console.error('Apple login error:', error.message);
-    res.status(401).json({ success: false, message: 'Apple authentication failed: ' + error.message });
+    res.status(401).json({ success: false, message: formatError(error) });
   }
 });
 

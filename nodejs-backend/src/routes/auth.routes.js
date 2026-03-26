@@ -25,6 +25,7 @@ router.post('/social/login', async (req, res) => {
 
     const { User } = require('../models');
     const authService = require('../services/auth.service');
+const { formatError } = require('../utils/formatError');
 
     // Find by social_id first, then email
     let user = socialId
@@ -86,7 +87,7 @@ router.post('/social/login', async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

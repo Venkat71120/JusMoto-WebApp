@@ -16,7 +16,7 @@ const Offer = sequelize.define('Offer', {
     allowNull: true
   },
   image: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(500),
     allowNull: true
   },
   status: {

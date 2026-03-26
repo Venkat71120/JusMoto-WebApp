@@ -3,6 +3,7 @@ const router = express.Router();
 const { authenticate, isClient, isAdmin } = require('../middleware/auth.middleware');
 const { Wallet, WalletTransaction, User } = require('../models');
 const { paginate, paginationResponse, generateTransactionId } = require('../utils/helpers');
+const { formatError } = require('../utils/formatError');
 
 // Get wallet balance
 router.get('/', authenticate, isClient, async (req, res) => {
@@ -16,7 +17,7 @@ router.get('/', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data: { balance: wallet.balance } });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -40,7 +41,7 @@ router.get('/transactions', authenticate, isClient, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -83,7 +84,7 @@ router.post('/topup', authenticate, isClient, async (req, res) => {
       message: 'Wallet topped up successfully'
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -123,7 +124,7 @@ router.post('/admin/add', authenticate, isAdmin, async (req, res) => {
       message: 'Amount added to wallet'
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -161,7 +162,7 @@ router.post('/admin/deduct', authenticate, isAdmin, async (req, res) => {
       message: 'Amount deducted from wallet'
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

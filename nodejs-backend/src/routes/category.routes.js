@@ -4,6 +4,7 @@ const { authenticate, isAdmin } = require('../middleware/auth.middleware');
 const { Category, SubCategory, Service } = require('../models');
 const { Op } = require('sequelize');
 const { paginate, paginationResponse, createSlug } = require('../utils/helpers');
+const { formatError } = require('../utils/formatError');
 
 // Get all categories (public)
 router.get('/', async (req, res) => {
@@ -27,7 +28,7 @@ router.get('/', async (req, res) => {
 
     res.json({ success: true, data: categories });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -50,7 +51,7 @@ router.get('/:id', async (req, res) => {
 
     res.json({ success: true, data: category });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -79,7 +80,7 @@ router.get('/:id/services', async (req, res) => {
 
     res.json(paginationResponse(rows, count, pagination.page, pagination.limit));
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -101,7 +102,7 @@ router.post('/', authenticate, isAdmin, async (req, res) => {
 
     res.status(201).json({ success: true, data: category, message: 'Category created successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -128,7 +129,7 @@ router.put('/:id', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, data: category, message: 'Category updated successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -150,7 +151,7 @@ router.delete('/:id', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, message: 'Category deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -164,7 +165,7 @@ router.get('/:categoryId/subcategories', async (req, res) => {
 
     res.json({ success: true, data: subcategories });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -183,7 +184,7 @@ router.post('/:categoryId/subcategories', authenticate, isAdmin, async (req, res
 
     res.status(201).json({ success: true, data: subcategory, message: 'Subcategory created successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

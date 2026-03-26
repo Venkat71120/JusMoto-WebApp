@@ -4,6 +4,7 @@ const { authenticate, isClient, isAdmin } = require('../middleware/auth.middlewa
 const { TrafficChallan, User } = require('../models');
 const { Op } = require('sequelize');
 const { paginate, paginationResponse } = require('../utils/helpers');
+const { formatError } = require('../utils/formatError');
 
 // Get user's challans
 router.get('/', authenticate, isClient, async (req, res) => {
@@ -26,7 +27,7 @@ router.get('/', authenticate, isClient, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -51,7 +52,7 @@ router.get('/:id', authenticate, async (req, res) => {
 
     res.json({ success: true, data: challan });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -82,7 +83,7 @@ router.post('/check', authenticate, isClient, async (req, res) => {
       message: challans.length > 0 ? `Found ${challans.length} pending challan(s)` : 'No pending challans found'
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -121,7 +122,7 @@ router.post('/', authenticate, isClient, async (req, res) => {
 
     res.status(201).json({ success: true, data: challan, message: 'Challan added successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -156,7 +157,7 @@ router.post('/:id/pay', authenticate, isClient, async (req, res) => {
       message: 'Payment initiated'
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -182,7 +183,7 @@ router.post('/payment/callback', async (req, res) => {
 
     res.json({ success: true, message: 'Payment status updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -206,7 +207,7 @@ router.get('/stats/summary', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data: stats[0] });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -235,7 +236,7 @@ router.get('/admin/all', authenticate, isAdmin, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

@@ -8,6 +8,7 @@ const { uploadToS3, generateS3Key } = require('../config/s3');
 router.get('/profile', authenticate, isClient, async (req, res) => {
   try {
     const { User, Wallet, UserSelectedCar, Brand, Car, Variant } = require('../models');
+const { formatError } = require('../utils/formatError');
 
     const user = await User.findByPk(req.user.id, {
       include: [
@@ -26,7 +27,7 @@ router.get('/profile', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data: user });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -43,7 +44,7 @@ router.put('/profile', authenticate, isClient, async (req, res) => {
     const user = await User.findByPk(req.user.id);
     res.json({ success: true, data: user, message: 'Profile updated successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -96,7 +97,7 @@ router.post('/profile/firebase-token', authenticate, isClient, async (req, res) 
 
     res.json({ message: 'Token Updated Successfully' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: formatError(error) });
   }
 });
 
@@ -117,7 +118,99 @@ router.put('/change-password', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, message: 'Password changed successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
+  }
+});
+
+// Change email - send OTP to new email
+router.post('/change-email', authenticate, isClient, async (req, res) => {
+  try {
+    const { email } = req.body;
+    const { User } = require('../models');
+
+    if (!email) {
+      return res.status(422).json({ success: false, message: 'Email is required' });
+    }
+
+    // Basic email format check
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(422).json({ success: false, message: 'Invalid email format' });
+    }
+
+    // Check if email is already used by another user
+    const existing = await User.findOne({ where: { email } });
+    if (existing && existing.id !== req.user.id) {
+      return res.status(409).json({ success: false, message: 'Email already in use by another account' });
+    }
+
+    // Generate OTP
+    const crypto = require('crypto');
+    const otp = crypto.randomInt(100000, 999999).toString();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Store OTP in user record (reuse password_reset fields)
+    await User.update(
+      { password_reset_token: `email:${email}:${otp}`, password_reset_expires: otpExpires },
+      { where: { id: req.user.id } }
+    );
+
+    // Send OTP to the NEW email address
+    const emailService = require('../services/email.service');
+    const user = await User.findByPk(req.user.id);
+    await emailService.sendOTP({ ...user.toJSON(), email }, otp);
+
+    res.json({
+      success: true,
+      message: 'OTP sent to new email address',
+      data: {
+        email,
+        expires_in: 600,
+        ...(process.env.NODE_ENV === 'development' ? { otp } : {})
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: formatError(error) });
+  }
+});
+
+// Verify email OTP and update email
+router.post('/verify-email-otp', authenticate, isClient, async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    const { User } = require('../models');
+
+    if (!email || !otp) {
+      return res.status(422).json({ success: false, message: 'Email and OTP are required' });
+    }
+
+    const user = await User.findByPk(req.user.id);
+
+    // Check OTP expiry
+    if (!user.password_reset_expires || new Date() > new Date(user.password_reset_expires)) {
+      return res.status(400).json({ success: false, message: 'OTP has expired. Please request a new one.' });
+    }
+
+    // Verify OTP (stored as "email:{address}:{otp}")
+    const expected = `email:${email}:${otp}`;
+    if (user.password_reset_token !== expected) {
+      return res.status(400).json({ success: false, message: 'Invalid OTP' });
+    }
+
+    // Update email
+    await user.update({
+      email,
+      email_verified: 1,
+      password_reset_token: null,
+      password_reset_expires: null
+    });
+
+    res.json({
+      success: true,
+      message: 'Email updated successfully',
+      data: { email: user.email }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -172,7 +265,7 @@ router.post('/change-phone-number', authenticate, isClient, async (req, res) => 
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -212,7 +305,7 @@ router.post('/verify-phone-otp', authenticate, isClient, async (req, res) => {
       data: { phone: user.phone }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -235,7 +328,7 @@ router.get('/cars', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data: cars });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -301,7 +394,7 @@ router.post('/cars', authenticate, isClient, async (req, res) => {
 
     res.status(201).json({ success: true, data: car, message: 'Car added successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -369,7 +462,7 @@ router.put('/cars/:id', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data: car, message: 'Car updated successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -387,7 +480,7 @@ router.delete('/cars/:id', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, message: 'Car deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -455,7 +548,7 @@ router.get('/addresses', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -478,7 +571,7 @@ router.post('/addresses', authenticate, isClient, async (req, res) => {
 
     res.status(201).json({ success: true, data: formatAddress(location), message: 'Address added successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -505,7 +598,7 @@ router.put('/addresses/:id', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data: formatAddress(location), message: 'Address updated successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -523,7 +616,7 @@ router.delete('/addresses/:id', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, message: 'Address deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -583,7 +676,7 @@ router.get('/dashboard', authenticate, isClient, async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -611,7 +704,7 @@ router.put('/cars/:id/default', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, message: 'Default car updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

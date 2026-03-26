@@ -4,6 +4,7 @@ const { authenticate, isAdmin, optionalAuth } = require('../middleware/auth.midd
 const { Service, Category, SubCategory, ServiceInclude, ServiceExclude, ServiceAddon, ServiceCar, ServiceFaq, ServiceAdditional, Review, User, Offer, OfferService, Car, Variant } = require('../models');
 const { Op } = require('sequelize');
 const { paginate, paginationResponse, createSlug } = require('../utils/helpers');
+const { formatError } = require('../utils/formatError');
 
 // Get all services (public)
 router.get('/', optionalAuth, async (req, res) => {
@@ -73,7 +74,7 @@ router.get('/', optionalAuth, async (req, res) => {
       ...paginationResponse(servicesWithRatings, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -93,7 +94,7 @@ router.get('/featured', async (req, res) => {
 
     res.json({ success: true, data: services });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -193,7 +194,7 @@ router.get('/:id', optionalAuth, async (req, res) => {
 
     res.json({ success: true, data: serviceData });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -232,7 +233,7 @@ router.get('/:id/price', async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -256,7 +257,7 @@ router.get('/:id/reviews', async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -314,7 +315,7 @@ router.post('/', authenticate, isAdmin, async (req, res) => {
 
     res.status(201).json({ success: true, data: service, message: 'Service created successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -341,7 +342,7 @@ router.put('/:id', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, data: service, message: 'Service updated successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -363,7 +364,7 @@ router.delete('/:id', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, message: 'Service deleted successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -382,7 +383,7 @@ router.post('/:id/car-pricing', authenticate, isAdmin, async (req, res) => {
 
     res.status(201).json({ success: true, data: serviceCar, message: 'Car pricing added successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -398,7 +399,7 @@ router.put('/:id/car-pricing/:carPricingId', authenticate, isAdmin, async (req, 
 
     res.json({ success: true, data: serviceCar, message: 'Car pricing updated successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

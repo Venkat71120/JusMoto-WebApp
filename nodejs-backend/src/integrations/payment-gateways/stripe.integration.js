@@ -1,5 +1,6 @@
 const Stripe = require('stripe');
 const paymentConfig = require('../../config/payment');
+const { formatError } = require('../../utils/formatError');
 
 class StripeIntegration {
   constructor() {
@@ -39,7 +40,7 @@ class StripeIntegration {
       console.error('Stripe createPaymentIntent error:', error);
       return {
         success: false,
-        error: error.message
+        error: formatError(error)
       };
     }
   }
@@ -65,7 +66,7 @@ class StripeIntegration {
       console.error('Stripe confirmPaymentIntent error:', error);
       return {
         success: false,
-        error: error.message
+        error: formatError(error)
       };
     }
   }
@@ -107,7 +108,7 @@ class StripeIntegration {
       console.error('Stripe createCheckoutSession error:', error);
       return {
         success: false,
-        error: error.message
+        error: formatError(error)
       };
     }
   }
@@ -137,7 +138,7 @@ class StripeIntegration {
       console.error('Stripe refund error:', error);
       return {
         success: false,
-        error: error.message
+        error: formatError(error)
       };
     }
   }

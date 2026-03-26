@@ -6,6 +6,7 @@ const { uploadToS3, generateS3Key } = require('../config/s3');
 const { Ticket, TicketMessage, User, Admin, Department } = require('../models');
 const { Op } = require('sequelize');
 const { paginate, paginationResponse, generateRandomString } = require('../utils/helpers');
+const { formatError } = require('../utils/formatError');
 
 // Get active departments (public - for mobile app service request creation)
 router.get('/departments', async (req, res) => {
@@ -17,7 +18,7 @@ router.get('/departments', async (req, res) => {
     });
     res.json({ success: true, data: departments });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -47,7 +48,7 @@ router.get('/', authenticate, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -97,7 +98,7 @@ router.get('/:id', authenticate, async (req, res) => {
 
     res.json({ success: true, data: ticket });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -136,7 +137,7 @@ router.post('/', authenticate, async (req, res) => {
 
     res.status(201).json({ success: true, data: ticket, message: 'Service request created successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -191,7 +192,7 @@ router.post('/:id/messages', authenticate, ...uploadSingle('attachment'), async 
 
     res.status(201).json({ success: true, data: ticketMessage, message: 'Reply sent' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -211,7 +212,7 @@ router.post('/:id/close', authenticate, async (req, res) => {
 
     res.json({ success: true, message: 'Service request closed' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -247,7 +248,7 @@ router.get('/admin/all', authenticate, isAdmin, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -271,7 +272,7 @@ router.put('/admin/:id/status', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, data: ticket, message: 'Service request updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

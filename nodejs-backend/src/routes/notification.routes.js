@@ -4,6 +4,7 @@ const { Op } = require('sequelize');
 const { authenticate } = require('../middleware/auth.middleware');
 const { Notification } = require('../models');
 const { paginate, paginationResponse } = require('../utils/helpers');
+const { formatError } = require('../utils/formatError');
 
 // Helper to build owner filter (uses Laravel morph pattern)
 function ownerWhere(req) {
@@ -47,7 +48,7 @@ router.get('/', authenticate, async (req, res) => {
       ...paginationResponse(formatted, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -59,7 +60,7 @@ router.get('/unread-count', authenticate, async (req, res) => {
 
     res.json({ success: true, unread_count: count, data: { count } });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -75,7 +76,7 @@ router.put('/read-all', authenticate, async (req, res) => {
 
     res.json({ success: true, message: 'All marked as read', data: { updated: affectedCount } });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -97,7 +98,7 @@ router.put('/:id', authenticate, async (req, res) => {
 
     res.json({ success: true, message: is_read ? 'Marked as read' : 'Marked as unread', data: formatNotification(notification) });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -113,7 +114,7 @@ router.put('/:id/read', authenticate, async (req, res) => {
 
     res.json({ success: true, message: 'Marked as read' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -126,7 +127,7 @@ router.delete('/:id', authenticate, async (req, res) => {
 
     res.json({ success: true, message: 'Notification deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

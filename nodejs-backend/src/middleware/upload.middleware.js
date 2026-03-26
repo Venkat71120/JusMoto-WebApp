@@ -1,4 +1,5 @@
 const multer = require('multer');
+const { formatError } = require('../utils/formatError');
 
 // Memory storage — files held in buffer, uploaded directly to S3
 const storage = multer.memoryStorage();
@@ -28,9 +29,9 @@ const handleUploadError = (err, req, res, next) => {
     if (err.code === 'LIMIT_FILE_SIZE') {
       return res.status(400).json({ error: 'File size too large. Maximum size is 10MB.' });
     }
-    return res.status(400).json({ error: err.message });
+    return res.status(400).json({ error: formatError(err) });
   }
-  if (err) return res.status(400).json({ error: err.message });
+  if (err) return res.status(400).json({ error: formatError(err) });
   next();
 };
 

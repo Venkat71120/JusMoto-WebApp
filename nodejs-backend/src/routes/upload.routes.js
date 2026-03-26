@@ -3,6 +3,7 @@ const router = express.Router();
 const { authenticate } = require('../middleware/auth.middleware');
 const { uploadSingle, uploadMultiple } = require('../middleware/upload.middleware');
 const { uploadToS3, generateS3Key } = require('../config/s3');
+const { formatError } = require('../utils/formatError');
 
 // Upload single file
 router.post('/single', authenticate, ...uploadSingle('file'), async (req, res) => {
@@ -25,7 +26,7 @@ router.post('/single', authenticate, ...uploadSingle('file'), async (req, res) =
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -44,7 +45,7 @@ router.post('/multiple', authenticate, ...uploadMultiple('files', 10), async (re
 
     res.json({ success: true, data: files });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -62,7 +63,7 @@ router.post('/avatar', authenticate, ...uploadSingle('avatar'), async (req, res)
 
     res.json({ success: true, avatar_url: avatarUrl, message: 'Avatar updated successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

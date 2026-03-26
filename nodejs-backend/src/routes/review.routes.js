@@ -3,6 +3,7 @@ const router = express.Router();
 const { authenticate, isClient, isAdmin } = require('../middleware/auth.middleware');
 const { Review, User, Service, Order } = require('../models');
 const { paginate, paginationResponse } = require('../utils/helpers');
+const { formatError } = require('../utils/formatError');
 
 // Get reviews for a service
 router.get('/service/:serviceId', async (req, res) => {
@@ -45,7 +46,7 @@ router.get('/service/:serviceId', async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -69,7 +70,7 @@ router.get('/my', authenticate, isClient, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -115,7 +116,7 @@ router.post('/', authenticate, isClient, async (req, res) => {
 
     res.status(201).json({ success: true, data: newReview, message: 'Review submitted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -136,7 +137,7 @@ router.put('/:id', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data: existingReview, message: 'Review updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -153,7 +154,7 @@ router.delete('/:id', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, message: 'Review deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -182,7 +183,7 @@ router.get('/admin/all', authenticate, isAdmin, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -194,7 +195,7 @@ router.put('/admin/:id/status', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, message: 'Review status updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

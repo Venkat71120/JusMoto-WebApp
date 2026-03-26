@@ -1,5 +1,6 @@
 const twilio = require('twilio');
 const smsConfig = require('../config/sms');
+const { formatError } = require('../utils/formatError');
 
 class SMSService {
   constructor() {
@@ -30,7 +31,7 @@ class SMSService {
       return { success: true, sid: result.sid };
     } catch (error) {
       console.error('SMS send error:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: formatError(error) };
     }
   }
 
@@ -104,7 +105,7 @@ class SMSService {
       return { success: true, sid: result.sid };
     } catch (error) {
       console.error('WhatsApp send error:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: formatError(error) };
     }
   }
 }

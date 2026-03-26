@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { authenticate, isClient } = require('../middleware/auth.middleware');
 const { UserCartItem, Service, ServiceAddon, ServiceCar, Category } = require('../models');
+const { formatError } = require('../utils/formatError');
 
 // Get cart items
 router.get('/', authenticate, isClient, async (req, res) => {
@@ -41,7 +42,7 @@ router.get('/', authenticate, isClient, async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -118,7 +119,7 @@ router.post('/', authenticate, isClient, async (req, res) => {
 
     res.status(201).json({ success: true, data: cartItem, message: 'Item added to cart' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -157,7 +158,7 @@ router.put('/:id', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data: cartItem, message: 'Cart updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -174,7 +175,7 @@ router.delete('/:id', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, message: 'Item removed from cart' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -187,7 +188,7 @@ router.delete('/', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, message: 'Cart cleared' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -200,7 +201,7 @@ router.get('/count', authenticate, isClient, async (req, res) => {
 
     res.json({ success: true, data: { count } });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

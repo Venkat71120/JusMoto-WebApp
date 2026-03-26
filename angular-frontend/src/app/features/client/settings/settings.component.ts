@@ -85,18 +85,36 @@ import * as L from 'leaflet';
             <h2>Change Password</h2>
             <div class="form-group">
               <label for="current_password">Current Password</label>
-              <input type="password" id="current_password" [(ngModel)]="passwords.current_password" class="form-control" placeholder="Enter current password">
+              <div class="password-wrapper">
+                <input [type]="showCurrentPw() ? 'text' : 'password'" id="current_password" [(ngModel)]="passwords.current_password" class="form-control" placeholder="Enter current password">
+                <button type="button" class="pw-toggle" (click)="showCurrentPw.set(!showCurrentPw())" tabindex="-1">
+                  <svg *ngIf="!showCurrentPw()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg *ngIf="showCurrentPw()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
             </div>
 
             <div class="form-group">
               <label for="new_password">New Password</label>
-              <input type="password" id="new_password" [(ngModel)]="passwords.new_password" class="form-control" placeholder="Enter new password">
+              <div class="password-wrapper">
+                <input [type]="showNewPw() ? 'text' : 'password'" id="new_password" [(ngModel)]="passwords.new_password" class="form-control" placeholder="Enter new password">
+                <button type="button" class="pw-toggle" (click)="showNewPw.set(!showNewPw())" tabindex="-1">
+                  <svg *ngIf="!showNewPw()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg *ngIf="showNewPw()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
               <small class="help-text">Password must be at least 8 characters</small>
             </div>
 
             <div class="form-group">
               <label for="confirm_password">Confirm New Password</label>
-              <input type="password" id="confirm_password" [(ngModel)]="passwords.confirm_password" class="form-control" placeholder="Re-enter new password">
+              <div class="password-wrapper">
+                <input [type]="showConfirmPw() ? 'text' : 'password'" id="confirm_password" [(ngModel)]="passwords.confirm_password" class="form-control" placeholder="Re-enter new password">
+                <button type="button" class="pw-toggle" (click)="showConfirmPw.set(!showConfirmPw())" tabindex="-1">
+                  <svg *ngIf="!showConfirmPw()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg *ngIf="showConfirmPw()" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
             </div>
 
             <button class="btn-primary" (click)="changePassword()" [disabled]="savingPassword()">
@@ -353,6 +371,10 @@ import * as L from 'leaflet';
     select.form-control { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 12px center; background-repeat: no-repeat; background-size: 20px; padding-right: 40px; }
     .field-error { display: block; margin-top: 4px; color: #dc2626; font-size: 12px; font-weight: 500; }
     .help-text { display: block; margin-top: 6px; color: #888; font-size: 13px; }
+    .password-wrapper { position: relative; }
+    .password-wrapper .form-control { padding-right: 44px; }
+    .pw-toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
+    .pw-toggle:hover svg { stroke: #e31b23; }
 
     .btn-primary { padding: 12px 24px; background: #e31b23; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
     .btn-primary:hover { background: #c8171e; }
@@ -443,6 +465,9 @@ export class SettingsComponent implements OnInit, AfterViewChecked {
   avatarUrl = signal<string>('');
   avatarError = signal(false);
   userInitials = signal('U');
+  showCurrentPw = signal(false);
+  showNewPw = signal(false);
+  showConfirmPw = signal(false);
 
   // Address signals
   addresses = signal<any[]>([]);

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { State, City, Area } = require('../models');
+const { formatError } = require('../utils/formatError');
 
 // Get all states
 router.get('/states', async (req, res) => {
@@ -12,7 +13,7 @@ router.get('/states', async (req, res) => {
 
     res.json({ success: true, data: states });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -26,7 +27,7 @@ router.get('/states/:stateId/cities', async (req, res) => {
 
     res.json({ success: true, data: cities });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -40,7 +41,7 @@ router.get('/cities/:cityId/areas', async (req, res) => {
 
     res.json({ success: true, data: areas });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -59,7 +60,7 @@ router.get('/cities', async (req, res) => {
 
     res.json({ success: true, data: cities });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -78,7 +79,7 @@ router.get('/areas', async (req, res) => {
 
     res.json({ success: true, data: areas });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

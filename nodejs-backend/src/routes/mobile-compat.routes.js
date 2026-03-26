@@ -5,6 +5,7 @@ const { PaymentGateway, StateTax, CityTax, StateDeliveryCharge, CityDeliveryChar
 const { paginate, paginationResponse, generateOrderNumber, generateInvoiceNumber } = require('../utils/helpers');
 const emailService = require('../services/email.service');
 const notificationService = require('../services/notification.service');
+const { formatError } = require('../utils/formatError');
 
 // ─── GET /payment-gateway-list (Laravel-compatible) ─────────────────
 router.get('/payment-gateway-list', async (req, res) => {
@@ -115,7 +116,7 @@ router.post('/client/tax-info', authenticate, isClient, async (req, res) => {
     const taxRate = await getTaxRate(outlet_id, state_id, city_id);
     res.json({ tax_info: taxRate });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -131,7 +132,7 @@ router.post('/client/delivery-charge-info', authenticate, isClient, async (req, 
       delivery_charge: charge
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -149,7 +150,7 @@ router.post('/client/tax-delivery-charge-info', authenticate, isClient, async (r
       delivery_charge_system: chargeSys ? chargeSys.option_value : 'flat'
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -334,7 +335,7 @@ router.post('/client/service/order-create', authenticate, isClient, async (req, 
     });
   } catch (error) {
     console.error('order-create error:', error);
-    res.status(500).json({ message: 'Failed to create order', error: error.message });
+    res.status(500).json({ message: 'Failed to create order', error: formatError(error) });
   }
 });
 
@@ -366,7 +367,7 @@ router.get('/client/orders/all', authenticate, isClient, async (req, res) => {
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch orders', error: error.message });
+    res.status(500).json({ message: 'Failed to fetch orders', error: formatError(error) });
   }
 });
 
@@ -394,7 +395,7 @@ router.get('/client/orders/details/:id', authenticate, isClient, async (req, res
 
     res.json({ data: order });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch order details', error: error.message });
+    res.status(500).json({ message: 'Failed to fetch order details', error: formatError(error) });
   }
 });
 
@@ -422,7 +423,7 @@ router.post('/client/service/order-cancel', authenticate, isClient, async (req, 
 
     res.json({ message: 'Order cancelled successfully', data: order });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to cancel order', error: error.message });
+    res.status(500).json({ message: 'Failed to cancel order', error: formatError(error) });
   }
 });
 
@@ -453,7 +454,7 @@ router.post('/client/service/order-payment-status-update', authenticate, isClien
 
     res.json({ message: 'Payment status updated', data: order });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to update payment status', error: error.message });
+    res.status(500).json({ message: 'Failed to update payment status', error: formatError(error) });
   }
 });
 
@@ -484,7 +485,7 @@ router.get('/client/dashboard/info', authenticate, isClient, async (req, res) =>
       }
     });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch dashboard', error: error.message });
+    res.status(500).json({ message: 'Failed to fetch dashboard', error: formatError(error) });
   }
 });
 
@@ -513,7 +514,7 @@ router.get('/coupon-info/:coupon_code', authenticate, async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch coupon', error: error.message });
+    res.status(500).json({ message: 'Failed to fetch coupon', error: formatError(error) });
   }
 });
 
@@ -549,7 +550,7 @@ router.post('/client/service/refund-info-update', authenticate, isClient, async 
 
     res.json({ message: 'Refund request submitted', data: refund });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to request refund', error: error.message });
+    res.status(500).json({ message: 'Failed to request refund', error: formatError(error) });
   }
 });
 
@@ -571,7 +572,7 @@ router.get('/client/orders/all-refund-list', authenticate, isClient, async (req,
       ...paginationResponse(rows, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch refunds', error: error.message });
+    res.status(500).json({ message: 'Failed to fetch refunds', error: formatError(error) });
   }
 });
 
@@ -624,7 +625,7 @@ router.post('/client/cart/add', authenticate, isClient, async (req, res) => {
 
     res.status(201).json({ message: 'Item added to cart', data: cartItem });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to add to cart', error: error.message });
+    res.status(500).json({ message: 'Failed to add to cart', error: formatError(error) });
   }
 });
 
@@ -637,7 +638,7 @@ router.post('/client/cart/item-increase', authenticate, isClient, async (req, re
     await item.update({ quantity: item.quantity + 1 });
     res.json({ message: 'Quantity increased', data: item });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: formatError(error) });
   }
 });
 
@@ -654,7 +655,7 @@ router.post('/client/cart/item-decrease', authenticate, isClient, async (req, re
     await item.update({ quantity: item.quantity - 1 });
     res.json({ message: 'Quantity decreased', data: item });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: formatError(error) });
   }
 });
 
@@ -665,7 +666,7 @@ router.post('/client/cart/item-remove', authenticate, isClient, async (req, res)
     await UserCartItem.destroy({ where: { id: cart_item_id, user_id: req.user.id } });
     res.json({ message: 'Item removed from cart' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: formatError(error) });
   }
 });
 
@@ -675,7 +676,7 @@ router.post('/client/cart/clear-all', authenticate, isClient, async (req, res) =
     await UserCartItem.destroy({ where: { user_id: req.user.id } });
     res.json({ message: 'Cart cleared' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: formatError(error) });
   }
 });
 
@@ -711,7 +712,7 @@ router.post('/client/location/create', authenticate, isClient, async (req, res) 
 
     res.status(201).json({ message: 'Location created', data: loc });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: formatError(error) });
   }
 });
 
@@ -740,7 +741,7 @@ router.get('/client/location/all', authenticate, isClient, async (req, res) => {
 
     res.json({ data });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: formatError(error) });
   }
 });
 
@@ -793,7 +794,7 @@ router.get('/client/reviews/all', authenticate, isClient, async (req, res) => {
       ...paginationResponse(data, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch reviews', error: error.message });
+    res.status(500).json({ message: 'Failed to fetch reviews', error: formatError(error) });
   }
 });
 
@@ -846,7 +847,7 @@ router.post('/service/review', async (req, res) => {
       ...paginationResponse(data, count, pagination.page, pagination.limit)
     });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch reviews', error: error.message });
+    res.status(500).json({ message: 'Failed to fetch reviews', error: formatError(error) });
   }
 });
 
@@ -898,7 +899,7 @@ router.post('/user/review-add', authenticate, isClient, async (req, res) => {
 
     res.status(201).json({ message: 'Review added successfully', status: 'add_success', data: newReview });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to add review', error: error.message });
+    res.status(500).json({ message: 'Failed to add review', error: formatError(error) });
   }
 });
 

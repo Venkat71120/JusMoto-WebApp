@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { FavoriteItem, Service } = require('../models');
 const { authenticate, isClient } = require('../middleware/auth.middleware');
+const { formatError } = require('../utils/formatError');
 
 // Get user's favourites
 router.get('/', authenticate, async (req, res) => {
@@ -35,7 +36,7 @@ router.get('/', authenticate, async (req, res) => {
 
     res.json({ success: true, data: items });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -52,7 +53,7 @@ router.get('/check/:serviceId', authenticate, async (req, res) => {
 
     res.json({ success: true, is_favourite: !!fav, favourite_id: fav ? fav.id : null });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -86,7 +87,7 @@ router.post('/', authenticate, async (req, res) => {
 
     res.status(201).json({ success: true, data: fav, message: 'Added to favourites' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 
@@ -104,7 +105,7 @@ router.delete('/:id', authenticate, async (req, res) => {
     await fav.destroy();
     res.json({ success: true, message: 'Removed from favourites' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: formatError(error) });
   }
 });
 

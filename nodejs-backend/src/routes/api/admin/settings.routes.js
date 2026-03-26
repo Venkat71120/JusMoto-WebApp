@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { StaticOption } = require('../../../models');
 const mailConfig = require('../../../config/mail');
 const emailService = require('../../../services/email.service');
+const { formatError } = require('../../../utils/formatError');
 
 const SMTP_KEYS = [
   'smtp_host',
@@ -120,7 +121,7 @@ router.post('/smtp/test', async (req, res) => {
     }
   } catch (error) {
     console.error('SMTP test error:', error);
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: formatError(error) });
   }
 });
 

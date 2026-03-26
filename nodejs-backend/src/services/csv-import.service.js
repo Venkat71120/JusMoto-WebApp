@@ -194,9 +194,10 @@ function parseCSV(filePath) {
                 const fuelType = normalizeFuelType(row['Fuel_Type']);
                 const engineType = extractEngineType(row['Displacement'], row['Cylinders']);
                 const imageUrl = (row['Image url'] || row['Image_url'] || '').trim();
+                const brandImage = (row['Brand_Image'] || '').trim();
 
                 if (brand && model) {
-                    results.push({ brand, model, variant, fuelType, engineType, imageUrl });
+                    results.push({ brand, model, variant, fuelType, engineType, imageUrl, brandImage });
                 }
             })
             .on('end', () => resolve(results))
@@ -251,15 +252,17 @@ async function importCarsFromCSV(filePath) {
             } else {
                 const [brand, brandCreated] = await Brand.findOrCreate({
                     where: { name: row.brand },
-                    defaults: { name: row.brand, image: 0 }
+                    defaults: { name: row.brand, image: row.brandImage || 0 }
                 });
                 brandId = brand.id;
                 brandCache[brandKey] = brandId;
 
                 if (brandCreated) {
                     stats.brandsCreated++;
-                    // Fetch brand image
-                    if (hasImageApi) {
+                    if (row.brandImage) {
+                        stats.imagesFound++;
+                    } else if (hasImageApi) {
+                        // Fallback to Pexels if no brand image in CSV
                         const imageUrl = await searchBrandImage(row.brand);
                         if (imageUrl) {
                             const savedPath = await downloadImage(imageUrl, `brand_${row.brand.toLowerCase().replace(/\s+/g, '_')}`);
@@ -273,6 +276,10 @@ async function importCarsFromCSV(filePath) {
                             stats.imagesFailed++;
                         }
                     }
+                } else if (!brand.image && row.brandImage) {
+                    // Update existing brand with image if it was missing
+                    await brand.update({ image: row.brandImage });
+                    stats.imagesFound++;
                 } else {
                     stats.brandsSkipped++;
                 }

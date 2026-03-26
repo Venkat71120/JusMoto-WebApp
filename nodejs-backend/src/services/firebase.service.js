@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const firebaseConfig = require('../config/firebase');
+const { formatError } = require('../utils/formatError');
 
 class FirebaseService {
   constructor() {
@@ -63,7 +64,7 @@ class FirebaseService {
       return { success: true, messageId: response };
     } catch (error) {
       console.error('Push notification error:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: formatError(error) };
     }
   }
 
@@ -112,7 +113,7 @@ class FirebaseService {
       };
     } catch (error) {
       console.error('Multicast push notification error:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: formatError(error) };
     }
   }
 
@@ -141,7 +142,7 @@ class FirebaseService {
       return { success: true, messageId: response };
     } catch (error) {
       console.error('Topic push notification error:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: formatError(error) };
     }
   }
 
@@ -158,7 +159,7 @@ class FirebaseService {
       return { success: true };
     } catch (error) {
       console.error('Topic subscription error:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: formatError(error) };
     }
   }
 
@@ -175,7 +176,7 @@ class FirebaseService {
       return { success: true };
     } catch (error) {
       console.error('Topic unsubscription error:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: formatError(error) };
     }
   }
 

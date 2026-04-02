@@ -181,6 +181,24 @@ class FirebaseService {
   }
 
   /**
+   * Verify a Firebase ID token (used for phone auth)
+   * Returns decoded token with uid, phone_number, etc.
+   */
+  async verifyIdToken(idToken) {
+    if (!this.initialized) {
+      return { success: false, error: 'Firebase not initialized' };
+    }
+
+    try {
+      const decoded = await admin.auth().verifyIdToken(idToken);
+      return { success: true, decoded };
+    } catch (error) {
+      console.error('Firebase ID token verification error:', error);
+      return { success: false, error: error.message || 'Invalid token' };
+    }
+  }
+
+  /**
    * Convert data object values to strings (Firebase requirement)
    */
   stringifyData(data) {

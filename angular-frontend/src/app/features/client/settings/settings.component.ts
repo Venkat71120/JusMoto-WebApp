@@ -7,6 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
+import { FirebasePhoneService } from '../../../core/services/firebase-phone.service';
 import * as L from 'leaflet';
 
 @Component({
@@ -65,13 +66,61 @@ import * as L from 'leaflet';
 
             <div class="form-row">
               <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="tel" id="phone" [(ngModel)]="profile.phone" class="form-control" placeholder="Enter 10-digit phone number" maxlength="10" pattern="\\d{10}" #phoneInput="ngModel">
+                <label for="phone">Phone
+                  <span class="verified-badge" *ngIf="phoneVerified() && profile.phone === verifiedPhone">Verified</span>
+                  <span class="unverified-badge" *ngIf="!(phoneVerified() && profile.phone === verifiedPhone) && profile.phone">Not verified</span>
+                </label>
+                <div class="phone-input-row">
+                  <input type="tel" id="phone" [(ngModel)]="profile.phone" class="form-control" placeholder="Enter 10-digit phone number" maxlength="10" pattern="\\d{10}" #phoneInput="ngModel" [disabled]="otpStep() === 'otp'">
+                  <button id="send-otp-btn" *ngIf="profile.phone && profile.phone.length === 10 && !(phoneVerified() && profile.phone === verifiedPhone) && otpStep() !== 'otp'" class="btn-verify" (click)="sendPhoneOtp()" [disabled]="sendingOtp()">
+                    {{ sendingOtp() ? 'Sending...' : 'Verify' }}
+                  </button>
+                </div>
                 <span class="field-error" *ngIf="phoneInput.touched && phoneInput.invalid">Phone number must be exactly 10 digits</span>
               </div>
               <div class="form-group">
                 <label for="date_of_birth">Date of Birth</label>
                 <input type="date" id="date_of_birth" [(ngModel)]="profile.date_of_birth" class="form-control">
+              </div>
+            </div>
+
+            <!-- Phone OTP Verification Section -->
+            <div class="otp-section" *ngIf="otpStep() === 'otp'">
+              <div class="otp-header">
+                <p>Enter the 6-digit OTP sent to <strong>+91 {{ profile.phone }}</strong></p>
+                <button type="button" class="btn-link-cancel" (click)="cancelPhoneOtp()">Cancel</button>
+              </div>
+              <div class="otp-inputs">
+                @for (i of otpIndexes; track i) {
+                  <input
+                    type="text"
+                    maxlength="1"
+                    [attr.data-otp-index]="i"
+                    (input)="onOtpInput($event, i)"
+                    (keydown)="onOtpKeydown($event, i)"
+                    (paste)="onOtpPaste($event)"
+                    class="otp-box"
+                    [class.filled]="otpValues[i]"
+                    inputmode="numeric"
+                    pattern="[0-9]"
+                    autocomplete="one-time-code"
+                  >
+                }
+              </div>
+              <div class="otp-error" *ngIf="otpError()">{{ otpError() }}</div>
+              <div class="otp-actions">
+                <button class="btn-primary btn-sm" (click)="verifyPhoneOtp()" [disabled]="verifyingOtp()">
+                  {{ verifyingOtp() ? 'Verifying...' : 'Verify OTP' }}
+                </button>
+                <button type="button" class="btn-link-resend" (click)="resendPhoneOtp()" [disabled]="resendCooldown() > 0 || sendingOtp()">
+                  @if (sendingOtp()) {
+                    Sending...
+                  } @else if (resendCooldown() > 0) {
+                    Resend in {{ resendCooldown() }}s
+                  } @else {
+                    Resend OTP
+                  }
+                </button>
               </div>
             </div>
 
@@ -451,6 +500,31 @@ import * as L from 'leaflet';
     .action-link { background: none; border: none; color: #e31b23; font-size: 13px; font-weight: 500; cursor: pointer; text-align: right; padding: 2px 0; }
     .action-link:hover { text-decoration: underline; }
     .action-link.danger { color: #dc3545; }
+
+    /* --- Phone Verification --- */
+    .verified-badge { display: inline-block; background: #d1fae5; color: #065f46; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; font-weight: 600; }
+    .unverified-badge { display: inline-block; background: #fef3c7; color: #92400e; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; font-weight: 600; }
+    .phone-input-row { display: flex; gap: 10px; align-items: flex-start; }
+    .phone-input-row .form-control { flex: 1; }
+    .btn-verify { padding: 12px 20px; background: #e31b23; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.2s; flex-shrink: 0; }
+    .btn-verify:hover:not(:disabled) { background: #c8171e; }
+    .btn-verify:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .otp-section { background: #f8f9fa; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+    .otp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .otp-header p { margin: 0; font-size: 14px; color: #444; }
+    .otp-header strong { color: #1a1a1a; }
+    .btn-link-cancel { background: none; border: none; color: #64748b; font-size: 13px; cursor: pointer; text-decoration: underline; }
+    .btn-link-cancel:hover { color: #e31b23; }
+    .otp-inputs { display: flex; gap: 8px; justify-content: flex-start; margin-bottom: 16px; }
+    .otp-box { width: 44px; height: 50px; text-align: center; font-size: 20px; font-weight: 700; border: 2px solid #e5e7eb; border-radius: 10px; outline: none; color: #1a1a1a; transition: all 0.2s; background: #fff; }
+    .otp-box:focus { border-color: #e31b23; box-shadow: 0 0 0 3px rgba(227,27,35,0.1); }
+    .otp-box.filled { border-color: #e31b23; }
+    .otp-error { color: #dc2626; font-size: 13px; font-weight: 500; margin-bottom: 12px; }
+    .otp-actions { display: flex; align-items: center; gap: 16px; }
+    .btn-link-resend { background: none; border: none; color: #e31b23; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-link-resend:hover:not(:disabled) { text-decoration: underline; }
+    .btn-link-resend:disabled { color: #94a3b8; cursor: not-allowed; }
   `]
 })
 export class SettingsComponent implements OnInit, AfterViewChecked {
@@ -468,6 +542,17 @@ export class SettingsComponent implements OnInit, AfterViewChecked {
   showCurrentPw = signal(false);
   showNewPw = signal(false);
   showConfirmPw = signal(false);
+
+  // Phone OTP verification signals
+  phoneVerified = signal(false);
+  otpStep = signal<'idle' | 'otp'>('idle');
+  sendingOtp = signal(false);
+  verifyingOtp = signal(false);
+  resendCooldown = signal(0);
+  otpError = signal('');
+  otpIndexes = [0, 1, 2, 3, 4, 5];
+  otpValues: string[] = ['', '', '', '', '', ''];
+  verifiedPhone = ''; // the phone number that was verified
 
   // Address signals
   addresses = signal<any[]>([]);
@@ -516,7 +601,8 @@ export class SettingsComponent implements OnInit, AfterViewChecked {
   constructor(
     private authService: AuthService,
     private http: HttpClient,
-    private toast: ToastService
+    private toast: ToastService,
+    private firebasePhone: FirebasePhoneService
   ) {}
 
   ngOnInit(): void {
@@ -555,6 +641,8 @@ export class SettingsComponent implements OnInit, AfterViewChecked {
           this.profile.last_name = u.last_name || '';
           this.profile.phone = u.phone || '';
           this.profile.date_of_birth = u.date_of_birth || '';
+          this.phoneVerified.set(!!u.otp_verified);
+          if (u.otp_verified) this.verifiedPhone = u.phone || '';
           this.updateInitials(u.first_name, u.last_name);
           if (u.image) {
             this.avatarUrl.set(this.resolveImageUrl(u.image));
@@ -926,6 +1014,129 @@ export class SettingsComponent implements OnInit, AfterViewChecked {
       this.marker = null;
       this.mapInitialized = false;
     }
+  }
+
+  // ─── Phone OTP Verification (Firebase) ───
+  sendPhoneOtp(): void {
+    if (!this.profile.phone || this.profile.phone.length !== 10) return;
+    this.sendingOtp.set(true);
+    this.otpError.set('');
+
+    // Setup invisible reCAPTCHA on the verify button
+    this.firebasePhone.setupRecaptcha('send-otp-btn');
+
+    this.firebasePhone.sendOtp(this.profile.phone)
+      .then(() => {
+        this.sendingOtp.set(false);
+        this.otpStep.set('otp');
+        this.otpValues = ['', '', '', '', '', ''];
+        this.startResendCooldown();
+        this.toast.success('OTP sent to +91 ' + this.profile.phone);
+      })
+      .catch((err: any) => {
+        this.sendingOtp.set(false);
+        this.firebasePhone.cleanup();
+        this.otpError.set(err?.message || 'Failed to send OTP. Please try again.');
+        this.toast.error(err?.message || 'Failed to send OTP');
+      });
+  }
+
+  verifyPhoneOtp(): void {
+    const otp = this.otpValues.join('');
+    if (otp.length !== 6) {
+      this.otpError.set('Please enter the complete 6-digit code');
+      return;
+    }
+
+    this.verifyingOtp.set(true);
+    this.otpError.set('');
+
+    // Step 1: Verify OTP with Firebase (client-side)
+    this.firebasePhone.verifyOtp(otp)
+      .then((idToken: string) => {
+        // Step 2: Send Firebase ID token to backend
+        this.http.post<any>(`${environment.apiUrl}/user/verify-phone`, { idToken }).subscribe({
+          next: (res) => {
+            this.verifyingOtp.set(false);
+            if (res.success) {
+              this.phoneVerified.set(true);
+              this.verifiedPhone = this.profile.phone;
+              this.otpStep.set('idle');
+              this.firebasePhone.cleanup();
+              this.toast.success('Phone number verified successfully');
+            }
+          },
+          error: (err) => {
+            this.verifyingOtp.set(false);
+            this.otpError.set(err.error?.message || 'Verification failed. Please try again.');
+          }
+        });
+      })
+      .catch((err: any) => {
+        this.verifyingOtp.set(false);
+        this.otpError.set(err?.message || 'Invalid OTP. Please try again.');
+      });
+  }
+
+  resendPhoneOtp(): void {
+    // Firebase: just send OTP again
+    this.sendPhoneOtp();
+  }
+
+  cancelPhoneOtp(): void {
+    this.otpStep.set('idle');
+    this.otpError.set('');
+    this.otpValues = ['', '', '', '', '', ''];
+    this.firebasePhone.cleanup();
+  }
+
+  onOtpInput(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.replace(/[^0-9]/g, '');
+    input.value = value;
+    this.otpValues[index] = value;
+
+    if (value && index < 5) {
+      const next = document.querySelector(`input[data-otp-index="${index + 1}"]`) as HTMLInputElement;
+      next?.focus();
+    }
+  }
+
+  onOtpKeydown(event: KeyboardEvent, index: number): void {
+    if (event.key === 'Backspace' && !this.otpValues[index] && index > 0) {
+      const prev = document.querySelector(`input[data-otp-index="${index - 1}"]`) as HTMLInputElement;
+      if (prev) {
+        prev.focus();
+        prev.value = '';
+        this.otpValues[index - 1] = '';
+      }
+    }
+  }
+
+  onOtpPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const pasted = (event.clipboardData?.getData('text') || '').replace(/[^0-9]/g, '').slice(0, 6);
+    for (let i = 0; i < 6; i++) {
+      this.otpValues[i] = pasted[i] || '';
+      const input = document.querySelector(`input[data-otp-index="${i}"]`) as HTMLInputElement;
+      if (input) input.value = this.otpValues[i];
+    }
+    const lastFilled = Math.min(pasted.length, 5);
+    const focusInput = document.querySelector(`input[data-otp-index="${lastFilled}"]`) as HTMLInputElement;
+    focusInput?.focus();
+  }
+
+  private startResendCooldown(): void {
+    this.resendCooldown.set(60);
+    const interval = setInterval(() => {
+      const current = this.resendCooldown();
+      if (current <= 1) {
+        this.resendCooldown.set(0);
+        clearInterval(interval);
+      } else {
+        this.resendCooldown.set(current - 1);
+      }
+    }, 1000);
   }
 
   // ─── Account Deletion ───

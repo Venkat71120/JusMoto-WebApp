@@ -7,6 +7,7 @@ const { sequelize } = require('../config/database');
 const { paginate, paginationResponse } = require('../utils/helpers');
 const { uploadSingle } = require('../middleware/upload.middleware');
 const { uploadToS3, generateS3Key } = require('../config/s3');
+const { formatError } = require('../utils/formatError');
 
 // Franchise dashboard stats
 router.get('/dashboard', authenticate, isFranchise, async (req, res) => {
@@ -14,7 +15,6 @@ router.get('/dashboard', authenticate, isFranchise, async (req, res) => {
     const franchiseId = req.admin.id;
 
     const [orderStats] = await require('../models').sequelize.query(`
-const { formatError } = require('../utils/formatError');
       SELECT
         COUNT(*) as total_orders,
         SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) as pending_orders,

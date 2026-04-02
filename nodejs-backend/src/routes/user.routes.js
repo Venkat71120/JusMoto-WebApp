@@ -3,12 +3,12 @@ const router = express.Router();
 const { authenticate, isClient } = require('../middleware/auth.middleware');
 const { uploadSingle } = require('../middleware/upload.middleware');
 const { uploadToS3, generateS3Key } = require('../config/s3');
+const { formatError } = require('../utils/formatError');
 
 // User profile routes
 router.get('/profile', authenticate, isClient, async (req, res) => {
   try {
     const { User, Wallet, UserSelectedCar, Brand, Car, Variant } = require('../models');
-const { formatError } = require('../utils/formatError');
 
     const user = await User.findByPk(req.user.id, {
       include: [
@@ -214,15 +214,31 @@ router.post('/verify-email-otp', authenticate, isClient, async (req, res) => {
   }
 });
 
-// Change phone number - send OTP
-router.post('/change-phone-number', authenticate, isClient, async (req, res) => {
+// Verify phone via Firebase ID token
+// Frontend handles OTP send/verify via Firebase SDK, then sends idToken here
+router.post('/verify-phone', authenticate, isClient, async (req, res) => {
   try {
-    const { phone } = req.body;
+    const { idToken } = req.body;
     const { User } = require('../models');
+    const firebaseService = require('../services/firebase.service');
 
-    if (!phone) {
-      return res.status(422).json({ success: false, message: 'Phone number is required' });
+    if (!idToken) {
+      return res.status(422).json({ success: false, message: 'Firebase ID token is required' });
     }
+
+    // Verify the Firebase ID token
+    const result = await firebaseService.verifyIdToken(idToken);
+    if (!result.success) {
+      return res.status(401).json({ success: false, message: result.error || 'Invalid Firebase token' });
+    }
+
+    const firebasePhone = result.decoded.phone_number; // e.g. "+919876543210"
+    if (!firebasePhone) {
+      return res.status(400).json({ success: false, message: 'No phone number found in Firebase token' });
+    }
+
+    // Normalize: strip +91 prefix
+    const phone = firebasePhone.replace(/^\+91/, '');
 
     // Check if phone is already used by another user
     const existing = await User.findOne({ where: { phone } });
@@ -230,79 +246,19 @@ router.post('/change-phone-number', authenticate, isClient, async (req, res) => 
       return res.status(409).json({ success: false, message: 'Phone number already in use by another account' });
     }
 
-    // Generate OTP
-    const crypto = require('crypto');
-    const otp = crypto.randomInt(100000, 999999).toString();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-    // Store OTP in user record (reuse password_reset fields)
-    await User.update(
-      { password_reset_token: `phone:${phone}:${otp}`, password_reset_expires: otpExpires },
-      { where: { id: req.user.id } }
-    );
-
-    // Try SMS first, fallback to email
-    const smsService = require('../services/sms.service');
-    const smsResult = await smsService.sendOTP(phone, otp);
-
-    if (!smsResult.success) {
-      // Fallback: send OTP via email
-      const user = await User.findByPk(req.user.id);
-      if (user.email) {
-        const emailService = require('../services/email.service');
-        await emailService.sendOTP(user, otp);
-      }
-    }
-
-    res.json({
-      success: true,
-      message: 'OTP sent successfully',
-      data: {
-        phone,
-        otp_sent_via: smsResult.success ? 'sms' : 'email',
-        expires_in: 600,
-        ...(process.env.NODE_ENV === 'development' ? { otp } : {})
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
-  }
-});
-
-// Verify phone OTP and update phone number
-router.post('/verify-phone-otp', authenticate, isClient, async (req, res) => {
-  try {
-    const { phone, otp } = req.body;
-    const { User } = require('../models');
-
-    if (!phone || !otp) {
-      return res.status(422).json({ success: false, message: 'Phone and OTP are required' });
-    }
-
+    // Update phone and mark as verified
     const user = await User.findByPk(req.user.id);
-
-    // Check OTP expiry
-    if (!user.password_reset_expires || new Date() > new Date(user.password_reset_expires)) {
-      return res.status(400).json({ success: false, message: 'OTP has expired. Please request a new one.' });
-    }
-
-    // Verify OTP (stored as "phone:{number}:{otp}")
-    const expected = `phone:${phone}:${otp}`;
-    if (user.password_reset_token !== expected) {
-      return res.status(400).json({ success: false, message: 'Invalid OTP' });
-    }
-
-    // Update phone number
     await user.update({
       phone,
+      otp_verified: 1,
       password_reset_token: null,
       password_reset_expires: null
     });
 
     res.json({
       success: true,
-      message: 'Phone number updated successfully',
-      data: { phone: user.phone }
+      message: 'Phone number verified successfully',
+      data: { phone: user.phone, otp_verified: 1 }
     });
   } catch (error) {
     res.status(500).json({ success: false, error: formatError(error) });

@@ -4,6 +4,7 @@ const authController = require('../controllers/auth.controller');
 const authValidator = require('../validators/auth.validator');
 const { validate } = require('../middleware/validate.middleware');
 const { authenticate } = require('../middleware/auth.middleware');
+const { formatError } = require('../utils/formatError');
 
 // Public routes
 router.post('/register', authValidator.registerValidator, validate, authController.register);
@@ -25,7 +26,6 @@ router.post('/social/login', async (req, res) => {
 
     const { User } = require('../models');
     const authService = require('../services/auth.service');
-const { formatError } = require('../utils/formatError');
 
     // Find by social_id first, then email
     let user = socialId

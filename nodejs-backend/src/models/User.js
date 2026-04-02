@@ -27,10 +27,10 @@ const User = sequelize.define('User', {
   },
   email: {
     type: DataTypes.STRING(255),
-    allowNull: false,
+    allowNull: true,
     unique: true,
     validate: {
-      isEmail: true
+      isEmail: { msg: 'Must be a valid email address' }
     }
   },
   date_of_birth: {

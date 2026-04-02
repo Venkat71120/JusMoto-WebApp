@@ -12,6 +12,7 @@ const path = require('path');
 const fs = require('fs');
 const emailService = require('../services/email.service');
 const sharp = require('sharp');
+const { formatError } = require('../utils/formatError');
 
 // ==================== Dashboard ====================
 router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
@@ -25,7 +26,6 @@ router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
     if (isFranchise) {
       // Franchise: only show their order stats
       const [franchiseStats] = await require('../models').sequelize.query(`
-const { formatError } = require('../utils/formatError');
         SELECT
           COUNT(*) as total_orders,
           COALESCE(SUM(CASE WHEN status IN (2,3) AND payment_status = 1 THEN total ELSE 0 END), 0) as total_revenue,

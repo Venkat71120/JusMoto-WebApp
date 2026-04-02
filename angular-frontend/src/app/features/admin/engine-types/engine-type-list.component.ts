@@ -13,19 +13,16 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
   template: `
     <div class="page-header">
       <h1 class="page-title">Engine Types</h1>
+      <button class="btn-primary" (click)="openAddModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Engine Type
+      </button>
     </div>
 
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" placeholder="Search engine types..." [(ngModel)]="searchTerm" (input)="filterItems()" class="search-input" />
-      </div>
-      <div class="add-inline">
-        <input type="text" [(ngModel)]="newName" placeholder="New engine type name" class="inline-input" (keyup.enter)="addItem()" />
-        <button class="btn-primary" (click)="addItem()" [disabled]="saving() || !newName.trim()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add
-        </button>
       </div>
     </div>
 
@@ -44,7 +41,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             <td>{{ i + 1 }}</td>
             <td>
               <span *ngIf="editId !== item.id">{{ item.name }}</span>
-              <input *ngIf="editId === item.id" type="text" [(ngModel)]="editName" class="inline-input">
+              <input *ngIf="editId === item.id" type="text" [(ngModel)]="editName" class="inline-input" (keyup.enter)="saveEdit()">
             </td>
             <td>
               <div class="action-btns" *ngIf="editId !== item.id">
@@ -68,6 +65,30 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
       </table>
     </div>
 
+    <!-- Add Engine Type Modal -->
+    <div class="modal-overlay" *ngIf="showAddModal()" (click)="closeAddModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Add Engine Type</h2>
+          <button class="modal-close" (click)="closeAddModal()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="engineName">Engine Type Name</label>
+            <input type="text" id="engineName" [(ngModel)]="newName" placeholder="Enter engine type name" class="form-control" (keyup.enter)="addItem()" autofocus />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-cancel" (click)="closeAddModal()">Cancel</button>
+          <button class="btn-primary" (click)="addItem()" [disabled]="saving() || !newName.trim()">
+            {{ saving() ? 'Adding...' : 'Add Engine Type' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
     <app-confirm-modal
       [open]="!!deletingItem()"
       title="Delete Engine Type"
@@ -86,7 +107,6 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .search-box svg { color:#94a3b8; flex-shrink:0; }
     .search-input { border:none; outline:none; font-size:14px; color:#334155; width:100%; background:transparent; }
     .search-input::placeholder { color:#94a3b8; }
-    .add-inline { display:flex; align-items:center; gap:10px; }
     .inline-input { padding:10px 14px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; width:220px; }
     .inline-input:focus { outline:none; border-color:#e31b23; box-shadow:0 0 0 3px rgba(227,27,35,0.1); }
     .table-container { position:relative; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
@@ -100,12 +120,32 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .action-btns { display:flex; gap:6px; }
     .action-btn { background:none; border:none; cursor:pointer; padding:6px; border-radius:6px; color:#64748b; display:inline-flex; }
     .action-btn:hover { background:#fee2e2; color:#e31b23; }
-    .btn-primary { background:#e31b23; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
+    .btn-primary { background:#e31b23; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px; font-size:14px; }
     .btn-primary:hover { background:#b11218; }
     .btn-primary:disabled { opacity:0.6; cursor:not-allowed; }
     .btn-sm { padding:6px 14px; font-size:13px; }
-    .btn-cancel { padding:6px 14px; border:1px solid #d1d5db; border-radius:8px; background:#fff; color:#374151; font-weight:600; cursor:pointer; font-size:13px; }
+    .btn-cancel { padding:10px 20px; border:1px solid #d1d5db; border-radius:8px; background:#fff; color:#374151; font-weight:600; cursor:pointer; font-size:14px; }
+    .btn-cancel.btn-sm { padding:6px 14px; font-size:13px; }
+    .btn-cancel:hover { background:#f9fafb; }
     .empty-state { text-align:center; padding:40px !important; color:#94a3b8; }
+
+    /* Modal */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000; animation:fadeIn 0.2s ease; }
+    .modal-content { background:#fff; border-radius:16px; width:100%; max-width:460px; box-shadow:0 20px 60px rgba(0,0,0,0.2); animation:slideUp 0.25s ease; }
+    .modal-header { display:flex; justify-content:space-between; align-items:center; padding:20px 24px; border-bottom:1px solid #f1f5f9; }
+    .modal-header h2 { font-size:18px; font-weight:700; color:#1a1a2e; margin:0; }
+    .modal-close { background:none; border:none; cursor:pointer; padding:4px; border-radius:6px; color:#94a3b8; display:flex; }
+    .modal-close:hover { background:#f1f5f9; color:#334155; }
+    .modal-body { padding:24px; }
+    .form-group { margin-bottom:0; }
+    .form-group label { display:block; font-size:14px; font-weight:600; color:#334155; margin-bottom:8px; }
+    .form-control { width:100%; padding:12px 16px; border:1px solid #e5e7eb; border-radius:8px; font-size:15px; color:#1a1a2e; box-sizing:border-box; transition:border-color 0.2s, box-shadow 0.2s; }
+    .form-control:focus { outline:none; border-color:#e31b23; box-shadow:0 0 0 3px rgba(227,27,35,0.1); }
+    .form-control::placeholder { color:#94a3b8; }
+    .modal-footer { display:flex; justify-content:flex-end; gap:12px; padding:16px 24px; border-top:1px solid #f1f5f9; }
+
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
   `]
 })
 export class EngineTypeListComponent implements OnInit {
@@ -114,6 +154,7 @@ export class EngineTypeListComponent implements OnInit {
   loading = signal(false);
   saving = signal(false);
   deletingItem = signal<any>(null);
+  showAddModal = signal(false);
   newName = '';
   searchTerm = '';
   editId: any = null;
@@ -141,11 +182,21 @@ export class EngineTypeListComponent implements OnInit {
     }
   }
 
+  openAddModal() {
+    this.newName = '';
+    this.showAddModal.set(true);
+  }
+
+  closeAddModal() {
+    this.showAddModal.set(false);
+    this.newName = '';
+  }
+
   addItem() {
     if (!this.newName.trim()) return;
     this.saving.set(true);
     this.http.post<any>(`${environment.apiUrl}/admin/engine-types`, { name: this.newName }).subscribe({
-      next: () => { this.newName = ''; this.toast.success('Engine type added successfully'); this.loadItems(); },
+      next: () => { this.newName = ''; this.showAddModal.set(false); this.toast.success('Engine type added successfully'); this.loadItems(); },
       error: () => { this.toast.error('Failed to add engine type'); this.saving.set(false); },
       complete: () => this.saving.set(false)
     });

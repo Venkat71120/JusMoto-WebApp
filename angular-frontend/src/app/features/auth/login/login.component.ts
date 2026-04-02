@@ -97,6 +97,12 @@ import { environment } from '../../../../environments/environment';
           <div class="admin-link">
             <p>Are you an admin? <a routerLink="/auth/admin-login">Login as Admin</a></p>
           </div>
+
+          <div class="legal-links">
+            <a routerLink="/privacy-policy">Privacy Policy</a>
+            <span class="dot">·</span>
+            <a routerLink="/terms-of-service">Terms of Service</a>
+          </div>
         </div>
       </div>
     </div>
@@ -195,6 +201,11 @@ import { environment } from '../../../../environments/environment';
     .admin-link p { color:#94a3b8; font-size:13px; margin:0; }
     .admin-link a { color:#64748b; text-decoration:none; font-weight:500; transition:color 0.2s; }
     .admin-link a:hover { color:#e31b23; text-decoration:underline; }
+
+    .legal-links { text-align:center; margin-top:20px; padding-top:16px; border-top:1px solid #e5e7eb; }
+    .legal-links a { color:#94a3b8; text-decoration:none; font-size:12px; transition:color 0.2s; }
+    .legal-links a:hover { color:#e31b23; text-decoration:underline; }
+    .legal-links .dot { color:#cbd5e1; margin:0 8px; font-size:12px; }
 
     @media (max-width: 900px) {
       .login-wrapper { flex-direction:column; }

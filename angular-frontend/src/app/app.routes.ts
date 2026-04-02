@@ -45,6 +45,16 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/admin-login/admin-login.component').then(m => m.AdminLoginComponent)
   },
 
+  // Public legal pages (no auth required)
+  {
+    path: 'privacy-policy',
+    loadComponent: () => import('./features/legal/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
+  },
+  {
+    path: 'terms-of-service',
+    loadComponent: () => import('./features/legal/terms-of-service.component').then(m => m.TermsOfServiceComponent)
+  },
+
   // Redirect legacy /dashboard to /client/dashboard
   {
     path: 'dashboard',

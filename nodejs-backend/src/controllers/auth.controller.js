@@ -58,7 +58,7 @@ const register = async (req, res) => {
     const token = jwt.sign(
       { id: user.id, type: 'client', email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+      { expiresIn: process.env.JWT_EXPIRES_IN || '180d' }
     );
 
     // Send OTP email for email verification + welcome email
@@ -131,7 +131,7 @@ const login = async (req, res) => {
     const token = jwt.sign(
       { id: user.id, type: 'client', email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+      { expiresIn: process.env.JWT_EXPIRES_IN || '180d' }
     );
 
     // Update last seen
@@ -190,7 +190,7 @@ const adminLogin = async (req, res) => {
     const token = jwt.sign(
       { id: admin.id, type: 'admin', role: admin.role, email: admin.email },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+      { expiresIn: process.env.JWT_EXPIRES_IN || '180d' }
     );
 
     // Fetch permissions for this admin's role
@@ -404,7 +404,7 @@ const refreshToken = async (req, res) => {
     const newToken = jwt.sign(
       { id: user.id, type, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+      { expiresIn: process.env.JWT_EXPIRES_IN || '180d' }
     );
 
     return response.success(res, { token: newToken }, 'Token refreshed');

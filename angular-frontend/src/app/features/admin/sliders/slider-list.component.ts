@@ -30,6 +30,10 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
         <div class="card-body">
           <div class="card-type">{{ slider.type || 'General' }}</div>
           <div class="card-identity" *ngIf="slider.identity">{{ slider.identity }}</div>
+          <div class="card-link" *ngIf="slider.link">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            <a [href]="slider.link" target="_blank" rel="noopener">{{ slider.link }}</a>
+          </div>
           <div class="card-actions">
             <a [routerLink]="['/admin/slider/edit', slider.id]" class="action-btn" title="Edit">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -72,7 +76,10 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
     .badge-red { background:#fee2e2; color:#dc2626; }
     .card-body { padding:16px; }
     .card-type { font-weight:600; color:#334155; font-size:14px; text-transform:capitalize; margin-bottom:4px; }
-    .card-identity { color:#94a3b8; font-size:13px; margin-bottom:12px; }
+    .card-identity { color:#94a3b8; font-size:13px; margin-bottom:4px; }
+    .card-link { display:flex; align-items:center; gap:4px; font-size:12px; color:#64748b; margin-bottom:12px; overflow:hidden; }
+    .card-link a { color:#e31b23; text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .card-link a:hover { text-decoration:underline; }
     .card-actions { display:flex; gap:8px; }
     .action-btn { background:none; border:1px solid #e5e7eb; cursor:pointer; padding:6px; border-radius:6px; color:#64748b; display:inline-flex; text-decoration:none; }
     .action-btn:hover { background:#fee2e2; color:#e31b23; border-color:#fca5a5; }

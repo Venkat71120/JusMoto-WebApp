@@ -150,6 +150,12 @@ import { environment } from '../../../environments/environment';
             <!-- SUPPORT - tickets visible to all, departments permission based -->
             <li class="nav-section">SUPPORT</li>
             <li>
+              <a routerLink="/admin/quotes/all" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <span>Quote Requests</span>
+              </a>
+            </li>
+            <li>
               <a routerLink="/admin/support-ticket/tickets" routerLinkActive="active" class="nav-item" (click)="closeSidebar()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                 <span>Service Requests</span>

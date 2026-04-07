@@ -73,6 +73,10 @@ export const adminRoutes: Routes = [
       { path: 'slider/add', loadComponent: () => import('./sliders/slider-form.component').then(m => m.SliderFormComponent) },
       { path: 'slider/edit/:id', loadComponent: () => import('./sliders/slider-form.component').then(m => m.SliderFormComponent) },
 
+      // Quotes
+      { path: 'quotes/all', loadComponent: () => import('./quotes/quote-list.component').then(m => m.QuoteListComponent) },
+      { path: 'quotes/details/:id', loadComponent: () => import('./quotes/quote-detail.component').then(m => m.QuoteDetailComponent) },
+
       // Support Tickets
       { path: 'support-ticket/tickets', loadComponent: () => import('./tickets/ticket-list.component').then(m => m.TicketListComponent) },
       { path: 'support-ticket/details/:id', loadComponent: () => import('./tickets/ticket-detail.component').then(m => m.TicketDetailComponent) },

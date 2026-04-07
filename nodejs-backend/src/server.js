@@ -107,6 +107,34 @@ const startServer = async () => {
       console.log('Migration check (ticket_messages):', e.message);
     }
 
+    // Create quote_requests table if not exists
+    try {
+      await sequelize.query(`CREATE TABLE IF NOT EXISTS quote_requests (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        user_id BIGINT UNSIGNED NOT NULL,
+        type ENUM('service', 'product') NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        description TEXT NOT NULL,
+        status ENUM('pending', 'reviewed', 'quoted', 'closed') DEFAULT 'pending',
+        admin_note TEXT NULL,
+        quoted_price DECIMAL(10,2) NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )`);
+    } catch (e) {
+      console.log('Migration check (quote_requests):', e.message);
+    }
+
+    // Add link column to sliders if not exists
+    try {
+      const [sliderCols] = await sequelize.query("SHOW COLUMNS FROM sliders LIKE 'link'");
+      if (sliderCols.length === 0) {
+        await sequelize.query("ALTER TABLE sliders ADD COLUMN link VARCHAR(500) NULL AFTER image");
+      }
+    } catch (e) {
+      console.log('Migration check (sliders.link):', e.message);
+    }
+
     console.log('Database models synchronized');
 
     // Start server (use httpServer for Socket.io support)

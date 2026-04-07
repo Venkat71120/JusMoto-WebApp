@@ -23,7 +23,8 @@
       "Bash(KEY=\"/c/xampp/htdocs/JusMoto-WebApp/aws-deployment/JusMoto.pem\")",
       "Bash(EC2=\"ubuntu@16.112.128.19\")",
       "Bash(DEST=\"/var/www/jusmoto/nodejs-backend/src\")",
-      "Bash(__NEW_LINE_79e7e6711f7d22c7__ ssh -i $KEY -o StrictHostKeyChecking=no $EC2 \":*)"
+      "Bash(__NEW_LINE_79e7e6711f7d22c7__ ssh -i $KEY -o StrictHostKeyChecking=no $EC2 \":*)",
+      "Bash(python3:*)"
     ]
   }
 }

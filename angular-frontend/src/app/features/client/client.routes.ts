@@ -24,6 +24,18 @@ export const clientRoutes: Routes = [
         loadComponent: () => import('./favourites/favourites.component').then(m => m.FavouritesComponent)
       },
       {
+        path: 'quotes',
+        loadComponent: () => import('./quotes/quote-list.component').then(m => m.ClientQuoteListComponent)
+      },
+      {
+        path: 'quotes/new',
+        loadComponent: () => import('./quotes/quote-create.component').then(m => m.QuoteCreateComponent)
+      },
+      {
+        path: 'quotes/:id',
+        loadComponent: () => import('./quotes/quote-detail.component').then(m => m.ClientQuoteDetailComponent)
+      },
+      {
         path: 'tickets',
         loadComponent: () => import('./tickets/ticket-list.component').then(m => m.ClientTicketListComponent)
       },

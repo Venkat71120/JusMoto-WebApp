@@ -39,6 +39,11 @@ import { ToastService } from '../../../core/services/toast.service';
         <input type="text" class="form-control" [(ngModel)]="form.identity" placeholder="Identifier or label">
       </div>
       <div class="form-group">
+        <label>Link URL</label>
+        <input type="url" class="form-control" [(ngModel)]="form.link" placeholder="https://example.com/page">
+        <small class="form-hint">Where should this slider link to when clicked?</small>
+      </div>
+      <div class="form-group">
         <label class="toggle-label">
           <input type="checkbox" [(ngModel)]="form.status"> Active
         </label>
@@ -68,6 +73,7 @@ import { ToastService } from '../../../core/services/toast.service';
     .form-control:focus { outline:none; border-color:#e31b23; box-shadow:0 0 0 3px rgba(227,27,35,0.1); }
     .image-preview { margin-top:12px; }
     .image-preview img { max-width:100%; max-height:200px; border-radius:8px; border:1px solid #e5e7eb; }
+    .form-hint { display:block; margin-top:4px; font-size:12px; color:#94a3b8; }
     .toggle-label { display:flex; align-items:center; gap:8px; cursor:pointer; }
     .toggle-label input { accent-color:#e31b23; width:16px; height:16px; }
     .error-msg { color:#dc2626; background:#fee2e2; padding:10px 16px; border-radius:8px; margin-bottom:16px; }
@@ -84,7 +90,7 @@ export class SliderFormComponent implements OnInit {
   loadingData = signal(false);
   saving = signal(false);
   error = signal('');
-  form: any = { image: '', type: '', identity: '', status: true };
+  form: any = { image: '', type: '', identity: '', link: '', status: true };
 
   constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private toast: ToastService) {}
 
@@ -99,7 +105,7 @@ export class SliderFormComponent implements OnInit {
     this.http.get<any>(`${environment.apiUrl}/admin/sliders/${this.sliderId}`).subscribe({
       next: (res) => {
         const s = res.data;
-        this.form = { image: s.image ?? '', type: s.type || '', identity: s.identity || '', status: !!s.status };
+        this.form = { image: s.image ?? '', type: s.type || '', identity: s.identity || '', link: s.link || '', status: !!s.status };
       },
       error: () => this.router.navigate(['/admin/slider/all']),
       complete: () => this.loadingData.set(false)

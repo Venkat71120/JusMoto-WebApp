@@ -38,6 +38,7 @@ const refundRoutes = require('./routes/refund.routes');
 const favouriteRoutes = require('./routes/favourite.routes');
 const mobileCompatRoutes = require('./routes/mobile-compat.routes');
 const loginOtpRoutes = require('./routes/login-otp.routes');
+const quoteRoutes = require('./routes/quote.routes');
 
 const app = express();
 const httpServer = createServer(app);
@@ -116,6 +117,7 @@ app.use(`${apiV1}/external`, externalRoutes);
 app.use(`${apiV1}/favourites`, favouriteRoutes);
 app.use(`${apiV1}/general`, generalRoutes);
 app.use(`${apiV1}/login-otp`, loginOtpRoutes);
+app.use(`${apiV1}/quotes`, quoteRoutes);
 app.use(apiV1, mobileCompatRoutes); // Laravel-compatible routes for mobile app
 
 // Health check

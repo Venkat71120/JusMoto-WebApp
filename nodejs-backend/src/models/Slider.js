@@ -19,6 +19,10 @@ const Slider = sequelize.define('Slider', {
     type: DataTypes.STRING(191),
     allowNull: true
   },
+  link: {
+    type: DataTypes.STRING(500),
+    allowNull: true
+  },
   status: {
     type: DataTypes.INTEGER,
     defaultValue: 0

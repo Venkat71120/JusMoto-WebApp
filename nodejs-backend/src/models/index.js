@@ -50,6 +50,7 @@ const PaymentGateway = require('./PaymentGateway');
 const { StateTax, CityTax } = require('./Tax');
 const { StateDeliveryCharge, CityDeliveryCharge } = require('./DeliveryCharge');
 const StaticOption = require('./StaticOption');
+const QuoteRequest = require('./QuoteRequest');
 
 // ==================== Define Associations ====================
 
@@ -213,6 +214,10 @@ TicketMessage.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });
 Admin.hasMany(Review, { foreignKey: 'admin_id', as: 'reviews' });
 Review.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });
 
+// Quote request associations
+User.hasMany(QuoteRequest, { foreignKey: 'user_id', as: 'quoteRequests' });
+QuoteRequest.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
 // Outlet location associations
 Admin.hasMany(AdminOutletLocation, { foreignKey: 'admin_id', as: 'outletLocations' });
 AdminOutletLocation.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });
@@ -271,5 +276,6 @@ module.exports = {
   CityTax,
   StateDeliveryCharge,
   CityDeliveryCharge,
-  StaticOption
+  StaticOption,
+  QuoteRequest
 };

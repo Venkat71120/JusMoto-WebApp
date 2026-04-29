@@ -49,7 +49,11 @@
       "Bash(find:*)",
       "Bash(xargs:*)",
       "Bash(mkdir:*)",
-      "Bash(npm install)"
+      "Bash(npm install)",
+      "Bash(npx pm2:*)",
+      "Bash(node:*)",
+      "Bash(npm install:*)",
+      "Bash(aws cloudfront get-distribution:*)"
     ],
     "deny": [],
     "ask": []

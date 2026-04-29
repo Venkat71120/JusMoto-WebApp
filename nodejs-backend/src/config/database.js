@@ -13,8 +13,14 @@ const sequelize = new Sequelize(
     pool: {
       max: 10,
       min: 0,
-      acquire: 30000,
+      acquire: 60000,
       idle: 10000
+    },
+    retry: {
+      max: 3
+    },
+    dialectOptions: {
+      connectTimeout: 60000
     },
     define: {
       timestamps: true,

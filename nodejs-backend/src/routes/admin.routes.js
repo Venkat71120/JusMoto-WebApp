@@ -5,61 +5,37 @@ const { uploadSingle } = require('../middleware/upload.middleware');
 const { User, Admin, Order, Service, Category, SubCategory, Brand, Car, Coupon, Offer, OfferService,
         Variant, Review, Ticket, ChatMessage, Department, RefundedOrder, State, City, Area,
         Slider, AdminOutletLocation, AdminNotification, MediaUpload, EngineType, FuelType,
-        Role, Permission, ServiceInclude, ServiceFaq, ServiceAdditional, StaticOption } = require('../models');
+        Role, Permission, ServiceInclude, ServiceFaq, ServiceAdditional } = require('../models');
 const { Op } = require('sequelize');
 const { paginate, paginationResponse, createSlug } = require('../utils/helpers');
 const path = require('path');
 const fs = require('fs');
 const emailService = require('../services/email.service');
 const sharp = require('sharp');
-const { formatError } = require('../utils/formatError');
+const { fetchBrandLogo } = require('../services/csv-import.service');
 
 // ==================== Dashboard ====================
 router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
   try {
-    const isFranchise = req.admin.is_franchise;
-    const franchiseId = req.admin.id;
-    const orderFilter = isFranchise ? `WHERE franchise_admin_id = ${parseInt(franchiseId)}` : '';
-    const orderFilterAnd = isFranchise ? `AND franchise_admin_id = ${parseInt(franchiseId)}` : '';
-
-    let stats;
-    if (isFranchise) {
-      // Franchise: only show their order stats
-      const [franchiseStats] = await require('../models').sequelize.query(`
-        SELECT
-          COUNT(*) as total_orders,
-          COALESCE(SUM(CASE WHEN status IN (2,3) AND payment_status = 1 THEN total ELSE 0 END), 0) as total_revenue,
-          COALESCE(SUM(CASE WHEN status IN (2,3) AND payment_status = 1 THEN tax ELSE 0 END), 0) as total_tax,
-          COALESCE(SUM(CASE WHEN status IN (2,3) AND payment_status = 1 THEN total ELSE 0 END), 0) as total_earnings,
-          SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) as pending_orders,
-          SUM(CASE WHEN DATE(created_at) = CURDATE() THEN 1 ELSE 0 END) as today_orders
-        FROM orders WHERE franchise_admin_id = ?
-      `, { replacements: [franchiseId] });
-      stats = franchiseStats;
-    } else {
-      const [adminStats] = await require('../models').sequelize.query(`
-        SELECT
-          (SELECT COUNT(*) FROM admins) as total_admins,
-          (SELECT COUNT(*) FROM users WHERE deleted_at IS NULL) as total_users,
-          (SELECT COUNT(*) FROM services WHERE status = 1 AND type = 0) as total_services,
-          (SELECT COUNT(*) FROM services WHERE status = 1 AND type = 1) as total_products,
-          (SELECT COUNT(*) FROM cars) as total_cars,
-          (SELECT COUNT(*) FROM coupons) as total_coupons,
-          (SELECT COUNT(*) FROM orders) as total_orders,
-          (SELECT COALESCE(SUM(tax), 0) FROM orders WHERE status IN (2,3) AND payment_status = 1) as total_tax,
-          (SELECT COALESCE(SUM(total), 0) FROM orders WHERE status IN (2,3) AND payment_status = 1) as total_earnings,
-          (SELECT COALESCE(SUM(total), 0) FROM orders WHERE payment_status = 1) as total_revenue,
-          (SELECT COUNT(*) FROM orders WHERE status = 0) as pending_orders,
-          (SELECT COUNT(*) FROM orders WHERE DATE(created_at) = CURDATE()) as today_orders
-      `);
-      stats = adminStats;
-    }
-
+    const [stats] = await require('../models').sequelize.query(`
+      SELECT
+        (SELECT COUNT(*) FROM admins) as total_admins,
+        (SELECT COUNT(*) FROM users WHERE deleted_at IS NULL) as total_users,
+        (SELECT COUNT(*) FROM services WHERE status = 1 AND type = 0) as total_services,
+        (SELECT COUNT(*) FROM services WHERE status = 1 AND type = 1) as total_products,
+        (SELECT COUNT(*) FROM cars) as total_cars,
+        (SELECT COUNT(*) FROM coupons) as total_coupons,
+        (SELECT COUNT(*) FROM orders) as total_orders,
+        (SELECT COALESCE(SUM(tax), 0) FROM orders WHERE status IN (2,3) AND payment_status = 1) as total_tax,
+        (SELECT COALESCE(SUM(total), 0) FROM orders WHERE status IN (2,3) AND payment_status = 1) as total_earnings,
+        (SELECT COALESCE(SUM(total), 0) FROM orders WHERE payment_status = 1) as total_revenue,
+        (SELECT COUNT(*) FROM orders WHERE status = 0) as pending_orders,
+        (SELECT COUNT(*) FROM orders WHERE DATE(created_at) = CURDATE()) as today_orders
+    `);
     const [recentOrders] = await require('../models').sequelize.query(`
       SELECT o.id, o.total, o.status, o.payment_status, o.created_at,
              u.first_name, u.last_name, u.email, u.image as user_image
       FROM orders o LEFT JOIN users u ON o.user_id = u.id
-      ${orderFilter}
       ORDER BY o.created_at DESC LIMIT 5
     `);
     const [recentUsers] = await require('../models').sequelize.query(`
@@ -74,16 +50,16 @@ router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
              COALESCE(SUM(total), 0) as revenue,
              COALESCE(SUM(CASE WHEN payment_status = 1 THEN total ELSE 0 END), 0) as paid_revenue
       FROM orders
-      WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) ${orderFilterAnd}
+      WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
       GROUP BY month, label ORDER BY month ASC
     `);
     // Order status breakdown
     const [ordersByStatus] = await require('../models').sequelize.query(`
-      SELECT status, COUNT(*) as count FROM orders ${orderFilter} GROUP BY status
+      SELECT status, COUNT(*) as count FROM orders GROUP BY status
     `);
-    res.json({ success: true, data: { ...stats[0], is_franchise: !!isFranchise, recent_orders: recentOrders, recent_users: recentUsers, monthly_stats: monthlyStats, orders_by_status: ordersByStatus } });
+    res.json({ success: true, data: { ...stats[0], recent_orders: recentOrders, recent_users: recentUsers, monthly_stats: monthlyStats, orders_by_status: ordersByStatus } });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -101,7 +77,7 @@ router.get('/media', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -152,7 +128,7 @@ router.post('/media/upload', authenticate, isAdmin, ...uploadSingle('file'), asy
 
     res.status(201).json({ success: true, data: media, message: 'File uploaded' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -177,7 +153,7 @@ router.delete('/media/:id', authenticate, isAdmin, async (req, res) => {
     await media.destroy();
     res.json({ success: true, message: 'Media deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -201,7 +177,7 @@ router.get('/users', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -211,7 +187,7 @@ router.get('/users/:id', authenticate, isAdmin, async (req, res) => {
     if (!user) return res.status(404).json({ success: false, error: 'User not found' });
     res.json({ success: true, data: user });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -235,7 +211,7 @@ router.put('/users/:id/status', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, message: 'User status updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -254,7 +230,7 @@ router.delete('/users/:id', authenticate, isAdmin, async (req, res) => {
     await user.destroy();
     res.json({ success: true, message: 'User deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -271,22 +247,12 @@ router.get('/orders', authenticate, isAdmin, async (req, res) => {
     if (status !== undefined && status !== '') where.status = status;
     if (payment_status !== undefined && payment_status !== '') where.payment_status = payment_status;
     if (search) {
-      const words = search.trim().split(/\s+/);
-      if (words.length > 1) {
-        // Multi-word search: each word must match first_name or last_name
-        where[Op.or] = [
-          { invoice_number: { [Op.like]: `%${search}%` } },
-          { '$user.email$': { [Op.like]: `%${search}%` } },
-          { [Op.and]: words.map(w => ({ [Op.or]: [{ '$user.first_name$': { [Op.like]: `%${w}%` } }, { '$user.last_name$': { [Op.like]: `%${w}%` } }] })) }
-        ];
-      } else {
-        where[Op.or] = [
-          { invoice_number: { [Op.like]: `%${search}%` } },
-          { '$user.first_name$': { [Op.like]: `%${search}%` } },
-          { '$user.last_name$': { [Op.like]: `%${search}%` } },
-          { '$user.email$': { [Op.like]: `%${search}%` } }
-        ];
-      }
+      where[Op.or] = [
+        { invoice_number: { [Op.like]: `%${search}%` } },
+        { '$user.first_name$': { [Op.like]: `%${search}%` } },
+        { '$user.last_name$': { [Op.like]: `%${search}%` } },
+        { '$user.email$': { [Op.like]: `%${search}%` } }
+      ];
     }
     const { rows, count } = await Order.findAndCountAll({
       where,
@@ -298,7 +264,7 @@ router.get('/orders', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -321,7 +287,7 @@ router.get('/orders/:id', authenticate, isAdmin, async (req, res) => {
     if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
     res.json({ success: true, data: order });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -330,7 +296,7 @@ router.put('/orders/:id/status', authenticate, isAdmin, async (req, res) => {
     await Order.update({ status: req.body.status }, { where: { id: req.params.id } });
     res.json({ success: true, message: 'Order status updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -339,7 +305,7 @@ router.put('/orders/:id/payment-status', authenticate, isAdmin, async (req, res)
     await Order.update({ payment_status: req.body.payment_status }, { where: { id: req.params.id } });
     res.json({ success: true, message: 'Payment status updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -355,14 +321,47 @@ router.get('/orders/:id/invoice', authenticate, isAdmin, async (req, res) => {
     });
     if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
 
-    const { generateInvoiceHtml } = require('../utils/invoice');
-    const html = generateInvoiceHtml(order);
+    const statusLabels = ['Pending', 'Accepted', 'In Progress', 'Completed', 'Cancelled'];
+    const scheduleLabels = { morning: '9 AM - 12 PM', afternoon: '12 PM - 4 PM', evening: '4 PM - 7 PM' };
+
+    const itemsHtml = (order.items || []).map((item, i) => {
+      const qty = item.qty || item.quantity || 1;
+      return `<tr><td>${i + 1}</td><td>${item.service?.title || 'Service #' + item.service_id}</td><td>&#8377;${Number(item.price).toFixed(2)}</td><td>${qty}</td><td style="text-align:right">&#8377;${(item.price * qty).toFixed(2)}</td></tr>`;
+    }).join('');
+
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Invoice ${order.invoice_number || order.id}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#333;padding:40px;max-width:800px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px;border-bottom:3px solid #e31b23;padding-bottom:20px}
+.brand{font-size:28px;font-weight:700;color:#e31b23}
+.invoice-title{text-align:right}.invoice-title h2{font-size:24px;color:#333;margin-bottom:5px}.invoice-title p{color:#666;font-size:13px}
+.info-grid{display:flex;justify-content:space-between;margin-bottom:30px;gap:20px;flex-wrap:wrap}.info-box{flex:1;min-width:180px}.info-box h4{font-size:12px;text-transform:uppercase;color:#999;margin-bottom:8px;letter-spacing:0.5px}
+.info-box p{font-size:14px;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin-bottom:20px}th{background:#f8f9fa;padding:10px 12px;text-align:left;font-size:12px;text-transform:uppercase;color:#666;border-bottom:2px solid #e5e7eb}
+td{padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:14px}
+.totals{margin-left:auto;width:280px}.totals .row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px}
+.totals .total{border-top:2px solid #333;padding-top:10px;margin-top:6px;font-weight:700;font-size:18px;color:#e31b23}
+.footer{margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;text-align:center;color:#999;font-size:12px}
+@media print{body{padding:20px}}
+</style></head><body>
+<div class="header"><div class="brand">JusMoto</div><div class="invoice-title"><h2>INVOICE</h2><p>${order.invoice_number || 'INV-' + order.id}</p><p>${new Date(order.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</p></div></div>
+<div class="info-grid"><div class="info-box"><h4>Bill To</h4><p><strong>${order.user?.first_name || ''} ${order.user?.last_name || ''}</strong><br>${order.user?.email || ''}<br>${order.user?.phone || ''}</p></div>
+<div class="info-box"><h4>Service Address</h4><p>${order.location?.title ? '<strong>' + order.location.title + '</strong><br>' : ''}${order.location?.address || '-'}<br>${order.location?.post_code ? 'PIN: ' + order.location.post_code : ''}${order.location?.phone ? '<br>Ph: ' + order.location.phone : ''}</p></div>
+<div class="info-box"><h4>Order Details</h4><p>Order #${order.id}<br>Status: ${statusLabels[order.status] || order.status}<br>Payment: ${order.payment_status ? '<strong style="color:#16a34a">Paid</strong>' : 'Unpaid'}${order.date ? '<br>Date: ' + new Date(order.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}${order.schedule ? '<br>Slot: ' + (scheduleLabels[order.schedule] || order.schedule) : ''}</p></div></div>
+<table><thead><tr><th>#</th><th>Service</th><th>Price</th><th>Qty</th><th style="text-align:right">Total</th></tr></thead><tbody>${itemsHtml}</tbody></table>
+<div class="totals"><div class="row"><span>Subtotal</span><span>&#8377;${Number(order.sub_total || 0).toFixed(2)}</span></div>
+<div class="row"><span>Tax</span><span>&#8377;${Number(order.tax || 0).toFixed(2)}</span></div>
+${order.coupon_amount > 0 ? `<div class="row"><span>Coupon (${order.coupon_code || ''})</span><span style="color:#16a34a">-&#8377;${Number(order.coupon_amount).toFixed(2)}</span></div>` : ''}
+${order.delivery_charge > 0 ? `<div class="row"><span>Delivery</span><span>&#8377;${Number(order.delivery_charge).toFixed(2)}</span></div>` : ''}
+<div class="row total"><span>Grand Total</span><span>&#8377;${Number(order.total || 0).toFixed(2)}</span></div></div>
+<div class="footer"><p>Thank you for choosing JusMoto!</p><p>This is a computer-generated invoice.</p></div>
+</body></html>`;
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Content-Disposition', `inline; filename="invoice-${order.invoice_number || order.id}.html"`);
     res.send(html);
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -408,7 +407,7 @@ router.put('/orders/:id', authenticate, isAdmin, async (req, res) => {
     }
     res.json({ success: true, message: 'Order updated successfully' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -430,7 +429,7 @@ router.get('/services', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -465,7 +464,7 @@ router.get('/services/:id', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, data });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -528,7 +527,7 @@ router.post('/services', authenticate, isAdmin, async (req, res) => {
 
     res.status(201).json({ success: true, data: service, message: 'Service created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -593,7 +592,7 @@ router.put('/services/:id', authenticate, isAdmin, async (req, res) => {
     const service = await Service.findByPk(serviceId, { include: ['category'] });
     res.json({ success: true, data: service, message: 'Service updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -604,7 +603,7 @@ router.put('/services/:id/status', authenticate, isAdmin, async (req, res) => {
     await service.update({ status: service.status ? 0 : 1 });
     res.json({ success: true, data: service, message: 'Status toggled' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -615,7 +614,7 @@ router.put('/services/:id/featured', authenticate, isAdmin, async (req, res) => 
     await service.update({ is_featured: service.is_featured ? 0 : 1 });
     res.json({ success: true, data: service, message: 'Featured toggled' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -624,7 +623,7 @@ router.delete('/services/:id', authenticate, isAdmin, async (req, res) => {
     await Service.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Service deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -638,7 +637,7 @@ router.get('/categories', authenticate, isAdmin, async (req, res) => {
     const { rows, count } = await Category.findAndCountAll({ where, ...pagination, order: [['created_at', 'DESC']] });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -648,7 +647,7 @@ router.get('/categories/:id', authenticate, isAdmin, async (req, res) => {
     if (!category) return res.status(404).json({ success: false, error: 'Category not found' });
     res.json({ success: true, data: category });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -658,7 +657,7 @@ router.post('/categories', authenticate, isAdmin, async (req, res) => {
     const category = await Category.create({ name, slug: createSlug(name), description, image, icon, status: status !== undefined ? status : 1 });
     res.status(201).json({ success: true, data: category, message: 'Category created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -671,7 +670,7 @@ router.put('/categories/:id', authenticate, isAdmin, async (req, res) => {
     const category = await Category.findByPk(req.params.id);
     res.json({ success: true, data: category, message: 'Category updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -682,7 +681,7 @@ router.put('/categories/:id/status', authenticate, isAdmin, async (req, res) => 
     await category.update({ status: category.status ? 0 : 1 });
     res.json({ success: true, data: category, message: 'Status toggled' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -691,7 +690,7 @@ router.delete('/categories/:id', authenticate, isAdmin, async (req, res) => {
     await Category.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Category deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -709,7 +708,7 @@ router.get('/sub-categories', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -719,7 +718,7 @@ router.post('/sub-categories', authenticate, isAdmin, async (req, res) => {
     const sub = await SubCategory.create({ name, slug: createSlug(name), category_id, description, image, status: status !== undefined ? status : 1 });
     res.status(201).json({ success: true, data: sub, message: 'Sub-category created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -732,7 +731,7 @@ router.put('/sub-categories/:id', authenticate, isAdmin, async (req, res) => {
     const sub = await SubCategory.findByPk(req.params.id, { include: ['category'] });
     res.json({ success: true, data: sub, message: 'Sub-category updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -743,7 +742,7 @@ router.put('/sub-categories/:id/status', authenticate, isAdmin, async (req, res)
     await sub.update({ status: sub.status ? 0 : 1 });
     res.json({ success: true, data: sub, message: 'Status toggled' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -752,7 +751,7 @@ router.delete('/sub-categories/:id', authenticate, isAdmin, async (req, res) => 
     await SubCategory.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Sub-category deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -778,17 +777,19 @@ router.get('/brands', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, data: brandsData });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
 router.post('/brands', authenticate, isAdmin, async (req, res) => {
   try {
     const { name, image } = req.body;
-    const brand = await Brand.create({ name, image });
+    // Auto-fetch brand logo from Clearbit if no image provided
+    const logoUrl = image || await fetchBrandLogo(name);
+    const brand = await Brand.create({ name, image: logoUrl });
     res.status(201).json({ success: true, data: brand, message: 'Brand created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -799,7 +800,7 @@ router.put('/brands/:id', authenticate, isAdmin, async (req, res) => {
     const brand = await Brand.findByPk(req.params.id);
     res.json({ success: true, data: brand, message: 'Brand updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -808,7 +809,7 @@ router.delete('/brands/:id', authenticate, isAdmin, async (req, res) => {
     await Brand.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Brand deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -845,7 +846,7 @@ router.get('/cars', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, ...paginationResponse(carsData, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -862,7 +863,7 @@ router.get('/cars/:id', authenticate, isAdmin, async (req, res) => {
     }
     res.json({ success: true, data: carData });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -872,7 +873,7 @@ router.post('/cars', authenticate, isAdmin, async (req, res) => {
     const car = await Car.create({ brand_id, name, image, Year: year });
     res.status(201).json({ success: true, data: car, message: 'Car created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -883,7 +884,7 @@ router.put('/cars/:id', authenticate, isAdmin, async (req, res) => {
     const car = await Car.findByPk(req.params.id, { include: ['brand'] });
     res.json({ success: true, data: car, message: 'Car updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -892,7 +893,7 @@ router.delete('/cars/:id', authenticate, isAdmin, async (req, res) => {
     await Car.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Car deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -902,7 +903,7 @@ router.get('/engine-types', authenticate, isAdmin, async (req, res) => {
     const types = await EngineType.findAll({ order: [['name', 'ASC']] });
     res.json({ success: true, data: types });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -911,7 +912,7 @@ router.post('/engine-types', authenticate, isAdmin, async (req, res) => {
     const type = await EngineType.create({ name: req.body.name });
     res.status(201).json({ success: true, data: type, message: 'Engine type created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -921,7 +922,7 @@ router.put('/engine-types/:id', authenticate, isAdmin, async (req, res) => {
     const type = await EngineType.findByPk(req.params.id);
     res.json({ success: true, data: type, message: 'Engine type updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -930,7 +931,7 @@ router.delete('/engine-types/:id', authenticate, isAdmin, async (req, res) => {
     await EngineType.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Engine type deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -938,18 +939,9 @@ router.delete('/engine-types/:id', authenticate, isAdmin, async (req, res) => {
 router.get('/fuel-types', authenticate, isAdmin, async (req, res) => {
   try {
     const types = await FuelType.findAll({ order: [['name', 'ASC']] });
-    const data = [];
-    for (const t of types) {
-      const json = t.toJSON();
-      if (json.image && typeof json.image === 'number') {
-        const media = await MediaUpload.findByPk(json.image);
-        json.image_url = media ? media.path : null;
-      }
-      data.push(json);
-    }
-    res.json({ success: true, data });
+    res.json({ success: true, data: types });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -958,7 +950,7 @@ router.post('/fuel-types', authenticate, isAdmin, async (req, res) => {
     const type = await FuelType.create({ name: req.body.name, image: req.body.image || 0 });
     res.status(201).json({ success: true, data: type, message: 'Fuel type created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -968,7 +960,7 @@ router.put('/fuel-types/:id', authenticate, isAdmin, async (req, res) => {
     const type = await FuelType.findByPk(req.params.id);
     res.json({ success: true, data: type, message: 'Fuel type updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -977,7 +969,7 @@ router.delete('/fuel-types/:id', authenticate, isAdmin, async (req, res) => {
     await FuelType.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Fuel type deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -999,46 +991,30 @@ router.get('/variants', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
-  }
-});
-
-router.get('/variants/:id', authenticate, isAdmin, async (req, res) => {
-  try {
-    const variant = await Variant.findByPk(req.params.id, {
-      include: [
-        { association: 'car', include: [{ association: 'brand', attributes: ['id', 'name'] }] },
-        { association: 'engineType' },
-        { association: 'fuelType' }
-      ]
-    });
-    if (!variant) return res.status(404).json({ success: false, error: 'Variant not found' });
-    res.json({ success: true, data: variant });
-  } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
 router.post('/variants', authenticate, isAdmin, async (req, res) => {
   try {
     const { name, car_id, engine_type_id, fuel_type_id } = req.body;
-    const variant = await Variant.create({ name: name || null, car_id, engine_type_id, fuel_type_id: fuel_type_id });
+    const variant = await Variant.create({ name: name || null, car_id, engine_type_id, fuel_type_id });
     res.status(201).json({ success: true, data: variant, message: 'Variant created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
 router.put('/variants/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const { name, car_id, engine_type_id, fuel_type_id } = req.body;
-    await Variant.update({ name: name || null, car_id, engine_type_id, fuel_type_id: fuel_type_id }, { where: { id: req.params.id } });
+    const { car_id, engine_type_id, fuel_type_id, name } = req.body;
+    await Variant.update({ name, car_id, engine_type_id, fuel_type_id }, { where: { id: req.params.id } });
     const variant = await Variant.findByPk(req.params.id, {
       include: ['car', 'engineType', 'fuelType']
     });
     res.json({ success: true, data: variant, message: 'Variant updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1047,7 +1023,7 @@ router.delete('/variants/:id', authenticate, isAdmin, async (req, res) => {
     await Variant.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Variant deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1057,7 +1033,7 @@ router.get('/coupons', authenticate, isAdmin, async (req, res) => {
     const coupons = await Coupon.findAll({ order: [['created_at', 'DESC']] });
     res.json({ success: true, data: coupons });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1067,7 +1043,7 @@ router.get('/coupons/:id', authenticate, isAdmin, async (req, res) => {
     if (!coupon) return res.status(404).json({ success: false, error: 'Coupon not found' });
     res.json({ success: true, data: coupon });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1076,7 +1052,7 @@ router.post('/coupons', authenticate, isAdmin, async (req, res) => {
     const coupon = await Coupon.create(req.body);
     res.status(201).json({ success: true, data: coupon, message: 'Coupon created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1086,7 +1062,7 @@ router.put('/coupons/:id', authenticate, isAdmin, async (req, res) => {
     const coupon = await Coupon.findByPk(req.params.id);
     res.json({ success: true, data: coupon, message: 'Coupon updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1095,7 +1071,7 @@ router.delete('/coupons/:id', authenticate, isAdmin, async (req, res) => {
     await Coupon.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Coupon deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1128,7 +1104,7 @@ router.get('/tickets', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1148,7 +1124,7 @@ router.get('/tickets/:id', authenticate, isAdmin, async (req, res) => {
     if (!ticket) return res.status(404).json({ success: false, error: 'Service request not found' });
     res.json({ success: true, data: ticket });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1168,7 +1144,7 @@ router.put('/tickets/:id/status', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, message: 'Service request updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1203,7 +1179,7 @@ router.post('/tickets/:id/reply', authenticate, isAdmin, ...uploadSingle('attach
 
     res.status(201).json({ success: true, data: ticketMsg, message: 'Reply sent' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1216,7 +1192,7 @@ router.put('/tickets/:id/assign', authenticate, isAdmin, async (req, res) => {
     await ticket.update({ admin_id: admin_id || null });
     res.json({ success: true, data: ticket, message: 'Service request assigned' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1251,7 +1227,7 @@ router.post('/tickets/create-from-order', authenticate, isAdmin, async (req, res
     }
     res.status(201).json({ success: true, data: ticket, message: 'Service request created from order' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1261,7 +1237,7 @@ router.get('/departments', authenticate, isAdmin, async (req, res) => {
     const departments = await Department.findAll({ order: [['name', 'ASC']] });
     res.json({ success: true, data: departments });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1270,7 +1246,7 @@ router.post('/departments', authenticate, isAdmin, async (req, res) => {
     const dept = await Department.create({ name: req.body.name, status: req.body.status !== undefined ? req.body.status : 1 });
     res.status(201).json({ success: true, data: dept, message: 'Department created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1280,7 +1256,7 @@ router.put('/departments/:id', authenticate, isAdmin, async (req, res) => {
     const dept = await Department.findByPk(req.params.id);
     res.json({ success: true, data: dept, message: 'Department updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1289,7 +1265,7 @@ router.delete('/departments/:id', authenticate, isAdmin, async (req, res) => {
     await Department.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Department deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1310,7 +1286,7 @@ router.get('/reviews', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1319,7 +1295,7 @@ router.put('/reviews/:id/status', authenticate, isAdmin, async (req, res) => {
     await Review.update({ status: req.body.status }, { where: { id: req.params.id } });
     res.json({ success: true, message: 'Review status updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1328,7 +1304,7 @@ router.delete('/reviews/:id', authenticate, isAdmin, async (req, res) => {
     await Review.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Review deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1349,7 +1325,7 @@ router.get('/sliders', authenticate, isAdmin, async (req, res) => {
     }
     res.json({ success: true, data });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1357,47 +1333,28 @@ router.get('/sliders/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const slider = await Slider.findByPk(req.params.id);
     if (!slider) return res.status(404).json({ success: false, error: 'Slider not found' });
-    const data = slider.toJSON();
-    if (data.image && !isNaN(data.image) && Number(data.image) > 0) {
-      const media = await MediaUpload.findByPk(Number(data.image));
-      data.image_url = media ? media.path : null;
-    } else {
-      data.image_url = data.image || null;
-    }
-    res.json({ success: true, data });
+    res.json({ success: true, data: slider });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
 router.post('/sliders', authenticate, isAdmin, async (req, res) => {
   try {
-    const data = { ...req.body };
-    // Resolve numeric media ID to URL path
-    if (data.image && !isNaN(data.image) && Number(data.image) > 0) {
-      const media = await MediaUpload.findByPk(Number(data.image));
-      if (media) data.image = media.path;
-    }
-    const slider = await Slider.create(data);
+    const slider = await Slider.create(req.body);
     res.status(201).json({ success: true, data: slider, message: 'Slider created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
 router.put('/sliders/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const data = { ...req.body };
-    // Resolve numeric media ID to URL path
-    if (data.image && !isNaN(data.image) && Number(data.image) > 0) {
-      const media = await MediaUpload.findByPk(Number(data.image));
-      if (media) data.image = media.path;
-    }
-    await Slider.update(data, { where: { id: req.params.id } });
+    await Slider.update(req.body, { where: { id: req.params.id } });
     const slider = await Slider.findByPk(req.params.id);
     res.json({ success: true, data: slider, message: 'Slider updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1406,7 +1363,7 @@ router.delete('/sliders/:id', authenticate, isAdmin, async (req, res) => {
     await Slider.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Slider deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1420,7 +1377,7 @@ router.get('/notifications', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1429,7 +1386,7 @@ router.put('/notifications/:id/read', authenticate, isAdmin, async (req, res) =>
     await AdminNotification.update({ is_read: 'read' }, { where: { id: req.params.id } });
     res.json({ success: true, message: 'Notification marked as read' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1442,17 +1399,7 @@ router.get('/outlet-locations', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, data: locations });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
-  }
-});
-
-router.get('/outlet-locations/:id', authenticate, isAdmin, async (req, res) => {
-  try {
-    const loc = await AdminOutletLocation.findByPk(req.params.id);
-    if (!loc) return res.status(404).json({ success: false, error: 'Location not found' });
-    res.json({ success: true, data: loc });
-  } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1461,7 +1408,7 @@ router.post('/outlet-locations', authenticate, isAdmin, async (req, res) => {
     const loc = await AdminOutletLocation.create({ ...req.body, admin_id: req.admin.id });
     res.status(201).json({ success: true, data: loc, message: 'Location created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1471,7 +1418,7 @@ router.put('/outlet-locations/:id', authenticate, isAdmin, async (req, res) => {
     const loc = await AdminOutletLocation.findByPk(req.params.id);
     res.json({ success: true, data: loc, message: 'Location updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1480,7 +1427,7 @@ router.delete('/outlet-locations/:id', authenticate, isAdmin, async (req, res) =
     await AdminOutletLocation.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Location deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1503,7 +1450,7 @@ router.get('/staff', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1516,7 +1463,7 @@ router.get('/staff/:id', authenticate, isAdmin, async (req, res) => {
     if (!admin) return res.status(404).json({ success: false, error: 'Staff not found' });
     res.json({ success: true, data: admin });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1532,7 +1479,7 @@ router.post('/staff', authenticate, isAdmin, async (req, res) => {
     });
     res.status(201).json({ success: true, data: { id: admin.id, name: admin.name, email: admin.email, role: admin.role }, message: 'Franchise admin created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1548,7 +1495,7 @@ router.put('/staff/:id', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, data: admin, message: 'Franchise admin updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1558,7 +1505,7 @@ router.delete('/staff/:id', authenticate, isAdmin, async (req, res) => {
     await Admin.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Staff deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1578,7 +1525,7 @@ router.get('/roles', authenticate, isAdmin, async (req, res) => {
     }));
     res.json({ success: true, data: mapped });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1592,7 +1539,7 @@ router.get('/roles/:id', authenticate, isAdmin, async (req, res) => {
     );
     res.json({ success: true, data: { ...role.toJSON(), permissions: perms } });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1607,7 +1554,7 @@ router.post('/roles', authenticate, isAdmin, async (req, res) => {
     }
     res.status(201).json({ success: true, data: role, message: 'Role created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1625,7 +1572,7 @@ router.put('/roles/:id', authenticate, isAdmin, async (req, res) => {
     const role = await Role.findByPk(req.params.id);
     res.json({ success: true, data: role, message: 'Role updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1635,7 +1582,7 @@ router.delete('/roles/:id', authenticate, isAdmin, async (req, res) => {
     await Role.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Role deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1644,7 +1591,7 @@ router.get('/permissions', authenticate, isAdmin, async (req, res) => {
     const permissions = await Permission.findAll({ order: [['menu_name', 'ASC'], ['name', 'ASC']] });
     res.json({ success: true, data: permissions });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1657,7 +1604,7 @@ router.get('/states', authenticate, isAdmin, async (req, res) => {
     const states = await State.findAll({ where, order: [['state', 'ASC']] });
     res.json({ success: true, data: states });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1666,7 +1613,7 @@ router.post('/states', authenticate, isAdmin, async (req, res) => {
     const s = await State.create(req.body);
     res.status(201).json({ success: true, data: s, message: 'State created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1676,7 +1623,7 @@ router.put('/states/:id', authenticate, isAdmin, async (req, res) => {
     const s = await State.findByPk(req.params.id);
     res.json({ success: true, data: s, message: 'State updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1685,7 +1632,7 @@ router.delete('/states/:id', authenticate, isAdmin, async (req, res) => {
     await State.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'State deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1698,7 +1645,7 @@ router.get('/cities', authenticate, isAdmin, async (req, res) => {
     const cities = await City.findAll({ where, include: [{ association: 'state', attributes: ['id', 'state'] }], order: [['city', 'ASC']] });
     res.json({ success: true, data: cities });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1707,7 +1654,7 @@ router.post('/cities', authenticate, isAdmin, async (req, res) => {
     const city = await City.create(req.body);
     res.status(201).json({ success: true, data: city, message: 'City created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1717,7 +1664,7 @@ router.put('/cities/:id', authenticate, isAdmin, async (req, res) => {
     const city = await City.findByPk(req.params.id);
     res.json({ success: true, data: city, message: 'City updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1726,7 +1673,7 @@ router.delete('/cities/:id', authenticate, isAdmin, async (req, res) => {
     await City.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'City deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1739,7 +1686,7 @@ router.get('/areas', authenticate, isAdmin, async (req, res) => {
     const areas = await Area.findAll({ where, include: [{ association: 'city', attributes: ['id', 'city'] }], order: [['area', 'ASC']] });
     res.json({ success: true, data: areas });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1748,7 +1695,7 @@ router.post('/areas', authenticate, isAdmin, async (req, res) => {
     const area = await Area.create(req.body);
     res.status(201).json({ success: true, data: area, message: 'Area created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1758,7 +1705,7 @@ router.put('/areas/:id', authenticate, isAdmin, async (req, res) => {
     const area = await Area.findByPk(req.params.id);
     res.json({ success: true, data: area, message: 'Area updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1767,7 +1714,7 @@ router.delete('/areas/:id', authenticate, isAdmin, async (req, res) => {
     await Area.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Area deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1789,7 +1736,7 @@ router.post('/locations/import-states', authenticate, isAdmin, async (req, res) 
     }
     res.json({ success: true, message: `Imported ${added} new states (${states.length - added} already existed)`, data: { total: states.length, added } });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1814,7 +1761,7 @@ router.post('/locations/import-cities', authenticate, isAdmin, async (req, res) 
     }
     res.json({ success: true, message: `Imported ${added} new cities for ${stateRecord.state}`, data: { total: json.data.length, added } });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1825,23 +1772,17 @@ router.get('/refunded-orders', authenticate, isAdmin, async (req, res) => {
     const pagination = paginate(page, limit);
     const where = {};
     if (status !== undefined && status !== '') where.status = status;
-
-    const orderWhere = {};
-    if (req.admin.is_franchise) {
-      orderWhere.franchise_admin_id = req.admin.id;
-    }
-
     const { rows, count } = await RefundedOrder.findAndCountAll({
       where,
       include: [
-        { association: 'order', attributes: ['id', 'invoice_number', 'total', 'franchise_admin_id'], where: orderWhere },
+        { association: 'order', attributes: ['id', 'invoice_number', 'total'] },
         { association: 'user', attributes: ['id', 'first_name', 'last_name', 'email'] }
       ],
       ...pagination, order: [['created_at', 'DESC']]
     });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1850,7 +1791,7 @@ router.put('/refunded-orders/:id/status', authenticate, isAdmin, async (req, res
     await RefundedOrder.update({ status: req.body.status }, { where: { id: req.params.id } });
     res.json({ success: true, message: 'Refund status updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1863,7 +1804,7 @@ router.get('/offers', authenticate, isAdmin, async (req, res) => {
     });
     res.json({ success: true, data: offers });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1873,27 +1814,27 @@ router.get('/offers/:id', authenticate, isAdmin, async (req, res) => {
     if (!offer) return res.status(404).json({ success: false, error: 'Offer not found' });
     res.json({ success: true, data: offer });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
 router.post('/offers', authenticate, isAdmin, async (req, res) => {
   try {
     const { title, subTitle, image, offerPercentage, expires_at, is_primary, service_ids } = req.body;
-    const offer = await Offer.create({ title, subTitle, image: image || null, offerPercentage, expires_at: expires_at || null, is_primary: is_primary ? '1' : '0', status: 1 });
+    const offer = await Offer.create({ title, subTitle, image: image || null, offerPercentage, expires_at: expires_at || null, is_primary, status: 1 });
     if (service_ids && service_ids.length > 0) {
       await OfferService.bulkCreate(service_ids.map(id => ({ offer_id: offer.id, service_id: id })));
     }
     res.status(201).json({ success: true, data: offer, message: 'Offer created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
 router.put('/offers/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const { title, subTitle, image, offerPercentage, expires_at, is_primary, status, service_ids } = req.body;
-    await Offer.update({ title, subTitle, image: image || null, offerPercentage, expires_at: expires_at || null, is_primary: is_primary ? '1' : '0', status }, { where: { id: req.params.id } });
+    await Offer.update({ title, subTitle, image: image || null, offerPercentage, expires_at: expires_at || null, is_primary, status }, { where: { id: req.params.id } });
     if (service_ids) {
       await OfferService.destroy({ where: { offer_id: req.params.id } });
       if (service_ids.length > 0) {
@@ -1903,7 +1844,7 @@ router.put('/offers/:id', authenticate, isAdmin, async (req, res) => {
     const offer = await Offer.findByPk(req.params.id, { include: ['offerServices'] });
     res.json({ success: true, data: offer, message: 'Offer updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1913,7 +1854,7 @@ router.delete('/offers/:id', authenticate, isAdmin, async (req, res) => {
     await Offer.destroy({ where: { id: req.params.id } });
     res.json({ success: true, message: 'Offer deleted' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1927,19 +1868,28 @@ router.get('/franchises', authenticate, isAdmin, async (req, res) => {
     const { rows, count } = await Admin.findAndCountAll({ where, ...pagination, order: [['created_at', 'DESC']] });
     res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
 router.post('/franchises', authenticate, isAdmin, async (req, res) => {
   try {
-    const franchise = await Admin.create({ ...req.body, is_franchise: 1, role: 'franchise', status: 1 });
+    // Auto-generate a unique username if none supplied, to satisfy the unique constraint.
+    let username = req.body.username;
+    if (!username) {
+      const emailPrefix = (req.body.email || 'franchise').split('@')[0].replace(/[^a-z0-9]/gi, '').toLowerCase();
+      const suffix = Math.random().toString(36).slice(2, 7);
+      username = `${emailPrefix}_${suffix}`;
+    }
+    const franchise = await Admin.create({ ...req.body, username, is_franchise: 1, role: 'franchise', status: 1 });
     res.status(201).json({ success: true, data: franchise, message: 'Franchise created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    // Surface the actual DB/validation error for easier debugging
+    const isValidationError = error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError';
+    res.status(isValidationError ? 422 : 500).json({ success: false, error: error.message });
   }
 });
-
+w
 // ==================== Reports ====================
 router.get('/reports/revenue', authenticate, isAdmin, async (req, res) => {
   try {
@@ -1959,7 +1909,7 @@ router.get('/reports/revenue', authenticate, isAdmin, async (req, res) => {
     `, { replacements: [from || '2000-01-01', to || '2099-12-31'] });
     res.json({ success: true, data: report });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -1970,7 +1920,7 @@ router.get('/reports/orders', authenticate, isAdmin, async (req, res) => {
     `);
     res.json({ success: true, data: report });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -2002,7 +1952,7 @@ router.post('/seed-permissions', authenticate, isAdmin, async (req, res) => {
     }
     res.json({ success: true, message: `Seeded ${added} new permissions (${sidebarPermissions.length - added} already existed)`, data: { total: sidebarPermissions.length, added } });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -2288,7 +2238,7 @@ router.post('/seed-archive-cars', authenticate, isAdmin, async (req, res) => {
       data: results
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -2386,154 +2336,7 @@ router.post('/seed-data', authenticate, isAdmin, async (req, res) => {
 
     res.json({ success: true, message: 'Data seeded successfully', data: results });
   } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
-  }
-});
-
-// ==================== CONTACT SETTINGS ====================
-
-// Helper: find-or-create then update a static option by option_name
-async function saveStaticOption(name, value) {
-  const existing = await StaticOption.findOne({ where: { option_name: name } });
-  if (existing) {
-    await existing.update({ option_value: value });
-  } else {
-    await StaticOption.create({ option_name: name, option_value: value });
-  }
-}
-
-// PUT /admin/privacy-policy
-router.put('/privacy-policy', authenticate, isAdmin, async (req, res) => {
-  try {
-    const { content } = req.body;
-    await saveStaticOption('page_privacy_policy', content || '');
-    res.json({ success: true, message: 'Privacy policy saved successfully' });
-  } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
-  }
-});
-
-// PUT /admin/terms-and-conditions
-router.put('/terms-and-conditions', authenticate, isAdmin, async (req, res) => {
-  try {
-    const { content } = req.body;
-    await saveStaticOption('page_terms_and_conditions', content || '');
-    res.json({ success: true, message: 'Terms and conditions saved successfully' });
-  } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
-  }
-});
-
-// PUT /admin/contact
-router.put('/contact', authenticate, isAdmin, async (req, res) => {
-  try {
-    const fields = {
-      contact_email: req.body.email,
-      contact_phone: req.body.phone,
-      contact_whatsapp: req.body.whatsapp,
-      contact_address: req.body.address,
-      social_facebook: req.body.facebook,
-      social_instagram: req.body.instagram,
-      social_twitter: req.body.twitter,
-      social_youtube: req.body.youtube
-    };
-    for (const [key, val] of Object.entries(fields)) {
-      if (val !== undefined) {
-        await saveStaticOption(key, val || '');
-      }
-    }
-    res.json({ success: true, message: 'Contact details saved successfully' });
-  } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
-  }
-});
-
-// ==================== SMTP Settings ====================
-
-const mailConfig = require('../config/mail');
-
-const SMTP_KEYS = ['smtp_host', 'smtp_port', 'smtp_username', 'smtp_password', 'smtp_from_email', 'smtp_from_name', 'smtp_secure'];
-
-// Get SMTP settings
-router.get('/settings/smtp', authenticate, isAdmin, async (req, res) => {
-  try {
-    const dbSettings = await StaticOption.findAll({ where: { option_name: SMTP_KEYS } });
-    const dbMap = {};
-    dbSettings.forEach(s => { dbMap[s.option_name] = s.option_value; });
-
-    res.json({
-      success: true,
-      data: {
-        smtp_host: dbMap.smtp_host || mailConfig.host,
-        smtp_port: parseInt(dbMap.smtp_port || mailConfig.port, 10),
-        smtp_username: dbMap.smtp_username || mailConfig.auth.user,
-        smtp_password: dbMap.smtp_password ? '********' : '',
-        smtp_from_email: dbMap.smtp_from_email || mailConfig.from.address,
-        smtp_from_name: dbMap.smtp_from_name || mailConfig.from.name,
-        smtp_secure: dbMap.smtp_secure === 'true' || mailConfig.secure || false
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
-  }
-});
-
-// Update SMTP settings
-router.put('/settings/smtp', authenticate, isAdmin, async (req, res) => {
-  try {
-    const { smtp_host, smtp_port, smtp_username, smtp_password, smtp_from_email, smtp_from_name, smtp_secure } = req.body;
-
-    if (!smtp_host || !smtp_port || !smtp_username || !smtp_from_email) {
-      return res.status(400).json({ success: false, message: 'smtp_host, smtp_port, smtp_username, and smtp_from_email are required' });
-    }
-
-    await saveStaticOption('smtp_host', smtp_host);
-    await saveStaticOption('smtp_port', String(smtp_port));
-    await saveStaticOption('smtp_username', smtp_username);
-    await saveStaticOption('smtp_from_email', smtp_from_email);
-    await saveStaticOption('smtp_from_name', smtp_from_name || 'JusMoto');
-    await saveStaticOption('smtp_secure', String(smtp_secure === true || smtp_secure === 'true'));
-
-    // Only update password if provided (not masked placeholder)
-    if (smtp_password && smtp_password !== '********') {
-      await saveStaticOption('smtp_password', smtp_password);
-    }
-
-    // Reload the email transporter with new settings
-    await emailService.reloadTransporter();
-
-    res.json({ success: true, message: 'SMTP settings updated successfully' });
-  } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
-  }
-});
-
-// Test SMTP settings
-router.post('/settings/smtp/test', authenticate, isAdmin, async (req, res) => {
-  try {
-    const { email } = req.body;
-    if (!email) {
-      return res.status(400).json({ success: false, message: 'email is required' });
-    }
-
-    const result = await emailService.send(
-      email,
-      'JusMoto SMTP Test',
-      `<div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 30px;">
-        <h2 style="color: #e31b23;">SMTP Configuration Test</h2>
-        <p>This is a test email from <strong>JusMoto</strong>.</p>
-        <p>If you received this email, your SMTP settings are working correctly.</p>
-        <p style="color: #888; font-size: 12px; margin-top: 30px;">Sent at: ${new Date().toISOString()}</p>
-      </div>`
-    );
-
-    if (result.success) {
-      res.json({ success: true, message: 'Test email sent successfully', messageId: result.messageId });
-    } else {
-      res.status(400).json({ success: false, message: 'Failed to send test email: ' + result.error });
-    }
-  } catch (error) {
-    res.status(500).json({ success: false, error: formatError(error) });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

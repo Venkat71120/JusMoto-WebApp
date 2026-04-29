@@ -12,6 +12,7 @@ const path = require('path');
 const fs = require('fs');
 const emailService = require('../services/email.service');
 const sharp = require('sharp');
+const { fetchBrandLogo } = require('../services/csv-import.service');
 
 // ==================== Dashboard ====================
 router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
@@ -783,7 +784,9 @@ router.get('/brands', authenticate, isAdmin, async (req, res) => {
 router.post('/brands', authenticate, isAdmin, async (req, res) => {
   try {
     const { name, image } = req.body;
-    const brand = await Brand.create({ name, image });
+    // Auto-fetch brand logo from Clearbit if no image provided
+    const logoUrl = image || await fetchBrandLogo(name);
+    const brand = await Brand.create({ name, image: logoUrl });
     res.status(201).json({ success: true, data: brand, message: 'Brand created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -994,8 +997,8 @@ router.get('/variants', authenticate, isAdmin, async (req, res) => {
 
 router.post('/variants', authenticate, isAdmin, async (req, res) => {
   try {
-    const { name, car_id, engine_type_id, fual_type_id } = req.body;
-    const variant = await Variant.create({ name: name || null, car_id, engine_type_id, fual_type_id });
+    const { name, car_id, engine_type_id, fuel_type_id } = req.body;
+    const variant = await Variant.create({ name: name || null, car_id, engine_type_id, fuel_type_id });
     res.status(201).json({ success: true, data: variant, message: 'Variant created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -1004,8 +1007,8 @@ router.post('/variants', authenticate, isAdmin, async (req, res) => {
 
 router.put('/variants/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const { car_id, engine_type_id, fual_type_id } = req.body;
-    await Variant.update({ car_id, engine_type_id, fual_type_id }, { where: { id: req.params.id } });
+    const { car_id, engine_type_id, fuel_type_id, name } = req.body;
+    await Variant.update({ name, car_id, engine_type_id, fuel_type_id }, { where: { id: req.params.id } });
     const variant = await Variant.findByPk(req.params.id, {
       include: ['car', 'engineType', 'fuelType']
     });
@@ -1818,7 +1821,7 @@ router.get('/offers/:id', authenticate, isAdmin, async (req, res) => {
 router.post('/offers', authenticate, isAdmin, async (req, res) => {
   try {
     const { title, subTitle, image, offerPercentage, expires_at, is_primary, service_ids } = req.body;
-    const offer = await Offer.create({ title, subTitle, image, offerPercentage, expires_at, is_primary, status: 1 });
+    const offer = await Offer.create({ title, subTitle, image: image || null, offerPercentage, expires_at: expires_at || null, is_primary, status: 1 });
     if (service_ids && service_ids.length > 0) {
       await OfferService.bulkCreate(service_ids.map(id => ({ offer_id: offer.id, service_id: id })));
     }
@@ -1831,7 +1834,7 @@ router.post('/offers', authenticate, isAdmin, async (req, res) => {
 router.put('/offers/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const { title, subTitle, image, offerPercentage, expires_at, is_primary, status, service_ids } = req.body;
-    await Offer.update({ title, subTitle, image, offerPercentage, expires_at, is_primary, status }, { where: { id: req.params.id } });
+    await Offer.update({ title, subTitle, image: image || null, offerPercentage, expires_at: expires_at || null, is_primary, status }, { where: { id: req.params.id } });
     if (service_ids) {
       await OfferService.destroy({ where: { offer_id: req.params.id } });
       if (service_ids.length > 0) {
@@ -2218,7 +2221,7 @@ router.post('/seed-archive-cars', authenticate, isAdmin, async (req, res) => {
             car_id: carRecord.id,
             name: variantDisplayName,
             engine_type_id: engineTypeId,
-            fual_type_id: fuelTypeId,
+            fuel_type_id: fuelTypeId,
             status: 1
           }
         });

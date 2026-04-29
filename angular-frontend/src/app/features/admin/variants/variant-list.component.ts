@@ -31,6 +31,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           <tr>
             <th>#</th>
             <th>Car</th>
+            <th>Variant Name</th>
             <th>Engine Type</th>
             <th>Fuel Type</th>
             <th>Actions</th>
@@ -40,8 +41,9 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
           <tr *ngFor="let v of variants(); let i = index">
             <td>{{ (pagination().page - 1) * pagination().limit + i + 1 }}</td>
             <td class="fw-600">{{ v.car?.brand?.name || '' }} {{ v.car?.name || '-' }}</td>
-            <td>{{ v.engine_type?.name || '-' }}</td>
-            <td>{{ v.fuel_type?.name || '-' }}</td>
+            <td>{{ v.name || '-' }}</td>
+            <td>{{ v.engineType?.name || '-' }}</td>
+            <td>{{ v.fuelType?.name || '-' }}</td>
             <td>
               <div class="action-btns">
                 <a [routerLink]="['/admin/variant/edit', v.id]" class="action-btn" title="Edit">
@@ -54,7 +56,7 @@ import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/
             </td>
           </tr>
           <tr *ngIf="variants().length === 0 && !loading()">
-            <td colspan="5" class="empty-state">No variants found</td>
+            <td colspan="6" class="empty-state">No variants found</td>
           </tr>
         </tbody>
       </table>
@@ -119,7 +121,7 @@ export class VariantListComponent implements OnInit {
   }
 
   loadCars() {
-    this.http.get<any>(`${environment.apiUrl}/admin/cars`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/admin/cars`, { params: { limit: 1000 } }).subscribe({
       next: (res) => this.cars.set(res.data || [])
     });
   }

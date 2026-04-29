@@ -238,7 +238,7 @@ async function main() {
       const variantDisplayName = `${modelName} ${year}`;
       const [, varCreated] = await Variant.findOrCreate({
         where: { car_id: carRecord.id, name: variantDisplayName },
-        defaults: { car_id: carRecord.id, name: variantDisplayName, engine_type_id: engineTypeId, fual_type_id: fuelTypeId, status: 1 }
+        defaults: { car_id: carRecord.id, name: variantDisplayName, engine_type_id: engineTypeId, fuel_type_id: fuelTypeId, status: 1 }
       });
       if (varCreated) results.variants++;
 

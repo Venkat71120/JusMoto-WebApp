@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://16.112.128.19.nip.io/api/v1',
-  socketUrl: 'https://16.112.128.19.nip.io',
+  apiUrl: 'http://localhost:3000/api/v1',
+  socketUrl: 'http://localhost:3000',
   appName: 'JusMoto',
   defaultLanguage: 'en',
   supportedLanguages: ['en', 'hi'],

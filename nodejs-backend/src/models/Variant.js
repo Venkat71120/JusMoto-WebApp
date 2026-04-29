@@ -19,7 +19,7 @@ const Variant = sequelize.define('Variant', {
     type: DataTypes.BIGINT.UNSIGNED,
     allowNull: true
   },
-  fual_type_id: {
+  fuel_type_id: {
     type: DataTypes.BIGINT.UNSIGNED,
     allowNull: true
   },
@@ -28,7 +28,7 @@ const Variant = sequelize.define('Variant', {
     defaultValue: 1
   }
 }, {
-  tableName: 'varients',
+  tableName: 'variants',
   timestamps: true,
   underscored: true
 });

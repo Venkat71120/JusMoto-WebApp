@@ -1871,13 +1871,22 @@ router.get('/franchises', authenticate, isAdmin, async (req, res) => {
 
 router.post('/franchises', authenticate, isAdmin, async (req, res) => {
   try {
-    const franchise = await Admin.create({ ...req.body, is_franchise: 1, role: 'franchise', status: 1 });
+    // Auto-generate a unique username if none supplied, to satisfy the unique constraint.
+    let username = req.body.username;
+    if (!username) {
+      const emailPrefix = (req.body.email || 'franchise').split('@')[0].replace(/[^a-z0-9]/gi, '').toLowerCase();
+      const suffix = Math.random().toString(36).slice(2, 7);
+      username = `${emailPrefix}_${suffix}`;
+    }
+    const franchise = await Admin.create({ ...req.body, username, is_franchise: 1, role: 'franchise', status: 1 });
     res.status(201).json({ success: true, data: franchise, message: 'Franchise created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    // Surface the actual DB/validation error for easier debugging
+    const isValidationError = error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError';
+    res.status(isValidationError ? 422 : 500).json({ success: false, error: error.message });
   }
 });
-
+w
 // ==================== Reports ====================
 router.get('/reports/revenue', authenticate, isAdmin, async (req, res) => {
   try {

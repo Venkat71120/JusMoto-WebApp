@@ -474,10 +474,15 @@ router.post('/services', authenticate, isAdmin, async (req, res) => {
             duration, max_qty, type, is_featured, status, video_url, gallery,
             includes, faqs, additional_info, specifications } = req.body;
 
+    // Generate a collision-safe slug by appending a short random suffix
+    const baseSlug = createSlug(title);
+    const suffix = Math.random().toString(36).slice(2, 7);
+    const slug = `${baseSlug}-${suffix}`;
+
     const service = await Service.create({
       admin_id: req.admin.id,
       title,
-      slug: createSlug(title),
+      slug,
       category_id,
       sub_category_id,
       price,
@@ -527,7 +532,8 @@ router.post('/services', authenticate, isAdmin, async (req, res) => {
 
     res.status(201).json({ success: true, data: service, message: 'Service created' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    const isValidationError = error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError';
+    res.status(isValidationError ? 422 : 500).json({ success: false, error: error.message });
   }
 });
 
@@ -1889,7 +1895,7 @@ router.post('/franchises', authenticate, isAdmin, async (req, res) => {
     res.status(isValidationError ? 422 : 500).json({ success: false, error: error.message });
   }
 });
-w
+
 // ==================== Reports ====================
 router.get('/reports/revenue', authenticate, isAdmin, async (req, res) => {
   try {

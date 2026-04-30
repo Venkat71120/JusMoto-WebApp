@@ -492,7 +492,7 @@ router.post('/services', authenticate, isAdmin, async (req, res) => {
       video_url,
       gallery_images: gallery || [],
       duration,
-      max_qty,
+      max_qty: max_qty || 0,
       type: type || 0,
       is_featured: is_featured || 0,
       status: status !== undefined ? status : 1,

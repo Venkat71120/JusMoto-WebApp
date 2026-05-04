@@ -1896,6 +1896,59 @@ router.post('/franchises', authenticate, isAdmin, async (req, res) => {
   }
 });
 
+router.put('/franchises/:id', authenticate, isAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const admin = await Admin.findOne({ where: { id, is_franchise: 1 } });
+    if (!admin) return res.status(404).json({ success: false, error: 'Franchise not found' });
+
+    const updateData = { ...req.body };
+    delete updateData.id;
+    delete updateData._method;
+
+    await admin.update(updateData);
+    res.json({ success: true, data: admin, message: 'Franchise updated' });
+  } catch (error) {
+    const isValidationError = error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError';
+    res.status(isValidationError ? 422 : 500).json({ success: false, error: error.message });
+  }
+});
+
+// Handle POST with _method: PUT (common pattern in this mobile app)
+router.post('/franchises/:id', authenticate, isAdmin, async (req, res) => {
+  if (req.body._method === 'PUT' || req.body._method === 'PATCH') {
+    try {
+      const { id } = req.params;
+      const admin = await Admin.findOne({ where: { id, is_franchise: 1 } });
+      if (!admin) return res.status(404).json({ success: false, error: 'Franchise not found' });
+
+      const updateData = { ...req.body };
+      delete updateData.id;
+      delete updateData._method;
+
+      await admin.update(updateData);
+      return res.json({ success: true, data: admin, message: 'Franchise updated' });
+    } catch (error) {
+      const isValidationError = error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError';
+      return res.status(isValidationError ? 422 : 500).json({ success: false, error: error.message });
+    }
+  }
+  res.status(405).json({ success: false, error: 'Method not allowed' });
+});
+
+router.delete('/franchises/:id', authenticate, isAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const admin = await Admin.findOne({ where: { id, is_franchise: 1 } });
+    if (!admin) return res.status(404).json({ success: false, error: 'Franchise not found' });
+
+    await admin.destroy();
+    res.json({ success: true, message: 'Franchise deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // ==================== Reports ====================
 router.get('/reports/revenue', authenticate, isAdmin, async (req, res) => {
   try {

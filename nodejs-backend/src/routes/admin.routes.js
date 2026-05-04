@@ -14,6 +14,17 @@ const emailService = require('../services/email.service');
 const sharp = require('sharp');
 const { fetchBrandLogo } = require('../services/csv-import.service');
 
+// Helper to resolve media ID to path
+const resolveMediaImage = async (image) => {
+  if (!image) return image;
+  // If it's a number or a numeric string (ID), and not already a path/URL
+  if (!isNaN(image) && !String(image).startsWith('http') && !String(image).includes('/')) {
+    const media = await MediaUpload.findByPk(image);
+    return media ? media.path : image;
+  }
+  return image;
+};
+
 // ==================== Dashboard ====================
 router.get('/dashboard', authenticate, isAdmin, async (req, res) => {
   try {
@@ -427,7 +438,14 @@ router.get('/services', authenticate, isAdmin, async (req, res) => {
       where, include: [{ association: 'category', attributes: ['id', 'name'] }],
       ...pagination, order: [['created_at', 'DESC']]
     });
-    res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
+
+    const resolvedRows = await Promise.all(rows.map(async (s) => {
+      const plain = s.get({ plain: true });
+      plain.image = await resolveMediaImage(plain.image);
+      return plain;
+    }));
+
+    res.json({ success: true, ...paginationResponse(resolvedRows, count, pagination.page, pagination.limit) });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -440,7 +458,8 @@ router.get('/services/:id', authenticate, isAdmin, async (req, res) => {
     });
     if (!service) return res.status(404).json({ success: false, error: 'Service not found' });
 
-    const data = service.toJSON();
+    const data = service.get({ plain: true });
+    data.image = await resolveMediaImage(data.image);
 
     // Transform includes: DB {title, description} → Frontend {title, icon}
     if (data.includes) {
@@ -479,23 +498,26 @@ router.post('/services', authenticate, isAdmin, async (req, res) => {
     const suffix = Math.random().toString(36).slice(2, 7);
     const slug = `${baseSlug}-${suffix}`;
 
+    // Resolve media ID to path if needed
+    const resolvedImage = await resolveMediaImage(image);
+
     const service = await Service.create({
       admin_id: req.admin.id,
       title,
       slug,
-      category_id,
-      sub_category_id,
-      price,
-      discount_price,
+      category_id: category_id ? parseInt(category_id) : null,
+      sub_category_id: sub_category_id ? parseInt(sub_category_id) : null,
+      price: price ? parseFloat(price) : 0,
+      discount_price: discount_price ? parseFloat(discount_price) : null,
       description,
-      image,
+      image: resolvedImage,
       video_url,
       gallery_images: gallery || [],
       duration,
-      max_qty: max_qty || 0,
-      type: type || 0,
-      is_featured: is_featured || 0,
-      status: status !== undefined ? status : 1,
+      max_qty: max_qty ? parseInt(max_qty) : 0,
+      type: type ? parseInt(type) : 0,
+      is_featured: (is_featured == 1 || is_featured === '1') ? 1 : 0,
+      status: (status == 1 || status === '1' || status === undefined) ? 1 : 0,
       is_published: 1,
       published_at: new Date()
     });
@@ -530,7 +552,8 @@ router.post('/services', authenticate, isAdmin, async (req, res) => {
       })));
     }
 
-    res.status(201).json({ success: true, data: service, message: 'Service created' });
+    const completeService = await Service.findByPk(service.id, { include: ['category'] });
+    res.status(201).json({ success: true, data: completeService, message: 'Service created' });
   } catch (error) {
     const isValidationError = error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError';
     res.status(isValidationError ? 422 : 500).json({ success: false, error: error.message });
@@ -547,6 +570,8 @@ router.put('/services/:id', authenticate, isAdmin, async (req, res) => {
             duration, max_qty, type, is_featured, status, video_url, gallery,
             includes, faqs, additional_info, specifications } = req.body;
 
+    const resolvedImage = await resolveMediaImage(image);
+
     const updateData = {};
     if (title !== undefined) {
       updateData.title = title;
@@ -558,17 +583,17 @@ router.put('/services/:id', authenticate, isAdmin, async (req, res) => {
       }
     }
     
-    if (category_id !== undefined) updateData.category_id = category_id;
-    if (sub_category_id !== undefined) updateData.sub_category_id = sub_category_id;
-    if (price !== undefined) updateData.price = price;
-    if (discount_price !== undefined) updateData.discount_price = discount_price;
+    if (category_id !== undefined) updateData.category_id = category_id ? parseInt(category_id) : null;
+    if (sub_category_id !== undefined) updateData.sub_category_id = sub_category_id ? parseInt(sub_category_id) : null;
+    if (price !== undefined) updateData.price = price ? parseFloat(price) : 0;
+    if (discount_price !== undefined) updateData.discount_price = discount_price ? parseFloat(discount_price) : null;
     if (description !== undefined) updateData.description = description;
-    if (image !== undefined) updateData.image = image;
+    if (image !== undefined) updateData.image = resolvedImage;
     if (duration !== undefined) updateData.duration = duration;
-    if (max_qty !== undefined) updateData.max_qty = max_qty;
-    if (type !== undefined) updateData.type = type;
-    if (is_featured !== undefined) updateData.is_featured = is_featured;
-    if (status !== undefined) updateData.status = status;
+    if (max_qty !== undefined) updateData.max_qty = max_qty ? parseInt(max_qty) : 0;
+    if (type !== undefined) updateData.type = type ? parseInt(type) : 0;
+    if (is_featured !== undefined) updateData.is_featured = (is_featured == 1 || is_featured === '1') ? 1 : 0;
+    if (status !== undefined) updateData.status = (status == 1 || status === '1') ? 1 : 0;
     if (video_url !== undefined) updateData.video_url = video_url;
     
     if (gallery !== undefined) updateData.gallery_images = gallery || [];
@@ -666,7 +691,14 @@ router.get('/categories', authenticate, isAdmin, async (req, res) => {
     const where = {};
     if (search) { where[Op.or] = [{ name: { [Op.like]: `%${search}%` } }, { slug: { [Op.like]: `%${search}%` } }]; }
     const { rows, count } = await Category.findAndCountAll({ where, ...pagination, order: [['created_at', 'DESC']] });
-    res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
+    
+    const resolvedRows = await Promise.all(rows.map(async (c) => {
+      const plain = c.get({ plain: true });
+      plain.image = await resolveMediaImage(plain.image);
+      return plain;
+    }));
+
+    res.json({ success: true, ...paginationResponse(resolvedRows, count, pagination.page, pagination.limit) });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -676,7 +708,11 @@ router.get('/categories/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const category = await Category.findByPk(req.params.id, { include: ['subCategories'] });
     if (!category) return res.status(404).json({ success: false, error: 'Category not found' });
-    res.json({ success: true, data: category });
+
+    const data = category.get({ plain: true });
+    data.image = await resolveMediaImage(data.image);
+
+    res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -685,7 +721,8 @@ router.get('/categories/:id', authenticate, isAdmin, async (req, res) => {
 router.post('/categories', authenticate, isAdmin, async (req, res) => {
   try {
     const { name, description, image, icon, status } = req.body;
-    const category = await Category.create({ name, slug: createSlug(name), description, image, icon, status: status !== undefined ? status : 1 });
+    const resolvedImage = await resolveMediaImage(image);
+    const category = await Category.create({ name, slug: createSlug(name), description, image: resolvedImage, icon, status: status !== undefined ? status : 1 });
     res.status(201).json({ success: true, data: category, message: 'Category created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -695,7 +732,8 @@ router.post('/categories', authenticate, isAdmin, async (req, res) => {
 router.put('/categories/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const { name, description, image, icon, status } = req.body;
-    const updateData = { name, description, image, icon, status };
+    const resolvedImage = await resolveMediaImage(image);
+    const updateData = { name, description, image: resolvedImage, icon, status };
     if (name) updateData.slug = createSlug(name);
     await Category.update(updateData, { where: { id: req.params.id } });
     const category = await Category.findByPk(req.params.id);
@@ -737,7 +775,14 @@ router.get('/sub-categories', authenticate, isAdmin, async (req, res) => {
       where, include: [{ association: 'category', attributes: ['id', 'name'] }],
       ...pagination, order: [['created_at', 'DESC']]
     });
-    res.json({ success: true, ...paginationResponse(rows, count, pagination.page, pagination.limit) });
+
+    const resolvedRows = await Promise.all(rows.map(async (s) => {
+      const plain = s.get({ plain: true });
+      plain.image = await resolveMediaImage(plain.image);
+      return plain;
+    }));
+
+    res.json({ success: true, ...paginationResponse(resolvedRows, count, pagination.page, pagination.limit) });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

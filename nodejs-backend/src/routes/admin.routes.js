@@ -540,16 +540,40 @@ router.post('/services', authenticate, isAdmin, async (req, res) => {
 router.put('/services/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const serviceId = req.params.id;
+    const existingService = await Service.findByPk(serviceId);
+    if (!existingService) return res.status(404).json({ success: false, error: 'Service not found' });
+
     const { title, category_id, sub_category_id, price, discount_price, description, image,
             duration, max_qty, type, is_featured, status, video_url, gallery,
             includes, faqs, additional_info, specifications } = req.body;
 
-    const updateData = { title, category_id, sub_category_id, price, discount_price, description,
-                         image, duration, max_qty, type, is_featured, status, video_url };
-    if (title) updateData.slug = createSlug(title);
+    const updateData = {};
+    if (title !== undefined) {
+      updateData.title = title;
+      // Only regenerate slug if title changed, using collision-safe logic
+      if (title !== existingService.title) {
+        const baseSlug = createSlug(title);
+        const suffix = Math.random().toString(36).slice(2, 7);
+        updateData.slug = `${baseSlug}-${suffix}`;
+      }
+    }
+    
+    if (category_id !== undefined) updateData.category_id = category_id;
+    if (sub_category_id !== undefined) updateData.sub_category_id = sub_category_id;
+    if (price !== undefined) updateData.price = price;
+    if (discount_price !== undefined) updateData.discount_price = discount_price;
+    if (description !== undefined) updateData.description = description;
+    if (image !== undefined) updateData.image = image;
+    if (duration !== undefined) updateData.duration = duration;
+    if (max_qty !== undefined) updateData.max_qty = max_qty;
+    if (type !== undefined) updateData.type = type;
+    if (is_featured !== undefined) updateData.is_featured = is_featured;
+    if (status !== undefined) updateData.status = status;
+    if (video_url !== undefined) updateData.video_url = video_url;
+    
     if (gallery !== undefined) updateData.gallery_images = gallery || [];
 
-    await Service.update(updateData, { where: { id: serviceId } });
+    await existingService.update(updateData);
 
     // Replace includes: delete old, insert new
     if (includes && Array.isArray(includes)) {
@@ -595,10 +619,11 @@ router.put('/services/:id', authenticate, isAdmin, async (req, res) => {
       }
     }
 
-    const service = await Service.findByPk(serviceId, { include: ['category'] });
-    res.json({ success: true, data: service, message: 'Service updated' });
+    const updatedService = await Service.findByPk(serviceId, { include: ['category'] });
+    res.json({ success: true, data: updatedService, message: 'Service updated' });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    const isValidationError = error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError';
+    res.status(isValidationError ? 422 : 500).json({ success: false, error: error.message });
   }
 });
 

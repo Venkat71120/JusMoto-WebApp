@@ -12,7 +12,7 @@ const path = require('path');
 const fs = require('fs');
 const emailService = require('../services/email.service');
 const sharp = require('sharp');
-const { fetchBrandLogo } = require('../services/csv-import.service');
+// const { fetchBrandLogo } = require('../services/csv-import.service');
 
 // Helper to resolve media ID to path
 const resolveMediaImage = async (image) => {
@@ -840,18 +840,13 @@ router.get('/brands', authenticate, isAdmin, async (req, res) => {
     const brands = await Brand.findAll({ where, order: [['name', 'ASC']] });
 
     // Resolve numeric image IDs (legacy Laravel media) to actual file paths
-    const brandsData = await Promise.all(brands.map(async (b) => {
-      const brand = b.toJSON();
-      if (brand.image && !isNaN(brand.image) && Number(brand.image) > 0) {
-        const media = await MediaUpload.findByPk(Number(brand.image));
-        brand.image = media ? media.path : null;
-      } else if (brand.image === 0 || brand.image === '0') {
-        brand.image = null;
-      }
+    const resolvedBrands = await Promise.all(brands.map(async (b) => {
+      const brand = b.get({ plain: true });
+      brand.image = await resolveMediaImage(brand.image);
       return brand;
     }));
 
-    res.json({ success: true, data: brandsData });
+    res.json({ success: true, data: resolvedBrands });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -859,10 +854,14 @@ router.get('/brands', authenticate, isAdmin, async (req, res) => {
 
 router.post('/brands', authenticate, isAdmin, async (req, res) => {
   try {
-    const { name, image } = req.body;
-    // Auto-fetch brand logo from Clearbit if no image provided
-    const logoUrl = image || await fetchBrandLogo(name);
-    const brand = await Brand.create({ name, image: logoUrl });
+    const { name, image, status } = req.body;
+    const resolvedImage = await resolveMediaImage(image);
+    const brand = await Brand.create({ 
+      name, 
+      slug: createSlug(name), 
+      image: resolvedImage,
+      status: status !== undefined ? parseInt(status) : 1
+    });
     res.status(201).json({ success: true, data: brand, message: 'Brand created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -871,9 +870,19 @@ router.post('/brands', authenticate, isAdmin, async (req, res) => {
 
 router.put('/brands/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const { name, image } = req.body;
-    await Brand.update({ name, image }, { where: { id: req.params.id } });
+    const { name, image, status } = req.body;
     const brand = await Brand.findByPk(req.params.id);
+    if (!brand) return res.status(404).json({ success: false, error: 'Brand not found' });
+
+    const resolvedImage = image !== undefined ? await resolveMediaImage(image) : brand.image;
+    
+    await brand.update({ 
+      name: name || brand.name, 
+      slug: name ? createSlug(name) : brand.slug,
+      image: resolvedImage,
+      status: status !== undefined ? parseInt(status) : brand.status
+    });
+    
     res.json({ success: true, data: brand, message: 'Brand updated' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -909,18 +918,16 @@ router.get('/cars', authenticate, isAdmin, async (req, res) => {
     });
 
     // Resolve numeric image IDs (legacy Laravel media) to actual S3 URLs
-    const carsData = await Promise.all(rows.map(async (c) => {
-      const car = c.toJSON();
-      if (car.image && !isNaN(car.image) && Number(car.image) > 0) {
-        const media = await MediaUpload.findByPk(Number(car.image));
-        car.image = media ? media.path : null;
-      } else if (car.image === 0 || car.image === '0') {
-        car.image = null;
+    const resolvedCars = await Promise.all(rows.map(async (c) => {
+      const car = c.get({ plain: true });
+      car.image = await resolveMediaImage(car.image);
+      if (car.brand) {
+        car.brand.image = await resolveMediaImage(car.brand.image);
       }
       return car;
     }));
 
-    res.json({ success: true, ...paginationResponse(carsData, count, pagination.page, pagination.limit) });
+    res.json({ success: true, ...paginationResponse(resolvedCars, count, pagination.page, pagination.limit) });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -930,13 +937,13 @@ router.get('/cars/:id', authenticate, isAdmin, async (req, res) => {
   try {
     const car = await Car.findByPk(req.params.id, { include: ['brand'] });
     if (!car) return res.status(404).json({ success: false, error: 'Car not found' });
-    const carData = car.toJSON();
-    if (carData.image && !isNaN(carData.image) && Number(carData.image) > 0) {
-      const media = await MediaUpload.findByPk(Number(carData.image));
-      carData.image = media ? media.path : null;
-    } else if (carData.image === 0 || carData.image === '0') {
-      carData.image = null;
+    
+    const carData = car.get({ plain: true });
+    carData.image = await resolveMediaImage(carData.image);
+    if (carData.brand) {
+      carData.brand.image = await resolveMediaImage(carData.brand.image);
     }
+    
     res.json({ success: true, data: carData });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -945,8 +952,15 @@ router.get('/cars/:id', authenticate, isAdmin, async (req, res) => {
 
 router.post('/cars', authenticate, isAdmin, async (req, res) => {
   try {
-    const { brand_id, name, year, image } = req.body;
-    const car = await Car.create({ brand_id, name, image, Year: year });
+    const { brand_id, name, year, image, status } = req.body;
+    const resolvedImage = await resolveMediaImage(image);
+    const car = await Car.create({ 
+      brand_id: parseInt(brand_id), 
+      name, 
+      image: resolvedImage, 
+      Year: year,
+      status: status !== undefined ? parseInt(status) : 1
+    });
     res.status(201).json({ success: true, data: car, message: 'Car created' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -955,10 +969,22 @@ router.post('/cars', authenticate, isAdmin, async (req, res) => {
 
 router.put('/cars/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const { brand_id, name, year, image } = req.body;
-    await Car.update({ brand_id, name, image, Year: year }, { where: { id: req.params.id } });
-    const car = await Car.findByPk(req.params.id, { include: ['brand'] });
-    res.json({ success: true, data: car, message: 'Car updated' });
+    const { brand_id, name, year, image, status } = req.body;
+    const car = await Car.findByPk(req.params.id);
+    if (!car) return res.status(404).json({ success: false, error: 'Car not found' });
+
+    const resolvedImage = image !== undefined ? await resolveMediaImage(image) : car.image;
+
+    await car.update({ 
+      brand_id: brand_id ? parseInt(brand_id) : car.brand_id, 
+      name: name || car.name, 
+      image: resolvedImage, 
+      Year: year || car.Year,
+      status: status !== undefined ? parseInt(status) : car.status
+    });
+    
+    const updatedCar = await Car.findByPk(req.params.id, { include: ['brand'] });
+    res.json({ success: true, data: updatedCar, message: 'Car updated' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

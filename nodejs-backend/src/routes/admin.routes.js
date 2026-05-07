@@ -104,7 +104,7 @@ router.get('/media', authenticate, isAdmin, async (req, res) => {
   }
 });
 
-router.post('/media/upload', authenticate, isAdmin, ...uploadSingle('file'), async (req, res) => {
+router.post('/media-upload-v2', authenticate, isAdmin, ...uploadSingle('file'), async (req, res) => {
   try {
     console.log('Media upload request received');
     if (!req.file) {

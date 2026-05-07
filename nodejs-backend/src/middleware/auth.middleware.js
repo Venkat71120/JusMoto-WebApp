@@ -38,9 +38,9 @@ const authenticate = async (req, res, next) => {
       next();
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
-        return res.status(401).json({ error: 'Token expired.' });
+        return res.status(401).json({ error: 'Token expired. (DEBUG)', message: 'Session expired' });
       }
-      return res.status(401).json({ error: 'Invalid token.' });
+      return res.status(401).json({ error: 'Invalid token. (DEBUG)', message: 'Invalid session' });
     }
   } catch (error) {
     console.error('Auth middleware error:', error);
@@ -92,7 +92,7 @@ const optionalAuth = async (req, res, next) => {
  */
 const isAdmin = (req, res, next) => {
   if (req.userType !== 'admin' || !req.admin) {
-    return res.status(403).json({ error: 'Access denied. Admin only.' });
+    return res.status(403).json({ error: 'Access denied. Admin only. (DEBUG)', message: 'Access denied. Admin only.' });
   }
   next();
 };

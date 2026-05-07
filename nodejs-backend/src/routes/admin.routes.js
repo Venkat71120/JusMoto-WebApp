@@ -106,9 +106,14 @@ router.get('/media', authenticate, isAdmin, async (req, res) => {
 
 router.post('/media/upload', authenticate, isAdmin, ...uploadSingle('file'), async (req, res) => {
   try {
-    if (!req.file) return res.status(400).json({ success: false, error: 'No file uploaded' });
+    console.log('Media upload request received');
+    if (!req.file) {
+      console.log('No file in request');
+      return res.status(400).json({ success: false, error: 'No file uploaded', message: 'Please select a file to upload' });
+    }
 
     const file = req.file;
+    console.log('Processing file:', file.originalname, file.mimetype, file.size);
     const ext = path.extname(file.originalname);
     const s3Folder = 'media';
     const s3FileName = generateS3Key(s3Folder, file.originalname).replace(`${s3Folder}/`, '');

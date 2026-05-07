@@ -28,6 +28,14 @@ const Car = sequelize.define('Car', {
     allowNull: true,
     field: 'Year'
   },
+  engine_type_id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    allowNull: true
+  },
+  fuel_type_id: {
+    type: DataTypes.BIGINT.UNSIGNED,
+    allowNull: true
+  },
   status: {
     type: DataTypes.INTEGER,
     defaultValue: 1

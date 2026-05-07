@@ -993,13 +993,15 @@ router.get('/cars/:id', authenticate, isAdmin, async (req, res) => {
 
 router.post('/cars', authenticate, isAdmin, async (req, res) => {
   try {
-    const { brand_id, name, year, image, status } = req.body;
+    const { brand_id, name, year, image, status, engine_type_id, fuel_type_id } = req.body;
     const resolvedImage = await resolveMediaImage(image);
     const car = await Car.create({ 
       brand_id: parseInt(brand_id), 
       name, 
       image: resolvedImage, 
       Year: year,
+      engine_type_id: engine_type_id ? parseInt(engine_type_id) : null,
+      fuel_type_id: fuel_type_id ? parseInt(fuel_type_id) : null,
       status: status !== undefined ? parseInt(status) : 1
     });
     res.status(201).json({ success: true, data: car, message: 'Car created' });
@@ -1010,7 +1012,7 @@ router.post('/cars', authenticate, isAdmin, async (req, res) => {
 
 router.put('/cars/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const { brand_id, name, year, image, status } = req.body;
+    const { brand_id, name, year, image, status, engine_type_id, fuel_type_id } = req.body;
     const car = await Car.findByPk(req.params.id);
     if (!car) return res.status(404).json({ success: false, error: 'Car not found' });
 
@@ -1021,6 +1023,8 @@ router.put('/cars/:id', authenticate, isAdmin, async (req, res) => {
       name: name || car.name, 
       image: resolvedImage, 
       Year: year || car.Year,
+      engine_type_id: engine_type_id !== undefined ? (engine_type_id ? parseInt(engine_type_id) : null) : car.engine_type_id,
+      fuel_type_id: fuel_type_id !== undefined ? (fuel_type_id ? parseInt(fuel_type_id) : null) : car.fuel_type_id,
       status: status !== undefined ? parseInt(status) : car.status
     });
     

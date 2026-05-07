@@ -107,6 +107,17 @@ const startServer = async () => {
       console.log('Migration check (ticket_messages):', e.message);
     }
 
+    // Ensure cars has engine_type_id and fuel_type_id
+    try {
+      const [eCols] = await sequelize.query("SHOW COLUMNS FROM cars LIKE 'engine_type_id'");
+      if (eCols.length === 0) {
+        await sequelize.query("ALTER TABLE cars ADD COLUMN engine_type_id BIGINT UNSIGNED NULL, ADD COLUMN fuel_type_id BIGINT UNSIGNED NULL");
+        console.log('Migration: Added engine_type_id and fuel_type_id to cars table');
+      }
+    } catch (e) {
+      console.log('Migration check (cars):', e.message);
+    }
+
     console.log('Database models synchronized');
 
     // Start server (use httpServer for Socket.io support)

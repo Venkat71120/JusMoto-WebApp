@@ -77,6 +77,9 @@ Variant.belongsTo(EngineType, { foreignKey: 'engine_type_id', as: 'engineType' }
 FuelType.hasMany(Variant, { foreignKey: 'fuel_type_id', as: 'variants' });
 Variant.belongsTo(FuelType, { foreignKey: 'fuel_type_id', as: 'fuelType' });
 
+Car.belongsTo(EngineType, { foreignKey: 'engine_type_id', as: 'engineType' });
+Car.belongsTo(FuelType, { foreignKey: 'fuel_type_id', as: 'fuelType' });
+
 // Service associations
 Admin.hasMany(Service, { foreignKey: 'admin_id', as: 'services' });
 Service.belongsTo(Admin, { foreignKey: 'admin_id', as: 'admin' });

@@ -855,6 +855,7 @@ router.get('/brands', authenticate, isAdmin, async (req, res) => {
     const resolvedBrands = await Promise.all(brands.map(async (b) => {
       const brand = b.get({ plain: true });
       brand.image = await resolveMediaImage(brand.image);
+      brand.status = brand.status !== undefined ? brand.status : 1; 
       return brand;
     }));
 
@@ -874,14 +875,13 @@ router.post('/brands', authenticate, isAdmin, async (req, res) => {
     // and resolve it during GET.
     const brand = await Brand.create({ 
       name, 
-      slug: createSlug(name), 
-      image: image || null,
-      status: status !== undefined ? parseInt(status) : 1
+      image: image || null
     });
     
     // Return resolved data for immediate UI update
     const brandData = brand.get({ plain: true });
     brandData.image = await resolveMediaImage(brandData.image);
+    brandData.status = 1;
     
     res.status(201).json({ success: true, data: brandData, message: 'Brand created successfully' });
   } catch (error) {
@@ -897,14 +897,13 @@ router.put('/brands/:id', authenticate, isAdmin, async (req, res) => {
 
     await brand.update({ 
       name: name || brand.name, 
-      slug: name ? createSlug(name) : brand.slug,
-      image: image !== undefined ? image : brand.image,
-      status: status !== undefined ? parseInt(status) : brand.status
+      image: image !== undefined ? image : brand.image
     });
     
     // Return resolved data for immediate UI update
     const brandData = brand.get({ plain: true });
     brandData.image = await resolveMediaImage(brandData.image);
+    brandData.status = brandData.status !== undefined ? brandData.status : 1;
     
     res.json({ success: true, data: brandData, message: 'Brand updated successfully' });
   } catch (error) {
@@ -927,17 +926,31 @@ router.get('/cars', authenticate, isAdmin, async (req, res) => {
     const { brand_id, search, page = 1, limit = 15, sort, order: sortOrder } = req.query;
     const pagination = paginate(page, limit);
     const where = {};
-    if (brand_id) where.brand_id = brand_id;
-    if (search) where.name = { [Op.like]: `%${search}%` };
+    
+    if (brand_id && brand_id !== 'null' && brand_id !== 'undefined') {
+      where.brand_id = parseInt(brand_id);
+    }
+    
+    if (search) {
+      where.name = { [Op.like]: `%${search}%` };
+    }
+    
     const dir = sortOrder === 'ASC' ? 'ASC' : 'DESC';
     let orderClause = [['created_at', 'DESC']];
     if (sort === 'name') orderClause = [['name', dir]];
-    else if (sort === 'Year') orderClause = [['Year', dir]];
+    else if (sort === 'Year' || sort === 'year') orderClause = [['Year', dir]];
     else if (sort === 'status') orderClause = [['status', dir]];
     else if (sort === 'brand') orderClause = [[{ model: Brand, as: 'brand' }, 'name', dir]];
+
     const { rows, count } = await Car.findAndCountAll({
-      where, include: [{ association: 'brand', attributes: ['id', 'name', 'image'] }],
-      ...pagination, order: orderClause
+      where, 
+      include: [{ 
+        model: Brand, 
+        as: 'brand', 
+        attributes: ['id', 'name', 'image'] 
+      }],
+      ...pagination, 
+      order: orderClause
     });
 
     // Resolve numeric image IDs (legacy Laravel media) to actual S3 URLs

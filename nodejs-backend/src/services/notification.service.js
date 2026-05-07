@@ -94,16 +94,27 @@ class NotificationService {
    */
   async broadcast(audience, title, message, data = null) {
     try {
-      const { User, Admin } = require('../models');
+      const { User, Admin, AdminNotification } = require('../models');
       let recipients = [];
 
       if (audience === 'user' || audience === 'all') {
         const users = await User.findAll({ attributes: ['id'] });
         recipients.push(...users.map(u => ({ id: u.id, type: 'User' })));
       }
+
+      // 1. Create standard notifications for everyone (for socket/history)
       if (audience === 'staff' || audience === 'all') {
         const admins = await Admin.findAll({ attributes: ['id'] });
         recipients.push(...admins.map(a => ({ id: a.id, type: 'Admin' })));
+        
+        // 2. Specialized: Create one record in AdminNotification table so all staff see it in their Admin list
+        await AdminNotification.create({
+          identity: 0,
+          user_id: 0,
+          type: 'broadcast',
+          message: `${title}: ${message}`,
+          is_read: 'unread'
+        });
       }
 
       if (recipients.length === 0) return true;

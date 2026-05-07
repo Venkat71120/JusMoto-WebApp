@@ -16,13 +16,25 @@ const sharp = require('sharp');
 
 // Helper to resolve media ID to path
 const resolveMediaImage = async (image) => {
-  if (!image) return image;
+  if (!image || image === '0' || image === 0) return null;
+  
   // If it's a number or a numeric string (ID), and not already a path/URL
-  if (!isNaN(image) && !String(image).startsWith('http') && !String(image).includes('/')) {
+  const isNumericId = !isNaN(image) && !String(image).startsWith('http') && !String(image).includes('/');
+  
+  if (isNumericId) {
     const media = await MediaUpload.findByPk(image);
-    return media ? media.path : image;
+    if (media) return media.path;
   }
-  return image;
+  
+  // If it's already a string, check if it's a full URL
+  if (typeof image === 'string') {
+    if (image.startsWith('http')) return image;
+    // If it's a relative path, we might need to prepend base URL (though S3 uploads should be full URLs)
+    // For now, return as is if it looks like a path
+    if (image.includes('/')) return image;
+  }
+  
+  return null;
 };
 
 // ==================== Dashboard ====================
@@ -855,14 +867,23 @@ router.get('/brands', authenticate, isAdmin, async (req, res) => {
 router.post('/brands', authenticate, isAdmin, async (req, res) => {
   try {
     const { name, image, status } = req.body;
-    const resolvedImage = await resolveMediaImage(image);
+    if (!name) return res.status(400).json({ success: false, error: 'Brand name is required' });
+
+    // Save as ID if it's numeric, otherwise save as path
+    // But for consistency with other entities, let's just save the raw input (ID or path)
+    // and resolve it during GET.
     const brand = await Brand.create({ 
       name, 
       slug: createSlug(name), 
-      image: resolvedImage,
+      image: image || null,
       status: status !== undefined ? parseInt(status) : 1
     });
-    res.status(201).json({ success: true, data: brand, message: 'Brand created' });
+    
+    // Return resolved data for immediate UI update
+    const brandData = brand.get({ plain: true });
+    brandData.image = await resolveMediaImage(brandData.image);
+    
+    res.status(201).json({ success: true, data: brandData, message: 'Brand created successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -874,16 +895,18 @@ router.put('/brands/:id', authenticate, isAdmin, async (req, res) => {
     const brand = await Brand.findByPk(req.params.id);
     if (!brand) return res.status(404).json({ success: false, error: 'Brand not found' });
 
-    const resolvedImage = image !== undefined ? await resolveMediaImage(image) : brand.image;
-    
     await brand.update({ 
       name: name || brand.name, 
       slug: name ? createSlug(name) : brand.slug,
-      image: resolvedImage,
+      image: image !== undefined ? image : brand.image,
       status: status !== undefined ? parseInt(status) : brand.status
     });
     
-    res.json({ success: true, data: brand, message: 'Brand updated' });
+    // Return resolved data for immediate UI update
+    const brandData = brand.get({ plain: true });
+    brandData.image = await resolveMediaImage(brandData.image);
+    
+    res.json({ success: true, data: brandData, message: 'Brand updated successfully' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

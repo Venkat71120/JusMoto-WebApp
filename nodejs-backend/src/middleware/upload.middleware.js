@@ -5,13 +5,23 @@ const storage = multer.memoryStorage();
 
 // File filter
 const fileFilter = (req, file, cb) => {
-  const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-  const allowedDocTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  console.log('Multer fileFilter - file received:', {
+    originalname: file.originalname,
+    mimetype: file.mimetype
+  });
+
+  const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
+  const allowedDocTypes = [
+    'application/pdf', 
+    'application/msword', 
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/octet-stream' // Sometimes seen from mobile
+  ];
 
   if (allowedImageTypes.includes(file.mimetype) || allowedDocTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type. Only images (JPEG, PNG, GIF, WebP) and documents (PDF, DOC, DOCX) are allowed.'), false);
+    cb(new Error(`Invalid file type (${file.mimetype}). Only images and documents are allowed.`), false);
   }
 };
 

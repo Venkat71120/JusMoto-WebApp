@@ -1640,9 +1640,10 @@ router.get('/staff/:id', authenticate, isAdmin, async (req, res) => {
 
 router.post('/staff', authenticate, isAdmin, async (req, res) => {
   try {
-    const { name, username, email, password, role, status, outlet_location_id } = req.body;
+    const { name, username, email, password, role, status, outlet_location_id, phone, mobile_number } = req.body;
     const admin = await Admin.create({
       name, username, email, password,
+      phone: phone || mobile_number,
       role: role || 'staff',
       is_franchise: 1,
       outlet_location_id: outlet_location_id || null,
@@ -1656,8 +1657,9 @@ router.post('/staff', authenticate, isAdmin, async (req, res) => {
 
 router.put('/staff/:id', authenticate, isAdmin, async (req, res) => {
   try {
-    const { name, username, email, role, status, outlet_location_id } = req.body;
+    const { name, username, email, role, status, outlet_location_id, phone, mobile_number } = req.body;
     const updateData = { name, username, email, role, status, outlet_location_id: outlet_location_id || null };
+    if (phone || mobile_number) updateData.phone = phone || mobile_number;
     if (req.body.password) updateData.password = req.body.password;
     await Admin.update(updateData, { where: { id: req.params.id } });
     const admin = await Admin.findByPk(req.params.id, {
@@ -2052,7 +2054,11 @@ router.post('/franchises', authenticate, isAdmin, async (req, res) => {
       const suffix = Math.random().toString(36).slice(2, 7);
       username = `${emailPrefix}_${suffix}`;
     }
-    const franchise = await Admin.create({ ...req.body, username, is_franchise: 1, role: 'franchise', status: 1 });
+    const createData = { ...req.body };
+    if (!createData.phone && createData.mobile_number) {
+      createData.phone = createData.mobile_number;
+    }
+    const franchise = await Admin.create({ ...createData, username, is_franchise: 1, role: 'franchise', status: 1 });
     res.status(201).json({ success: true, data: franchise, message: 'Franchise created' });
   } catch (error) {
     // Surface the actual DB/validation error for easier debugging
@@ -2068,6 +2074,9 @@ router.put('/franchises/:id', authenticate, isAdmin, async (req, res) => {
     if (!admin) return res.status(404).json({ success: false, error: 'Franchise not found' });
 
     const updateData = { ...req.body };
+    if (!updateData.phone && updateData.mobile_number) {
+      updateData.phone = updateData.mobile_number;
+    }
     delete updateData.id;
     delete updateData._method;
 

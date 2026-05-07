@@ -88,6 +88,50 @@ class NotificationService {
       { url: `/client/orders/${order.id}`, order_id: order.id }
     );
   }
+
+  /**
+   * Broadcast a notification to a specific audience
+   */
+  async broadcast(audience, title, message, data = null) {
+    try {
+      const { User, Admin } = require('../models');
+      let recipients = [];
+
+      if (audience === 'user' || audience === 'all') {
+        const users = await User.findAll({ attributes: ['id'] });
+        recipients.push(...users.map(u => ({ id: u.id, type: 'User' })));
+      }
+      if (audience === 'staff' || audience === 'all') {
+        const admins = await Admin.findAll({ attributes: ['id'] });
+        recipients.push(...admins.map(a => ({ id: a.id, type: 'Admin' })));
+      }
+
+      if (recipients.length === 0) return true;
+
+      const notifications = recipients.map(r => ({
+        id: uuidv4(),
+        notifiable_id: r.id,
+        notifiable_type: r.type,
+        type: 'broadcast',
+        title,
+        message,
+        data: data ? JSON.stringify(data) : null
+      }));
+
+      await Notification.bulkCreate(notifications);
+      
+      // For smaller lists, we can emit sockets. For very large lists, 
+      // users will see it when they refresh or via FCM if implemented.
+      if (recipients.length < 100) {
+        notifications.forEach(n => this._emitSocket(n));
+      }
+      
+      return true;
+    } catch (err) {
+      console.error('Failed to broadcast notification:', err.message);
+      return false;
+    }
+  }
 }
 
 module.exports = new NotificationService();

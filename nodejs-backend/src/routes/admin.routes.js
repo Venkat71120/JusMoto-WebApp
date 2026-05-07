@@ -1537,6 +1537,30 @@ router.put('/notifications/:id/read', authenticate, isAdmin, async (req, res) =>
   }
 });
 
+router.post('/notifications', authenticate, isAdmin, async (req, res) => {
+  try {
+    const { title, subject, message, body, audience, type, target_user_type } = req.body;
+    const finalTitle = title || subject;
+    const finalMessage = message || body;
+    const finalAudience = audience || target_user_type || type || 'all';
+
+    if (!finalTitle || !finalMessage) {
+      return res.status(400).json({ success: false, error: 'Title and message are required' });
+    }
+
+    const notificationService = require('../services/notification.service');
+    const success = await notificationService.broadcast(finalAudience, finalTitle, finalMessage);
+
+    if (success) {
+      res.json({ success: true, message: 'Broadcast notification sent successfully' });
+    } else {
+      res.status(500).json({ success: false, error: 'Failed to send broadcast notification' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // ==================== Outlet Locations ====================
 router.get('/outlet-locations', authenticate, isAdmin, async (req, res) => {
   try {
